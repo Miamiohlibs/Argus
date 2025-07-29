@@ -1,21 +1,19 @@
+import UserTableWrapper from '@/components/UserTableWrapper';
 import getUserRole from '../../actions/getUserRole';
 import { redirect } from 'next/navigation';
-import UserList from '@/components/UserList';
 
-const UserAdministration = async () => {
+export default async function UsersPage() {
   const { role } = await getUserRole();
 
-  if (role && ['admin', 'superadmin'].includes(role)) {
-    return (
-      <>
-        <h1>User Role: {role}</h1>
-        <UserList />
-      </>
-    );
-  } else {
-    // go to main route /
+  if (role && !['admin', 'superadmin'].includes(role)) {
+    // go to main route if not admin or superadmin
     redirect('/');
+  } else {
+    return (
+      <main className="p-4">
+        <h1 className="text-xl font-bold mb-4">User List</h1>
+        <UserTableWrapper />
+      </main>
+    );
   }
-};
-
-export default UserAdministration;
+}
