@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import DataTable from 'react-data-table-component';
 import { User } from '@/types/User';
 import getUsers from '@/app/actions/getUsers';
-
+import Link from 'next/link';
 const columns = [
   {
     name: 'Name',
@@ -20,6 +20,33 @@ const columns = [
     selector: (row: User) => row.role ?? '',
     sortable: true,
   },
+  {
+    name: 'Edit',
+    cell: (row: User) => (
+      <Link
+        href={`/admin/users/edit/${row.id}`} // change path to your route
+      >
+        <button>Edit</button>
+      </Link>
+    ),
+    ignoreRowClick: true,
+    allowoverflow: true,
+    button: true,
+  },
+  //   {
+  //     name: 'Delete',
+  //     cell: (row: User) => (
+  //       <button
+  //         onClick={() => handleDelete(row.id)}
+  //         className="text-red-600 hover:underline"
+  //       >
+  //         Delete
+  //       </button>
+  //     ),
+  //     ignoreRowClick: true,
+  //     allowOverflow: true,
+  //     button: true,
+  //   },
 ];
 
 export default function UserTable() {
@@ -43,7 +70,7 @@ export default function UserTable() {
   useEffect(() => {
     const filtered = users.filter((user) =>
       [user.name, user.email, user.role].some((val) =>
-        val.toLowerCase().includes(filterText.toLowerCase())
+        val?.toLowerCase().includes(filterText.toLowerCase() || '')
       )
     );
     setFilteredUsers(filtered);
