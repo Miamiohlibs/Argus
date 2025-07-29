@@ -12,11 +12,13 @@
   "dependencies": {
     "@clerk/nextjs": "^6.27.1",
     "@prisma/client": "^6.12.0",
+    "bootstrap": "^5.3.7",
     "datatables.net-dt": "^2.3.2",
     "datatables.net-react": "^1.0.1",
     "jquery": "^3.7.1",
     "next": "15.4.4",
     "react": "19.1.0",
+    "react-bootstrap": "^2.10.10",
     "react-data-table-component": "^7.7.0",
     "react-dom": "19.1.0",
     "react-toastify": "^11.0.5"
