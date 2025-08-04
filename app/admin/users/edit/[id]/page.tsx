@@ -1,55 +1,28 @@
 import getUser from '@/app/actions/getUser';
-import {
-  Form,
-  FormControl,
-  FormLabel,
-  Button,
-  InputGroup,
-} from 'react-bootstrap';
+import UserEditForm from '@/components/UserEditForm';
+import Link from 'next/link';
 
-const UserEditPage = async ({
+export default async function UserEditPage({
   params,
 }: {
-  params: Promise<{ id: string }>;
-}) => {
+  params: { id: string };
+}) {
   const { id } = await params;
   const { user } = await getUser(id);
-  const possibleRoles = ['user', 'admin'];
 
-  if (!user) {
-    return <p>User not found</p>;
-  }
+  if (!user) return <p>User not found</p>;
+
   return (
     <>
+      <Link href="/admin/users" className="btn btn-secondary mb-4">
+        Back to Users
+      </Link>
       <h1>Edit User Permissions</h1>
-      <div
-        style={{
-          alignItems: 'left',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '1rem',
-        }}
-      >
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
         <h2>{user.name}</h2>
         <p>Email: {user.email}</p>
-        <p>Current Role: {user.role}</p>
-        <Form>
-          <InputGroup>
-            <FormLabel htmlFor="role">Role</FormLabel>
-            <FormControl as="select" id="role" name="role">
-              {possibleRoles.map((role) => (
-                <option key={role} value={role} selected={user.role === role}>
-                  {role.charAt(0).toUpperCase() + role.slice(1)}
-                </option>
-              ))}
-            </FormControl>
-          </InputGroup>
-
-          <Button type="submit">Save Changes</Button>
-        </Form>
+        <UserEditForm user={user} />
       </div>
     </>
   );
-};
-
-export default UserEditPage;
+}
