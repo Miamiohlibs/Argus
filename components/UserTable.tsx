@@ -1,10 +1,11 @@
 'use client';
+import { TableColumn } from 'react-data-table-component';
 import { useEffect, useState } from 'react';
 import DataTable from 'react-data-table-component';
 import { User } from '@/types/User';
 import getUsers from '@/app/actions/getUsers';
 import Link from 'next/link';
-const columns = [
+const columns: TableColumn<User>[] = [
   {
     name: 'Name',
     selector: (row: User) => row.name ?? '',
@@ -30,8 +31,6 @@ const columns = [
       </Link>
     ),
     ignoreRowClick: true,
-    allowoverflow: true,
-    button: true,
   },
   //   {
   //     name: 'Delete',
