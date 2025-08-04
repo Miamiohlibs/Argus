@@ -19,13 +19,50 @@ model User {
   clerkUserId  String        @unique
   email        String        @unique
   name         String?
-  role         String        @default("user")
+  role         Role
   imageUrl     String?
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
   transactions Transaction[]
+  pull_lists   PullList[]
 }
 
+model PullList {
+  id        Int      @id @default(autoincrement())
+  title     String
+  owner     User     @relation(fields: [userId], references: [id])
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model BibEntry {
+  id         String      @id @default(uuid())
+  itemTitle  String
+  almaId     String
+  almaIdType String
+  author     String
+  callNumber String?
+  location   String
+  notes      String?
+  items      ItemEntry[]
+}
+
+model ItemEntry {
+  id          String    @id @default(uuid())
+  description String
+  BibEntry    BibEntry? @relation(fields: [bibEntryId], references: [id])
+  bibEntryId  String?
+}
+
+enum Role {
+  user
+  editor
+  admin
+  superadmin
+}
+
+// This was from the original tutorial, not used in Watson
 model Transaction {
   id        String   @id @default(uuid())
   text      String
