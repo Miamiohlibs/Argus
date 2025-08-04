@@ -1,12 +1,15 @@
 import getUser from '@/app/actions/getUser';
 import UserEditForm from '@/components/UserEditForm';
 import Link from 'next/link';
+import checkAccess from '@/lib/checkAccess';
 
 export default async function UserEditPage({
   params,
 }: {
   params: { id: string };
 }) {
+  await checkAccess(['admin', 'superadmin']);
+
   const { id } = await params;
   const { user } = await getUser(id);
 
