@@ -1,6 +1,6 @@
 import Guest from '@/components/Guest';
 import { currentUser } from '@clerk/nextjs/server';
-import PullListList from '@/components/PullListList';
+import ProjectList from '@/components/ProjectList';
 
 const Home = async () => {
   const user = await currentUser();
@@ -11,7 +11,7 @@ const Home = async () => {
   return (
     <main>
       <h2>Welcome, {user.firstName} </h2>
-      <PullListList userId={user.id} />
+      <ProjectList userId={user.id} />
     </main>
   );
 };
