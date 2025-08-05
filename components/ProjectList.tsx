@@ -2,6 +2,7 @@
 import type { Project } from '@prisma/client';
 import getProjects from '@/app/actions/getProjects';
 // import PullListItem from './PullListItem';
+import ProjectItem from './ProjectItem';
 
 const ProjectList = async () => {
   const { projects, error } = await getProjects();
@@ -21,9 +22,7 @@ const ProjectList = async () => {
         {projects &&
           projects.length > 0 &&
           projects.map((project: Project) => (
-            <li key={project.id}>
-              {project.title} (ID: {project.id})
-            </li>
+            <ProjectItem key={project.id} project={project} />
           ))}
       </ul>
     </>
