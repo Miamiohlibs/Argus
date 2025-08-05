@@ -12,8 +12,8 @@ const roboto = Roboto({
 });
 
 export const metadata: Metadata = {
-  title: 'Expense Tracker',
-  description: 'Track your expenses & create a budget',
+  title: 'Watson Argus',
+  description: 'Special Collections Pull List Manager',
 };
 
 export default function RootLayout({

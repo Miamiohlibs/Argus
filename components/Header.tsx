@@ -13,7 +13,7 @@ const Header = async () => {
   return (
     <nav className="navbar">
       <div className="navbar-container">
-        <h2>Expense Tracker</h2>
+        <h2>Watson/Argus</h2>
         <div>
           <SignedOut>
             <SignInButton />
