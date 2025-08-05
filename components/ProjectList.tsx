@@ -3,6 +3,7 @@ import type { Project } from '@prisma/client';
 import getProjects from '@/app/actions/getProjects';
 // import PullListItem from './PullListItem';
 import ProjectItem from './ProjectItem';
+import Link from 'next/link';
 
 const ProjectList = async () => {
   const { projects, error } = await getProjects();
@@ -12,12 +13,22 @@ const ProjectList = async () => {
   }
 
   if (!projects || projects.length === 0) {
-    return <p>No pull lists found. Add a new list to get started!</p>;
+    return (
+      <>
+        <p>No projects found. Add a new project to get started!</p>
+        <Link href="/addProject" className="btn">
+          Add Project
+        </Link>
+      </>
+    );
   }
 
   return (
     <>
       <h3>Your Projects</h3>
+      <Link href="/addProject" className="btn">
+        Add Project
+      </Link>
       <ul className="list">
         {projects &&
           projects.length > 0 &&

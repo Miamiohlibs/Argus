@@ -1,3 +1,4 @@
+import { Nav, NavItem, NavLink, Navbar, NavbarBrand } from 'react-bootstrap';
 import {
   SignInButton,
   SignUpButton,
@@ -11,19 +12,21 @@ const Header = async () => {
   const user = await checkUser();
 
   return (
-    <nav className="navbar">
-      <div className="navbar-container">
-        <h2>Watson/Argus</h2>
-        <div>
-          <SignedOut>
+    <Navbar bg="dark" variant="dark" expand="lg">
+      <NavbarBrand href="/" className="ml-3">
+        Watson/Argus
+      </NavbarBrand>
+      <Nav className="ms-auto mr-3">
+        <SignedOut>
+          <NavItem>
             <SignInButton />
-          </SignedOut>
-          <SignedIn>
-            <UserButton />
-          </SignedIn>
-        </div>
-      </div>
-    </nav>
+          </NavItem>
+        </SignedOut>
+        <SignedIn>
+          <p className="text-light">{user?.name}</p> <UserButton />
+        </SignedIn>
+      </Nav>
+    </Navbar>
   );
 };
 

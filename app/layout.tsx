@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Roboto } from 'next/font/google';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './globals.css';
 import { ClerkProvider } from '@clerk/nextjs';
 import Header from '@/components/Header';
@@ -26,7 +27,7 @@ export default function RootLayout({
       <html lang="en">
         <body className={`${roboto.className}`}>
           <Header />
-          <main className="container">{children}</main>
+          <main className="container-fluid px-4 py-3">{children}</main>
           <ToastContainer />
         </body>
       </html>
