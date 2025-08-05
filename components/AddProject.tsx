@@ -2,21 +2,21 @@
 import { useRef } from 'react';
 import { toast } from 'react-toastify';
 import type { User } from '@prisma/client';
-import addPullList from '@/app/actions/addPullList';
+import addProject from '@/app/actions/addProject';
 
-type AddPullListProps = {
+type AddProjectProps = {
   user: User | null;
 };
 
-export default function AddPullList({ user }: AddPullListProps) {
+export default function AddProject({ user }: AddProjectProps) {
   const formRef = useRef<HTMLFormElement>(null);
   const clientAction = async (formData: FormData) => {
     let title = formData.get('title');
-    const { data, error } = await addPullList(formData);
+    const { data, error } = await addProject(formData);
     if (error) {
       toast.error(error);
     } else {
-      toast.success('List added');
+      toast.success('Project added');
       formRef.current?.reset();
     }
   };
@@ -59,5 +59,3 @@ export default function AddPullList({ user }: AddPullListProps) {
     </>
   );
 }
-
-// export default AddPullList;

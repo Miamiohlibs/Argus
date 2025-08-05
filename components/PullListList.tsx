@@ -1,28 +1,28 @@
 // import { PullList } from '@/types/PullList';
-import type { PullList } from '@prisma/client';
-import getPullLists from '@/app/actions/getPullLists';
+import type { Project } from '@prisma/client';
+import getProjects from '@/app/actions/getProjects';
 // import PullListItem from './PullListItem';
 
-const PullListList = async () => {
-  const { pullLists, error } = await getPullLists();
-  console.log('PullLists:', pullLists);
+const ProjectList = async () => {
+  const { projects, error } = await getProjects();
+  console.log('Projects:', projects);
   if (error) {
     return <p className="error">{error}</p>;
   }
 
-  if (!pullLists || pullLists.length === 0) {
+  if (!projects || projects.length === 0) {
     return <p>No pull lists found. Add a new list to get started!</p>;
   }
 
   return (
     <>
-      <h3>Your Lists</h3>
+      <h3>Your Projects</h3>
       <ul className="list">
-        {pullLists &&
-          pullLists.length > 0 &&
-          pullLists.map((pullList: PullList) => (
-            <li key={pullList.id}>
-              {pullList.title} (ID: {pullList.id})
+        {projects &&
+          projects.length > 0 &&
+          projects.map((project: Project) => (
+            <li key={project.id}>
+              {project.title} (ID: {project.id})
             </li>
           ))}
       </ul>
@@ -30,4 +30,4 @@ const PullListList = async () => {
   );
 };
 
-export default PullListList;
+export default ProjectList;

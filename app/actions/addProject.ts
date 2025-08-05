@@ -2,20 +2,19 @@
 import { auth } from '@clerk/nextjs/server';
 import { db } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
-import AddPullList from '@/components/AddPullList';
 
-interface PullListData {
+interface ProjectData {
   title: string;
   userId: string;
   notes?: string;
 }
 
-interface PullListResult {
-  data?: PullListData;
+interface ProjectResult {
+  data?: ProjectData;
   error?: string;
 }
 
-async function addPullList(formData: FormData): Promise<PullListResult> {
+async function addProject(formData: FormData): Promise<ProjectResult> {
   const titleValue = formData.get('title');
   //   const ownerValue = formData.get('userId');
   const notesValue = formData.get('notes') ?? '';
@@ -65,7 +64,7 @@ async function addPullList(formData: FormData): Promise<PullListResult> {
       },
     });
 
-    const created = await db.pullList.create({
+    const created = await db.project.create({
       data: {
         title,
         notes,
@@ -89,17 +88,17 @@ async function addPullList(formData: FormData): Promise<PullListResult> {
         : null,
     });
 
-    const pullListData: PullListData = {
+    const projectData: ProjectData = {
       title: created.title,
       userId: created.userId,
       notes: created.notes ?? undefined,
     };
     revalidatePath('/');
-    return { data: pullListData };
+    return { data: projectData };
   } catch (error) {
-    console.error('Error creating PullList:', error);
-    return { error: 'PullList not added: ' + JSON.stringify(error) };
+    console.error('Error creating Project:', error);
+    return { error: 'Project not added: ' + JSON.stringify(error) };
   }
 }
 
-export default addPullList;
+export default addProject;

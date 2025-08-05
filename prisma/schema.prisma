@@ -24,18 +24,19 @@ model User {
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
   transactions Transaction[]
-  pull_lists   PullList[]
+  projects     Project[]
 }
 
-model PullList {
-  id          Int       @id @default(autoincrement())
+model Project {
+  id          Int        @id @default(autoincrement())
   title       String
-  user        User      @relation(fields: [userId], references: [clerkUserId], onDelete: Cascade)
+  user        User       @relation(fields: [userId], references: [clerkUserId], onDelete: Cascade)
   userId      String
   notes       String?
   needForDate DateTime?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  bibEntries  BibEntry[]
 }
 
 model BibEntry {
@@ -48,6 +49,8 @@ model BibEntry {
   location   String
   notes      String?
   items      ItemEntry[]
+  projectId  Int
+  project    Project     @relation(fields: [projectId], references: [id], onDelete: Cascade)
 }
 
 model ItemEntry {

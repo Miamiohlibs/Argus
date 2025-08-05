@@ -1,10 +1,10 @@
 'use server';
 import { db } from '@/lib/db';
 import { auth } from '@clerk/nextjs/server';
-import type { PullList } from '@prisma/client';
+import type { Project } from '@prisma/client';
 
-async function getPullLists(): Promise<{
-  pullLists?: PullList[];
+async function getProjects(): Promise<{
+  projects?: Project[];
   error?: string;
 }> {
   const { userId } = await auth();
@@ -13,17 +13,17 @@ async function getPullLists(): Promise<{
   }
 
   try {
-    const pullLists = await db.pullList.findMany({
+    const projects = await db.project.findMany({
       where: { userId },
       orderBy: {
         createdAt: 'desc',
       },
     });
-    return { pullLists };
+    return { projects };
   } catch (error) {
     console.log('DB error:', error);
     return { error: 'Database error' };
   }
 }
 
-export default getPullLists;
+export default getProjects;
