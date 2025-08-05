@@ -30,7 +30,7 @@ model User {
 model PullList {
   id          Int       @id @default(autoincrement())
   title       String
-  owner       User      @relation(fields: [userId], references: [id])
+  user        User      @relation(fields: [userId], references: [clerkUserId], onDelete: Cascade)
   userId      String
   notes       String?
   needForDate DateTime?
