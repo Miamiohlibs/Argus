@@ -3,23 +3,27 @@ import { Button, Form, InputGroup } from 'react-bootstrap';
 import { useRef } from 'react';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation'; // Changed from react-router-dom
+import { bibById } from '@/app/actions/almaSearch';
+import { useState } from 'react';
 
 const RecordSearchForm = () => {
   const formRef = useRef<HTMLFormElement>(null);
   const router = useRouter(); // Changed from useNavigate
+  const [results, setresults] = useState<any>(null); // State to hold search results
 
   const handleSubmit = async (formData: FormData) => {
-    let title = formData.get('mms-id');
-    // const { data, error } = await addProject(formData);
-    alert(title);
-    // if (error) {
-    //   toast.error('Project creation failed');
-    //   router.push('/'); // Redirect to home on error
-    // } else {
-    //   toast.success('Project created successfully');
-    //   router.push('/'); //
-    //   formRef.current?.reset();
-    // }
+    let mms_id = formData.get('mms-id');
+    const { data, error } = await bibById({ mms_id: mms_id?.toString() || '' });
+    // console.log('Data from bibById:', data);
+    if (error) {
+      toast.error('Lookup failed');
+      //   router.push('/'); // Redirect to home on error
+    } else {
+      // toast.success('Lookup successful');
+      setresults(data); // Set the results state with the fetched data
+      // Optionally, you can redirect or perform other actions with the results
+      // router.push('/'); // Uncomment if you want to redirect after successful search
+    }
   };
 
   return (
@@ -40,6 +44,22 @@ const RecordSearchForm = () => {
           </InputGroup>
         </Form.Group>
       </Form>
+
+      <div>
+        {results ? (
+          <>
+            <ul>
+              <li>MMS ID: {results.bib[0].mms_id}</li>
+              <li>Title: {results.bib[0].title}</li>
+              <li>Author: {results.bib[0].author}</li>
+              <li>Publication Year: {results.bib[0].date_of_publication}</li>
+            </ul>
+            <pre>{JSON.stringify(results.bib, null, 2)}</pre>
+          </>
+        ) : (
+          <p>No results found.</p>
+        )}
+      </div>
     </>
   );
 };
