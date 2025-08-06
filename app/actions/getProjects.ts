@@ -3,7 +3,11 @@ import { db } from '@/lib/db';
 import { auth } from '@clerk/nextjs/server';
 import type { Project } from '@prisma/client';
 
-async function getProjects(): Promise<{
+async function getProjects({
+  limitToUser,
+}: {
+  limitToUser?: boolean;
+}): Promise<{
   projects?: Project[];
   error?: string;
 }> {
@@ -14,7 +18,9 @@ async function getProjects(): Promise<{
 
   try {
     const projects = await db.project.findMany({
-      where: { userId },
+      where: {
+        ...(limitToUser ? { userId } : {}),
+      },
       orderBy: {
         createdAt: 'desc',
       },
