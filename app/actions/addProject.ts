@@ -2,6 +2,8 @@
 import { auth } from '@clerk/nextjs/server';
 import { db } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
+// import { redirect } from 'next/dist/server/api-utils';
 
 interface ProjectData {
   title: string;
@@ -93,7 +95,8 @@ async function addProject(formData: FormData): Promise<ProjectResult> {
       userId: created.userId,
       notes: created.notes ?? undefined,
     };
-    revalidatePath('/');
+    // revalidatePath('/');
+    // redirect('/'); // Redirect to the home page after adding the project
     return { data: projectData };
   } catch (error) {
     console.error('Error creating Project:', error);
