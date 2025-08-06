@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { Button } from 'react-bootstrap';
 import getProjects from '@/app/actions/getProjects';
 import DeleteProjectButton from './DeleteProjectButton';
+import { User } from '@prisma/client';
 
 // Use Prisma's generated type that includes the user relation
 type ProjectWithUser = Prisma.ProjectGetPayload<{
@@ -17,7 +18,7 @@ type ProjectWithUser = Prisma.ProjectGetPayload<{
 // Define the props interface
 interface ProjectsTableProps {
   limitToUser?: boolean;
-  user?: string | null;
+  user?: User | null;
 }
 
 export default function ProjectsTable({
@@ -77,14 +78,14 @@ export default function ProjectsTable({
       cell: (row: ProjectWithUser) => {
         // Check if current user can edit this project
         const canEdit =
-          // user.role === 'admin' ||
-          // user.role === 'superadmin' ||
-          row.user.clerkUserId === user;
+          user?.role === 'admin' ||
+          user?.role === 'superadmin' ||
+          row.user.clerkUserId === user?.clerkUserId;
         console.log(
           'Row User:',
           row.user?.clerkUserId,
           'Current User:',
-          user,
+          user?.clerkUserId,
           'Can edit:',
           canEdit,
           'for project:',
