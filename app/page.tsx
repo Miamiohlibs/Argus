@@ -1,7 +1,8 @@
 import Guest from '@/components/Guest';
 import { currentUser } from '@clerk/nextjs/server';
-import ProjectList from '@/components/ProjectList';
 import ProjectsTable from '@/components/ProjectsTable';
+import CreateProjectButton from '@/components/CreateProjectButton';
+
 const Home = async () => {
   const user = await currentUser();
 
@@ -10,7 +11,8 @@ const Home = async () => {
   }
   return (
     <main>
-      <h2>Welcome, {user.firstName} </h2>
+      <h2>{user.firstName}'s Projects</h2>
+      <CreateProjectButton />
       <ProjectsTable limitToUser={true} />
     </main>
   );
