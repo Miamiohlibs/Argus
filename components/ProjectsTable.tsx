@@ -2,9 +2,7 @@
 import { TableColumn } from 'react-data-table-component';
 import { useEffect, useState } from 'react';
 import DataTable from 'react-data-table-component';
-// import { User } from '@/types/User';
 import { Prisma } from '@prisma/client';
-// import getUsers from '@/app/actions/getUsers';
 import Link from 'next/link';
 import { Button } from 'react-bootstrap';
 import getProjects from '@/app/actions/getProjects';
@@ -14,66 +12,6 @@ import DeleteProjectButton from './DeleteProjectButton';
 type ProjectWithUser = Prisma.ProjectGetPayload<{
   include: { user: true };
 }>;
-
-const columns: TableColumn<ProjectWithUser>[] = [
-  {
-    name: 'Title',
-    selector: (row: ProjectWithUser) => row.title ?? '',
-    sortable: true,
-  },
-  {
-    name: 'Owner',
-    selector: (row: ProjectWithUser) => row.user.name ?? 'Unknown',
-    sortable: true,
-  },
-  {
-    name: 'Created',
-    selector: (row: ProjectWithUser) =>
-      new Date(row.createdAt).toLocaleDateString(),
-    sortable: true,
-  },
-  {
-    name: 'Updated',
-    selector: (row: ProjectWithUser) =>
-      new Date(row.updatedAt).toLocaleDateString(),
-    sortable: true,
-  },
-  {
-    name: 'Notes',
-    selector: (row: ProjectWithUser) => row.notes ?? '',
-    sortable: false,
-  },
-  {
-    name: 'Tools',
-    cell: (row: ProjectWithUser) => (
-      <>
-        <Link
-          href={`/admin/projects/edit/${row.id}`} // change path to your route
-        >
-          <Button variant="outline-primary" size="sm">
-            Edit
-          </Button>
-        </Link>
-        <DeleteProjectButton project={row} />
-      </>
-    ),
-    ignoreRowClick: true,
-  },
-  //   {
-  //     name: 'Delete',
-  //     cell: (row: User) => (
-  //       <button
-  //         onClick={() => handleDelete(row.id)}
-  //         className="text-red-600 hover:underline"
-  //       >
-  //         Delete
-  //       </button>
-  //     ),
-  //     ignoreRowClick: true,
-  //     allowOverflow: true,
-  //     button: true,
-  //   },
-];
 
 export default function ProjectsTable(
   options: { limitToUser?: boolean } = { limitToUser: true }
@@ -85,8 +23,64 @@ export default function ProjectsTable(
   const [loading, setLoading] = useState(true);
   const [filterText, setFilterText] = useState('');
 
+  const handleDelete = (projectId: number) => {
+    console.log(`Delete project with ID: ${projectId}`);
+    const updatedProjects = projects.filter(
+      (project) => project.id !== projectId
+    );
+    setProjects(updatedProjects);
+    setFilteredProjects(updatedProjects);
+  };
+
+  // Move columns inside the component so handleDelete is in scope
+  const columns: TableColumn<ProjectWithUser>[] = [
+    {
+      name: 'Title',
+      selector: (row: ProjectWithUser) => row.title ?? '',
+      sortable: true,
+    },
+    {
+      name: 'Owner',
+      selector: (row: ProjectWithUser) => row.user.name ?? 'Unknown',
+      sortable: true,
+    },
+    {
+      name: 'Created',
+      selector: (row: ProjectWithUser) =>
+        new Date(row.createdAt).toLocaleDateString(),
+      sortable: true,
+    },
+    {
+      name: 'Updated',
+      selector: (row: ProjectWithUser) =>
+        new Date(row.updatedAt).toLocaleDateString(),
+      sortable: true,
+    },
+    {
+      name: 'Notes',
+      selector: (row: ProjectWithUser) => row.notes ?? '',
+      sortable: false,
+    },
+    {
+      name: 'Tools',
+      cell: (row: ProjectWithUser) => (
+        <>
+          <Link href={`/admin/projects/edit/${row.id}`}>
+            <Button variant="outline-primary" size="sm">
+              Edit
+            </Button>
+          </Link>
+          <DeleteProjectButton
+            project={row}
+            onDeleted={() => handleDelete(row.id)}
+          />
+        </>
+      ),
+      ignoreRowClick: true,
+    },
+  ];
+
   useEffect(() => {
-    // Fetch projects from an API or other source
     const fetchProjects = async () => {
       const data = await getProjects({ limitToUser: options.limitToUser });
       setProjects(data.projects ?? []);
@@ -108,7 +102,6 @@ export default function ProjectsTable(
 
   return (
     <DataTable
-      //   title="Project List"
       columns={columns}
       data={filteredProjects}
       progressPending={loading}
