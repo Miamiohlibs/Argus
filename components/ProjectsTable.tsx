@@ -3,27 +3,48 @@ import { TableColumn } from 'react-data-table-component';
 import { useEffect, useState } from 'react';
 import DataTable from 'react-data-table-component';
 // import { User } from '@/types/User';
-// import { User } from '@prisma/client';
-import { Project } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 // import getUsers from '@/app/actions/getUsers';
 import Link from 'next/link';
 import { Button } from 'react-bootstrap';
 import getProjects from '@/app/actions/getProjects';
 
-const columns: TableColumn<Project>[] = [
+// Use Prisma's generated type that includes the user relation
+type ProjectWithUser = Prisma.ProjectGetPayload<{
+  include: { user: true };
+}>;
+
+const columns: TableColumn<ProjectWithUser>[] = [
   {
     name: 'Title',
-    selector: (row: Project) => row.title ?? '',
+    selector: (row: ProjectWithUser) => row.title ?? '',
+    sortable: true,
+  },
+  {
+    name: 'Owner',
+    selector: (row: ProjectWithUser) => row.user.name ?? 'Unknown',
+    sortable: true,
+  },
+  {
+    name: 'Created',
+    selector: (row: ProjectWithUser) =>
+      new Date(row.createdAt).toLocaleDateString(),
+    sortable: true,
+  },
+  {
+    name: 'Updated',
+    selector: (row: ProjectWithUser) =>
+      new Date(row.updatedAt).toLocaleDateString(),
     sortable: true,
   },
   {
     name: 'Notes',
-    selector: (row: Project) => row.notes ?? '',
+    selector: (row: ProjectWithUser) => row.notes ?? '',
     sortable: false,
   },
   {
     name: 'Edit',
-    cell: (row: Project) => (
+    cell: (row: ProjectWithUser) => (
       <Link
         href={`/admin/projects/edit/${row.id}`} // change path to your route
       >
@@ -53,8 +74,10 @@ const columns: TableColumn<Project>[] = [
 export default function ProjectsTable(
   options: { limitToUser?: boolean } = { limitToUser: true }
 ) {
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [filteredProjects, setFilteredProjects] = useState<Project[]>([]);
+  const [projects, setProjects] = useState<ProjectWithUser[]>([]);
+  const [filteredProjects, setFilteredProjects] = useState<ProjectWithUser[]>(
+    []
+  );
   const [loading, setLoading] = useState(true);
   const [filterText, setFilterText] = useState('');
 
@@ -81,7 +104,7 @@ export default function ProjectsTable(
 
   return (
     <DataTable
-      title="Project List"
+      //   title="Project List"
       columns={columns}
       data={filteredProjects}
       progressPending={loading}
@@ -92,7 +115,7 @@ export default function ProjectsTable(
       subHeaderComponent={
         <input
           type="text"
-          placeholder="Search by name, email, or role"
+          placeholder="Search projects..."
           value={filterText}
           onChange={(e) => setFilterText(e.target.value)}
           className="p-2 border rounded w-full md:w-1/3"

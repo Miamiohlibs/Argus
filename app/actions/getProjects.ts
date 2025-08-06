@@ -23,10 +23,14 @@ async function getProjects(
       where: {
         ...(limitToUser ? { userId } : {}),
       },
+      include: {
+        user: true, // Include user details if needed
+      },
       orderBy: {
         createdAt: 'desc',
       },
     });
+    // console.log('Fetched projects:', projects);
     return { projects };
   } catch (error) {
     console.log('DB error:', error);
