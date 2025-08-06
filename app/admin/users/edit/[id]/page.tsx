@@ -8,7 +8,7 @@ export default async function UserEditPage({
 }: {
   params: { id: string };
 }) {
-  await checkAccess(['admin', 'superadmin']);
+  await checkAccess({ permittedRoles: ['admin', 'superadmin'] });
 
   const { id } = await params;
   const { user } = await getUser(id);
