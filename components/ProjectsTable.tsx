@@ -8,6 +8,7 @@ import { Prisma } from '@prisma/client';
 import Link from 'next/link';
 import { Button } from 'react-bootstrap';
 import getProjects from '@/app/actions/getProjects';
+import DeleteProjectButton from './DeleteProjectButton';
 
 // Use Prisma's generated type that includes the user relation
 type ProjectWithUser = Prisma.ProjectGetPayload<{
@@ -43,15 +44,18 @@ const columns: TableColumn<ProjectWithUser>[] = [
     sortable: false,
   },
   {
-    name: 'Edit',
+    name: 'Tools',
     cell: (row: ProjectWithUser) => (
-      <Link
-        href={`/admin/projects/edit/${row.id}`} // change path to your route
-      >
-        <Button variant="outline-primary" size="sm">
-          Edit
-        </Button>
-      </Link>
+      <>
+        <Link
+          href={`/admin/projects/edit/${row.id}`} // change path to your route
+        >
+          <Button variant="outline-primary" size="sm">
+            Edit
+          </Button>
+        </Link>
+        <DeleteProjectButton project={row} />
+      </>
     ),
     ignoreRowClick: true,
   },
