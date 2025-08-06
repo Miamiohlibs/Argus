@@ -5,6 +5,8 @@ import DataTable from 'react-data-table-component';
 import { User } from '@/types/User';
 import getUsers from '@/app/actions/getUsers';
 import Link from 'next/link';
+import { Button } from 'react-bootstrap';
+
 const columns: TableColumn<User>[] = [
   {
     name: 'Name',
@@ -27,7 +29,9 @@ const columns: TableColumn<User>[] = [
       <Link
         href={`/admin/users/edit/${row.id}`} // change path to your route
       >
-        <button>Edit</button>
+        <Button variant="outline-primary" size="sm">
+          Edit
+        </Button>
       </Link>
     ),
     ignoreRowClick: true,
