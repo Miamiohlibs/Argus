@@ -1,7 +1,12 @@
 'use server';
 import { db } from '@/lib/db';
 import { auth } from '@clerk/nextjs/server';
-import type { Project } from '@prisma/client';
+import type { Prisma } from '@prisma/client';
+
+// Define the type that matches what you're actually returning
+type ProjectWithUser = Prisma.ProjectGetPayload<{
+  include: { user: true };
+}>;
 
 async function getProjects(
   {
@@ -10,7 +15,7 @@ async function getProjects(
     limitToUser?: boolean;
   } = { limitToUser: true }
 ): Promise<{
-  projects?: Project[];
+  projects?: ProjectWithUser[];
   error?: string;
 }> {
   const { userId } = await auth();
