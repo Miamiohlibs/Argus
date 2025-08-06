@@ -17,7 +17,10 @@ const Header = async () => {
       <NavbarBrand href="/">Watson/Argus</NavbarBrand>
       <Nav className="ms-auto me-3 text-light">
         <NavItem>
-          <NavLink href="#">Example</NavLink>
+          <NavLink href="/">My Projects</NavLink>
+        </NavItem>
+        <NavItem>
+          <NavLink href="/allProjects">All Projects</NavLink>
         </NavItem>
         <AdminNav />
         <SignedOut>
