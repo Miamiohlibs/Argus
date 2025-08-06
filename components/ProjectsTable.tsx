@@ -3,6 +3,7 @@ import { TableColumn } from 'react-data-table-component';
 import { useEffect, useState } from 'react';
 import DataTable from 'react-data-table-component';
 import { Prisma } from '@prisma/client';
+// import { User as ClerkUser } from '@clerk/nextjs';
 import Link from 'next/link';
 import { Button } from 'react-bootstrap';
 import getProjects from '@/app/actions/getProjects';
@@ -13,15 +14,25 @@ type ProjectWithUser = Prisma.ProjectGetPayload<{
   include: { user: true };
 }>;
 
-export default function ProjectsTable(
-  options: { limitToUser?: boolean } = { limitToUser: true }
-) {
+// Define the props interface
+interface ProjectsTableProps {
+  limitToUser?: boolean;
+  user?: string | null;
+}
+
+export default function ProjectsTable({
+  limitToUser = true,
+  user = null,
+}: ProjectsTableProps) {
   const [projects, setProjects] = useState<ProjectWithUser[]>([]);
   const [filteredProjects, setFilteredProjects] = useState<ProjectWithUser[]>(
     []
   );
   const [loading, setLoading] = useState(true);
   const [filterText, setFilterText] = useState('');
+
+  // Normalize the limitToUser prop to ensure consistency
+  const normalizedLimitToUser = Boolean(limitToUser);
 
   const handleDelete = (projectId: number) => {
     console.log(`Delete project with ID: ${projectId}`);
@@ -63,33 +74,55 @@ export default function ProjectsTable(
     },
     {
       name: 'Tools',
-      cell: (row: ProjectWithUser) => (
-        <>
-          <Link href={`/admin/projects/edit/${row.id}`}>
-            <Button variant="outline-primary" size="sm">
-              Edit
-            </Button>
-          </Link>
-          <DeleteProjectButton
-            project={row}
-            onDeleted={() => handleDelete(row.id)}
-          />
-        </>
-      ),
+      cell: (row: ProjectWithUser) => {
+        // Check if current user can edit this project
+        const canEdit =
+          // user.role === 'admin' ||
+          // user.role === 'superadmin' ||
+          row.user.clerkUserId === user;
+        console.log(
+          'Row User:',
+          row.user?.clerkUserId,
+          'Current User:',
+          user,
+          'Can edit:',
+          canEdit,
+          'for project:',
+          row.title
+        );
+
+        if (!canEdit) {
+          return <></>;
+        }
+
+        return (
+          <>
+            <Link href={`/admin/projects/edit/${row.id}`}>
+              <Button variant="outline-primary" size="sm">
+                Edit
+              </Button>
+            </Link>
+            <DeleteProjectButton
+              project={row}
+              onDeleted={() => handleDelete(row.id)}
+            />
+          </>
+        );
+      },
       ignoreRowClick: true,
     },
   ];
 
   useEffect(() => {
     const fetchProjects = async () => {
-      const data = await getProjects({ limitToUser: options.limitToUser });
+      const data = await getProjects({ limitToUser: normalizedLimitToUser });
       setProjects(data.projects ?? []);
       setFilteredProjects(data.projects ?? []);
       setLoading(false);
     };
 
     fetchProjects();
-  }, []);
+  }, [normalizedLimitToUser]); // Use normalized value for consistent dependency
 
   useEffect(() => {
     const filtered = projects.filter((project) =>
