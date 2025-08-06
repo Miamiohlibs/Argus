@@ -49,6 +49,11 @@ export default function ProjectsTable({
     {
       name: 'Title',
       selector: (row: ProjectWithUser) => row.title ?? '',
+      cell: (row: ProjectWithUser) => (
+        <Link href={`/project/${row.id}`}>
+          {row.title || 'Untitled Project'}
+        </Link>
+      ),
       sortable: true,
     },
     {
