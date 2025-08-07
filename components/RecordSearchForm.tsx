@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'; // Changed from react-router-dom
 import { bibById, bibHoldings } from '@/app/actions/almaSearch';
 import { useState } from 'react';
 import BibEntry from './BibEntry';
+import HoldingEntry from './HoldingEntry';
 
 const RecordSearchForm = () => {
   const formRef = useRef<HTMLFormElement>(null);
@@ -89,8 +90,13 @@ const RecordSearchForm = () => {
         ) : (
           <p>No results found.</p>
         )}
+        {results && results.holding ? (
+          <>
+            <HoldingEntry holdings={results.holding} />
+          </>
+        ) : null}
       </div>
-      <pre>{JSON.stringify(results, null, 2)}</pre>
+      <pre>{/* {JSON.stringify(results, null, 2)} */}</pre>
     </>
   );
 };
