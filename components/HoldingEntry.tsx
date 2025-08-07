@@ -1,9 +1,11 @@
 'use client';
 import { Form, Button, InputGroup } from 'react-bootstrap';
 import { useState } from 'react';
+import { useRef } from 'react';
 
 const HoldingEntry = ({ holdings }: { holdings: any[] }) => {
   const [selectedItems, setSelectedItems] = useState<any[]>([]);
+  const formRef = useRef<HTMLFormElement>(null);
 
   const handleItemCheck = (item: any, checked: boolean) => {
     if (checked) {
@@ -17,11 +19,17 @@ const HoldingEntry = ({ holdings }: { holdings: any[] }) => {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log('Selected items:', selectedItems);
-    // Process the selected items array here
-    // You can pass this to a server action or parent component
+  const handleSubmit = (event: React.SyntheticEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    // console.log('FormData:', formData.get('holdingNote'));
+    const allFormData: Record<string, FormDataEntryValue> = {};
+    for (const [key, value] of formData.entries()) {
+      allFormData[key] = value;
+    }
+
+    console.log('All Form Data:', allFormData);
+    console.log('Selected Items:', selectedItems);
   };
 
   return (
@@ -31,7 +39,7 @@ const HoldingEntry = ({ holdings }: { holdings: any[] }) => {
           <Form.Control
             type="hidden"
             name="holdings_id"
-            value={JSON.stringify(holding)}
+            value={JSON.stringify(holding.holding_id)}
           />
           <Form.Control
             type="hidden"
@@ -57,7 +65,7 @@ const HoldingEntry = ({ holdings }: { holdings: any[] }) => {
             <InputGroup className="mb-3">
               <InputGroup.Text id="holding-note">Note</InputGroup.Text>
               <Form.Control
-                name="holding-note"
+                name="holdingNote"
                 placeholder="Enter holdings note and/or select items below"
                 aria-label="Holding note"
                 aria-describedby="holding-note"
@@ -81,11 +89,18 @@ const HoldingEntry = ({ holdings }: { holdings: any[] }) => {
                 <li key={item.item_data.barcode} className="mb-2">
                   <Form.Check
                     type="checkbox"
-                    id={`item-${item.item_data.barcode}`}
-                    label={`Item: ${item.item_data.description} (Barcode: ${
-                      item.item_data.barcode || 'N/A'
-                    })`}
-                    onChange={(e) => handleItemCheck(item, e.target.checked)}
+                    id={`item-${item.item_data.pid}`}
+                    label={`Item: ${item.item_data.description}`}
+                    onChange={(e) =>
+                      handleItemCheck(
+                        {
+                          pid: item.item_data.pid,
+                          barcode: item.item_data.barcode || '',
+                          description: item.item_data.description,
+                        },
+                        e.target.checked
+                      )
+                    }
                     value={item.item_data.barcode}
                   />
                 </li>
