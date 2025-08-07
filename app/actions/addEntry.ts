@@ -5,23 +5,31 @@ import { db } from '@/lib/db';
 // import { redirect } from 'next/navigation';
 // import { redirect } from 'next/dist/server/api-utils';
 
-const addEntry = async () => {
+const addEntry = async ({
+  bibData,
+  itemData,
+}: {
+  bibData: Record<string, FormDataEntryValue>;
+  itemData: any[];
+}) => {
   try {
+    console.log('Adding entry with bibData:', bibData);
+    const projectId = parseInt((bibData.project_id as string).replace('"', ''));
+    console.log('Project ID:', projectId);
+    const itemDescriptions = itemData.map((item) => ({
+      description: item.description,
+    }));
     const response = await db.bibEntry.create({
       data: {
-        itemTitle: 'New Entry',
-        notes: 'This is a new entry',
-        almaId: '123456789',
+        itemTitle: bibData.title as string,
+        author: bibData.author as string,
+        location: bibData.holdings_location_code as string,
+        projectId: projectId,
+        notes: bibData.holdingNotes as string,
+        almaId: bibData.mms_id as string,
         almaIdType: 'mms_id',
-        author: 'John Doe',
-        location: 'Main Library',
-        projectId: 18,
         items: {
-          create: [
-            {
-              description: 'Item 1',
-            },
-          ],
+          create: itemDescriptions,
         },
       },
     });

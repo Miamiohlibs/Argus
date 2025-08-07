@@ -30,7 +30,6 @@ const HoldingEntry = ({
   const handleSubmit = async (event: React.SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
-    // console.log('FormData:', formData.get('holdingNote'));
     const allFormData: Record<string, FormDataEntryValue> = {};
     for (const [key, value] of formData.entries()) {
       allFormData[key] = value;
@@ -39,7 +38,10 @@ const HoldingEntry = ({
     console.log('All Form Data:', allFormData);
     console.log('Selected Items:', selectedItems);
 
-    const { data, error } = await AddEntry();
+    const { data, error } = await AddEntry({
+      bibData: allFormData,
+      itemData: selectedItems,
+    });
 
     if (error) {
       toast.error('Failed to add entry');
@@ -48,90 +50,144 @@ const HoldingEntry = ({
       console.log('Entry added:', data);
     }
   };
+
+  // Helper function to safely stringify values
+  const safeStringify = (value: any): string => {
+    if (value === undefined || value === null) {
+      return '';
+    }
+    return JSON.stringify(value);
+  };
+
   return (
     <Form onSubmit={handleSubmit}>
-      {holdings.map((holding) => (
-        <div key={holding.holding_id} className="mb-4 border p-3">
-          <Form.Control
-            type="hidden"
-            name="project_id"
-            value={JSON.stringify(projectId)}
-          />
-          <Form.Control
-            type="hidden"
-            name="holdings_id"
-            value={JSON.stringify(holding.holding_id)}
-          />
-          <Form.Control
-            type="hidden"
-            name="holdings_library_name"
-            value={JSON.stringify(holding.library.desc)}
-          />
-          <Form.Control
-            type="hidden"
-            name="holdings_library_location"
-            value={JSON.stringify(holding.location.desc)}
-          />
-          <Form.Control
-            type="hidden"
-            name="holdings_location_code"
-            value={JSON.stringify(holding.location.value)}
-          />
-          <Form.Control
-            type="hidden"
-            name="holdings_call"
-            value={JSON.stringify(holding.call_number)}
-          />
-          <Form.Group controlId="mmsIdSearch">
-            <InputGroup className="mb-3">
-              <InputGroup.Text id="holding-note">Note</InputGroup.Text>
-              <Form.Control
-                name="holdingNote"
-                placeholder="Enter holdings note and/or select items below"
-                aria-label="Holding note"
-                aria-describedby="holding-note"
-              />
-              <Button type="submit" variant="primary">
-                Add Item to Project
-              </Button>
-            </InputGroup>
-          </Form.Group>
-          <p>
-            <strong>{holding.library.desc}</strong> &mdash;{' '}
-            {holding.location.desc} ({holding.location.value})
-          </p>
-          <p>
-            Call Number: <strong>{holding.call_number}</strong>
-          </p>
+      {holdings.map((holding) => {
+        // Safe access to nested properties
+        const firstItem = holding.itemDetails?.item?.[0];
+        const bibData = firstItem?.bib_data;
 
-          <ul style={{ listStyleType: 'none', paddingLeft: 0 }}>
-            {holding.itemDetails && holding.itemDetails.item ? (
-              holding.itemDetails.item.map((item: any) => (
-                <li key={item.item_data.barcode} className="mb-2">
-                  <Form.Check
-                    type="checkbox"
-                    id={`item-${item.item_data.pid}`}
-                    label={`Item: ${item.item_data.description}`}
-                    onChange={(e) =>
-                      handleItemCheck(
-                        {
-                          pid: item.item_data.pid,
-                          barcode: item.item_data.barcode || '',
-                          description: item.item_data.description,
-                        },
-                        e.target.checked
-                      )
-                    }
-                    value={item.item_data.barcode}
-                  />
-                </li>
-              ))
-            ) : (
-              <li className="text-muted">No items found</li>
-            )}
-          </ul>
-        </div>
-      ))}
+        return (
+          <div key={holding.holding_id} className="mb-4 border p-3">
+            <Form.Control
+              type="hidden"
+              name="project_id"
+              value={safeStringify(projectId)}
+            />
+            <Form.Control
+              type="hidden"
+              name="title"
+              value={safeStringify(bibData?.title)}
+            />
+            <Form.Control
+              type="hidden"
+              name="author"
+              value={safeStringify(bibData?.author)}
+            />
+            <Form.Control
+              type="hidden"
+              name="mms_id"
+              value={safeStringify(bibData?.mms_id)}
+            />
+            <Form.Control
+              type="hidden"
+              name="place_of_publication"
+              value={safeStringify(bibData?.place_of_publication)}
+            />
+            <Form.Control
+              type="hidden"
+              name="date_of_publication"
+              value={safeStringify(bibData?.date_of_publication)}
+            />
+            <Form.Control
+              type="hidden"
+              name="publisher_const"
+              value={safeStringify(bibData?.publisher_const)}
+            />
+            <Form.Control
+              type="hidden"
+              name="holdings_id"
+              value={safeStringify(holding.holding_id)}
+            />
+            <Form.Control
+              type="hidden"
+              name="holdings_library_name"
+              value={safeStringify(holding.library?.desc)}
+            />
+            <Form.Control
+              type="hidden"
+              name="holdings_library_location"
+              value={safeStringify(holding.location?.desc)}
+            />
+            <Form.Control
+              type="hidden"
+              name="holdings_location_code"
+              value={safeStringify(holding.location?.value)}
+            />
+            <Form.Control
+              type="hidden"
+              name="holdings_call"
+              value={safeStringify(holding.call_number)}
+            />
+
+            <Form.Group controlId={`mmsIdSearch-${holding.holding_id}`}>
+              <InputGroup className="mb-3">
+                <InputGroup.Text id="holding-note">Note</InputGroup.Text>
+                <Form.Control
+                  name="holdingNote"
+                  placeholder="Enter holdings note and/or select items below"
+                  aria-label="Holding note"
+                  aria-describedby="holding-note"
+                  defaultValue="" // Add default value to prevent uncontrolled->controlled warning
+                />
+                <Button type="submit" variant="primary">
+                  Add Item to Project
+                </Button>
+              </InputGroup>
+            </Form.Group>
+
+            <p>
+              <strong>{holding.library?.desc || 'Unknown Library'}</strong>{' '}
+              &mdash; {holding.location?.desc || 'Unknown Location'} (
+              {holding.location?.value || 'N/A'})
+            </p>
+            <p>
+              Call Number: <strong>{holding.call_number || 'N/A'}</strong>
+            </p>
+
+            <ul style={{ listStyleType: 'none', paddingLeft: 0 }}>
+              {holding.itemDetails?.item ? (
+                holding.itemDetails.item.map((item: any, index: number) => (
+                  <li
+                    key={item.item_data?.barcode || `item-${index}`}
+                    className="mb-2"
+                  >
+                    <Form.Check
+                      type="checkbox"
+                      id={`item-${item.item_data?.pid || index}`}
+                      label={`Item: ${
+                        item.item_data?.description || 'Unknown Item'
+                      }`}
+                      onChange={(e) =>
+                        handleItemCheck(
+                          {
+                            pid: item.item_data?.pid || '',
+                            barcode: item.item_data?.barcode || '',
+                            description: item.item_data?.description || '',
+                          },
+                          e.target.checked
+                        )
+                      }
+                      value={item.item_data?.barcode || ''}
+                    />
+                  </li>
+                ))
+              ) : (
+                <li className="text-muted">No items found</li>
+              )}
+            </ul>
+          </div>
+        );
+      })}
     </Form>
   );
 };
