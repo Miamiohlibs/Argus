@@ -1,6 +1,5 @@
 'use client';
 import { findByBarcode, bibById } from '../actions/almaSearch';
-const barcode = '35054035116561';
 import RecordSearchForm from '@/components/RecordSearchForm';
 import { useSearchParams } from 'next/navigation';
 
