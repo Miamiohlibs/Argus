@@ -24,8 +24,24 @@ export default async function ProjectPage({
       {project?.user.clerkUserId == user?.clerkUserId && (
         <RecordSearchButton projectId={id} />
       )}
-      <p>{JSON.stringify(bibEntries)}</p>
+      <pre>{JSON.stringify(bibEntries.data?.entries.length, null, 2)}</pre>
       <p className="mt-5">Notes: {project?.notes}</p>
+
+      {bibEntries && bibEntries.data?.entries ? (
+        <ul>
+          {bibEntries.data?.entries.length > 0 &&
+            bibEntries.data?.entries?.map((entry) => (
+              <li key={entry.id}>
+                {entry.itemTitle}, {entry.author}, {entry.notes}, ,
+                {entry.callNumber}
+                {entry.location}
+                {entry.items.length}
+              </li>
+            ))}
+        </ul>
+      ) : (
+        <p>No bibliography entries found.</p>
+      )}
     </>
   );
 }
