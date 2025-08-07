@@ -44,7 +44,23 @@ export async function bibHoldings({ mms_id }: { mms_id: string }) {
       apiKey: process.env.ALMA_API_KEY || '',
     });
     const results = await alma.holdingsByMmsId(mms_id);
-    console.log('Holdings for MMS ID:', results);
+    // await Promise.all(
+    //   results.holding.map(async (holding: any) => {
+    //     let thisHoldingResult = await alma.followLink(holding.links[0].href);
+    //     holding.holding_data = thisHoldingResult;
+    //   })
+    // );
+    await Promise.all(
+      results.holding.map(async (holding: any) => {
+        let itemDetailUrl = holding.link + '/items';
+        console.log('- Holding data:', itemDetailUrl);
+        let itemHoldingsDetail = await alma.followLink(itemDetailUrl);
+        holding.itemDetails = itemHoldingsDetail;
+        console.log('- Item details:', itemHoldingsDetail);
+        return holding.items ? holding.items : []; // Ensure items are present
+      })
+    );
+
     return { data: results };
   } catch (error) {
     console.error('Error fetching holdings:', error);
