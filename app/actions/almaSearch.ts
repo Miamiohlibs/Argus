@@ -27,11 +27,27 @@ export async function bibById({ mms_id }: { mms_id: string }) {
       baseUrl: process.env.ALMA_BASEURL || '',
       apiKey: process.env.ALMA_API_KEY || '',
     });
+
     const results = await alma.idLookup({ mms_id });
     console.log('Search results by ID:', results);
     return { data: results };
   } catch (error) {
     console.error('Error searching by ID:', error);
     return { error: 'Lookup failed with message:' + `: ${error}` };
+  }
+}
+
+export async function bibHoldings({ mms_id }: { mms_id: string }) {
+  try {
+    const alma = new SearchBibs({
+      baseUrl: process.env.ALMA_BASEURL || '',
+      apiKey: process.env.ALMA_API_KEY || '',
+    });
+    const results = await alma.holdingsByMmsId(mms_id);
+    console.log('Holdings for MMS ID:', results);
+    return { data: results };
+  } catch (error) {
+    console.error('Error fetching holdings:', error);
+    return { error: 'Holdings lookup failed with message:' + `: ${error}` };
   }
 }

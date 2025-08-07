@@ -13,13 +13,13 @@ type BibEntryProps = {
 
 const BibEntry = (entry: BibEntryProps) => {
   const fields = [
-    'mms_id',
     'author',
     'title',
     'date_of_publication',
     'publisher_const',
     'place_of_publication',
     'isbn',
+    'mms_id',
   ];
   let returnValue = (
     <div className="bib-entry">

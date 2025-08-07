@@ -3,7 +3,7 @@ import { Button, Form, InputGroup } from 'react-bootstrap';
 import { useRef } from 'react';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation'; // Changed from react-router-dom
-import { bibById } from '@/app/actions/almaSearch';
+import { bibById, bibHoldings } from '@/app/actions/almaSearch';
 import { useState } from 'react';
 import BibEntry from './BibEntry';
 
@@ -14,7 +14,26 @@ const RecordSearchForm = () => {
 
   const handleSubmit = async (formData: FormData) => {
     let mms_id = formData.get('mms-id');
-    const { data, error } = await bibById({ mms_id: mms_id?.toString() || '' });
+    // const { data, error } = await bibById({ mms_id: mms_id?.toString() || '' });
+    const { data, error } = await bibHoldings({
+      mms_id: mms_id?.toString() || '',
+    });
+    // console.log('Data from bibById:', data);
+    if (error) {
+      toast.error('Lookup failed');
+      //   router.push('/'); // Redirect to home on error
+    } else {
+      // toast.success('Lookup successful');
+      setresults(data); // Set the results state with the fetched data
+      // Optionally, you can redirect or perform other actions with the results
+      // router.push('/'); // Uncomment if you want to redirect after successful search
+    }
+  };
+  const handleBarcodeSearch = async (formData: FormData) => {
+    let barcode = formData.get('barcode');
+    const { data, error } = await bibById({
+      mms_id: barcode?.toString() || '',
+    });
     // console.log('Data from bibById:', data);
     if (error) {
       toast.error('Lookup failed');
@@ -45,11 +64,27 @@ const RecordSearchForm = () => {
           </InputGroup>
         </Form.Group>
       </Form>
+      <Form ref={formRef} action={handleBarcodeSearch}>
+        <Form.Group controlId="barcodeSearch">
+          <InputGroup className="mb-3">
+            <InputGroup.Text id="barcode">Barcode</InputGroup.Text>
+            <Form.Control
+              name="barcode"
+              placeholder="Enter Barcode"
+              aria-label="Barcode"
+              aria-describedby="barcode"
+            />
+            <Button type="submit" variant="primary">
+              Search
+            </Button>
+          </InputGroup>
+        </Form.Group>
+      </Form>
 
       <div>
-        {results && results.bib[0] ? (
+        {results && results.bib_data ? (
           <>
-            <BibEntry {...results.bib[0]} />
+            <BibEntry {...results.bib_data} />
           </>
         ) : (
           <p>No results found.</p>

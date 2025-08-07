@@ -4,5 +4,6 @@ declare module '@kenxirwin/alma-search' {
     constructor(config: { baseUrl: string; apiKey: string });
     barcodeLookup(barcode: string): Promise<any>;
     idLookup({ mms_id }: { mms_id: string }): Promise<any>;
+    holdingsByMmsId(mms_id: string): Promise<any>;
   }
 }
