@@ -14,7 +14,7 @@ export async function findByBarcode(barcode: string) {
     });
     const results = await alma.barcodeLookup(barcode);
     console.log('Search results by barcode:', results);
-    return results;
+    return { data: results };
   } catch (error) {
     console.error('Error searching by barcode:', error);
     throw error;
