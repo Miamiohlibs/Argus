@@ -2,11 +2,20 @@
 import { findByBarcode, bibById } from '../actions/almaSearch';
 const barcode = '35054035116561';
 import RecordSearchForm from '@/components/RecordSearchForm';
+import { useSearchParams } from 'next/navigation';
+
 const SearchBibsPage = () => {
+  // get recordId from URL params
+  const params = useSearchParams();
+  // console.log('All params:', Object.fromEntries(params.entries())); // Debug all params
+  // console.log('projectId param:', params.get('projectId'));
+
+  const projectId = params?.get('projectId') ?? 'none';
+
   return (
     <>
       <h1>Search Bibs</h1>
-      <RecordSearchForm />
+      <RecordSearchForm projectId={projectId} />
       {/* Uncomment the following lines to test barcode search */}
       {/* <pre>{JSON.stringify(await findByBarcode(barcode), null, 2)}</pre> */}
     </>

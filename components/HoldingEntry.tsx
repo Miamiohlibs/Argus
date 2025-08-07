@@ -2,8 +2,16 @@
 import { Form, Button, InputGroup } from 'react-bootstrap';
 import { useState } from 'react';
 import { useRef } from 'react';
+import { toast } from 'react-toastify';
+import AddEntry from '@/app/actions/addEntry';
 
-const HoldingEntry = ({ holdings }: { holdings: any[] }) => {
+const HoldingEntry = ({
+  holdings,
+  projectId,
+}: {
+  holdings: any[];
+  projectId: string | number;
+}) => {
   const [selectedItems, setSelectedItems] = useState<any[]>([]);
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -19,7 +27,7 @@ const HoldingEntry = ({ holdings }: { holdings: any[] }) => {
     }
   };
 
-  const handleSubmit = (event: React.SyntheticEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     // console.log('FormData:', formData.get('holdingNote'));
@@ -30,12 +38,25 @@ const HoldingEntry = ({ holdings }: { holdings: any[] }) => {
 
     console.log('All Form Data:', allFormData);
     console.log('Selected Items:', selectedItems);
-  };
 
+    const { data, error } = await AddEntry();
+
+    if (error) {
+      toast.error('Failed to add entry');
+    } else {
+      toast.success('Entry added successfully');
+      console.log('Entry added:', data);
+    }
+  };
   return (
     <Form onSubmit={handleSubmit}>
       {holdings.map((holding) => (
         <div key={holding.holding_id} className="mb-4 border p-3">
+          <Form.Control
+            type="hidden"
+            name="project_id"
+            value={JSON.stringify(projectId)}
+          />
           <Form.Control
             type="hidden"
             name="holdings_id"
@@ -111,17 +132,6 @@ const HoldingEntry = ({ holdings }: { holdings: any[] }) => {
           </ul>
         </div>
       ))}
-
-      {selectedItems.length > 0 && (
-        <div className="mt-3">
-          <p>
-            <strong>Selected Items: {selectedItems.length}</strong>
-          </p>
-          <Button type="submit" variant="primary">
-            Submit Selected Items
-          </Button>
-        </div>
-      )}
     </Form>
   );
 };

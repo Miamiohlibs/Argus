@@ -11,7 +11,13 @@ type BibEntryProps = {
   // This allows the component to accept any additional properties that may be passed to it
 };
 
-const BibEntry = (entry: BibEntryProps) => {
+const BibEntry = ({
+  entry,
+  projectId,
+}: {
+  entry: BibEntryProps;
+  projectId: string | number;
+}) => {
   const fields = [
     'author',
     'title',

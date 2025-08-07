@@ -8,7 +8,11 @@ import { useState } from 'react';
 import BibEntry from './BibEntry';
 import HoldingEntry from './HoldingEntry';
 
-const RecordSearchForm = () => {
+interface RecordSearchFormProps {
+  projectId: string | number;
+}
+
+const RecordSearchForm = ({ projectId }: RecordSearchFormProps) => {
   const formRef = useRef<HTMLFormElement>(null);
   const router = useRouter(); // Changed from useNavigate
   const [results, setresults] = useState<any>(null); // State to hold search results
@@ -65,7 +69,7 @@ const RecordSearchForm = () => {
           </InputGroup>
         </Form.Group>
       </Form>
-      <Form ref={formRef} action={handleBarcodeSearch}>
+      {/* <Form ref={formRef} action={handleBarcodeSearch}>
         <Form.Group controlId="barcodeSearch">
           <InputGroup className="mb-3">
             <InputGroup.Text id="barcode">Barcode</InputGroup.Text>
@@ -80,19 +84,19 @@ const RecordSearchForm = () => {
             </Button>
           </InputGroup>
         </Form.Group>
-      </Form>
+      </Form> */}
 
       <div>
         {results && results.bib_data ? (
           <>
-            <BibEntry {...results.bib_data} />
+            <BibEntry entry={results.bib_data} projectId={projectId} />
           </>
         ) : (
           <p>No results found.</p>
         )}
         {results && results.holding ? (
           <>
-            <HoldingEntry holdings={results.holding} />
+            <HoldingEntry holdings={results.holding} projectId={projectId} />
           </>
         ) : null}
       </div>
