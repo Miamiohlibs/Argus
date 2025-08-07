@@ -1,6 +1,7 @@
 import getProject from '@/app/actions/getProject';
 import RecordSearchButton from '@/components/RecordSearchButton';
 import { checkUser } from '@/lib/checkUser';
+import getEntries from '@/app/actions/getEntries';
 
 export default async function ProjectPage({
   params,
@@ -9,7 +10,9 @@ export default async function ProjectPage({
 }) {
   const user = await checkUser();
   const { id } = await params;
+  const bibEntries = await getEntries(id);
   const { project, error } = await getProject({ id });
+
   if (error) {
     return <div>Error: {error}</div>;
   }
@@ -21,6 +24,7 @@ export default async function ProjectPage({
       {project?.user.clerkUserId == user?.clerkUserId && (
         <RecordSearchButton projectId={id} />
       )}
+      <p>{JSON.stringify(bibEntries)}</p>
       <p className="mt-5">Notes: {project?.notes}</p>
     </>
   );
