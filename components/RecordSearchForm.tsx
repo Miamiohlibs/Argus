@@ -96,7 +96,7 @@ const RecordSearchForm = () => {
           </>
         ) : null}
       </div>
-      <pre>{/* {JSON.stringify(results, null, 2)} */}</pre>
+      <pre>{JSON.stringify(results, null, 2)}</pre>
     </>
   );
 };

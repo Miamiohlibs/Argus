@@ -14,7 +14,7 @@ body {
 }
 
 .bib-entry{
-  background-color: #fff;
+  background-color: #ddd;
   box-shadow: var(--box-shadow);
   padding: 20px;
   margin: 20px 0;
@@ -26,6 +26,14 @@ body {
   font-weight: bold;
   color: #333;
 }
+
+.holdings-selection-form {
+  background-color: #fff;
+  box-shadow: var(--box-shadow);
+  padding: 20px;
+  margin: 20px 0;
+}
+
 /* .container {
   margin: 30px auto;
   width: 350px;
