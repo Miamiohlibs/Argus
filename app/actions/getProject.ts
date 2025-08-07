@@ -12,10 +12,10 @@ async function getProject(params: { id: string }): Promise<{
   project?: ProjectWithUserAndBib;
   error?: string;
 }> {
-  const { userId } = await auth();
-  if (!userId) {
-    return { error: 'User not found' };
-  }
+  // const { userId } = await auth();
+  // if (!userId) {
+  //   return { error: 'User not found' };
+  // }
 
   try {
     const project = await db.project.findUniqueOrThrow({
