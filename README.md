@@ -5,10 +5,13 @@
 ### Bugs
 
 - handle what happens when there's only one item attached to a bib -- currently "Unknown" (no description); auto-add only item
+- currently only retrieving first 10 holdings items for a bibEntry
 
 ### Features
 
 - route / clear entry on submit
+  - for now, just harsh page reload
+  - later: implement onEntryAdded callback from page -> RecordSearchForm -> HoldingEntry
 - add db field for total numbers of items available on a given record (denominator in : select 3/12 items)
 - tools for entries display: linkout, delete, edit
 - editable projects and entries

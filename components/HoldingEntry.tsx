@@ -5,13 +5,16 @@ import { useRef } from 'react';
 import { toast } from 'react-toastify';
 import AddEntry from '@/app/actions/addEntry';
 
+interface HoldingEntryProps {
+  holdings: any[];
+  projectId: string | number;
+  onEntryAdded?: () => void; // New callback prop
+}
 const HoldingEntry = ({
   holdings,
   projectId,
-}: {
-  holdings: any[];
-  projectId: string | number;
-}) => {
+  onEntryAdded,
+}: HoldingEntryProps) => {
   const [selectedItems, setSelectedItems] = useState<any[]>([]);
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -48,6 +51,13 @@ const HoldingEntry = ({
     } else {
       toast.success('Entry added successfully');
       console.log('Entry added:', data);
+      window.location.reload();
+      formRef.current?.reset(); // clear the form
+      setSelectedItems([]); // Clear selected items after successful submission
+      // Clear local state instead of reloading
+
+      // Call the parent callback to clear other forms
+      // onEntryAdded?.();
     }
   };
 
@@ -156,31 +166,40 @@ const HoldingEntry = ({
 
             <ul style={{ listStyleType: 'none', paddingLeft: 0 }}>
               {holding.itemDetails?.item ? (
-                holding.itemDetails.item.map((item: any, index: number) => (
-                  <li
-                    key={item.item_data?.barcode || `item-${index}`}
-                    className="mb-2"
-                  >
-                    <Form.Check
-                      type="checkbox"
-                      id={`item-${item.item_data?.pid || index}`}
-                      label={`Item: ${
-                        item.item_data?.description || 'Unknown Item'
-                      }`}
-                      onChange={(e) =>
-                        handleItemCheck(
-                          {
-                            pid: item.item_data?.pid || '',
-                            barcode: item.item_data?.barcode || '',
-                            description: item.item_data?.description || '',
-                          },
-                          e.target.checked
-                        )
-                      }
-                      value={item.item_data?.barcode || ''}
-                    />
-                  </li>
-                ))
+                holding.itemDetails.item.map((item: any, index: number) => {
+                  // Calculate item label based on the number of items
+                  const itemLabel =
+                    holding.itemDetails.item.length === 1
+                      ? 'Sole Item'
+                      : `Item: ${
+                          item.item_data?.description ||
+                          `Unknown Item: ${holding.itemDetails.item.length}`
+                        }`;
+
+                  return (
+                    <li
+                      key={item.item_data?.barcode || `item-${index}`}
+                      className="mb-2"
+                    >
+                      <Form.Check
+                        type="checkbox"
+                        id={`item-${item.item_data?.pid || index}`}
+                        label={itemLabel}
+                        onChange={(e) =>
+                          handleItemCheck(
+                            {
+                              pid: item.item_data?.pid || '',
+                              barcode: item.item_data?.barcode || '',
+                              description: item.item_data?.description || '',
+                            },
+                            e.target.checked
+                          )
+                        }
+                        value={item.item_data?.barcode || ''}
+                      />
+                    </li>
+                  );
+                })
               ) : (
                 <li className="text-muted">No items found</li>
               )}

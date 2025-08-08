@@ -26,7 +26,7 @@ const addEntry = async ({
         location: bibData.holdings_location_code as string,
         callNumber: bibData.holdings_call as string,
         projectId: projectId,
-        notes: bibData.holdingNotes as string,
+        notes: bibData.holdingNote as string,
         almaId: bibData.mms_id as string,
         almaIdType: 'mms_id',
         items: {
@@ -34,6 +34,7 @@ const addEntry = async ({
         },
       },
     });
+    console.log('Entry added successfully:', response);
     return { data: response, error: null };
   } catch (error) {
     console.error('Error adding entry:', error);
