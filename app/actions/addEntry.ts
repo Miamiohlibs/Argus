@@ -24,6 +24,7 @@ const addEntry = async ({
         itemTitle: bibData.title as string,
         author: bibData.author as string,
         location: bibData.holdings_location_code as string,
+        callNumber: bibData.holdings_call as string,
         projectId: projectId,
         notes: bibData.holdingNotes as string,
         almaId: bibData.mms_id as string,
