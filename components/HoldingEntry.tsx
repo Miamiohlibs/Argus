@@ -138,7 +138,11 @@ const HoldingEntry = ({
               name="holdings_call"
               value={safeStringify(holding.call_number)}
             />
-
+            <Form.Control
+              type="hidden"
+              name="total_item_count"
+              value={holding.itemDetails.total_record_count}
+            />
             <Form.Group controlId={`mmsIdSearch-${holding.holding_id}`}>
               <InputGroup className="mb-3">
                 <InputGroup.Text id="holding-note">Note</InputGroup.Text>

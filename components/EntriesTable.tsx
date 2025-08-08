@@ -65,6 +65,17 @@ export default function EntriesTable({ entries = [] }: EntriesTableProps) {
       name: '# Items',
       selector: (row: EntryWithItems) => row.items.length ?? '',
       sortable: true,
+      cell: (row: EntryWithItems) => {
+        if (row.totalItems === 1) {
+          return 1;
+        } else if (row.totalItems && row.items.length > 0) {
+          return `${row.items.length} / ${row.totalItems}`;
+        } else if (row.items.length > 0) {
+          return row.items.length;
+        } else {
+          return '';
+        }
+      },
     },
     {
       name: 'Notes',

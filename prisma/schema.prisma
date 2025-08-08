@@ -4,6 +4,10 @@
 // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
+// after updating, run 
+// `npx prisma generate` to regenerate the Prisma Client
+// and `npx prisma migrate dev` to apply the changes to the database
+// or `npx prisma db push` to push the changes without migrations
 generator client {
   provider = "prisma-client-js"
   // output   = "../app/generated/prisma"
@@ -48,6 +52,7 @@ model BibEntry {
   callNumber String?
   location   String
   notes      String?
+  totalItems Int?        @default(1)
   items      ItemEntry[]
   projectId  Int
   project    Project     @relation(fields: [projectId], references: [id], onDelete: Cascade)

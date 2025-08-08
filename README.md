@@ -13,6 +13,7 @@
   - for now, just harsh page reload
   - later: implement onEntryAdded callback from page -> RecordSearchForm -> HoldingEntry
 - add db field for total numbers of items available on a given record (denominator in : select 3/12 items)
+  - for now: sorta set up but needs testing
 - tools for entries display: linkout, delete, edit
 - editable projects and entries
 - custom entries
