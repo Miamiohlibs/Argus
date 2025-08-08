@@ -9,6 +9,8 @@
 - editable projects and entries
 - custom entries
 - barcode and url lookups ( and maybe: unified lookup )
+- handle lookups with weird urls like the Orwell Mystique:
+  - https://ohiolink-mu.primo.exlibrisgroup.com/permalink/01OHIOLINK_MU/mjrtap/cdi_nii_cinii_1130282270339388288
 - streamline actions/almaSearch.ts
 - print slips
 - organize actions and/or components?
