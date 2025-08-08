@@ -27,7 +27,7 @@ export default async function ProjectPage({
       )}
 
       {bibEntries && bibEntries.data?.entries ? (
-        <EntriesTable projectId={id} />
+        <EntriesTable entries={bibEntries.data?.entries} />
       ) : (
         <p>No bibliography entries found.</p>
       )}

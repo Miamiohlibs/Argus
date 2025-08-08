@@ -7,7 +7,7 @@ import { Prisma } from '@prisma/client';
 import Link from 'next/link';
 import { Button } from 'react-bootstrap';
 // import getProjects from '@/app/actions/getProjects';
-import getEntries from '@/app/actions/getEntries';
+// import getEntries from '@/app/actions/getEntries';
 import DeleteProjectButton from './DeleteProjectButton';
 // import DeleteEntryButton from './DeleteEntryButton';
 import { User } from '@prisma/client';
@@ -19,15 +19,10 @@ type EntryWithItems = Prisma.BibEntryGetPayload<{
 
 // Define the props interface
 interface EntriesTableProps {
-  projectId?: string | number;
-  user?: User | null;
+  entries?: EntryWithItems[];
 }
 
-export default function EntriesTableProps({
-  projectId,
-  user = null,
-}: EntriesTableProps) {
-  const [entries, setEntries] = useState<EntryWithItems[]>([]);
+export default function EntriesTable({ entries = [] }: EntriesTableProps) {
   const [filteredEntries, setFilteredEntries] = useState<EntryWithItems[]>([]);
   const [loading, setLoading] = useState(true);
   const [filterText, setFilterText] = useState('');
@@ -71,19 +66,6 @@ export default function EntriesTableProps({
       selector: (row: EntryWithItems) => row.items.length ?? '',
       sortable: true,
     },
-    //
-    // {
-    //   name: 'Created',
-    //   selector: (row: EntryWithItems) =>
-    //     new Date(row.createdAt).toLocaleDateString(),
-    //   sortable: true,
-    // },
-    // {
-    //   name: 'Updated',
-    //   selector: (row: ProjectWithUser) =>
-    //     new Date(row.updatedAt).toLocaleDateString(),
-    //   sortable: true,
-    // },
     {
       name: 'Notes',
       selector: (row: EntryWithItems) => row.notes ?? '',
@@ -132,10 +114,7 @@ export default function EntriesTableProps({
 
   useEffect(() => {
     const fetchProjects = async () => {
-      const id = projectId?.toString() ?? '';
-      const bibEntries = await getEntries(id);
-      setEntries(bibEntries.data?.entries ?? []);
-      setFilteredEntries(bibEntries.data?.entries ?? []);
+      setFilteredEntries(entries ?? []);
       setLoading(false);
     };
 
