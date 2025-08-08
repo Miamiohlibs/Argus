@@ -2,8 +2,16 @@
 
 ## Next Steps
 
+### Bugs
+
+- handle what happens when there's only one item attached to a bib -- currently "Unknown" (no description); auto-add only item
 - remove extra quotation marks from display (or better, don't enter them into the database)
 - get call numbers into the db
+
+### Features
+
+- route / clear entry on submit
+- add link back to entry table from entry submit page
 - add db field for total numbers of items available on a given record (denominator in : select 3/12 items)
 - tools for entries display: linkout, delete, edit
 - editable projects and entries
