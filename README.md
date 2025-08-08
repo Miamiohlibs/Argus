@@ -5,7 +5,6 @@
 ### Bugs
 
 - handle what happens when there's only one item attached to a bib -- currently "Unknown" (no description); auto-add only item
-- remove extra quotation marks from display (or better, don't enter them into the database)
 
 ### Features
 

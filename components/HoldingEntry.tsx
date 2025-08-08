@@ -56,7 +56,7 @@ const HoldingEntry = ({
     if (value === undefined || value === null) {
       return '';
     }
-    return JSON.stringify(value);
+    return JSON.stringify(value).replace(/^\"(.*)\"$/, '$1'); // Remove surrounding quotes if present
   };
 
   return (
