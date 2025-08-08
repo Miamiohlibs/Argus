@@ -1,3 +1,18 @@
+# Watson/Argus
+
+## Next Steps
+
+- remove extra quotation marks from display (or better, don't enter them into the database)
+- get call numbers into the db
+- add db field for total numbers of items available on a given record (denominator in : select 3/12 items)
+- tools for entries display: linkout, delete, edit
+- editable projects and entries
+- custom entries
+- barcode and url lookups ( and maybe: unified lookup )
+- streamline actions/almaSearch.ts
+- print slips
+- organize actions and/or components?
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
