@@ -9,8 +9,11 @@ import { Button } from 'react-bootstrap';
 // import getProjects from '@/app/actions/getProjects';
 // import getEntries from '@/app/actions/getEntries';
 import DeleteProjectButton from './DeleteProjectButton';
+import DeleteButton from './DeleteButton';
+import deleteEntry from '@/app/actions/deleteEntry';
 // import DeleteEntryButton from './DeleteEntryButton';
 import { User } from '@prisma/client';
+import { toast } from 'react-toastify';
 
 // Use Prisma's generated type that includes the user relation
 type EntryWithItems = Prisma.BibEntryGetPayload<{
@@ -23,16 +26,47 @@ interface EntriesTableProps {
 }
 
 export default function EntriesTable({ entries = [] }: EntriesTableProps) {
+  const [currentEntries, setCurrentEntries] = useState<EntryWithItems[]>([]); // Track current entries
   const [filteredEntries, setFilteredEntries] = useState<EntryWithItems[]>([]);
   const [loading, setLoading] = useState(true);
   const [filterText, setFilterText] = useState('');
 
-  const handleDelete = (entryId: number) => {
-    // console.log(`Delete entry with ID: ${entryId}`);
-    // const updatedEntries = entries.filter((entry) => entry.id !== entryId);
-    // setEntries(updatedEntries);
-    // setFilteredEntries(updatedEntries);
+  const handleDelete = async (entryId: string) => {
+    console.log(`Delete entry with ID: ${entryId}`);
+
+    const { message, error } = await deleteEntry(entryId);
+    if (error) {
+      toast.error('Entry deletion failed');
+    } else {
+      toast.success('Entry deleted successfully');
+      const updatedEntries = currentEntries.filter(
+        (item) => item.id !== entryId
+      );
+      setCurrentEntries(updatedEntries);
+
+      const updatedFilteredEntries = filteredEntries.filter(
+        (item) => item.id != entryId
+      );
+      setFilteredEntries(updatedFilteredEntries);
+    }
   };
+
+  // Initialize data when entries prop changes
+  useEffect(() => {
+    setCurrentEntries(entries);
+    setFilteredEntries(entries);
+    setLoading(false);
+  }, [entries]); // Only run when entries prop changes
+
+  // Filter entries when filterText or currentEntries change
+  useEffect(() => {
+    const filtered = currentEntries.filter((entry) =>
+      [entry.itemTitle, entry.author, entry.notes].some((val) =>
+        val?.toLowerCase().includes(filterText.toLowerCase() || '')
+      )
+    );
+    setFilteredEntries(filtered);
+  }, [filterText, currentEntries]); // Use currentEntries instead of entries
 
   // Move columns inside the component so handleDelete is in scope
   const columns: TableColumn<EntryWithItems>[] = [
@@ -82,64 +116,42 @@ export default function EntriesTable({ entries = [] }: EntriesTableProps) {
       selector: (row: EntryWithItems) => row.notes ?? '',
       sortable: false,
     },
-    // {
-    //   name: 'Tools',
-    //   cell: (row: EntryWithItems) => {
-    //     // Check if current user can edit this project
-    //     const canEdit =
-    //       user?.role === 'admin' ||
-    //       user?.role === 'superadmin' ||
-    //       row.user.clerkUserId === user?.clerkUserId;
-    //     console.log(
-    //       'Row User:',
-    //       row.user?.clerkUserId,
-    //       'Current User:',
-    //       user?.clerkUserId,
-    //       'Can edit:',
-    //       canEdit,
-    //       'for project:',
-    //       row.title
-    //     );
-
-    //     if (!canEdit) {
-    //       return <></>;
-    //     }
-
-    //     return (
-    //       <>
-    //         <Link href={`/admin/projects/edit/${row.id}`}>
-    //           <Button variant="outline-primary" size="sm">
-    //             Edit
-    //           </Button>
-    //         </Link>
-    //         <DeleteProjectButton
-    //           project={row}
-    //           onDeleted={() => handleDelete(row.id)}
-    //         />
-    //       </>
-    //     );
-    //   },
-    //   ignoreRowClick: true,
-    // },
+    {
+      name: 'Tools',
+      cell: (row: EntryWithItems) => {
+        // Check if current user can edit this project
+        let canEdit = true;
+        // const canEdit =
+        //   user?.role === 'admin' ||
+        //   user?.role === 'superadmin' ||
+        //   row.user.clerkUserId === user?.clerkUserId;
+        // console.log(
+        //   'Row User:',
+        //   row.user?.clerkUserId,
+        //   'Current User:',
+        //   user?.clerkUserId,
+        //   'Can edit:',
+        //   canEdit,
+        //   'for project:',
+        //   row.title
+        // );
+        if (!canEdit) {
+          return <></>;
+        }
+        return (
+          <>
+            <Link href={`#`}>
+              <Button variant="outline-primary" size="sm" className="me-1">
+                Edit
+              </Button>
+            </Link>
+            <DeleteButton label="entry" onDelete={() => handleDelete(row.id)} />
+          </>
+        );
+      },
+      ignoreRowClick: true,
+    },
   ];
-
-  useEffect(() => {
-    const fetchProjects = async () => {
-      setFilteredEntries(entries ?? []);
-      setLoading(false);
-    };
-
-    fetchProjects();
-  }); // Use normalized value for consistent dependency
-
-  useEffect(() => {
-    const filtered = entries.filter((entry) =>
-      [entry.itemTitle, entry.author, entry.notes].some((val) =>
-        val?.toLowerCase().includes(filterText.toLowerCase() || '')
-      )
-    );
-    setFilteredEntries(filtered);
-  }, [filterText, entries]);
 
   return (
     <DataTable
