@@ -8,6 +8,7 @@
 - currently only retrieving first 10 holdings items for a bibEntry
 - need to restrict who can delete an entry
 - use generic delete button for deleteProject
+- where did the Project tools go for owners and admin users?
 
 ### Features
 
