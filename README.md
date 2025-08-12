@@ -6,6 +6,7 @@
 
 - handle what happens when there's only one item attached to a bib -- currently "Unknown" (no description); auto-add only item
 - currently only retrieving first 10 holdings items for a bibEntry
+- need to restrict who can delete an entry
 
 ### Features
 
