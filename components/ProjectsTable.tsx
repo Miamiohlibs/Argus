@@ -32,6 +32,8 @@ export default function ProjectsTable({
   const [loading, setLoading] = useState(true);
   const [filterText, setFilterText] = useState('');
 
+  // const username = await
+  console.log(`Current user: ${user}`);
   // Normalize the limitToUser prop to ensure consistency
   const normalizedLimitToUser = Boolean(limitToUser);
 
