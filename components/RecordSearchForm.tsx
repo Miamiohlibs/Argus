@@ -2,23 +2,27 @@
 import { Button, Form, InputGroup } from 'react-bootstrap';
 import { useRef } from 'react';
 import { toast } from 'react-toastify';
-import { useRouter } from 'next/navigation'; // Changed from react-router-dom
-import { bibById, bibHoldings } from '@/app/actions/almaSearch';
+// import { useRouter } from 'next/navigation'; // Changed from react-router-dom
+// import { bibById } from '@/app/actions/almaSearch';
+import { bibHoldings } from '@/app/actions/almaSearch';
 import { useState } from 'react';
 import BibEntry from './BibEntry';
 import HoldingEntry from './HoldingEntry';
+import type { AlmaMmsidSearchResult } from '@/types/AlmaMmsidSearchResult';
 
 interface RecordSearchFormProps {
   projectId: string | number;
 }
 
+type MmsidSearchResultOrNull = AlmaMmsidSearchResult | null;
+
 const RecordSearchForm = ({ projectId }: RecordSearchFormProps) => {
   const formRef = useRef<HTMLFormElement>(null);
-  const router = useRouter(); // Changed from useNavigate
-  const [results, setresults] = useState<any>(null); // State to hold search results
+  // const router = useRouter(); // Changed from useNavigate
+  const [results, setresults] = useState<MmsidSearchResultOrNull>(null); // State to hold search results
 
   const handleSubmit = async (formData: FormData) => {
-    let mms_id = formData.get('mms-id');
+    const mms_id = formData.get('mms-id');
     // const { data, error } = await bibById({ mms_id: mms_id?.toString() || '' });
     const { data, error } = await bibHoldings({
       mms_id: mms_id?.toString() || '',
@@ -34,22 +38,22 @@ const RecordSearchForm = ({ projectId }: RecordSearchFormProps) => {
       // router.push('/'); // Uncomment if you want to redirect after successful search
     }
   };
-  const handleBarcodeSearch = async (formData: FormData) => {
-    let barcode = formData.get('barcode');
-    const { data, error } = await bibById({
-      mms_id: barcode?.toString() || '',
-    });
-    // console.log('Data from bibById:', data);
-    if (error) {
-      toast.error('Lookup failed');
-      //   router.push('/'); // Redirect to home on error
-    } else {
-      // toast.success('Lookup successful');
-      setresults(data); // Set the results state with the fetched data
-      // Optionally, you can redirect or perform other actions with the results
-      // router.push('/'); // Uncomment if you want to redirect after successful search
-    }
-  };
+  // const handleBarcodeSearch = async (formData: FormData) => {
+  //   const barcode = formData.get('barcode');
+  //   const { data, error } = await bibById({
+  //     mms_id: barcode?.toString() || '',
+  //   });
+  //   // console.log('Data from bibById:', data);
+  //   if (error) {
+  //     toast.error('Lookup failed');
+  //     //   router.push('/'); // Redirect to home on error
+  //   } else {
+  //     // toast.success('Lookup successful');
+  //     setresults(data); // Set the results state with the fetched data
+  //     // Optionally, you can redirect or perform other actions with the results
+  //     // router.push('/'); // Uncomment if you want to redirect after successful search
+  //   }
+  // };
 
   return (
     <>

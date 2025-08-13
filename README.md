@@ -4,21 +4,6 @@
 
 ### Build errors:
 
-./components/HoldingEntry.tsx
-9:13 Error: Unexpected any. Specify a different type. @typescript-eslint/no-explicit-any
-16:3 Warning: 'onEntryAdded' is defined but never used. @typescript-eslint/no-unused-vars
-18:54 Error: Unexpected any. Specify a different type. @typescript-eslint/no-explicit-any
-21:34 Error: Unexpected any. Specify a different type. @typescript-eslint/no-explicit-any
-65:33 Error: Unexpected any. Specify a different type. @typescript-eslint/no-explicit-any
-173:53 Error: Unexpected any. Specify a different type. @typescript-eslint/no-explicit-any
-
-./components/RecordSearchForm.tsx
-17:9 Warning: 'router' is assigned a value but never used. @typescript-eslint/no-unused-vars
-18:42 Error: Unexpected any. Specify a different type. @typescript-eslint/no-explicit-any
-21:9 Error: 'mms_id' is never reassigned. Use 'const' instead. prefer-const
-37:9 Warning: 'handleBarcodeSearch' is assigned a value but never used. @typescript-eslint/no-unused-vars
-38:9 Error: 'barcode' is never reassigned. Use 'const' instead. prefer-const
-
 ### Bugs
 
 - handle what happens when there's only one item attached to a bib -- currently "Unknown" (no description); auto-add only item
