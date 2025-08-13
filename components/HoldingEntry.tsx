@@ -5,8 +5,15 @@ import { useRef } from 'react';
 import { toast } from 'react-toastify';
 import AddEntry from '@/app/actions/addEntry';
 import type { AlmaHolding } from '@/types/AlmaHolding';
-import type { ItemEntry } from '@prisma/client';
+// import type { BibEntry, ItemEntry } from '@prisma/client';
 import type { AlmaHoldingsItemData } from '@/types/AlmaHoldingsItemData';
+import type { SafeStringifyInput } from '@/types/SafeStringInput';
+interface miniItemData {
+  pid: string;
+  barcode: string;
+  description: string;
+  item_id: string;
+}
 
 interface HoldingEntryProps {
   holdings: AlmaHolding[];
@@ -18,12 +25,13 @@ const HoldingEntry = ({
   projectId,
 }: // onEntryAdded,
 HoldingEntryProps) => {
-  const [selectedItems, setSelectedItems] = useState<any[]>([]);
+  const [selectedItems, setSelectedItems] = useState<miniItemData[]>([]);
   const formRef = useRef<HTMLFormElement>(null);
 
-  const handleItemCheck = (item: any, checked: boolean) => {
+  const handleItemCheck = (item: miniItemData, checked: boolean) => {
     if (checked) {
       setSelectedItems([...selectedItems, item]);
+      console.log('selected items:', selectedItems);
     } else {
       setSelectedItems(
         selectedItems.filter(
@@ -44,9 +52,16 @@ HoldingEntryProps) => {
     console.log('All Form Data:', allFormData);
     console.log('Selected Items:', selectedItems);
 
+    const itemsToSubmit = selectedItems.map((item) => {
+      return {
+        description: item.description,
+        id: 'unknown',
+        bibEntryId: 'unknown',
+      };
+    });
     const { data, error } = await AddEntry({
       bibData: allFormData,
-      itemData: selectedItems,
+      itemData: itemsToSubmit,
     });
 
     if (error) {
@@ -65,7 +80,7 @@ HoldingEntryProps) => {
   };
 
   // Helper function to safely stringify values
-  const safeStringify = (value: any): string => {
+  const safeStringify = (value: SafeStringifyInput): string => {
     if (value === undefined || value === null) {
       return '';
     }
@@ -199,6 +214,7 @@ HoldingEntryProps) => {
                                 pid: item.item_data?.pid || '',
                                 barcode: item.item_data?.barcode || '',
                                 description: item.item_data?.description || '',
+                                item_id: `item-${item.item_data?.pid || index}`,
                               },
                               e.target.checked
                             )
