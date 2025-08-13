@@ -13,7 +13,12 @@ const addEntry = async ({
   itemData: any[];
 }) => {
   try {
+    const url =
+      bibData.mms_id && process.env.ALMA_PERMALINK_BASEURL
+        ? process.env.ALMA_PERMALINK_BASEURL + bibData.mms_id
+        : undefined;
     console.log('Adding entry with bibData:', bibData);
+    console.log(`environment: ${process.env.ALMA_PERMALINK_BASEURL}`);
     const projectId = parseInt((bibData.project_id as string).replace('"', ''));
     console.log('Project ID:', projectId);
     const itemDescriptions = itemData.map((item) => ({
@@ -27,6 +32,7 @@ const addEntry = async ({
         callNumber: bibData.holdings_call as string,
         projectId: projectId,
         totalItems: parseInt(bibData.total_item_count as string) || 1,
+        url: url as string,
         notes: bibData.holdingNote as string,
         almaId: bibData.mms_id as string,
         almaIdType: 'mms_id',

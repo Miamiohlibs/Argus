@@ -53,6 +53,7 @@ model BibEntry {
   location   String
   notes      String?
   totalItems Int?        @default(1)
+  url        String?
   items      ItemEntry[]
   projectId  Int
   project    Project     @relation(fields: [projectId], references: [id], onDelete: Cascade)

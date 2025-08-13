@@ -135,17 +135,26 @@ export default function EntriesTable({ entries = [] }: EntriesTableProps) {
         //   'for project:',
         //   row.title
         // );
+        const LinkOutUrl = row.url ?? undefined;
+        const LinkOut = LinkOutUrl ? (
+          <Link href={LinkOutUrl} target="_blank">
+            <Button variant="outline-info" size="sm" className="me-1">
+              Go
+            </Button>
+          </Link>
+        ) : undefined;
         if (!canEdit) {
-          return <></>;
+          return <>{LinkOut}</>;
         }
         return (
           <>
+            {LinkOut}
             <Link href={`#`}>
               <Button variant="outline-primary" size="sm" className="me-1">
                 Edit
               </Button>
             </Link>
-            <DeleteButton label="entry" onDelete={() => handleDelete(row.id)} />
+            <DeleteButton label="" onDelete={() => handleDelete(row.id)} />
           </>
         );
       },
