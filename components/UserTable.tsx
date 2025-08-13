@@ -2,7 +2,8 @@
 import { TableColumn } from 'react-data-table-component';
 import { useEffect, useState } from 'react';
 import DataTable from 'react-data-table-component';
-import { User } from '@/types/User';
+// import { User } from '@/types/User';
+import { User } from '@prisma/client';
 import getUsers from '@/app/actions/getUsers';
 import Link from 'next/link';
 import { Button } from 'react-bootstrap';

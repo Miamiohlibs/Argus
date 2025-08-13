@@ -1,4 +1,5 @@
-import { User } from '@/types/User';
+// import { User } from '@/types/User';
+import { User } from '@prisma/client';
 
 const UserItem = ({ user }: { user: User }) => {
   return (

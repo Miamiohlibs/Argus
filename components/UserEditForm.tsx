@@ -11,24 +11,34 @@ import {
   InputGroup,
 } from 'react-bootstrap';
 
-import { User } from '@/types/User';
+// import { User } from '@/types/User';
+import { User } from '@prisma/client';
 import { revalidatePath } from 'next/cache';
 export default function UserEditForm({ user }: { user: User }) {
   const [role, setRole] = useState(user.role);
-  const possibleRoles = ['user', 'admin'];
+  const validRoles = ['user', 'admin', 'superadmin'] as const;
+  type Role = (typeof validRoles)[number];
+
+  const isValidRole = (role: string): role is Role => {
+    return validRoles.includes(role as Role);
+  };
 
   const handleChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
     setRole(e.target.value);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
+    // if (isValidRole(role)) {
     e.preventDefault();
-    let updatedUser = await updateUser(user.id, { role });
+    let updatedUser = await updateUser(user.id, { role: role as Role });
     if (updatedUser.error) {
       console.error('Error updating user:', updatedUser.error);
       return;
     }
     toast.success('User role updated successfully');
+    // } else {
+    //   console.error('Invalid role: ', role)
+    // }
   };
 
   return (
@@ -36,7 +46,7 @@ export default function UserEditForm({ user }: { user: User }) {
       <InputGroup>
         <FormLabel htmlFor="role">Role</FormLabel>
         <FormSelect id="role" value={role} onChange={handleChange}>
-          {possibleRoles.map((r) => (
+          {validRoles.map((r) => (
             <option key={r} value={r}>
               {r.charAt(0).toUpperCase() + r.slice(1)}
             </option>
