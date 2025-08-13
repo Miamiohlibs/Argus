@@ -4,9 +4,6 @@
 
 ### Build errors:
 
-./components/Header.tsx
-4:3 Warning: 'SignUpButton' is defined but never used. @typescript-eslint/no-unused-vars
-
 ./components/HoldingEntry.tsx
 9:13 Error: Unexpected any. Specify a different type. @typescript-eslint/no-explicit-any
 16:3 Warning: 'onEntryAdded' is defined but never used. @typescript-eslint/no-unused-vars

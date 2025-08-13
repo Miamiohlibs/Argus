@@ -1,7 +1,7 @@
 import { Nav, NavItem, NavLink, Navbar, NavbarBrand } from 'react-bootstrap';
 import {
   SignInButton,
-  SignUpButton,
+  // SignUpButton,
   SignedIn,
   SignedOut,
   UserButton,
