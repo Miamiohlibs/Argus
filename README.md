@@ -19,11 +19,6 @@
 37:9 Warning: 'handleBarcodeSearch' is assigned a value but never used. @typescript-eslint/no-unused-vars
 38:9 Error: 'barcode' is never reassigned. Use 'const' instead. prefer-const
 
-./components/SlipsList.tsx
-1:10 Warning: 'EntryWithItems' is defined but never used. @typescript-eslint/no-unused-vars
-7:11 Warning: 'project' is assigned a value but never used. @typescript-eslint/no-unused-vars
-7:20 Warning: 'error' is assigned a value but never used. @typescript-eslint/no-unused-vars
-
 ### Bugs
 
 - handle what happens when there's only one item attached to a bib -- currently "Unknown" (no description); auto-add only item
