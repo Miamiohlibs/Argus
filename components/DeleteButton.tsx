@@ -18,6 +18,7 @@ export default function DeleteButton({ label, onDelete }: DeleteButtonProps) {
       await onDelete();
     } catch (err) {
       setError(`Failed to delete ${label}`);
+      console.log(err);
     } finally {
       setLoading(false);
     }

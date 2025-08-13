@@ -1,6 +1,7 @@
 'use server';
 import { db } from '@/lib/db';
-import { User } from '@/types/User';
+// import { User } from '@/types/User';
+import { User } from '@prisma/client';
 
 async function updateUser(
   id: string,
@@ -17,7 +18,7 @@ async function updateUser(
     const safeUser: User = {
       ...updatedUser,
       name: updatedUser.name ?? undefined,
-      imageUrl: updatedUser.imageUrl ?? undefined,
+      imageUrl: updatedUser.imageUrl ?? null,
     };
     return { user: safeUser };
   } catch (error) {

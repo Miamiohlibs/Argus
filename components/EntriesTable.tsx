@@ -23,7 +23,7 @@ export default function EntriesTable({ entries = [] }: EntriesTableProps) {
   const handleDelete = async (entryId: string) => {
     console.log(`Delete entry with ID: ${entryId}`);
 
-    const { message, error } = await deleteEntry(entryId);
+    const { error } = await deleteEntry(entryId); // also gets {message}
     if (error) {
       toast.error('Entry deletion failed');
     } else {
@@ -109,7 +109,7 @@ export default function EntriesTable({ entries = [] }: EntriesTableProps) {
       name: 'Tools',
       cell: (row: EntryWithItems) => {
         // Check if current user can edit this project
-        let canEdit = true;
+        const canEdit = true;
         // const canEdit =
         //   user?.role === 'admin' ||
         //   user?.role === 'superadmin' ||

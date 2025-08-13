@@ -5,7 +5,6 @@ import deleteProject from '@/app/actions/deleteProject';
 import { Button } from 'react-bootstrap';
 // import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { on } from 'events';
 
 const DeleteProjectButton = ({
   project,

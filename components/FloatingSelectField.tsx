@@ -12,7 +12,7 @@ type FloatingSelectFieldProps = {
   optionClasses?: string;
   label: string;
   selectOptions: Array<string | number>;
-  formControlProps?: {};
+  formControlProps?: object;
 };
 
 const FloatingSelectField = (props: FloatingSelectFieldProps) => {

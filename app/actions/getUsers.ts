@@ -1,6 +1,6 @@
 'use server';
 import { db } from '@/lib/db';
-import { User } from '@/types/User';
+import { User } from '@prisma/client';
 
 async function getUsers(): Promise<{
   users?: User[];

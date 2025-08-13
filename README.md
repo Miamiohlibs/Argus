@@ -4,40 +4,6 @@
 
 ### Build errors:
 
-./app/printSlips/[id]/page.tsx
-10:6 Warning: 'EntriesResult' is defined but never used. @typescript-eslint/no-unused-vars
-
-./app/searchBibs/ClientSearchBibsPage.tsx
-17:9 Warning: 'otherParam' is assigned a value but never used. @typescript-eslint/no-unused-vars
-
-./components/AddProject.tsx
-19:13 Warning: 'data' is assigned a value but never used. @typescript-eslint/no-unused-vars
-
-./components/AddTransaction.tsx
-10:13 Warning: 'data' is assigned a value but never used. @typescript-eslint/no-unused-vars
-
-./components/BibEntry.tsx
-10:18 Error: Unexpected any. Specify a different type. @typescript-eslint/no-explicit-any
-16:3 Warning: 'projectId' is defined but never used. @typescript-eslint/no-unused-vars
-30:7 Error: 'returnValue' is never reassigned. Use 'const' instead. prefer-const
-
-./components/DeleteButton.tsx
-19:14 Warning: 'err' is defined but never used. @typescript-eslint/no-unused-vars
-
-./components/DeleteProjectButton.tsx
-8:10 Warning: 'on' is defined but never used. @typescript-eslint/no-unused-vars
-
-./components/EntriesTable.tsx
-26:13 Warning: 'message' is assigned a value but never used. @typescript-eslint/no-unused-vars
-112:13 Error: 'canEdit' is never reassigned. Use 'const' instead. prefer-const
-
-./components/FloatingSelectField.tsx
-15:22 Error: The `{}` ("empty object") type allows any non-nullish value, including literals like `0` and `""`.
-
-- If that's what you want, disable this lint rule with an inline comment or configure the 'allowObjectTypes' rule option.
-- If you want a type meaning "any object", you probably want `object` instead.
-- If you want a type meaning "any value", you probably want `unknown` instead. @typescript-eslint/no-empty-object-type
-
 ./components/Header.tsx
 4:3 Warning: 'SignUpButton' is defined but never used. @typescript-eslint/no-unused-vars
 
