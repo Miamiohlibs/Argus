@@ -1,13 +1,7 @@
 'use server';
 import { db } from '@/lib/db';
-import type { Prisma } from '@prisma/client';
+import { EntryWithItems } from '@/types/EntryWithItems';
 
-// Type for a single entry with its items
-type EntryWithItems = Prisma.BibEntryGetPayload<{
-  include: { items: true };
-}>;
-
-// Type for the result we want to return
 type EntriesResult = {
   entries: EntryWithItems[];
   totalCount: number;

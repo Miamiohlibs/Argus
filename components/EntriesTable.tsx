@@ -2,23 +2,12 @@
 import { TableColumn } from 'react-data-table-component';
 import { useEffect, useState } from 'react';
 import DataTable from 'react-data-table-component';
-import { Prisma } from '@prisma/client';
-// import { User as ClerkUser } from '@clerk/nextjs';
 import Link from 'next/link';
 import { Button } from 'react-bootstrap';
-// import getProjects from '@/app/actions/getProjects';
-// import getEntries from '@/app/actions/getEntries';
-import DeleteProjectButton from './DeleteProjectButton';
 import DeleteButton from './DeleteButton';
 import deleteEntry from '@/app/actions/deleteEntry';
-// import DeleteEntryButton from './DeleteEntryButton';
-import { User } from '@prisma/client';
 import { toast } from 'react-toastify';
-
-// Use Prisma's generated type that includes the user relation
-type EntryWithItems = Prisma.BibEntryGetPayload<{
-  include: { items: true };
-}>;
+import { EntryWithItems } from '@/types/EntryWithItems';
 
 // Define the props interface
 interface EntriesTableProps {
