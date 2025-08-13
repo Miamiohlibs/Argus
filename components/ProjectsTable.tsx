@@ -110,6 +110,11 @@ export default function ProjectsTable({
                 Edit
               </Button>
             </Link>
+            <Link href={`/printSlips/${row.id}`}>
+              <Button variant="outline-primary" size="sm">
+                Print
+              </Button>
+            </Link>
             <DeleteProjectButton
               project={row}
               onDeleted={() => handleDelete(row.id)}

@@ -3,13 +3,17 @@ import Link from 'next/link';
 
 interface RecordSearchButtonProps {
   projectId: string | number;
+  className?: string;
 }
 
-const RecordSearchButton = ({ projectId }: RecordSearchButtonProps) => {
+const RecordSearchButton = ({
+  projectId,
+  className,
+}: RecordSearchButtonProps) => {
   return (
     <Link
       href={`/searchBibs?projectId=${projectId.toString()}`}
-      className="mb-3"
+      className={className}
     >
       <Button variant="primary" size="sm">
         Add an Item

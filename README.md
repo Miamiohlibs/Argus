@@ -8,6 +8,10 @@
 - currently only retrieving first 10 holdings items for a bibEntry
 - need to restrict who can delete an entry
 - use generic delete button for deleteProject
+- clerk middleware error in header: at async Header (components/Header.tsx:13:15)
+  3 |
+  4 | export const checkUser = async () => {
+  > 5 | const user = await currentUser();
 
 ### Features
 
@@ -16,7 +20,6 @@
   - later: implement onEntryAdded callback from page -> RecordSearchForm -> HoldingEntry
 - add db field for total numbers of items available on a given record (denominator in : select 3/12 items)
   - for now: sorta set up but needs testing
-- tools for entries display: linkout, edit
 - editable projects and entries
 - custom entries
 - barcode and url lookups ( and maybe: unified lookup )
@@ -24,6 +27,8 @@
   - https://ohiolink-mu.primo.exlibrisgroup.com/permalink/01OHIOLINK_MU/mjrtap/cdi_nii_cinii_1130282270339388288
 - streamline actions/almaSearch.ts
 - print slips
+  - for now: bare bones slips implemented
+  - display options: pdf-creator-node, @react-pdf/layout
 - organize actions and/or components?
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).

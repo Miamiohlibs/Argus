@@ -14,7 +14,9 @@ const Home = async () => {
   return (
     <main>
       <h2>{clerkUserInfo.firstName}'s Projects</h2>
-      <CreateProjectButton />
+      <div className="mb-3">
+        <CreateProjectButton />
+      </div>
       <ProjectsTable limitToUser={true} user={user} />
     </main>
   );
