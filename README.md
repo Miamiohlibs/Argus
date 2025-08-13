@@ -24,16 +24,6 @@
 7:11 Warning: 'project' is assigned a value but never used. @typescript-eslint/no-unused-vars
 7:20 Warning: 'error' is assigned a value but never used. @typescript-eslint/no-unused-vars
 
-./components/UserEditForm.tsx
-15:10 Warning: 'revalidatePath' is defined but never used. @typescript-eslint/no-unused-vars
-26:9 Error: 'updatedUser' is never reassigned. Use 'const' instead. prefer-const
-
-./components/UserList.tsx
-2:10 Warning: 'User' is defined but never used. @typescript-eslint/no-unused-vars
-6:18 Warning: 'error' is assigned a value but never used. @typescript-eslint/no-unused-vars
-
-info - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules
-
 ### Bugs
 
 - handle what happens when there's only one item attached to a bib -- currently "Unknown" (no description); auto-add only item

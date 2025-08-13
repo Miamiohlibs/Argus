@@ -13,24 +13,24 @@ import {
 
 // import { User } from '@/types/User';
 import { User } from '@prisma/client';
-import { revalidatePath } from 'next/cache';
+// import { revalidatePath } from 'next/cache';
 export default function UserEditForm({ user }: { user: User }) {
   const [role, setRole] = useState(user.role);
   const validRoles = ['user', 'admin', 'superadmin'] as const;
   type Role = (typeof validRoles)[number];
 
-  const isValidRole = (role: string): role is Role => {
-    return validRoles.includes(role as Role);
-  };
+  // const isValidRole = (role: string): role is Role => {
+  //   return validRoles.includes(role as Role);
+  // };
 
   const handleChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setRole(e.target.value);
+    setRole(e.target.value as Role);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     // if (isValidRole(role)) {
     e.preventDefault();
-    let updatedUser = await updateUser(user.id, { role: role as Role });
+    const updatedUser = await updateUser(user.id, { role: role as Role });
     if (updatedUser.error) {
       console.error('Error updating user:', updatedUser.error);
       return;
