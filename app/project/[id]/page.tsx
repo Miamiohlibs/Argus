@@ -9,7 +9,7 @@ import { Button } from 'react-bootstrap';
 export default async function ProjectPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
   const user = await checkUser();
   const { id } = await params;

@@ -6,7 +6,7 @@ import checkAccess from '@/lib/checkAccess';
 export default async function UserEditPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
   await checkAccess({ permittedRoles: ['admin', 'superadmin'] });
 

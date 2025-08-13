@@ -2,6 +2,103 @@
 
 ## Next Steps
 
+### Build errors:
+
+./app/actions/deleteEntry.ts
+4:10 Warning: 'revalidatePath' is defined but never used. @typescript-eslint/no-unused-vars
+
+./app/actions/getProject.ts
+3:10 Warning: 'auth' is defined but never used. @typescript-eslint/no-unused-vars
+
+./app/addProject/page.tsx
+4:15 Warning: 'User' is defined but never used. @typescript-eslint/no-unused-vars
+
+./app/admin/users/page.tsx
+2:8 Warning: 'getUserRole' is defined but never used. @typescript-eslint/no-unused-vars
+3:10 Warning: 'redirect' is defined but never used. @typescript-eslint/no-unused-vars
+
+./app/allProjects/page.tsx
+3:10 Warning: 'currentUser' is defined but never used. @typescript-eslint/no-unused-vars
+
+./app/datatables/page-ok.tsx
+21:21 Warning: 'setTableData' is assigned a value but never used. @typescript-eslint/no-unused-vars
+
+./app/datatables/page.tsx
+4:8 Warning: 'getUsers' is defined but never used. @typescript-eslint/no-unused-vars
+5:10 Warning: 'User' is defined but never used. @typescript-eslint/no-unused-vars
+8:10 Warning: 'get' is defined but never used. @typescript-eslint/no-unused-vars
+24:21 Warning: 'setTableData' is assigned a value but never used. @typescript-eslint/no-unused-vars
+
+./app/page.tsx
+16:36 Error: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`. react/no-unescaped-entities
+
+./app/printSlips/[id]/page.tsx
+10:6 Warning: 'EntriesResult' is defined but never used. @typescript-eslint/no-unused-vars
+
+./app/searchBibs/ClientSearchBibsPage.tsx
+17:9 Warning: 'otherParam' is assigned a value but never used. @typescript-eslint/no-unused-vars
+
+./components/AddProject.tsx
+19:13 Warning: 'data' is assigned a value but never used. @typescript-eslint/no-unused-vars
+
+./components/AddTransaction.tsx
+10:13 Warning: 'data' is assigned a value but never used. @typescript-eslint/no-unused-vars
+
+./components/BibEntry.tsx
+10:18 Error: Unexpected any. Specify a different type. @typescript-eslint/no-explicit-any
+16:3 Warning: 'projectId' is defined but never used. @typescript-eslint/no-unused-vars
+30:7 Error: 'returnValue' is never reassigned. Use 'const' instead. prefer-const
+
+./components/DeleteButton.tsx
+19:14 Warning: 'err' is defined but never used. @typescript-eslint/no-unused-vars
+
+./components/DeleteProjectButton.tsx
+8:10 Warning: 'on' is defined but never used. @typescript-eslint/no-unused-vars
+
+./components/EntriesTable.tsx
+26:13 Warning: 'message' is assigned a value but never used. @typescript-eslint/no-unused-vars
+112:13 Error: 'canEdit' is never reassigned. Use 'const' instead. prefer-const
+
+./components/FloatingSelectField.tsx
+15:22 Error: The `{}` ("empty object") type allows any non-nullish value, including literals like `0` and `""`.
+
+- If that's what you want, disable this lint rule with an inline comment or configure the 'allowObjectTypes' rule option.
+- If you want a type meaning "any object", you probably want `object` instead.
+- If you want a type meaning "any value", you probably want `unknown` instead. @typescript-eslint/no-empty-object-type
+
+./components/Header.tsx
+4:3 Warning: 'SignUpButton' is defined but never used. @typescript-eslint/no-unused-vars
+
+./components/HoldingEntry.tsx
+9:13 Error: Unexpected any. Specify a different type. @typescript-eslint/no-explicit-any
+16:3 Warning: 'onEntryAdded' is defined but never used. @typescript-eslint/no-unused-vars
+18:54 Error: Unexpected any. Specify a different type. @typescript-eslint/no-explicit-any
+21:34 Error: Unexpected any. Specify a different type. @typescript-eslint/no-explicit-any
+65:33 Error: Unexpected any. Specify a different type. @typescript-eslint/no-explicit-any
+173:53 Error: Unexpected any. Specify a different type. @typescript-eslint/no-explicit-any
+
+./components/RecordSearchForm.tsx
+17:9 Warning: 'router' is assigned a value but never used. @typescript-eslint/no-unused-vars
+18:42 Error: Unexpected any. Specify a different type. @typescript-eslint/no-explicit-any
+21:9 Error: 'mms_id' is never reassigned. Use 'const' instead. prefer-const
+37:9 Warning: 'handleBarcodeSearch' is assigned a value but never used. @typescript-eslint/no-unused-vars
+38:9 Error: 'barcode' is never reassigned. Use 'const' instead. prefer-const
+
+./components/SlipsList.tsx
+1:10 Warning: 'EntryWithItems' is defined but never used. @typescript-eslint/no-unused-vars
+7:11 Warning: 'project' is assigned a value but never used. @typescript-eslint/no-unused-vars
+7:20 Warning: 'error' is assigned a value but never used. @typescript-eslint/no-unused-vars
+
+./components/UserEditForm.tsx
+15:10 Warning: 'revalidatePath' is defined but never used. @typescript-eslint/no-unused-vars
+26:9 Error: 'updatedUser' is never reassigned. Use 'const' instead. prefer-const
+
+./components/UserList.tsx
+2:10 Warning: 'User' is defined but never used. @typescript-eslint/no-unused-vars
+6:18 Warning: 'error' is assigned a value but never used. @typescript-eslint/no-unused-vars
+
+info - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules
+
 ### Bugs
 
 - handle what happens when there's only one item attached to a bib -- currently "Unknown" (no description); auto-add only item

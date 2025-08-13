@@ -1,6 +1,7 @@
 // import 'dotenv/config';
 'use server';
 import { SearchBibs } from '@kenxirwin/alma-search';
+import type { AlmaHolding } from '@/types/AlmaHolding';
 
 // Debug: Log the environment variables
 // console.log('ALMA_BASEURL:', process.env.ALMA_BASEURL);
@@ -51,10 +52,10 @@ export async function bibHoldings({ mms_id }: { mms_id: string }) {
     //   })
     // );
     await Promise.all(
-      results.holding.map(async (holding: any) => {
-        let itemDetailUrl = holding.link + '/items';
+      results.holding.map(async (holding: AlmaHolding) => {
+        const itemDetailUrl = holding.link + '/items';
         console.log('- Holding data:', itemDetailUrl);
-        let itemHoldingsDetail = await alma.followLink(itemDetailUrl);
+        const itemHoldingsDetail = await alma.followLink(itemDetailUrl);
         holding.itemDetails = itemHoldingsDetail;
         console.log('- Item details:', itemHoldingsDetail);
         return holding.items ? holding.items : []; // Ensure items are present

@@ -4,13 +4,13 @@ import { db } from '@/lib/db';
 // import { revalidatePath } from 'next/cache';
 // import { redirect } from 'next/navigation';
 // import { redirect } from 'next/dist/server/api-utils';
-
+import { ItemEntry } from '@prisma/client';
 const addEntry = async ({
   bibData,
   itemData,
 }: {
   bibData: Record<string, FormDataEntryValue>;
-  itemData: any[];
+  itemData: ItemEntry[];
 }) => {
   try {
     const url =

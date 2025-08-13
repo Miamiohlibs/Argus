@@ -12,7 +12,7 @@ type EntriesResult = {
   totalCount: number;
 };
 
-const printSlips = async ({ params }: { params: { id: string } }) => {
+const printSlips = async ({ params }: { params: Promise<{ id: string }> }) => {
   const { id } = await params;
 
   return (
