@@ -4,17 +4,20 @@ import { useState } from 'react';
 import { useRef } from 'react';
 import { toast } from 'react-toastify';
 import AddEntry from '@/app/actions/addEntry';
+import type { AlmaHolding } from '@/types/AlmaHolding';
+import type { ItemEntry } from '@prisma/client';
+import type { AlmaHoldingsItemData } from '@/types/AlmaHoldingsItemData';
 
 interface HoldingEntryProps {
-  holdings: any[];
+  holdings: AlmaHolding[];
   projectId: string | number;
-  onEntryAdded?: () => void; // New callback prop
+  // onEntryAdded?: () => void;
 }
 const HoldingEntry = ({
   holdings,
   projectId,
-  onEntryAdded,
-}: HoldingEntryProps) => {
+}: // onEntryAdded,
+HoldingEntryProps) => {
   const [selectedItems, setSelectedItems] = useState<any[]>([]);
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -141,7 +144,7 @@ const HoldingEntry = ({
             <Form.Control
               type="hidden"
               name="total_item_count"
-              value={holding.itemDetails.total_record_count}
+              value={holding.itemDetails?.total_record_count}
             />
             <Form.Group controlId={`mmsIdSearch-${holding.holding_id}`}>
               <InputGroup className="mb-3">
@@ -169,41 +172,43 @@ const HoldingEntry = ({
             </p>
 
             <ul style={{ listStyleType: 'none', paddingLeft: 0 }}>
-              {holding.itemDetails?.item ? (
-                holding.itemDetails.item.map((item: any, index: number) => {
-                  // Calculate item label based on the number of items
-                  const itemLabel =
-                    holding.itemDetails.item.length === 1
-                      ? 'Sole Item'
-                      : `Item: ${
-                          item.item_data?.description ||
-                          `Unknown Item: ${holding.itemDetails.item.length}`
-                        }`;
+              {holding.itemDetails && holding.itemDetails.item ? (
+                holding.itemDetails.item.map(
+                  (item: AlmaHoldingsItemData, index: number) => {
+                    // Calculate item label based on the number of items
+                    const itemLabel =
+                      item.length === 1
+                        ? 'Sole Item'
+                        : `Item: ${
+                            item.item_data?.description ||
+                            `Unknown Item: ${item.length}`
+                          }`;
 
-                  return (
-                    <li
-                      key={item.item_data?.barcode || `item-${index}`}
-                      className="mb-2"
-                    >
-                      <Form.Check
-                        type="checkbox"
-                        id={`item-${item.item_data?.pid || index}`}
-                        label={itemLabel}
-                        onChange={(e) =>
-                          handleItemCheck(
-                            {
-                              pid: item.item_data?.pid || '',
-                              barcode: item.item_data?.barcode || '',
-                              description: item.item_data?.description || '',
-                            },
-                            e.target.checked
-                          )
-                        }
-                        value={item.item_data?.barcode || ''}
-                      />
-                    </li>
-                  );
-                })
+                    return (
+                      <li
+                        key={item.item_data?.barcode || `item-${index}`}
+                        className="mb-2"
+                      >
+                        <Form.Check
+                          type="checkbox"
+                          id={`item-${item.item_data?.pid || index}`}
+                          label={itemLabel}
+                          onChange={(e) =>
+                            handleItemCheck(
+                              {
+                                pid: item.item_data?.pid || '',
+                                barcode: item.item_data?.barcode || '',
+                                description: item.item_data?.description || '',
+                              },
+                              e.target.checked
+                            )
+                          }
+                          value={item.item_data?.barcode || ''}
+                        />
+                      </li>
+                    );
+                  }
+                )
               ) : (
                 <li className="text-muted">No items found</li>
               )}
