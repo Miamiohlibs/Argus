@@ -1,7 +1,7 @@
 import AddProject from '@/components/AddProject';
 import { checkUser } from '@/lib/checkUser';
 // import { User } from '@/types/User';
-import type { User } from '@prisma/client';
+// import type { User } from '@prisma/client';
 
 export default async function AddProjectPage() {
   const currentUser = await checkUser();

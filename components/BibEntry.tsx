@@ -1,22 +1,11 @@
-type BibEntryProps = {
-  mms_id: string;
-  author?: string;
-  title?: string;
-  date_of_publication?: string;
-  publisher_const?: string;
-  place_of_publication?: string;
-  isbn?: string;
-  // and other fields are ok too
-  [key: string]: any; // Allow additional fields
-  // This allows the component to accept any additional properties that may be passed to it
-};
+import type { BibEntry } from '@prisma/client';
 
 const BibEntry = ({
   entry,
-  projectId,
-}: {
-  entry: BibEntryProps;
-  projectId: string | number;
+}: // projectId,
+{
+  entry: BibEntry;
+  // projectId: string | number;
 }) => {
   const fields = [
     'author',
@@ -27,17 +16,22 @@ const BibEntry = ({
     'isbn',
     'mms_id',
   ];
-  let returnValue = (
+
+  const getEntryValue = (entry: BibEntry, field: keyof BibEntry) => {
+    return entry[field];
+  };
+
+  const returnValue = (
     <div className="bib-entry">
       {fields.map((field) => {
-        if (field in entry && entry[field]) {
+        if (field in entry && getEntryValue(entry, field as keyof BibEntry)) {
           return (
             <p key={field}>
               <span className="bib-entry-label">
                 {field.charAt(0).toUpperCase() +
                   field.slice(1).replace(/_/g, ' ')}
               </span>
-              : {entry[field] || 'N/A'}
+              : {getEntryValue(entry, field as keyof BibEntry) || 'N/A'}
             </p>
           );
         }

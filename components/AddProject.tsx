@@ -22,6 +22,7 @@ export default function AddProject({ user }: AddProjectProps) {
       router.push('/'); // Redirect to home on error
     } else {
       toast.success('Project created successfully');
+      console.log(data);
       router.push('/'); //
       formRef.current?.reset();
     }

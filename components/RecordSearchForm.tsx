@@ -89,7 +89,7 @@ const RecordSearchForm = ({ projectId }: RecordSearchFormProps) => {
       <div>
         {results && results.bib_data ? (
           <>
-            <BibEntry entry={results.bib_data} projectId={projectId} />
+            <BibEntry entry={results.bib_data} />
           </>
         ) : (
           <p>No results found.</p>

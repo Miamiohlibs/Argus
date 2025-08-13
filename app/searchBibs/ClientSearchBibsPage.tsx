@@ -14,7 +14,7 @@ const ClientSearchBibsPage = ({ projectId }: ClientSearchBibsPageProps) => {
   const clientProjectId = projectId || params?.get('projectId') || 'none';
 
   // You can also access other query parameters here
-  const otherParam = params?.get('someOtherParam');
+  // const otherParam = params?.get('someOtherParam');
 
   return (
     <>

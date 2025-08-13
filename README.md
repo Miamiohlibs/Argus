@@ -4,34 +4,6 @@
 
 ### Build errors:
 
-./app/actions/deleteEntry.ts
-4:10 Warning: 'revalidatePath' is defined but never used. @typescript-eslint/no-unused-vars
-
-./app/actions/getProject.ts
-3:10 Warning: 'auth' is defined but never used. @typescript-eslint/no-unused-vars
-
-./app/addProject/page.tsx
-4:15 Warning: 'User' is defined but never used. @typescript-eslint/no-unused-vars
-
-./app/admin/users/page.tsx
-2:8 Warning: 'getUserRole' is defined but never used. @typescript-eslint/no-unused-vars
-3:10 Warning: 'redirect' is defined but never used. @typescript-eslint/no-unused-vars
-
-./app/allProjects/page.tsx
-3:10 Warning: 'currentUser' is defined but never used. @typescript-eslint/no-unused-vars
-
-./app/datatables/page-ok.tsx
-21:21 Warning: 'setTableData' is assigned a value but never used. @typescript-eslint/no-unused-vars
-
-./app/datatables/page.tsx
-4:8 Warning: 'getUsers' is defined but never used. @typescript-eslint/no-unused-vars
-5:10 Warning: 'User' is defined but never used. @typescript-eslint/no-unused-vars
-8:10 Warning: 'get' is defined but never used. @typescript-eslint/no-unused-vars
-24:21 Warning: 'setTableData' is assigned a value but never used. @typescript-eslint/no-unused-vars
-
-./app/page.tsx
-16:36 Error: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`. react/no-unescaped-entities
-
 ./app/printSlips/[id]/page.tsx
 10:6 Warning: 'EntriesResult' is defined but never used. @typescript-eslint/no-unused-vars
 

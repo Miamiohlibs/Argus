@@ -13,7 +13,7 @@ const Home = async () => {
   }
   return (
     <main>
-      <h2>{clerkUserInfo.firstName}'s Projects</h2>
+      <h2>{clerkUserInfo.firstName}&apos;s Projects</h2>
       <div className="mb-3">
         <CreateProjectButton />
       </div>

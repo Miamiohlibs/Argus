@@ -1,6 +1,6 @@
 'use server';
 import { db } from '@/lib/db';
-import { auth } from '@clerk/nextjs/server';
+// import { auth } from '@clerk/nextjs/server';
 import type { Prisma } from '@prisma/client';
 
 // Define the type that matches what you're actually returning

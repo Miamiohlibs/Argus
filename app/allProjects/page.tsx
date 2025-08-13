@@ -1,6 +1,6 @@
 import ProjectsTable from '@/components/ProjectsTable';
 import CreateProjectButton from '@/components/CreateProjectButton';
-import { currentUser } from '@clerk/nextjs/server';
+// import { currentUser } from '@clerk/nextjs/server';
 import { checkUser } from '@/lib/checkUser';
 
 const AllProjectsPage = async () => {
