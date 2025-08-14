@@ -118,4 +118,46 @@ export async function createProject(
   }
 }
 
-export default createProject;
+export async function updateProject(prevState: any, formData: FormData) {
+  console.log('starting UpdateProject...');
+  try {
+    const user = await checkUser();
+    if (!user) {
+      return { error: 'User not authenticated' };
+    }
+
+    const projectId = formData.get('projectId') as string;
+    const title = formData.get('title') as string;
+    const notes = formData.get('notes') as string;
+
+    // Check if user owns the project
+    const existingProject = await db.project.findUnique({
+      where: { id: parseInt(projectId) },
+    });
+
+    console.log('found existing project: ', existingProject);
+
+    if (!existingProject) {
+      console.log('Project not found');
+      return { error: 'Project not found' };
+    }
+
+    if (existingProject?.userId !== user.clerkUserId) {
+      console.log(`${existingProject?.userId} !== ${user.clerkUserId}`);
+      return { error: 'Not authorized' };
+    }
+
+    const updatedProject = await db.project.update({
+      where: { id: parseInt(projectId) },
+      data: {
+        title,
+        notes: notes || null,
+      },
+    });
+    console.log('returning updated project');
+    return { data: updatedProject };
+  } catch (error) {
+    console.error('Error updating project:', error);
+    return { error: 'Failed to update project' };
+  }
+}

@@ -42,7 +42,7 @@ export default function ProjectForm({
       // Client-side redirect after showing toast
       setTimeout(() => {
         window.location.href = '/';
-      }, 2000); // Give time for toast to show
+      }, 1500); // Give time for toast to show
     }
   }, [state]);
 
@@ -71,12 +71,12 @@ export default function ProjectForm({
             />
           </Form.Group>
 
-          <Form.Group className="mb-4" controlId="note">
+          <Form.Group className="mb-4" controlId="notes">
             <Form.Label>Notes</Form.Label>
             <Form.Control
               as="textarea"
               rows={4}
-              name="note"
+              name="notes"
               defaultValue={project?.notes || ''}
               placeholder="Enter project notes or description (optional)..."
               className="resize-none"
@@ -85,9 +85,13 @@ export default function ProjectForm({
 
           <Form.Control type="hidden" name="userId" value={user?.clerkUserId} />
 
+          {project && (
+            <Form.Control type="hidden" name="projectId" value={project.id} />
+          )}
+
           <div className="d-grid">
             <Button variant="primary" type="submit" size="lg">
-              Create New Project
+              {project ? 'Update Project' : 'Create New Project'}
             </Button>
           </div>
         </Form>
