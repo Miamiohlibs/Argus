@@ -1,32 +1,23 @@
 'use client';
 import { useRef } from 'react';
-import { toast } from 'react-toastify';
 import type { User } from '@prisma/client';
-import addProject from '@/app/actions/addProject';
 import { Form, Button, Card, Alert } from 'react-bootstrap';
 import { useRouter } from 'next/navigation'; // Changed from react-router-dom
+import { Project } from '@prisma/client';
 
-type AddProjectProps = {
+type ProjectFormProps = {
   user: User | null;
+  project?: Project;
+  onSubmit: Promise<void> | void;
 };
 
-export default function AddProject({ user }: AddProjectProps) {
+export default function ProjectForm({
+  user,
+  project,
+  onSubmit,
+}: ProjectFormProps) {
   const formRef = useRef<HTMLFormElement>(null);
   const router = useRouter(); // Changed from useNavigate
-
-  const handleSubmit = async (formData: FormData) => {
-    // let title = formData.get('title');
-    const { data, error } = await addProject(formData);
-    if (error) {
-      toast.error('Project creation failed');
-      router.push('/'); // Redirect to home on error
-    } else {
-      toast.success('Project created successfully');
-      console.log(data);
-      router.push('/'); //
-      formRef.current?.reset();
-    }
-  };
 
   if (user === null) {
     return (
@@ -40,7 +31,7 @@ export default function AddProject({ user }: AddProjectProps) {
         <Card.Title className="mb-0">Add Project</Card.Title>
       </Card.Header>
       <Card.Body>
-        <Form ref={formRef} action={handleSubmit}>
+        <Form ref={formRef} action={onSubmit}>
           <Form.Group className="mb-3" controlId="title">
             <Form.Label>Title *</Form.Label>
             <Form.Control
