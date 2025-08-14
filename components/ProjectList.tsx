@@ -16,7 +16,7 @@ const ProjectList = async () => {
     return (
       <>
         <p>No projects found. Add a new project to get started!</p>
-        <Link href="/addProject" className="btn btn-primary">
+        <Link href="/createProject" className="btn btn-primary">
           Add Project
         </Link>
       </>
@@ -26,7 +26,7 @@ const ProjectList = async () => {
   return (
     <>
       <h3>Your Projects</h3>
-      <Link href="/addProject" className="btn">
+      <Link href="/createProject" className="btn">
         Add Project
       </Link>
       <ul className="list">

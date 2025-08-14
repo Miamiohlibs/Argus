@@ -3,7 +3,7 @@ import { Button } from 'react-bootstrap';
 
 const CreateProjectButton = () => {
   return (
-    <Link href="/addProject" className="mb-3">
+    <Link href="/createProject" className="mb-3">
       <Button variant="primary">Create a New Project</Button>
     </Link>
   );
