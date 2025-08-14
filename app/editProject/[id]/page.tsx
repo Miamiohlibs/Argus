@@ -2,10 +2,10 @@ import ProjectForm from '@/components/ProjectForm';
 import { checkUser } from '@/lib/checkUser';
 import { updateProject } from '@/app/actions/projectActions';
 import getProject from '@/app/actions/getProject';
-import { Project } from '@prisma/client';
+// import { Project } from '@prisma/client';
 
 interface EditProjectPageProps {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 export default async function EditProjectPage({
   params,
