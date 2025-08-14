@@ -19,7 +19,7 @@ interface ProjectResult {
   error?: string;
 }
 
-export async function addProject(
+export async function createProject(
   prevState: any,
   formData: FormData
 ): Promise<ProjectResult> {
@@ -118,4 +118,4 @@ export async function addProject(
   }
 }
 
-export default addProject;
+export default createProject;
