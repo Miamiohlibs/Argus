@@ -1,29 +1,56 @@
 'use client';
-import { useRef } from 'react';
+// import { useRef } from 'react';
 import type { User } from '@prisma/client';
+import { useActionState } from 'react';
 import { Form, Button, Card, Alert } from 'react-bootstrap';
-import { useRouter } from 'next/navigation'; // Changed from react-router-dom
+import { toast } from 'react-toastify';
+import { useEffect } from 'react';
+// import { useRouter } from 'next/navigation'; // Changed from react-router-dom
 import { Project } from '@prisma/client';
 
-type ProjectFormProps = {
+interface ProjectFormProps {
   user: User | null;
   project?: Project;
-  onSubmit: Promise<void> | void;
-};
+  action: (prevState: any, formData: FormData) => Promise<any>;
+  // onSubmit: (formData: FormData) => Promise<void>;
+  submitButtonText?: string;
+}
 
 export default function ProjectForm({
   user,
-  project,
-  onSubmit,
+  project = undefined,
+  action,
+  submitButtonText = project ? 'Update Project' : 'Create Project',
 }: ProjectFormProps) {
-  const formRef = useRef<HTMLFormElement>(null);
-  const router = useRouter(); // Changed from useNavigate
+  const [state, formAction] = useActionState(action, {
+    data: null,
+    error: null,
+  });
 
-  if (user === null) {
-    return (
-      <Alert variant="warning">Unable to load form due to missing user</Alert>
-    );
-  }
+  // Handle notifications
+  useEffect(() => {
+    if (state?.error) {
+      toast.error(
+        project ? 'Project update failed' : 'Project creation failed'
+      );
+    } else if (state?.data) {
+      toast.success(
+        project
+          ? 'Project updated successfully'
+          : 'Project created successfully'
+      );
+      // Client-side redirect after showing toast
+      setTimeout(() => {
+        window.location.href = '/';
+      }, 2000); // Give time for toast to show
+    }
+  }, [state]);
+
+  // if (user === null) {
+  //   return (
+  //     <Alert variant="warning">Unable to load form due to missing user</Alert>
+  //   );
+  // }
 
   return (
     <Card className="shadow-sm">
@@ -31,27 +58,16 @@ export default function ProjectForm({
         <Card.Title className="mb-0">Add Project</Card.Title>
       </Card.Header>
       <Card.Body>
-        <Form ref={formRef} action={onSubmit}>
+        <Form action={formAction}>
           <Form.Group className="mb-3" controlId="title">
             <Form.Label>Title *</Form.Label>
             <Form.Control
               type="text"
               name="title"
+              defaultValue={project?.title || ''}
               placeholder="Enter project title..."
               required
               size="lg"
-            />
-          </Form.Group>
-
-          <Form.Group className="mb-3" controlId="ownerName">
-            <Form.Label>Owner</Form.Label>
-            <Form.Control
-              type="text"
-              name="ownerName"
-              value={user?.name || 'Unknown user'}
-              disabled
-              readOnly
-              className="bg-light"
             />
           </Form.Group>
 
@@ -61,12 +77,13 @@ export default function ProjectForm({
               as="textarea"
               rows={4}
               name="note"
+              defaultValue={project?.notes || ''}
               placeholder="Enter project notes or description (optional)..."
               className="resize-none"
             />
           </Form.Group>
 
-          <Form.Control type="hidden" name="userId" value={user.clerkUserId} />
+          <Form.Control type="hidden" name="userId" value={user?.clerkUserId} />
 
           <div className="d-grid">
             <Button variant="primary" type="submit" size="lg">
