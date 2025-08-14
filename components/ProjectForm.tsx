@@ -2,30 +2,34 @@
 // import { useRef } from 'react';
 import type { User } from '@prisma/client';
 import { useActionState } from 'react';
-import { Form, Button, Card, Alert } from 'react-bootstrap';
+import { Form, Button, Card } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import { useEffect } from 'react';
 // import { useRouter } from 'next/navigation'; // Changed from react-router-dom
 import { Project } from '@prisma/client';
 
+type ProjectActionResult =
+  | { success: true; data: unknown; error?: never }
+  | { success: false; error: string; data?: never };
+
 interface ProjectFormProps {
   user: User | null;
-  project?: Project;
-  action: (prevState: any, formData: FormData) => Promise<any>;
+  project?: Project | null;
+  action: (
+    prevState: unknown,
+    formData: FormData
+  ) => Promise<ProjectActionResult>;
+
   // onSubmit: (formData: FormData) => Promise<void>;
-  submitButtonText?: string;
+  // submitButtonText?: string;
 }
 
 export default function ProjectForm({
   user,
   project = undefined,
   action,
-  submitButtonText = project ? 'Update Project' : 'Create Project',
 }: ProjectFormProps) {
-  const [state, formAction] = useActionState(action, {
-    data: null,
-    error: null,
-  });
+  const [state, formAction] = useActionState(action, null);
 
   // Handle notifications
   useEffect(() => {
@@ -44,13 +48,7 @@ export default function ProjectForm({
         window.location.href = '/';
       }, 1500); // Give time for toast to show
     }
-  }, [state]);
-
-  // if (user === null) {
-  //   return (
-  //     <Alert variant="warning">Unable to load form due to missing user</Alert>
-  //   );
-  // }
+  }, [state, project]);
 
   return (
     <Card className="shadow-sm">
