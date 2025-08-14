@@ -106,7 +106,7 @@ export default function ProjectsTable({
         return (
           <>
             <Link href={`/editProject/${row.id}`}>
-              <Button variant="outline-primary" size="sm">
+              <Button variant="outline-primary" size="sm" className="me-1">
                 Edit
               </Button>
             </Link>
