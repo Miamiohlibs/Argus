@@ -11,22 +11,21 @@ import { checkUser } from '@/lib/checkUser';
 interface ProjectData {
   title: string;
   userId: string;
-  notes?: string;
+  notes?: string | null;
 }
 
-interface ProjectResult {
-  data?: ProjectData;
-  error?: string;
-}
+type ProjectActionResult =
+  | { success: true; data: ProjectData; error?: never }
+  | { success: false; error: string; data?: never };
 
 export async function createProject(
-  prevState: any,
+  prevState: unknown,
   formData: FormData
-): Promise<ProjectResult> {
+): Promise<ProjectActionResult> {
   try {
     const user = await checkUser();
     if (!user) {
-      return { error: 'User not authenticated' };
+      return { success: false, error: 'User not authenticated' };
     }
 
     const titleValue = formData.get('title');
@@ -34,7 +33,7 @@ export async function createProject(
     const notesValue = formData.get('notes') ?? '';
     // check for input values
     if (!titleValue || titleValue === '') {
-      return { error: 'Title or owner is missing' };
+      return { success: false, error: 'Title or owner is missing' };
     }
     const title: string = titleValue.toString(); // ensure text is a string
     //   const userId: string = ownerValue.toString();
@@ -46,7 +45,7 @@ export async function createProject(
 
     // check for user
     if (!userId) {
-      return { error: 'User not found' };
+      return { success: false, error: 'User not found' };
     }
 
     try {
@@ -58,6 +57,7 @@ export async function createProject(
       if (!existingUser) {
         console.log(`User with clerkUserId ${userId} not found in database`);
         return {
+          success: false,
           error:
             'User not found in database. Please ensure you are logged in properly.',
         };
@@ -107,23 +107,29 @@ export async function createProject(
       };
       // revalidatePath('/');
       // redirect('/'); // Redirect to the home page after adding the project
-      return { data: projectData };
+      return { success: true, data: projectData };
     } catch (error) {
       console.error('Error creating Project:', error);
-      return { error: 'Project not added: ' + JSON.stringify(error) };
+      return {
+        success: false,
+        error: 'Project not added: ' + JSON.stringify(error),
+      };
     }
   } catch (error) {
     console.error('Error creating project:', error);
-    return { error: 'Failed to create project' };
+    return { success: false, error: 'Failed to create project' };
   }
 }
 
-export async function updateProject(prevState: any, formData: FormData) {
+export async function updateProject(
+  prevState: unknown,
+  formData: FormData
+): Promise<ProjectActionResult> {
   console.log('starting UpdateProject...');
   try {
     const user = await checkUser();
     if (!user) {
-      return { error: 'User not authenticated' };
+      return { success: false, error: 'User not authenticated' };
     }
 
     const projectId = formData.get('projectId') as string;
@@ -139,12 +145,12 @@ export async function updateProject(prevState: any, formData: FormData) {
 
     if (!existingProject) {
       console.log('Project not found');
-      return { error: 'Project not found' };
+      return { success: false, error: 'Project not found' };
     }
 
     if (existingProject?.userId !== user.clerkUserId) {
       console.log(`${existingProject?.userId} !== ${user.clerkUserId}`);
-      return { error: 'Not authorized' };
+      return { success: false, error: 'Not authorized' };
     }
 
     const updatedProject = await db.project.update({
@@ -155,9 +161,9 @@ export async function updateProject(prevState: any, formData: FormData) {
       },
     });
     console.log('returning updated project');
-    return { data: updatedProject };
+    return { success: true, data: updatedProject };
   } catch (error) {
     console.error('Error updating project:', error);
-    return { error: 'Failed to update project' };
+    return { success: false, error: 'Failed to update project' };
   }
 }
