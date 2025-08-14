@@ -4,10 +4,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
+    "dev": "dotenv -c -- next dev",
+    "build": "dotenv -c -- next build",
+    "start": "dotenv -c -- next start",
+    "lint": "dotenv -c -- next lint",
     "postinstall": "prisma generate"
   },
   "dependencies": {
@@ -32,6 +32,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "dotenv-cli": "^10.0.0",
     "eslint": "^9",
     "eslint-config-next": "15.4.4",
     "prisma": "^6.12.0",
