@@ -122,8 +122,10 @@ export async function bibHoldings({ mms_id }: { mms_id: string }) {
     );
 
     const condensedResults = condenseBibHoldings(results);
-
-    return { data: condensedResults };
+    if (condensedResults !== undefined) {
+      return { data: condensedResults };
+    }
+    return { error: 'Error fetching holdings' };
   } catch (error) {
     console.error('Error fetching holdings:', error);
     return { error: 'Holdings lookup failed with message:' + `: ${error}` };
