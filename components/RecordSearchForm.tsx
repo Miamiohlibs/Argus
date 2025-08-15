@@ -116,10 +116,24 @@ const RecordSearchForm = ({ projectId }: RecordSearchFormProps) => {
         </div>
       ))} */}
 
-      {results &&
+      {results ? (
         results.map((holding) => {
-          return <BibEntryComponent entry={holding.bib_data} />;
-        })}
+          return (
+            <div key={holding.holding_data.holding_id}>
+              <BibEntryComponent entry={holding.bib_data} />
+              <HoldingEntry
+                holdings={holding.holding_data}
+                items={holding.items}
+                bibData={holding.bib_data}
+                projectId={projectId}
+                locationCodes={holding.locationCodes}
+              />
+            </div>
+          );
+        })
+      ) : (
+        <p>No Results Found</p>
+      )}
 
       <pre>{JSON.stringify(results, null, 2)}</pre>
     </>
