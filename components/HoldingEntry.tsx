@@ -99,6 +99,16 @@ HoldingEntryProps) => {
     return JSON.stringify(value).replace(/^\"(.*)\"$/, '$1'); // Remove surrounding quotes if present
   };
 
+  let library_desc, location_value, location_desc;
+
+  if (!locationCodes.includes(',')) {
+    // if only one location
+    location_desc = items[0].location.desc;
+    location_value = items[0].location.value;
+    library_desc = items[0].library.desc;
+    console.log(`set: ${location_desc}, ${library_desc}, ${location_value}`);
+  }
+
   return (
     <Form onSubmit={handleSubmit}>
       <div key={holdings.holding_id} className="mb-4 border p-3">
@@ -142,21 +152,6 @@ HoldingEntryProps) => {
           name="holdings_id"
           value={safeStringify(holdings.holding_id)}
         />
-        {/* <Form.Control
-              type="hidden"
-              name="holdings_library_name"
-              value={safeStringify(item.library?.desc)}
-            />
-            <Form.Control
-              type="hidden"
-              name="holdings_library_location"
-              value={safeStringify(item.location?.desc)}
-            />
-            <Form.Control
-              type="hidden"
-              name="holdings_location_code"
-              value={safeStringify(item.location?.value)}
-            /> */}
         <Form.Control
           type="hidden"
           name="holdings_call"
@@ -182,18 +177,15 @@ HoldingEntryProps) => {
             </Button>
           </InputGroup>
         </Form.Group>
-
-        {/* <p>
-          <strong>{item.library?.desc || 'Unknown Library'}</strong> &mdash;{' '}
-          {item.location?.desc || 'Unknown Location'} (
-          {item.location?.value || 'N/A'})
+        <p>
+          <strong>{library_desc || 'Unknown Library'}</strong> &mdash;{' '}
+          {location_desc || 'Unknown Location'} ({location_value || 'N/A'})
         </p>
         <p>
           Call Number: <strong>{holdings.call_number || 'N/A'}</strong>
-        </p> */}
-
+        </p>
+        {/*  */}
         {/* Begin Item Selection */}
-
         <ul style={{ listStyleType: 'none', paddingLeft: 0 }}>
           {items ? (
             items.map((item: AlmaItemHoldingItemData, index: number) => {
