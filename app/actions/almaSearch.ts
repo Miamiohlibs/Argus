@@ -9,9 +9,7 @@ import type {
   AlmaItemHoldingHoldingData,
   AlmaItemHoldingItemData,
 } from '@/types/AlmaItem';
-// Debug: Log the environment variables
-// console.log('ALMA_BASEURL:', process.env.ALMA_BASEURL);
-// console.log('ALMA_API_KEY:', process.env.ALMA_API_KEY ? 'Set' : 'Not set');
+import type { CondensedBibHoldings } from '@/types/CondensedBibHoldings';
 
 export async function findByBarcode(barcode: string) {
   try {
@@ -81,13 +79,6 @@ async function getAllHoldingsItemsByMmsId(
     item: allItems,
   };
 }
-
-type CondensedBibHoldings = {
-  bib_data: AlmaItemHoldingBibData;
-  holding_data: AlmaItemHoldingHoldingData;
-  items: AlmaItemHoldingItemData[];
-  locationCodes: string;
-};
 
 function condenseBibHoldings(response: AlmaItemApiResponse) {
   const uniqHoldings = [
