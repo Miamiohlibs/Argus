@@ -17,13 +17,6 @@ const BibEntryComponent = ({
     'mms_id',
   ];
 
-  // const getEntryValue = (
-  //   entry: BibEntry,
-  //   field: keyof AlmaItemHoldingBibData
-  // ) => {
-  //   return entry[field];
-  // };
-
   const getEntryValue = (
     entry: AlmaItemHoldingBibData,
     field: keyof AlmaItemHoldingBibData
@@ -45,22 +38,6 @@ const BibEntryComponent = ({
           );
         }
       })}
-      {/* {fields.map((field) => {
-        if (
-          field in entry &&
-          getEntryValue(entry, field as keyof AlmaItemHoldingBibData)
-        ) {
-          return (
-            <p key={field}>
-              <span className="bib-entry-label">
-                {field.charAt(0).toUpperCase() +
-                  field.slice(1).replace(/_/g, ' ')}
-              </span>
-              : {getEntryValue(entry, field as keyof BibEntry) || 'N/A'}
-            </p>
-          );
-        }
-      })} */}
     </div>
   );
   return returnValue;
