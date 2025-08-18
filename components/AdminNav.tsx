@@ -1,3 +1,4 @@
+import NextLink from 'next/link';
 import { Nav, NavItem, NavLink } from 'react-bootstrap';
 import checkAccess from '@/lib/checkAccess';
 
@@ -15,7 +16,7 @@ const AdminNav = async () => {
     <>
       <Nav className="me-3">
         <NavItem>
-          <NavLink href="/admin/users">Users</NavLink>
+          <NavLink as={NextLink} href="/admin/users">Users</NavLink>
         </NavItem>
       </Nav>
     </>
