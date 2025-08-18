@@ -1,3 +1,4 @@
+import NextLink from 'next/link';
 import { Nav, NavItem, NavLink, Navbar, NavbarBrand } from 'react-bootstrap';
 import {
   SignInButton,
@@ -14,13 +15,13 @@ const Header = async () => {
 
   return (
     <Navbar bg="dark" variant="dark" expand="lg" className="px-2">
-      <NavbarBrand href="/">Watson/Argus</NavbarBrand>
+      <NavbarBrand as={NextLink} href="/">Watson/Argus</NavbarBrand>
       <Nav className="ms-auto me-3 text-light">
         <NavItem>
-          <NavLink href="/">My Projects</NavLink>
+          <NavLink as={NextLink} href="/">My Projects</NavLink>
         </NavItem>
         <NavItem>
-          <NavLink href="/allProjects">All Projects</NavLink>
+          <NavLink as={NextLink} href="/allProjects">All Projects</NavLink>
         </NavItem>
         <AdminNav />
         <SignedOut>
