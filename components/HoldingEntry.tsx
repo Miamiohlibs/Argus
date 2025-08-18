@@ -154,6 +154,11 @@ HoldingEntryProps) => {
         />
         <Form.Control
           type="hidden"
+          name="holdings_location_code"
+          value={safeStringify(locationCodes)}
+        />
+        <Form.Control
+          type="hidden"
           name="holdings_call"
           value={safeStringify(holdings.call_number)}
         />
