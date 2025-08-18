@@ -138,7 +138,7 @@ export default function EntriesTable({ entries = [] }: EntriesTableProps) {
         return (
           <>
             {LinkOut}
-            <Link href={`#`}>
+            <Link href={`/editEntry/${row.id}`}>
               <Button variant="outline-primary" size="sm" className="me-1">
                 Edit
               </Button>
