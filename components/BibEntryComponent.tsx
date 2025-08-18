@@ -1,10 +1,10 @@
 import type { BibEntry } from '@prisma/client';
-
-const BibEntry = ({
+import type { AlmaItem, AlmaItemHoldingBibData } from '@/types/AlmaItem';
+const BibEntryComponent = ({
   entry,
 }: // projectId,
 {
-  entry: BibEntry;
+  entry: AlmaItemHoldingBibData;
   // projectId: string | number;
 }) => {
   const fields = [
@@ -17,21 +17,23 @@ const BibEntry = ({
     'mms_id',
   ];
 
-  const getEntryValue = (entry: BibEntry, field: keyof BibEntry) => {
+  const getEntryValue = (
+    entry: AlmaItemHoldingBibData,
+    field: keyof AlmaItemHoldingBibData
+  ) => {
     return entry[field];
   };
-
   const returnValue = (
     <div className="bib-entry">
-      {fields.map((field) => {
-        if (field in entry && getEntryValue(entry, field as keyof BibEntry)) {
+      {fields.map((field: string) => {
+        if (Object.getOwnPropertyNames(entry).includes(field)) {
           return (
             <p key={field}>
               <span className="bib-entry-label">
                 {field.charAt(0).toUpperCase() +
                   field.slice(1).replace(/_/g, ' ')}
               </span>
-              : {getEntryValue(entry, field as keyof BibEntry) || 'N/A'}
+              : {getEntryValue(entry, field as keyof AlmaItemHoldingBibData)}
             </p>
           );
         }
@@ -41,4 +43,4 @@ const BibEntry = ({
   return returnValue;
 };
 
-export default BibEntry;
+export default BibEntryComponent;
