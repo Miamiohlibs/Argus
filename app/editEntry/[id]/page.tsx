@@ -32,7 +32,9 @@ export default async function EditEntryPage({
   }
   return (
     <>
-      <h1>Edit Entry</h1>
+      <h1>
+        Editing: <i>{holdingsData[0].bib_data.title}</i>
+      </h1>
       <Link href={`/project/${projectId}`}>
         <Button variant="outline-secondary">Back to Project</Button>
       </Link>

@@ -63,7 +63,7 @@ export default function EntriesTable({ entries = [] }: EntriesTableProps) {
       name: 'Title',
       selector: (row: EntryWithItems) => row.itemTitle ?? '',
       cell: (row: EntryWithItems) => (
-        <Link href={`/entry/${row.id}`}>
+        <Link href={`/editEntry/${row.id}`}>
           {row.itemTitle || 'Untitled Project'}
         </Link>
       ),
