@@ -43,12 +43,13 @@ export default async function EditEntryPage({
     existingEntry !== undefined &&
     existingEntry?.project.userId == clerkUser?.id;
 
+  const isEditor: boolean = isAdmin || isOwner;
+
   return (
     <>
       <h1>
         Editing: <i>{holdingsData && holdingsData[0].bib_data.title}</i>
-        <br /> isAdmin: {isAdmin.toString()}
-        <br /> isOwner: {isOwner.toString()}
+        <br /> isEditor: {isEditor.toString()}
       </h1>
       <Link href={`/project/${projectId}`}>
         <Button variant="outline-secondary">Back to Project</Button>
@@ -59,8 +60,7 @@ export default async function EditEntryPage({
         holdingsData={holdingsData}
         actionType="edit"
         existingEntry={existingEntry}
-        isOwner={isOwner}
-        isAdmin={isAdmin}
+        isEditor={isEditor}
       />
     </>
   );

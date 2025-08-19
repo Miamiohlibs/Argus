@@ -27,6 +27,7 @@ interface HoldingEntryProps {
   projectId: string | number;
   actionType: 'add' | 'edit';
   existingEntry?: EntryWithItems;
+  isEditor: boolean;
 }
 
 const HoldingEntry = ({
@@ -37,6 +38,7 @@ const HoldingEntry = ({
   projectId,
   actionType,
   existingEntry,
+  isEditor,
 }: HoldingEntryProps) => {
   const [selectedItems, setSelectedItems] = useState<miniItemData[]>([]);
   const [isInitialized, setIsInitialized] = useState(false);
@@ -146,6 +148,17 @@ const HoldingEntry = ({
     console.log(`set: ${location_desc}, ${library_desc}, ${location_value}`);
   }
 
+  if (!isEditor) {
+    return (
+      <>
+        <p>Notes: {existingEntry?.notes}</p>
+        <p>
+          Selected items:
+          {existingEntry?.items.map((item) => item.description).join(', ')}
+        </p>
+      </>
+    );
+  }
   return (
     <Form onSubmit={handleSubmit}>
       <div key={holdings.holding_id} className="mb-4 border p-3">

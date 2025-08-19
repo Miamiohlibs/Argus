@@ -8,8 +8,7 @@ interface BibResultsWrapperProps {
   holdingsData: CondensedBibHoldings[] | undefined;
   actionType: 'add' | 'edit';
   existingEntry?: EntryWithItems;
-  isOwner: boolean;
-  isAdmin: boolean;
+  isEditor: boolean;
 }
 
 export default function BibResultsWrapper({
@@ -17,6 +16,7 @@ export default function BibResultsWrapper({
   projectId,
   actionType,
   existingEntry,
+  isEditor,
 }: BibResultsWrapperProps) {
   return holdingsData ? (
     <>
@@ -31,6 +31,7 @@ export default function BibResultsWrapper({
             locationCodes={holding.locationCodes}
             actionType={actionType}
             existingEntry={existingEntry}
+            isEditor={isEditor}
           />
         </div>
       ))}
