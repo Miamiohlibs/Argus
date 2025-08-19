@@ -6,6 +6,8 @@ import HoldingEntry from '@/components/HoldingEntry';
 import getEntryById from '@/app/actions/getEntryById';
 import { CondensedBibHoldings } from '@/types/CondensedBibHoldings';
 import BibResultsWrapper from '@/components/BibResultsWrapper';
+import { Button } from 'react-bootstrap';
+import Link from 'next/link';
 
 export default async function EditEntryPage({
   params,
@@ -34,7 +36,9 @@ export default async function EditEntryPage({
   return (
     <>
       <h1>Edit Entry</h1>
-      <p>{id}</p>
+      <Link href={`/project/${projectId}`}>
+        <Button variant="outline-secondary">Back to Project</Button>
+      </Link>
       {/* Note : this section duplicates part of RecordSearchForm -- we should dedup the code */}
       <BibResultsWrapper
         projectId={projectId}
