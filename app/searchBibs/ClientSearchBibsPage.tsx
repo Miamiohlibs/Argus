@@ -5,13 +5,23 @@ import { Button } from 'react-bootstrap';
 import Link from 'next/link';
 
 interface ClientSearchBibsPageProps {
-  projectId?: string;
+  projectId?: number;
 }
 
 const ClientSearchBibsPage = ({ projectId }: ClientSearchBibsPageProps) => {
   // You can still use useSearchParams if needed for other params
   const params = useSearchParams();
-  const clientProjectId = projectId || params?.get('projectId') || 'none';
+  const tempId = projectId || params?.get('projectId') || 'none';
+  let numericId: number;
+  if (typeof tempId === 'number') {
+    numericId = tempId;
+  } else {
+    numericId = parseInt(tempId, 10);
+  }
+  if (tempId == 'none' || isNaN(numericId)) {
+    return <>`Invalid project ID: ${tempId}`</>;
+  }
+  const clientProjectId = numericId;
 
   // You can also access other query parameters here
   // const otherParam = params?.get('someOtherParam');

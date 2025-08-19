@@ -5,6 +5,7 @@ import BibEntryComponent from '@/components/BibEntryComponent';
 import HoldingEntry from '@/components/HoldingEntry';
 import getEntryById from '@/app/actions/getEntryById';
 import { CondensedBibHoldings } from '@/types/CondensedBibHoldings';
+import BibResultsWrapper from '@/components/BibResultsWrapper';
 
 export default async function EditEntryPage({
   params,
@@ -35,25 +36,14 @@ export default async function EditEntryPage({
       <h1>Edit Entry</h1>
       <p>{id}</p>
       {/* Note : this section duplicates part of RecordSearchForm -- we should dedup the code */}
-      {holdingsData ? (
-        holdingsData.map((holding) => {
-          return (
-            <div key={holding.holding_data.holding_id}>
-              <BibEntryComponent entry={holding.bib_data} />
-              <HoldingEntry
-                holdings={holding.holding_data}
-                items={holding.items}
-                bibData={holding.bib_data}
-                projectId={parseInt(projectId)}
-                locationCodes={holding.locationCodes}
-              />
-            </div>
-          );
-        })
-      ) : (
-        <p>No Results Found</p>
-      )}{' '}
+      <BibResultsWrapper
+        projectId={projectId}
+        holdingsData={holdingsData}
+        actionType="edit"
+        existingEntry={existingEntry}
+      />
       {JSON.stringify(existingEntry, null, 2)}
+      <br />
       <br />
       {JSON.stringify(holdingsData, null, 2)}
     </>

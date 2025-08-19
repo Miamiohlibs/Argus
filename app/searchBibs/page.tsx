@@ -8,10 +8,21 @@ interface SearchBibsPageProps {
 // Server component - receives searchParams automatically
 async function SearchBibsPage({ searchParams }: SearchBibsPageProps) {
   const resolvedParams = await searchParams;
-  const projectId = (resolvedParams.projectId as string) || 'none';
+  const tempId = (resolvedParams.projectId as string) || 'none';
+
+  let numericId: number;
+  if (typeof tempId === 'number') {
+    numericId = tempId;
+  } else {
+    numericId = parseInt(tempId, 10);
+  }
+  if (tempId == 'none' || isNaN(numericId)) {
+    return <>`Invalid project ID: ${tempId}`</>;
+  }
+  const projectId = numericId;
 
   return (
-    <ServerDataFetcher projectId={projectId}>
+    <ServerDataFetcher projectId={projectId.toString()}>
       <ClientSearchBibsPage projectId={projectId} />
     </ServerDataFetcher>
   );

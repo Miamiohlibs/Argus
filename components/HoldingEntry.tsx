@@ -5,6 +5,7 @@ import { useRef } from 'react';
 import { toast } from 'react-toastify';
 import AddEntry from '@/app/actions/addEntry';
 import type { AlmaHolding } from '@/types/AlmaHolding';
+import { EntryWithItems } from '@/types/EntryWithItems';
 // import type { BibEntry, ItemEntry } from '@prisma/client';
 import type { AlmaHoldingsItemData } from '@/types/AlmaHoldingsItemData';
 import {
@@ -27,6 +28,8 @@ interface HoldingEntryProps {
   items: AlmaItemHoldingItemData[];
   locationCodes: string;
   projectId: string | number;
+  actionType: 'add' | 'edit';
+  existingEntry?: EntryWithItems;
   // onEntryAdded?: () => void;
 }
 const HoldingEntry = ({
@@ -35,6 +38,8 @@ const HoldingEntry = ({
   items,
   locationCodes,
   projectId,
+  actionType,
+  existingEntry,
 }: // onEntryAdded,
 HoldingEntryProps) => {
   const [selectedItems, setSelectedItems] = useState<miniItemData[]>([]);
@@ -175,10 +180,12 @@ HoldingEntryProps) => {
               placeholder="Enter holdings note and/or select items below"
               aria-label="Holding note"
               aria-describedby="holding-note"
-              defaultValue="" // Add default value to prevent uncontrolled->controlled warning
+              defaultValue={existingEntry?.notes ?? ''} // Add default value to prevent uncontrolled->controlled warning
             />
             <Button type="submit" variant="primary">
-              Add Item to Project
+              {actionType == 'add'
+                ? 'Add Item to Project'
+                : 'Save Edits to Item'}
             </Button>
           </InputGroup>
         </Form.Group>
