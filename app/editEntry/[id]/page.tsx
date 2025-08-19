@@ -42,10 +42,6 @@ export default async function EditEntryPage({
         actionType="edit"
         existingEntry={existingEntry}
       />
-      {JSON.stringify(existingEntry, null, 2)}
-      <br />
-      <br />
-      {JSON.stringify(holdingsData, null, 2)}
     </>
   );
 

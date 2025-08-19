@@ -113,6 +113,9 @@ HoldingEntryProps) => {
     library_desc = items[0].library.desc;
     console.log(`set: ${location_desc}, ${library_desc}, ${location_value}`);
   }
+  const existingItemDescriptions = existingEntry?.items.map(
+    (entry) => entry.description
+  );
 
   return (
     <Form onSubmit={handleSubmit}>
@@ -189,6 +192,7 @@ HoldingEntryProps) => {
             </Button>
           </InputGroup>
         </Form.Group>
+        <p>Checked boxes: {JSON.stringify(existingEntry?.items)}</p>
         <p>
           <strong>{library_desc || 'Unknown Library'}</strong> &mdash;{' '}
           {location_desc || 'Unknown Location'} ({location_value || 'N/A'})
@@ -215,6 +219,15 @@ HoldingEntryProps) => {
                     type="checkbox"
                     id={`item-${item.pid || index}`}
                     label={itemLabel}
+                    checked={
+                      existingItemDescriptions?.includes(
+                        item.description || ''
+                      ) ||
+                      selectedItems.some(
+                        (selected) =>
+                          selected.item_id === `item-${item.pid || index}`
+                      )
+                    }
                     onChange={(e) =>
                       handleItemCheck(
                         {
