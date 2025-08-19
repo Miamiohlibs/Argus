@@ -1,5 +1,4 @@
-import type { BibEntry } from '@prisma/client';
-import type { AlmaItem, AlmaItemHoldingBibData } from '@/types/AlmaItem';
+import type { AlmaItemHoldingBibData } from '@/types/AlmaItem';
 const BibEntryComponent = ({
   entry,
 }: // projectId,

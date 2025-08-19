@@ -1,19 +1,17 @@
 'use client';
 import { Form, Button, InputGroup } from 'react-bootstrap';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRef } from 'react';
 import { toast } from 'react-toastify';
-import AddEntry from '@/app/actions/addEntry';
-import type { AlmaHolding } from '@/types/AlmaHolding';
-// import type { BibEntry, ItemEntry } from '@prisma/client';
-import type { AlmaHoldingsItemData } from '@/types/AlmaHoldingsItemData';
+import entryAction from '@/app/actions/addEntry';
+import { EntryWithItems } from '@/types/EntryWithItems';
 import {
-  AlmaItem,
   AlmaItemHoldingHoldingData,
   AlmaItemHoldingItemData,
   AlmaItemHoldingBibData,
 } from '@/types/AlmaItem';
 import type { SafeStringifyInput } from '@/types/SafeStringInput';
+
 interface miniItemData {
   pid: string;
   barcode: string;
@@ -27,25 +25,60 @@ interface HoldingEntryProps {
   items: AlmaItemHoldingItemData[];
   locationCodes: string;
   projectId: string | number;
-  // onEntryAdded?: () => void;
+  actionType: 'add' | 'edit';
+  existingEntry?: EntryWithItems;
 }
+
 const HoldingEntry = ({
   bibData,
   holdings,
   items,
   locationCodes,
   projectId,
-}: // onEntryAdded,
-HoldingEntryProps) => {
+  actionType,
+  existingEntry,
+}: HoldingEntryProps) => {
   const [selectedItems, setSelectedItems] = useState<miniItemData[]>([]);
+  const [isInitialized, setIsInitialized] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
+
+  // Initialize selectedItems with existing entry items
+  useEffect(() => {
+    if (existingEntry && !isInitialized) {
+      // Convert existing entry items to miniItemData format
+      const existingItemData: miniItemData[] = [];
+
+      existingEntry.items.forEach((existingItem) => {
+        // Find the matching item from the items array
+        const matchingItem = items.find(
+          (item) => item.description === existingItem.description
+        );
+
+        if (matchingItem) {
+          existingItemData.push({
+            pid: matchingItem.pid || '',
+            barcode: matchingItem.barcode || '',
+            description: matchingItem.description || '',
+            item_id: `item-${matchingItem.pid || items.indexOf(matchingItem)}`,
+          });
+        }
+      });
+
+      setSelectedItems(existingItemData);
+      setIsInitialized(true);
+    }
+  }, [existingEntry, items, isInitialized]);
 
   const handleItemCheck = (item: miniItemData, checked: boolean) => {
     if (checked) {
-      setSelectedItems([...selectedItems, item]);
-      console.log('selected items:', selectedItems);
+      setSelectedItems((prev) => [...prev, item]);
+      console.log('selected items after adding:', [...selectedItems, item]);
     } else {
-      setSelectedItems(
+      setSelectedItems((prev) =>
+        prev.filter((selectedItem) => selectedItem.item_id !== item.item_id)
+      );
+      console.log(
+        'selected items after removing:',
         selectedItems.filter(
           (selectedItem) => selectedItem.item_id !== item.item_id
         )
@@ -71,23 +104,28 @@ HoldingEntryProps) => {
         bibEntryId: 'unknown',
       };
     });
-    const { data, error } = await AddEntry({
+
+    const { data, error } = await entryAction({
       bibData: allFormData,
       itemData: itemsToSubmit,
+      actionType,
+      ...(existingEntry?.id && { existingEntryId: existingEntry.id }),
     });
 
     if (error) {
-      toast.error('Failed to add entry');
+      toast.error(`Failed to ${actionType === 'add' ? 'add' : 'update'} entry`);
     } else {
-      toast.success('Entry added successfully');
-      console.log('Entry added:', data);
-      window.location.reload();
-      formRef.current?.reset(); // clear the form
-      setSelectedItems([]); // Clear selected items after successful submission
-      // Clear local state instead of reloading
+      toast.success(
+        `Entry ${actionType === 'add' ? 'added' : 'updated'} successfully`
+      );
+      console.log('Entry saved:', data);
 
-      // Call the parent callback to clear other forms
-      // onEntryAdded?.();
+      if (actionType === 'add') {
+        formRef.current?.reset();
+        setSelectedItems([]);
+      }
+      // For edit, don't reload - let the user see the updated state
+      // window.location.reload(); // Remove this for better UX
     }
   };
 
@@ -96,16 +134,15 @@ HoldingEntryProps) => {
     if (value === undefined || value === null) {
       return '';
     }
-    return JSON.stringify(value).replace(/^\"(.*)\"$/, '$1'); // Remove surrounding quotes if present
+    return JSON.stringify(value).replace(/^\"(.*)\"$/, '$1');
   };
 
+  // Calculate location info
   let library_desc, location_value, location_desc;
-
-  if (!locationCodes.includes(',')) {
-    // if only one location
-    location_desc = items[0].location.desc;
-    location_value = items[0].location.value;
-    library_desc = items[0].library.desc;
+  if (!locationCodes.includes(',') && items.length > 0) {
+    location_desc = items[0].location?.desc;
+    location_value = items[0].location?.value;
+    library_desc = items[0].library?.desc;
     console.log(`set: ${location_desc}, ${library_desc}, ${location_value}`);
   }
 
@@ -167,6 +204,15 @@ HoldingEntryProps) => {
           name="total_item_count"
           value={items.length}
         />
+        <Form.Control type="hidden" name="actionType" value={actionType} />
+        {existingEntry && (
+          <Form.Control
+            type="hidden"
+            name="existing_entry_id"
+            value={existingEntry?.id}
+          />
+        )}
+
         <Form.Group controlId={`mmsIdSearch-${holdings.holding_id}`}>
           <InputGroup className="mb-3">
             <InputGroup.Text id="holding-note">Note</InputGroup.Text>
@@ -175,13 +221,16 @@ HoldingEntryProps) => {
               placeholder="Enter holdings note and/or select items below"
               aria-label="Holding note"
               aria-describedby="holding-note"
-              defaultValue="" // Add default value to prevent uncontrolled->controlled warning
+              defaultValue={existingEntry?.notes ?? ''}
             />
             <Button type="submit" variant="primary">
-              Add Item to Project
+              {actionType === 'add'
+                ? 'Add Item to Project'
+                : 'Save Edits to Item'}
             </Button>
           </InputGroup>
         </Form.Group>
+
         <p>
           <strong>{library_desc || 'Unknown Library'}</strong> &mdash;{' '}
           {location_desc || 'Unknown Location'} ({location_value || 'N/A'})
@@ -189,12 +238,11 @@ HoldingEntryProps) => {
         <p>
           Call Number: <strong>{holdings.call_number || 'N/A'}</strong>
         </p>
-        {/*  */}
-        {/* Begin Item Selection */}
+
+        {/* Item Selection */}
         <ul style={{ listStyleType: 'none', paddingLeft: 0 }}>
           {items ? (
             items.map((item: AlmaItemHoldingItemData, index: number) => {
-              // Calculate item label based on the number of items
               const itemLabel =
                 items.length === 1
                   ? 'Sole Item'
@@ -202,22 +250,27 @@ HoldingEntryProps) => {
                       item.description || `Unknown Item: ${items.length}`
                     }`;
 
+              const itemData: miniItemData = {
+                pid: item.pid || '',
+                barcode: item.barcode || '',
+                description: item.description || '',
+                item_id: `item-${item.pid || index}`,
+              };
+
+              // Check if this item is selected (controlled by selectedItems state)
+              const isChecked = selectedItems.some(
+                (selected) => selected.item_id === itemData.item_id
+              );
+
               return (
                 <li key={item.barcode || `item-${index}`} className="mb-2">
                   <Form.Check
                     type="checkbox"
                     id={`item-${item.pid || index}`}
                     label={itemLabel}
+                    checked={isChecked} // Now purely controlled by selectedItems state
                     onChange={(e) =>
-                      handleItemCheck(
-                        {
-                          pid: item.pid || '',
-                          barcode: item.barcode || '',
-                          description: item.description || '',
-                          item_id: `item-${item.pid || index}`,
-                        },
-                        e.target.checked
-                      )
+                      handleItemCheck(itemData, e.target.checked)
                     }
                     value={item.barcode || ''}
                   />
@@ -228,7 +281,6 @@ HoldingEntryProps) => {
             <li className="text-muted">No items found</li>
           )}
         </ul>
-        {/* End Item Selection */}
       </div>
     </Form>
   );

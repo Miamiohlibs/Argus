@@ -5,8 +5,6 @@ import { SearchBibs } from '@kenxirwin/alma-search';
 import type {
   AlmaItem,
   AlmaItemApiResponse,
-  AlmaItemHoldingBibData,
-  AlmaItemHoldingHoldingData,
   AlmaItemHoldingItemData,
 } from '@/types/AlmaItem';
 import type { CondensedBibHoldings } from '@/types/CondensedBibHoldings';
@@ -87,9 +85,6 @@ function condenseBibHoldings(response: AlmaItemApiResponse) {
   // console.log(uniqBibHoldings);
   const output: CondensedBibHoldings[] = [];
   uniqHoldings.forEach((holdingId) => {
-    const bibLocations: string = [
-      ...new Set(response.item.map((item) => item.item_data.location.value)),
-    ].join(',');
     const allMatchingHoldings: AlmaItem[] = response.item.filter(
       (item) => (item.holding_data.holding_id = holdingId)
     );
@@ -113,10 +108,6 @@ function condenseBibHoldings(response: AlmaItemApiResponse) {
 
 export async function bibHoldings({ mms_id }: { mms_id: string }) {
   try {
-    const alma = new SearchBibs({
-      baseUrl: process.env.ALMA_BASEURL || '',
-      apiKey: process.env.ALMA_API_KEY || '',
-    });
     const results: AlmaItemApiResponse = await getAllHoldingsItemsByMmsId(
       mms_id
     );

@@ -6,14 +6,11 @@ import { toast } from 'react-toastify';
 // import { bibById } from '@/app/actions/almaSearch';
 import { bibHoldings } from '@/app/actions/almaSearch';
 import { useState } from 'react';
-import BibEntryComponent from './BibEntryComponent';
-import HoldingEntry from './HoldingEntry';
-import type { AlmaMmsidSearchResult } from '@/types/AlmaMmsidSearchResult';
 import type { CondensedBibHoldings } from '@/types/CondensedBibHoldings';
-import { Card, CardBody } from 'react-bootstrap';
+import BibResultsWrapper from './BibResultsWrapper';
 
 interface RecordSearchFormProps {
-  projectId: string | number;
+  projectId: number;
 }
 
 const RecordSearchForm = ({ projectId }: RecordSearchFormProps) => {
@@ -98,7 +95,6 @@ const RecordSearchForm = ({ projectId }: RecordSearchFormProps) => {
   locationCodes: string;
   }
   */}
-
       {/* {results?.map((holding) => (
         <div key={holding.bib_data.mms_id}>
           {holding && holding.bib_data ? (
@@ -116,7 +112,13 @@ const RecordSearchForm = ({ projectId }: RecordSearchFormProps) => {
         </div>
       ))} */}
 
-      {results ? (
+      <BibResultsWrapper
+        projectId={projectId}
+        holdingsData={results ?? undefined}
+        actionType={'add'}
+      />
+
+      {/* {results ? (
         results.map((holding) => {
           return (
             <div key={holding.holding_data.holding_id}>
@@ -133,8 +135,7 @@ const RecordSearchForm = ({ projectId }: RecordSearchFormProps) => {
         })
       ) : (
         <p>No Results Found</p>
-      )}
-
+      )} */}
       <pre>{JSON.stringify(results, null, 2)}</pre>
     </>
   );
