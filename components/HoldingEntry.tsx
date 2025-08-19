@@ -4,11 +4,8 @@ import { useState, useEffect } from 'react';
 import { useRef } from 'react';
 import { toast } from 'react-toastify';
 import entryAction from '@/app/actions/addEntry';
-import type { AlmaHolding } from '@/types/AlmaHolding';
 import { EntryWithItems } from '@/types/EntryWithItems';
-import type { AlmaHoldingsItemData } from '@/types/AlmaHoldingsItemData';
 import {
-  AlmaItem,
   AlmaItemHoldingHoldingData,
   AlmaItemHoldingItemData,
   AlmaItemHoldingBibData,

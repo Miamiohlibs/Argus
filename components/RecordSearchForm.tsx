@@ -6,11 +6,7 @@ import { toast } from 'react-toastify';
 // import { bibById } from '@/app/actions/almaSearch';
 import { bibHoldings } from '@/app/actions/almaSearch';
 import { useState } from 'react';
-import BibEntryComponent from './BibEntryComponent';
-import HoldingEntry from './HoldingEntry';
-import type { AlmaMmsidSearchResult } from '@/types/AlmaMmsidSearchResult';
 import type { CondensedBibHoldings } from '@/types/CondensedBibHoldings';
-import { Card, CardBody } from 'react-bootstrap';
 import BibResultsWrapper from './BibResultsWrapper';
 
 interface RecordSearchFormProps {

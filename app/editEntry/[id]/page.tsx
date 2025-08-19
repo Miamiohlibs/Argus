@@ -1,8 +1,5 @@
 import { EntryWithItems } from '@/types/EntryWithItems';
-import { AlmaItemHoldingBibData } from '@/types/AlmaItem';
 import { bibHoldings } from '@/app/actions/almaSearch';
-import BibEntryComponent from '@/components/BibEntryComponent';
-import HoldingEntry from '@/components/HoldingEntry';
 import getEntryById from '@/app/actions/getEntryById';
 import { CondensedBibHoldings } from '@/types/CondensedBibHoldings';
 import BibResultsWrapper from '@/components/BibResultsWrapper';
