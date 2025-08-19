@@ -33,7 +33,7 @@ export default async function EditEntryPage({
   return (
     <>
       <h1>
-        Editing: <i>{holdingsData[0].bib_data.title}</i>
+        Editing: <i>{holdingsData && holdingsData[0].bib_data.title}</i>
       </h1>
       <Link href={`/project/${projectId}`}>
         <Button variant="outline-secondary">Back to Project</Button>
