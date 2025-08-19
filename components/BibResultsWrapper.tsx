@@ -8,6 +8,8 @@ interface BibResultsWrapperProps {
   holdingsData: CondensedBibHoldings[] | undefined;
   actionType: 'add' | 'edit';
   existingEntry?: EntryWithItems;
+  isOwner: boolean;
+  isAdmin: boolean;
 }
 
 export default function BibResultsWrapper({
