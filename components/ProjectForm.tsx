@@ -7,9 +7,10 @@ import { toast } from 'react-toastify';
 import { useEffect } from 'react';
 // import { useRouter } from 'next/navigation'; // Changed from react-router-dom
 import { Project } from '@prisma/client';
+import { ProjectData } from '@/types/ProjectData';
 
 type ProjectActionResult =
-  | { success: true; data: Project; error?: never }
+  | { success: true; data: ProjectData; error?: never }
   | { success: false; error: string; data?: never };
 
 interface ProjectFormProps {
@@ -35,6 +36,7 @@ export default function ProjectForm({
   if (basePath === null) {
     basePath = '/';
   }
+
   // Handle notifications
   useEffect(() => {
     if (state?.error) {
@@ -53,7 +55,7 @@ export default function ProjectForm({
         window.location.href = `${basePath}/project/${state.data?.id}`;
       }, 500); // Give time for toast to show
     }
-  }, [state, project]);
+  }, [state, project, basePath]);
 
   return (
     <Card className="shadow-sm">

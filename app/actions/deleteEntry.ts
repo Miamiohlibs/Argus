@@ -1,10 +1,7 @@
 'use server';
 import { db } from '@/lib/db';
 import { auth } from '@clerk/nextjs/server';
-// import { revalidatePath } from 'next/cache';
-import canEdit from '@/lib/canEdit';
 import { isAdmin } from '@/lib/canEdit';
-import { unauthorized } from 'next/navigation';
 
 async function deleteProject(entryId: string): Promise<{
   message?: string;

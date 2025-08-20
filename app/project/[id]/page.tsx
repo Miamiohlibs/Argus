@@ -6,7 +6,7 @@ import EntriesTable from '@/components/EntriesTable';
 import Link from 'next/link';
 import { Button } from 'react-bootstrap';
 // import canEdit from '@/lib/canEdit';
-import canEdit, { isAdmin, isOwner, isBasicUser } from '@/lib/canEdit';
+import canEdit from '@/lib/canEdit';
 
 export default async function ProjectPage({
   params,
