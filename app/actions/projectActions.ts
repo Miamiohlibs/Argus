@@ -107,7 +107,7 @@ export async function createProject(
       };
       // revalidatePath('/');
       // redirect('/'); // Redirect to the home page after adding the project
-      return { success: true, data: projectData };
+      return { success: true, data: created };
     } catch (error) {
       console.error('Error creating Project:', error);
       return {

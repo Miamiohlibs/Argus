@@ -8,11 +8,16 @@ export default async function CreateProjectPage() {
   const currentUser = await checkUser();
   // const currentUser: User | null = await checkUser();
   const isEditor = await isEditorOrAbove();
+  const basePath = process.env.APP_BASEPATH ?? '/';
 
   if (isEditor) {
     return (
       <>
-        <ProjectForm user={currentUser} action={createProject} />
+        <ProjectForm
+          user={currentUser}
+          action={createProject}
+          basePath={basePath}
+        />
       </>
     );
   } else {
