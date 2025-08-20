@@ -7,9 +7,10 @@ import { toast } from 'react-toastify';
 import { useEffect } from 'react';
 // import { useRouter } from 'next/navigation'; // Changed from react-router-dom
 import { Project } from '@prisma/client';
+import { ProjectData } from '@/types/ProjectData';
 
 type ProjectActionResult =
-  | { success: true; data: Project; error?: never }
+  | { success: true; data: ProjectData; error?: never }
   | { success: false; error: string; data?: never };
 
 interface ProjectFormProps {

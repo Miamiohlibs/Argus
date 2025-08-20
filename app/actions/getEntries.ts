@@ -13,20 +13,21 @@ async function getEntries(projectId: string): Promise<{
 }> {
   try {
     // Fetch all entries for this project with their items
-    const rawEntries = await db.bibEntry.findMany({
+    const entries = await db.bibEntry.findMany({
       where: {
         projectId: parseInt(projectId, 10),
       },
       include: {
         items: true, // Include related items
+        project: true,
       },
     });
 
     // Ensure every entry has an 'items' array (even if empty)
-    const entries: EntryWithItems[] = rawEntries.map((entry) => ({
-      ...entry,
-      items: entry.items ?? [],
-    }));
+    // const entries: EntryWithItems[] = rawEntries.map((entry) => ({
+    //   ...entry,
+    //   items: entry.items ?? [],
+    // }));
 
     console.log(`Fetched ${entries.length} entries for project ${projectId}`);
 

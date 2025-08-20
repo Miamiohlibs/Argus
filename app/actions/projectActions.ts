@@ -7,12 +7,8 @@ import { checkUser } from '@/lib/checkUser';
 // import { revalidatePath } from 'next/cache';
 // import { redirect } from 'next/navigation';
 // import { redirect } from 'next/dist/server/api-utils';
-
-interface ProjectData {
-  title: string;
-  userId: string;
-  notes?: string | null;
-}
+// import { Project } from '@prisma/client';
+import { ProjectData } from '@/types/ProjectData';
 
 type ProjectActionResult =
   | { success: true; data: ProjectData; error?: never }
