@@ -5,6 +5,7 @@ import { CondensedBibHoldings } from '@/types/CondensedBibHoldings';
 import BibResultsWrapper from '@/components/BibResultsWrapper';
 import { Button } from 'react-bootstrap';
 import Link from 'next/link';
+import canEdit from '@/lib/canEdit';
 
 export default async function EditEntryPage({
   params,
@@ -30,10 +31,12 @@ export default async function EditEntryPage({
   if (holdingsError) {
     return <>Error refreshing catalog data</>;
   }
+  const canEditBool: boolean = await canEdit(projectId?.toString() ?? 0);
   return (
     <>
       <h1>
         Editing: <i>{holdingsData && holdingsData[0].bib_data.title}</i>
+        <br /> isEditor: {canEdit.toString()}
       </h1>
       <Link href={`/project/${projectId}`}>
         <Button variant="outline-secondary">Back to Project</Button>
@@ -44,6 +47,7 @@ export default async function EditEntryPage({
         holdingsData={holdingsData}
         actionType="edit"
         existingEntry={existingEntry}
+        isEditor={canEditBool}
       />
     </>
   );

@@ -3,6 +3,8 @@ import { checkUser } from '@/lib/checkUser';
 import { updateProject } from '@/app/actions/projectActions';
 import getProject from '@/app/actions/getProject';
 // import { Project } from '@prisma/client';
+import canEdit from '@/lib/canEdit';
+import { redirect } from 'next/navigation';
 
 interface EditProjectPageProps {
   params: Promise<{ id: string }>;
@@ -14,6 +16,10 @@ export default async function EditProjectPage({
   const { id } = await params;
   const response = await getProject({ id });
   const project = response.project;
+  const isEditor = await canEdit(id);
+  if (!isEditor) {
+    redirect(`/project/${id}`); // go to non-edit version of project page
+  }
 
   console.log(currentUser);
   console.log(project);

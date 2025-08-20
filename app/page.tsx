@@ -3,10 +3,12 @@ import { currentUser } from '@clerk/nextjs/server';
 import ProjectsTable from '@/components/ProjectsTable';
 import CreateProjectButton from '@/components/CreateProjectButton';
 import { checkUser } from '@/lib/checkUser';
+import { isEditorOrAbove } from '@/lib/canEdit';
 
 const Home = async () => {
   const user = await checkUser();
   const clerkUserInfo = (await currentUser()) ?? { firstName: 'Guest' };
+  const isEditor = await isEditorOrAbove();
 
   if (!user) {
     return <Guest />;
@@ -14,9 +16,7 @@ const Home = async () => {
   return (
     <main>
       <h2>{clerkUserInfo.firstName}&apos;s Projects</h2>
-      <div className="mb-3">
-        <CreateProjectButton />
-      </div>
+      <div className="mb-3">{isEditor && <CreateProjectButton />}</div>
       <ProjectsTable limitToUser={true} user={user} />
     </main>
   );

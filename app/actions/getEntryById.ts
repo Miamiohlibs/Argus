@@ -14,6 +14,7 @@ async function getEntryById(entryId: string): Promise<{
       },
       include: {
         items: true, // Include related items
+        project: true,
       },
     });
 

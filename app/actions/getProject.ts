@@ -2,11 +2,12 @@
 import { db } from '@/lib/db';
 // import { auth } from '@clerk/nextjs/server';
 import type { Prisma } from '@prisma/client';
+import type { ProjectWithUserAndBib } from '@/types/ProjectWithUserAndBib';
 
 // Define the type that matches what you're actually returning
-type ProjectWithUserAndBib = Prisma.ProjectGetPayload<{
-  include: { user: true; bibEntries: true };
-}>;
+// type ProjectWithUserAndBib = Prisma.ProjectGetPayload<{
+//   include: { user: true; bibEntries: true };
+// }>;
 
 async function getProject(params: { id: string }): Promise<{
   project?: ProjectWithUserAndBib;
