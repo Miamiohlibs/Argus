@@ -13,6 +13,10 @@ export async function isBasicUser() {
   );
 }
 
+export async function isEditorOrAbove() {
+  return !(await isBasicUser());
+}
+
 export async function isAdmin() {
   return (
     (await checkAccess({
