@@ -35,6 +35,7 @@ export default function ProjectForm({
   if (basePath === null) {
     basePath = '/';
   }
+
   // Handle notifications
   useEffect(() => {
     if (state?.error) {
@@ -50,10 +51,10 @@ export default function ProjectForm({
       console.log(`State`, JSON.stringify(state.data));
       // Client-side redirect after showing toast
       setTimeout(() => {
-        window.location.href = `${basePath}/project/${state.data?.id}`;
+        window.location.href = `${basePathConst}/project/${state.data?.id}`;
       }, 500); // Give time for toast to show
     }
-  }, [state, project]);
+  }, [state, project, basePath]);
 
   return (
     <Card className="shadow-sm">

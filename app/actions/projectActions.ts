@@ -100,13 +100,6 @@ export async function createProject(
           : null,
       });
 
-      const projectData: ProjectData = {
-        title: created.title,
-        userId: created.userId,
-        notes: created.notes ?? undefined,
-      };
-      // revalidatePath('/');
-      // redirect('/'); // Redirect to the home page after adding the project
       return { success: true, data: created };
     } catch (error) {
       console.error('Error creating Project:', error);

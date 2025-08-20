@@ -47,7 +47,6 @@ export async function isOwner(projectId: number | string): Promise<boolean> {
     if (!clerkUser) {
       return false;
     }
-    const projectUser = project.userId;
 
     const isOwner: boolean = project.userId == clerkUser?.id;
     return isOwner;
