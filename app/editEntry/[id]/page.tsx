@@ -5,8 +5,7 @@ import { CondensedBibHoldings } from '@/types/CondensedBibHoldings';
 import BibResultsWrapper from '@/components/BibResultsWrapper';
 import { Button } from 'react-bootstrap';
 import Link from 'next/link';
-import { currentUser } from '@clerk/nextjs/server';
-import checkAccess from '@/lib/checkAccess';
+import canEdit from '@/lib/canEdit';
 
 export default async function EditEntryPage({
   params,
@@ -14,12 +13,6 @@ export default async function EditEntryPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const clerkUser = await currentUser();
-  const isAdmin =
-    (await checkAccess({
-      permittedRoles: ['admin', 'superadmin'],
-      inline: true,
-    })) !== false; // checkAccess will return admin level if not false, so look for not false
   const {
     data: existingEntry,
     error: existingEntryError,
@@ -38,18 +31,12 @@ export default async function EditEntryPage({
   if (holdingsError) {
     return <>Error refreshing catalog data</>;
   }
-  const isOwner: boolean =
-    clerkUser !== undefined &&
-    existingEntry !== undefined &&
-    existingEntry?.project.userId == clerkUser?.id;
-
-  const isEditor: boolean = isAdmin || isOwner;
-
+  const canEditBool: boolean = await canEdit(projectId?.toString() ?? 0);
   return (
     <>
       <h1>
         Editing: <i>{holdingsData && holdingsData[0].bib_data.title}</i>
-        <br /> isEditor: {isEditor.toString()}
+        <br /> isEditor: {canEdit.toString()}
       </h1>
       <Link href={`/project/${projectId}`}>
         <Button variant="outline-secondary">Back to Project</Button>
@@ -60,7 +47,7 @@ export default async function EditEntryPage({
         holdingsData={holdingsData}
         actionType="edit"
         existingEntry={existingEntry}
-        isEditor={isEditor}
+        isEditor={canEditBool}
       />
     </>
   );
