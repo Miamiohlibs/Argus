@@ -16,7 +16,7 @@ import { User } from '@prisma/client';
 // import { revalidatePath } from 'next/cache';
 export default function UserEditForm({ user }: { user: User }) {
   const [role, setRole] = useState(user.role);
-  const validRoles = ['user', 'admin', 'superadmin'] as const;
+  const validRoles = ['user', 'editor', 'admin', 'superadmin'] as const;
   type Role = (typeof validRoles)[number];
 
   // const isValidRole = (role: string): role is Role => {

@@ -11,9 +11,13 @@ import BibResultsWrapper from './BibResultsWrapper';
 
 interface RecordSearchFormProps {
   projectId: number;
+  userCanEditPage: boolean;
 }
 
-const RecordSearchForm = ({ projectId }: RecordSearchFormProps) => {
+const RecordSearchForm = ({
+  projectId,
+  userCanEditPage,
+}: RecordSearchFormProps) => {
   const formRef = useRef<HTMLFormElement>(null);
   // const router = useRouter(); // Changed from useNavigate
   // const [results, setresults] = useState<MmsidSearchResultOrNull>(null); // State to hold search results
@@ -116,6 +120,7 @@ const RecordSearchForm = ({ projectId }: RecordSearchFormProps) => {
         projectId={projectId}
         holdingsData={results ?? undefined}
         actionType={'add'}
+        isEditor={userCanEditPage}
       />
 
       {/* {results ? (
