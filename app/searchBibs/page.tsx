@@ -1,5 +1,6 @@
 import ClientSearchBibsPage from './ClientSearchBibsPage';
 import ServerDataFetcher from './ServerDataFetcher';
+import canEdit from '@/lib/canEdit';
 
 interface SearchBibsPageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -20,10 +21,13 @@ async function SearchBibsPage({ searchParams }: SearchBibsPageProps) {
     return <>`Invalid project ID: ${tempId}`</>;
   }
   const projectId = numericId;
-
+  const userCanEditPage = await canEdit(projectId);
   return (
     <ServerDataFetcher projectId={projectId.toString()}>
-      <ClientSearchBibsPage projectId={projectId} />
+      <ClientSearchBibsPage
+        projectId={projectId}
+        userCanEditPage={userCanEditPage}
+      />
     </ServerDataFetcher>
   );
 }

@@ -6,9 +6,13 @@ import Link from 'next/link';
 
 interface ClientSearchBibsPageProps {
   projectId?: number;
+  userCanEditPage: boolean;
 }
 
-const ClientSearchBibsPage = ({ projectId }: ClientSearchBibsPageProps) => {
+const ClientSearchBibsPage = ({
+  projectId,
+  userCanEditPage,
+}: ClientSearchBibsPageProps) => {
   // You can still use useSearchParams if needed for other params
   const params = useSearchParams();
   const tempId = projectId || params?.get('projectId') || 'none';
@@ -34,7 +38,10 @@ const ClientSearchBibsPage = ({ projectId }: ClientSearchBibsPageProps) => {
           Back to Project
         </Button>
       </Link>
-      <RecordSearchForm projectId={clientProjectId} />
+      <RecordSearchForm
+        projectId={clientProjectId}
+        userCanEditPage={userCanEditPage}
+      />
     </>
   );
 };

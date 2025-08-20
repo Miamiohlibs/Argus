@@ -36,7 +36,6 @@ export default async function EditEntryPage({
     <>
       <h1>
         Editing: <i>{holdingsData && holdingsData[0].bib_data.title}</i>
-        <br /> isEditor: {canEdit.toString()}
       </h1>
       <Link href={`/project/${projectId}`}>
         <Button variant="outline-secondary">Back to Project</Button>
