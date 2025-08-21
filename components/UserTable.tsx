@@ -11,7 +11,13 @@ import DeleteButton from './DeleteButton';
 import deleteUser from '@/app/actions/deleteUser';
 import { toast } from 'react-toastify';
 
-export default function UserTable() {
+export default function UserTable({
+  user,
+  canDeleteSuperAdmin,
+}: {
+  user: User;
+  canDeleteSuperAdmin: boolean;
+}) {
   const [users, setUsers] = useState<User[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
@@ -60,6 +66,22 @@ export default function UserTable() {
     {
       name: 'Name',
       selector: (row: User) => row.name ?? '',
+      cell: (row: User) => {
+        let extra;
+        if (row.clerkUserId == user.clerkUserId) {
+          extra = (
+            <Button variant="outline-info" size="sm" className="ms-3">
+              Self
+            </Button>
+          );
+        }
+        return (
+          <>
+            {row.name}
+            {extra}
+          </>
+        );
+      },
       sortable: true,
     },
     {
@@ -74,18 +96,22 @@ export default function UserTable() {
     },
     {
       name: 'Tools',
-      cell: (row: User) => (
-        <>
-          <Link
-            href={`/admin/users/edit/${row.id}`} // change path to your route
-          >
-            <Button className="me-1" variant="outline-primary" size="sm">
-              Edit
-            </Button>
-          </Link>
-          <DeleteButton label="" onDelete={() => handleDelete(row.id)} />
-        </>
-      ),
+      cell: (row: User) =>
+        (canDeleteSuperAdmin || row.role !== 'superadmin') &&
+        row.clerkUserId !== user.clerkUserId ? (
+          <>
+            <Link
+              href={`/admin/users/edit/${row.id}`} // change path to your route
+            >
+              <Button className="me-1" variant="outline-primary" size="sm">
+                Edit
+              </Button>
+            </Link>
+            <DeleteButton label="" onDelete={() => handleDelete(row.id)} />
+          </>
+        ) : (
+          <></>
+        ),
       ignoreRowClick: true,
     },
   ];
