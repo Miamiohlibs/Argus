@@ -19,13 +19,18 @@ async function deleteUser(userIdToDelete: string): Promise<{
     );
     return { error: 'Delete user permission denied' };
   }
-
   try {
-    await db.user.delete({
+    // this is a bit of a hack: we're not really going to deleteMany
+    // only one or zero users will match
+    // but deleteMany supports the syntax to prevent the user from deleting themself
+    const deletedUsers = await db.user.deleteMany({
       where: {
-        id: userIdToDelete,
+        AND: [{ id: userIdToDelete }, { clerkUserId: { not: userId } }],
       },
     });
+    if (deletedUsers.count == 0) {
+      throw new Error('No users deleted.');
+    }
     return { message: 'Deleted project' };
   } catch (error) {
     console.log('DB error:', error);
