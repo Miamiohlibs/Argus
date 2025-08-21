@@ -1,5 +1,4 @@
-import SlipsList from '@/components/SlipsList';
-
+import SlipsList from '@/app/printSlips/[id]/SlipsList';
 const printSlips = async ({ params }: { params: Promise<{ id: string }> }) => {
   const { id } = await params;
 

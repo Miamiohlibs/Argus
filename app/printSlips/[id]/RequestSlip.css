@@ -1,0 +1,51 @@
+
+.request-slip {
+  font-family: "Times New Roman", Times, serif;
+  font-size: 0.9rem;
+  background: white;
+  color: black;
+  line-height: 95%;
+}
+
+.request-slip .section {
+  margin-bottom: 1rem;
+}
+
+.checklist {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+.checklist li {
+  margin: 2px 0;
+}
+
+.box {
+  border: 1px solid lightgrey;
+  height: 40px;
+  margin-top: 0.5rem;
+}
+
+.box.tall {
+  height: 100px;
+}
+
+@media print {
+  body {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    font-size: 11pt;
+  }
+
+  .request-slip {
+    border: 1px solid black !important;
+    box-shadow: none !important;
+    page-break-inside: avoid;
+  }
+
+  .section {
+    border: 1px solid black !important;
+    margin-bottom: 0.5rem !important;
+  }
+}
