@@ -9,6 +9,9 @@ export default async function UsersPage() {
   const user = await checkUser();
   const canDeleteSuperAdmin = user?.role == 'superadmin'; // true if user is superadmin
 
+  if (!user) {
+    return;
+  }
   return (
     <main className="p-4">
       <h1 className="text-xl font-bold mb-4">User List</h1>
