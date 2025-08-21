@@ -26,7 +26,7 @@ export default function UserTable({
   const handleDelete = async (userIdtoDelete: string) => {
     console.log(`Delete user with ID: ${userIdtoDelete}`);
 
-    const { message, error } = await deleteUser(userIdtoDelete); // also gets {message}
+    const { error } = await deleteUser(userIdtoDelete); // also gets {message}
     if (error) {
       toast.error('Entry deletion failed');
     } else {
