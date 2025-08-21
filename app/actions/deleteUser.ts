@@ -23,7 +23,7 @@ async function deleteUser(userIdToDelete: string): Promise<{
 
   // Array of AND conditions for Prisma where query on db.user.deleteMany.
   // Each object can include any fields from the User type.
-  const deleteRequirementsArray: Array<Record<string, any>> = [
+  const deleteRequirementsArray: Array<Record<string, string | object>> = [
     { id: userIdToDelete }, // id to delete
     { clerkUserId: { not: userId } }, // don't delete yourself
   ];
