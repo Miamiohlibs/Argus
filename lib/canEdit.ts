@@ -25,6 +25,14 @@ export async function isAdmin() {
     })) !== false
   ); // checkAccess will return admin level if not false, so look for not false
 }
+export async function isSuperAdmin() {
+  return (
+    (await checkAccess({
+      permittedRoles: ['superadmin'],
+      inline: true,
+    })) !== false
+  ); // checkAccess will return admin level if not false, so look for not false
+}
 
 export async function isOwner(projectId: number | string): Promise<boolean> {
   //return true if the clerk user id of the user ==
