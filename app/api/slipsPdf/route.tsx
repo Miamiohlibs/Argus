@@ -3,22 +3,20 @@ import { NextRequest, NextResponse } from 'next/server';
 import { renderToStream } from '@react-pdf/renderer';
 import { RequestSlipProps } from '@/types/RequestSlipProps';
 import { MultiPagePdf } from '@/components/MultipagePdf';
-
+import getEntries from '@/app/actions/getEntries';
 export async function GET(req: NextRequest) {
-  const books: RequestSlipProps[] = [
-    {
-      author: 'Wegener, Larry Edward',
-      title:
-        "A concordance to Herman Melville's Clarel, a poem and pilgrimage in the Holy Land",
-      callNumber: 'PS2384 .C529 1979',
-    },
-    {
-      author: 'Melville, Herman',
-      title: 'Billy Budd',
-      callNumber: 'PS2384 .B5 1948',
-    },
-  ];
-  const stream = await renderToStream(<MultiPagePdf books={books} />);
+  // get items from project 18
+  const { data } = await getEntries('18');
+  const entries = data?.entries ?? [];
+  const items = entries.map((entry) => {
+    return {
+      author: entry.author,
+      title: entry.itemTitle,
+      callNumber: entry.callNumber,
+    };
+  });
+
+  const stream = await renderToStream(<MultiPagePdf books={items} />);
   const filename = 'pullslip.pdf';
   // params.title !== null ? `Pull slip: ${params.title}.pdf` : 'pullslip.pdf';
 
