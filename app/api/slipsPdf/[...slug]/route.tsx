@@ -4,9 +4,14 @@ import { renderToStream } from '@react-pdf/renderer';
 import { RequestSlipProps } from '@/types/RequestSlipProps';
 import { MultiPagePdf } from '@/components/MultipagePdf';
 import getEntries from '@/app/actions/getEntries';
-export async function GET(req: NextRequest) {
-  // get items from project 18
-  const { data } = await getEntries('18');
+
+export async function GET(
+  req: NextRequest,
+  { params }: { params: { slug: string } }
+) {
+  const id = await params.slug;
+  // get items from project by id
+  const { data } = await getEntries(id);
   const entries = data?.entries ?? [];
   const items = entries.map((entry) => {
     return {
