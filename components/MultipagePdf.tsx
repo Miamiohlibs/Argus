@@ -1,5 +1,5 @@
 // app/pdf/RequestSlip.tsx
-import { Page, Text, View, Document, StyleSheet } from '@react-pdf/renderer';
+import { Document, StyleSheet } from '@react-pdf/renderer';
 import { RequestSlipProps } from '@/types/RequestSlipProps';
 import { RequestSlipPage } from './RequestSlipPage';
 // const styles = StyleSheet.create({
