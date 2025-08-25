@@ -1,7 +1,7 @@
 // app/api/pdf/route.tsx
 import { NextRequest, NextResponse } from 'next/server';
 import { renderToStream } from '@react-pdf/renderer';
-import { RequestSlipProps } from '@/types/RequestSlipProps';
+// import { RequestSlipProps } from '@/types/RequestSlipProps';
 import { MultiPagePdf } from '@/components/MultipagePdf';
 import getEntries from '@/app/actions/getEntries';
 import getProject from '@/app/actions/getProject';
@@ -25,8 +25,8 @@ export async function GET(
     return {
       author: entry.author,
       title: entry.itemTitle,
-      callNumber: entry.callNumber,
-      notes: entry.notes,
+      callNumber: entry.callNumber ?? undefined,
+      notes: entry.notes ?? undefined,
       location: entry.location,
       itemInfo: entry.items.map((item) => item.description).join(', '),
       userName: project?.user.name,
