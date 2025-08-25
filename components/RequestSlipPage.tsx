@@ -198,7 +198,11 @@ export const RequestSlipPage = ({
           <View style={styles.col}>
             <Text style={styles.sectionHeader}>Institution</Text>
             <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
+              <View
+                style={
+                  affiliation == 'Miami' ? styles.checkedBox : styles.checkbox
+                }
+              />
               <Text>Miami University</Text>
             </View>
             <View style={styles.checkboxRow}>

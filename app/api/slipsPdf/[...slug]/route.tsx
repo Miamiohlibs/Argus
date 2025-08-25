@@ -18,6 +18,10 @@ export async function GET(
   const entries = data?.entries ?? [];
   const items = entries.map((entry) => {
     console.log('One entry:', JSON.stringify(entry));
+    const affiliation =
+      project?.user.email && project?.user.email.includes('@miamioh.edu')
+        ? 'Miami'
+        : 'Other';
     return {
       author: entry.author,
       title: entry.itemTitle,
@@ -27,6 +31,7 @@ export async function GET(
       itemInfo: entry.items.map((item) => item.description).join(', '),
       userName: project?.user.name,
       userEmail: project?.user.email,
+      affiliation,
     };
   });
 
