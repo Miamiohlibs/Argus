@@ -1,8 +1,8 @@
 'use client';
-import { useParams } from 'next/navigation';
+// import { useParams } from 'next/navigation';
 
 export default function MultiPagePdf() {
-  const { id } = useParams();
+  // const { id } = useParams();
   return (
     <div style={{ height: '100vh' }}>
       <iframe
