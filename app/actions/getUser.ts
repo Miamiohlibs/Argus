@@ -3,7 +3,28 @@ import { db } from '@/lib/db';
 // import { User } from '@/types/User';
 import { User } from '@prisma/client';
 
-async function getUser(id: string): Promise<{
+export async function getUserByClerkUserId(clerkUserId: string): Promise<{
+  user?: User | undefined;
+  error?: string;
+}> {
+  try {
+    const user = await db.user.findUniqueOrThrow({
+      where: {
+        clerkUserId,
+      },
+    });
+    console.log('Fetched user by Clerk ID:', user);
+    if (!user || user === null) {
+      return { error: 'No user found' };
+    }
+    return { user };
+  } catch (error) {
+    console.log('DB error:', error);
+    return { error: 'Database error' };
+  }
+}
+
+export default async function getUser(id: string): Promise<{
   user?: User | undefined;
   error?: string;
 }> {
@@ -30,5 +51,3 @@ async function getUser(id: string): Promise<{
     return { error: 'Database error' };
   }
 }
-
-export default getUser;
