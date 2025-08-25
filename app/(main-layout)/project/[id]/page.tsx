@@ -39,7 +39,7 @@ export default async function ProjectPage({
           <RecordSearchButton projectId={id} className={'me-2'} />
         )}
 
-        <Link href={`/printSlips/${id}`}>
+        <Link href={`/slips/${id}`}>
           <Button variant="outline-primary" size="sm">
             Print Slips
           </Button>
