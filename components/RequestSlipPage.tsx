@@ -27,6 +27,8 @@ type RequestSlipProps = {
   callNumber?: string;
   itemInfo?: string;
   notes?: string;
+  userName?: string;
+  userEmail?: string;
   affiliation?: 'Miami' | 'Other';
   status?: 'Undergrad' | 'Graduate' | 'Faculty' | 'Staff' | 'Alumni' | 'Other';
 };
@@ -39,6 +41,8 @@ export const RequestSlipPage = ({
   callNumber,
   itemInfo,
   notes,
+  userName,
+  userEmail,
   affiliation,
   status,
   styles,
@@ -180,7 +184,12 @@ export const RequestSlipPage = ({
         <Text style={styles.label}>II. RESEARCHER INFORMATION</Text>
         <View style={styles.row}>
           <View style={styles.col}>
-            <Text>Last Name (printed):</Text>
+            <Text>
+              Name:{' '}
+              <Text style={styles.bold}>
+                {userName} ({userEmail})
+              </Text>
+            </Text>
             <Text>AFFILIATION</Text>
             <View style={styles.checkboxRow}>
               <View style={styles.checkbox} />

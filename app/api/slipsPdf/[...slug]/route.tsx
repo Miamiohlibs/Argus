@@ -4,6 +4,7 @@ import { renderToStream } from '@react-pdf/renderer';
 import { RequestSlipProps } from '@/types/RequestSlipProps';
 import { MultiPagePdf } from '@/components/MultipagePdf';
 import getEntries from '@/app/actions/getEntries';
+import getProject from '@/app/actions/getProject';
 
 export async function GET(
   req: NextRequest,
@@ -12,6 +13,8 @@ export async function GET(
   const id = await params.slug;
   // get items from project by id
   const { data } = await getEntries(id);
+  const { project } = await getProject({ id });
+
   const entries = data?.entries ?? [];
   const items = entries.map((entry) => {
     console.log('One entry:', JSON.stringify(entry));
@@ -22,6 +25,8 @@ export async function GET(
       notes: entry.notes,
       location: entry.location,
       itemInfo: entry.items.map((item) => item.description).join(', '),
+      userName: project?.user.name,
+      userEmail: project?.user.email,
     };
   });
 
