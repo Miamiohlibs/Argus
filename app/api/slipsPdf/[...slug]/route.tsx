@@ -8,10 +8,17 @@ import getProject from '@/app/actions/getProject';
 
 export async function GET(
   req: NextRequest,
-  context: { params: { slug: string[] } }
+  { params }: { params: Promise<{ slug: string }> }
 ) {
-  const { params } = context;
-  const id = params.slug[0];
+  // req: NextRequest,
+  // context: { params: { slug: string[] } }
+  // const id = '18';
+  const { slug } = await params;
+  // const { id } = await params;
+  const id = slug;
+
+  // const { params } = context;
+  // const id = params.slug[0];
   // const id = await params.slug;
   // get items from project by id
   const { data } = await getEntries(id);
