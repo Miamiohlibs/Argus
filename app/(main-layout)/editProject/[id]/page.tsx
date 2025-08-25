@@ -29,7 +29,7 @@ export default async function EditProjectPage({
         user={currentUser}
         action={updateProject}
         project={project}
-        basePath={process.env.APP_BASEPATH ?? '/'}
+        basePath={process.env.NEXT_PUBLIC_APP_BASEPATH ?? '/'}
       />
     </>
   );

@@ -7,7 +7,7 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 Set up a `.env` file, including:
 
 ```
-APP_BASEPATH=/argus. # or whatever path you want to use; skip this to use /
+NEXT_PUBLIC_APP_BASEPATH=/argus. # or whatever path you want to use; skip this to use /
 DATABASE_URL=postgresql://... #database connection string; I use Neon
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
 CLERK_SECRET_KEY=

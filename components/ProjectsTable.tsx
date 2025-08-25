@@ -105,7 +105,7 @@ export default function ProjectsTable({
         if (!canEditBool) {
           return (
             <>
-              <Link href={`/printSlips/${row.id}`}>
+              <Link href={`/slips/${row.id}`}>
                 <Button variant="outline-primary" size="sm">
                   Print
                 </Button>
@@ -121,7 +121,7 @@ export default function ProjectsTable({
                 Edit
               </Button>
             </Link>
-            <Link href={`/printSlips/${row.id}`}>
+            <Link href={`/slips/${row.id}`}>
               <Button variant="outline-primary" size="sm">
                 Print
               </Button>
