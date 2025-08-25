@@ -30,6 +30,11 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 4,
   },
+  sectionHeader: {
+    textAlign: 'left',
+    marginBottom: 4,
+    fontWeight: 'bold',
+  },
   title: {
     fontSize: 12,
     fontWeight: 'bold',
@@ -47,9 +52,17 @@ const styles = StyleSheet.create({
     padding: 4,
     borderRight: '1pt solid black',
   },
+  colNoRightBorder: {
+    flex: 1,
+    padding: 4,
+    borderRight: 0,
+  },
   lastCol: {
     flex: 1,
     padding: 4,
+  },
+  blankLine: {
+    height: 12,
   },
   label: {
     fontWeight: 'bold',

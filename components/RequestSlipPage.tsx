@@ -182,15 +182,21 @@ export const RequestSlipPage = ({
       {/* Section II */}
       <View style={styles.section}>
         <Text style={styles.label}>II. RESEARCHER INFORMATION</Text>
+        <View style={styles.header}>
+          <Text>
+            Name:
+            <Text style={styles.bold}>
+              {userName} ({userEmail})
+            </Text>
+          </Text>
+        </View>
         <View style={styles.row}>
           <View style={styles.col}>
-            <Text>
-              Name:{' '}
-              <Text style={styles.bold}>
-                {userName} ({userEmail})
-              </Text>
-            </Text>
-            <Text>AFFILIATION</Text>
+            <Text style={styles.sectionHeader}>AFFILIATION</Text>
+            <Text style={styles.paragraph}>Please check all that apply</Text>
+          </View>
+          <View style={styles.col}>
+            <Text style={styles.sectionHeader}>Institution</Text>
             <View style={styles.checkboxRow}>
               <View style={styles.checkbox} />
               <Text>Miami University</Text>
@@ -200,9 +206,8 @@ export const RequestSlipPage = ({
               <Text>Other</Text>
             </View>
           </View>
-
-          <View style={styles.col}>
-            <Text>Institution</Text>
+          <View style={styles.colNoRightBorder}>
+            <Text style={styles.sectionHeader}>Status</Text>
             <View style={styles.checkboxRow}>
               <View style={styles.checkbox} />
               <Text>Undergraduate</Text>
@@ -218,7 +223,7 @@ export const RequestSlipPage = ({
           </View>
 
           <View style={styles.lastCol}>
-            <Text>Status</Text>
+            <View style={styles.blankLine}>{/* Blank on purpose*/}</View>
             <View style={styles.checkboxRow}>
               <View style={styles.checkbox} />
               <Text>Alumni</Text>
