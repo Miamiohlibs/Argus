@@ -10,23 +10,14 @@ export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ slug: string }> }
 ) {
-  // req: NextRequest,
-  // context: { params: { slug: string[] } }
-  // const id = '18';
   const { slug } = await params;
-  // const { id } = await params;
-  const id = slug;
-
-  // const { params } = context;
-  // const id = params.slug[0];
-  // const id = await params.slug;
-  // get items from project by id
+  const id = slug; // why this two-step? idk but it seemed necessary to build
   const { data } = await getEntries(id);
   const { project } = await getProject({ id });
 
   const entries = data?.entries ?? [];
   const items = entries.map((entry) => {
-    console.log('One entry:', JSON.stringify(entry));
+    // console.log('One entry:', JSON.stringify(entry));
     const affiliation =
       project?.user.email && project?.user.email.includes('@miamioh.edu')
         ? 'Miami'

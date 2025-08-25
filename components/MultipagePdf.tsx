@@ -104,8 +104,6 @@ const styles = StyleSheet.create({
 });
 
 export const MultiPagePdf = ({ books }: { books: RequestSlipProps[] }) => {
-  console.log(`books: `, JSON.stringify(books));
-  console.log('isArray:', Array.isArray(books));
   return (
     <Document>
       {books &&
