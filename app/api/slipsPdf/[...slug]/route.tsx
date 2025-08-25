@@ -8,9 +8,11 @@ import getProject from '@/app/actions/getProject';
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { slug: string } }
+  context: { params: { slug: string[] } }
 ) {
-  const id = await params.slug;
+  const { params } = context;
+  const id = params.slug[0];
+  // const id = await params.slug;
   // get items from project by id
   const { data } = await getEntries(id);
   const { project } = await getProject({ id });
