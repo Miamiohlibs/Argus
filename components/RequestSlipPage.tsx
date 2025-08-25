@@ -1,5 +1,5 @@
 // app/pdf/RequestSlip.tsx
-import { Page, Text, View, Document, StyleSheet } from '@react-pdf/renderer';
+import { Page, Text, View } from '@react-pdf/renderer';
 
 // const styles = StyleSheet.create({
 //   page: { padding: 10, fontSize: 10 },
