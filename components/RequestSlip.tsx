@@ -38,6 +38,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 9,
   },
+  centerText: {
+    textAlign: 'center',
+  },
+  bold: {
+    fontWeight: 'bold',
+  },
   checkboxRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -59,28 +65,106 @@ const RequestSlip = () => (
         <Text>Special Collections & Archives Request Slip</Text>
       </View>
 
+      <Text style={styles.label}>
+        I. ITEM REQUESTED (please fill out completely)
+      </Text>
       {/* Section I */}
       <View style={styles.section}>
         <View style={styles.row}>
           <View style={styles.col}>
-            <Text style={styles.label}>
-              I. ITEM REQUESTED (please fill out completely)
-            </Text>
-            <Text>TYPE OF MATERIAL</Text>
+            <Text style={styles.label}>TYPE OF MATERIAL</Text>
             <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} /> <Text>Vault</Text>
+              <View style={styles.checkbox} />
+              <Text>Vault</Text>
             </View>
             <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} /> <Text>Rare</Text>
+              <View style={styles.checkbox} />
+              <Text>Rare</Text>
             </View>
             <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} /> <Text>German</Text>
+              <View style={styles.checkbox} />
+              <Text>German</Text>
+            </View>
+            <View style={styles.checkboxRow}>
+              <View style={styles.checkbox} />
+              <Text>Russian</Text>
+            </View>
+            <View style={styles.checkboxRow}>
+              <View style={styles.checkbox} />
+              <Text>Miami Archives</Text>
+            </View>
+            <View style={styles.checkboxRow}>
+              <View style={styles.checkbox} />
+              <Text>Thesis/Dissertation</Text>
+            </View>
+            <View style={styles.checkboxRow}>
+              <View style={styles.checkbox} />
+              <Text>Manuscript</Text>
+            </View>
+            <View style={styles.checkboxRow}>
+              <View style={styles.checkbox} />
+              <Text>Western College</Text>
+            </View>
+            <View style={styles.checkboxRow}>
+              <View style={styles.checkbox} />
+              <Text>Oxford College</Text>
+            </View>
+            <View style={styles.checkboxRow}>
+              <View style={styles.checkbox} />
+              <Text>Reference College</Text>
+            </View>
+            <View style={styles.checkboxRow}>
+              <View style={styles.checkbox} />
+              <Text>Archives VF</Text>
+            </View>
+            <View style={styles.checkboxRow}>
+              <View style={styles.checkbox} />
+              <Text>Map</Text>
+            </View>
+            <View style={styles.checkboxRow}>
+              <View style={styles.checkbox} />
+              <Text>Honors Paper</Text>
+            </View>
+            <View style={styles.checkboxRow}>
+              <View style={styles.checkbox} />
+              <Text>Photograph: </Text>
+              <View style={styles.checkboxRow}>
+                <View style={styles.checkbox} />
+                <Text>Print </Text>
+              </View>
+              <View style={styles.checkboxRow}>
+                <View style={styles.checkbox} />
+                <Text>Negative</Text>
+              </View>
+            </View>
+            <View style={styles.checkboxRow}>
+              <View style={styles.checkbox} />
+              <Text>Media</Text>
+            </View>
+            <View style={styles.checkboxRow}>
+              <View style={styles.checkbox} />
+              <Text>Other</Text>
             </View>
             {/* Add more as needed */}
+            <View style={styles.label}>
+              <Text>SIZE (if applicable)</Text>
+            </View>
+            <View style={styles.checkboxRow}>
+              <View style={styles.checkbox} />
+              <Text>Small</Text>
+            </View>
+            <View style={styles.checkboxRow}>
+              <View style={styles.checkbox} />
+              <Text>Folio</Text>
+            </View>
+            <View style={styles.checkboxRow}>
+              <View style={styles.checkbox} />
+              <Text>Double Oversize</Text>
+            </View>
           </View>
 
           <View style={styles.col}>
-            <Text style={styles.label}>Author (last name)</Text>
+            <Text>Author (last name)</Text>
             <Text>Brief Title</Text>
             <Text>Date of item</Text>
             <Text>Manuscript #</Text>
@@ -90,6 +174,8 @@ const RequestSlip = () => (
 
           <View style={styles.lastCol}>
             <Text style={styles.label}>CALL NUMBER</Text>
+            <Text style={styles.centerText}>spec</Text>
+            <Text style={styles.centerText}>PN 2011 .F12 1992</Text>
             <Text>Volume(s):</Text>
           </View>
         </View>
@@ -103,36 +189,44 @@ const RequestSlip = () => (
             <Text>Last Name (printed):</Text>
             <Text>AFFILIATION</Text>
             <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} /> <Text>Miami University</Text>
+              <View style={styles.checkbox} />
+              <Text>Miami University</Text>
             </View>
             <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} /> <Text>Other</Text>
+              <View style={styles.checkbox} />
+              <Text>Other</Text>
             </View>
           </View>
 
           <View style={styles.col}>
             <Text>Institution</Text>
             <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} /> <Text>Undergraduate</Text>
+              <View style={styles.checkbox} />
+              <Text>Undergraduate</Text>
             </View>
             <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} /> <Text>Graduate</Text>
+              <View style={styles.checkbox} />
+              <Text>Graduate</Text>
             </View>
             <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} /> <Text>Faculty</Text>
+              <View style={styles.checkbox} />
+              <Text>Faculty</Text>
             </View>
           </View>
 
           <View style={styles.lastCol}>
             <Text>Status</Text>
             <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} /> <Text>Alumni</Text>
+              <View style={styles.checkbox} />
+              <Text>Alumni</Text>
             </View>
             <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} /> <Text>Staff</Text>
+              <View style={styles.checkbox} />
+              <Text>Staff</Text>
             </View>
             <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} /> <Text>Other</Text>
+              <View style={styles.checkbox} />
+              <Text>Other</Text>
             </View>
           </View>
         </View>
@@ -149,14 +243,18 @@ const RequestSlip = () => (
             <Text>[ ] Cataloguing</Text>
             <Text>[ ] Exhibit</Text>
             <Text>[ ] Digitization</Text>
+            <Text>[ ] Hold Shelf/Cart</Text>
+            <Text>[ ] Reading Room</Text>
+            <Text>[ ] Class</Text>
+            <Text>[ ] Other</Text>
           </View>
           <View style={styles.col}>
             <Text>Pulled by:</Text>
             <Text>Location:</Text>
           </View>
           <View style={styles.lastCol}>
-            <Text>Resolved by:</Text>
-            <Text>Resolved on date:</Text>
+            <Text>Reshelved by:</Text>
+            <Text>Reshelved on date:</Text>
           </View>
         </View>
       </View>
