@@ -14,10 +14,14 @@ export async function GET(
   const { data } = await getEntries(id);
   const entries = data?.entries ?? [];
   const items = entries.map((entry) => {
+    console.log('One entry:', JSON.stringify(entry));
     return {
       author: entry.author,
       title: entry.itemTitle,
       callNumber: entry.callNumber,
+      notes: entry.notes,
+      location: entry.location,
+      itemInfo: entry.items.map((item) => item.description).join(', '),
     };
   });
 

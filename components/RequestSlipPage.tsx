@@ -22,7 +22,11 @@ import { Page, Text, View, Document, StyleSheet } from '@react-pdf/renderer';
 type RequestSlipProps = {
   author?: string;
   title?: string;
+  date?: string;
+  location?: string;
   callNumber?: string;
+  itemInfo?: string;
+  notes?: string;
   affiliation?: 'Miami' | 'Other';
   status?: 'Undergrad' | 'Graduate' | 'Faculty' | 'Staff' | 'Alumni' | 'Other';
 };
@@ -30,85 +34,221 @@ type RequestSlipProps = {
 export const RequestSlipPage = ({
   author,
   title,
+  date,
+  location,
   callNumber,
+  itemInfo,
+  notes,
   affiliation,
   status,
   styles,
 }: RequestSlipProps & { styles: any }) => {
   return (
-    <Page size="A4" style={styles.page}>
-      <Text style={styles.header}>
-        Miami University Libraries {'\n'}
-        Special Collections & Archives Request Slip
-      </Text>
+    <Page size="LETTER" style={styles.page}>
+      {/* Header */}
+      <View style={styles.header}>
+        <Text style={styles.title}>Miami University Libraries</Text>
+        <Text>Special Collections & Archives Request Slip</Text>
+      </View>
 
-      {/* Section I: ITEM REQUESTED */}
+      <Text style={styles.label}>
+        I. ITEM REQUESTED (please fill out completely)
+      </Text>
+      {/* Section I */}
       <View style={styles.section}>
         <View style={styles.row}>
-          <View style={styles.cell}>
-            <Text style={styles.label}>I. ITEM REQUESTED</Text>
-            <Text>(please fill out completely)</Text>
+          <View style={styles.col}>
+            <Text style={styles.label}>TYPE OF MATERIAL</Text>
+            <View style={styles.checkboxRow}>
+              <View style={styles.checkbox} />
+              <Text>Vault</Text>
+            </View>
+            <View style={styles.checkboxRow}>
+              <View style={styles.checkbox} />
+              <Text>Rare</Text>
+            </View>
+            <View style={styles.checkboxRow}>
+              <View style={styles.checkbox} />
+              <Text>German</Text>
+            </View>
+            <View style={styles.checkboxRow}>
+              <View style={styles.checkbox} />
+              <Text>Russian</Text>
+            </View>
+            <View style={styles.checkboxRow}>
+              <View style={styles.checkbox} />
+              <Text>Miami Archives</Text>
+            </View>
+            <View style={styles.checkboxRow}>
+              <View style={styles.checkbox} />
+              <Text>Thesis/Dissertation</Text>
+            </View>
+            <View style={styles.checkboxRow}>
+              <View style={styles.checkbox} />
+              <Text>Manuscript</Text>
+            </View>
+            <View style={styles.checkboxRow}>
+              <View style={styles.checkbox} />
+              <Text>Western College</Text>
+            </View>
+            <View style={styles.checkboxRow}>
+              <View style={styles.checkbox} />
+              <Text>Oxford College</Text>
+            </View>
+            <View style={styles.checkboxRow}>
+              <View style={styles.checkbox} />
+              <Text>Reference College</Text>
+            </View>
+            <View style={styles.checkboxRow}>
+              <View style={styles.checkbox} />
+              <Text>Archives VF</Text>
+            </View>
+            <View style={styles.checkboxRow}>
+              <View style={styles.checkbox} />
+              <Text>Map</Text>
+            </View>
+            <View style={styles.checkboxRow}>
+              <View style={styles.checkbox} />
+              <Text>Honors Paper</Text>
+            </View>
+            <View style={styles.checkboxRow}>
+              <View style={styles.checkbox} />
+              <Text>Photograph: </Text>
+              <View style={styles.checkboxRow}>
+                <View style={styles.checkbox} />
+                <Text>Print </Text>
+              </View>
+              <View style={styles.checkboxRow}>
+                <View style={styles.checkbox} />
+                <Text>Negative</Text>
+              </View>
+            </View>
+            <View style={styles.checkboxRow}>
+              <View style={styles.checkbox} />
+              <Text>Media</Text>
+            </View>
+            <View style={styles.checkboxRow}>
+              <View style={styles.checkbox} />
+              <Text>Other</Text>
+            </View>
+            {/* Add more as needed */}
+            <View style={styles.label}>
+              <Text>SIZE (if applicable)</Text>
+            </View>
+            <View style={styles.checkboxRow}>
+              <View style={styles.checkbox} />
+              <Text>Small</Text>
+            </View>
+            <View style={styles.checkboxRow}>
+              <View style={styles.checkbox} />
+              <Text>Folio</Text>
+            </View>
+            <View style={styles.checkboxRow}>
+              <View style={styles.checkbox} />
+              <Text>Double Oversize</Text>
+            </View>
           </View>
 
-          <View style={styles.cell}>
-            <Text style={styles.label}>Author (last name)</Text>
-            <Text>{author || '________________'}</Text>
-
-            <Text style={styles.label}>Brief Title</Text>
-            <Text>{title || '________________'}</Text>
+          <View style={styles.col}>
+            <Text>
+              Author: <Text style={styles.bold}>{author}</Text>
+            </Text>
+            <Text>
+              Brief Title: <Text style={styles.bold}>{title}</Text>
+            </Text>
+            <Text>
+              Date of item: <Text style={styles.bold}>{date}</Text>
+            </Text>
+            <Text>Manuscript #</Text>
+            <Text>Box ________ Folder ________</Text>
+            <Text>Other information</Text>
+            <Text style={styles.paragraph}>{notes}</Text>
           </View>
 
-          <View style={styles.cellLast}>
+          <View style={styles.lastCol}>
             <Text style={styles.label}>CALL NUMBER</Text>
-            <Text>{callNumber || '________________'}</Text>
+            <Text style={styles.centerText}>{location}</Text>
+            <Text style={styles.centerText}>{callNumber ?? ''}</Text>
+            <Text>Volume(s):</Text>
+            <Text style={styles.paragraph}>{itemInfo}</Text>
           </View>
         </View>
       </View>
 
-      {/* Section II: RESEARCHER INFORMATION */}
+      {/* Section II */}
       <View style={styles.section}>
         <Text style={styles.label}>II. RESEARCHER INFORMATION</Text>
-
-        <View style={{ flexDirection: 'row', marginTop: 4 }}>
-          {/* Affiliation */}
-          <View style={{ flex: 1 }}>
-            <Text style={styles.label}>AFFILIATION</Text>
+        <View style={styles.row}>
+          <View style={styles.col}>
+            <Text>Last Name (printed):</Text>
+            <Text>AFFILIATION</Text>
             <View style={styles.checkboxRow}>
-              <View
-                style={
-                  affiliation === 'Miami' ? styles.checkedBox : styles.checkbox
-                }
-              />
+              <View style={styles.checkbox} />
               <Text>Miami University</Text>
             </View>
             <View style={styles.checkboxRow}>
-              <View
-                style={
-                  affiliation === 'Other' ? styles.checkedBox : styles.checkbox
-                }
-              />
+              <View style={styles.checkbox} />
               <Text>Other</Text>
             </View>
           </View>
 
-          {/* Status */}
-          <View style={{ flex: 1 }}>
-            <Text style={styles.label}>STATUS</Text>
-            {[
-              'Undergrad',
-              'Graduate',
-              'Faculty',
-              'Staff',
-              'Alumni',
-              'Other',
-            ].map((opt) => (
-              <View key={opt} style={styles.checkboxRow}>
-                <View
-                  style={status === opt ? styles.checkedBox : styles.checkbox}
-                />
-                <Text>{opt}</Text>
-              </View>
-            ))}
+          <View style={styles.col}>
+            <Text>Institution</Text>
+            <View style={styles.checkboxRow}>
+              <View style={styles.checkbox} />
+              <Text>Undergraduate</Text>
+            </View>
+            <View style={styles.checkboxRow}>
+              <View style={styles.checkbox} />
+              <Text>Graduate</Text>
+            </View>
+            <View style={styles.checkboxRow}>
+              <View style={styles.checkbox} />
+              <Text>Faculty</Text>
+            </View>
+          </View>
+
+          <View style={styles.lastCol}>
+            <Text>Status</Text>
+            <View style={styles.checkboxRow}>
+              <View style={styles.checkbox} />
+              <Text>Alumni</Text>
+            </View>
+            <View style={styles.checkboxRow}>
+              <View style={styles.checkbox} />
+              <Text>Staff</Text>
+            </View>
+            <View style={styles.checkboxRow}>
+              <View style={styles.checkbox} />
+              <Text>Other</Text>
+            </View>
+          </View>
+        </View>
+      </View>
+
+      {/* Section III (Internal Use) */}
+      <View style={styles.section}>
+        <Text style={{ textAlign: 'center' }}>
+          ————————— For Internal Use Only —————————
+        </Text>
+        <View style={styles.row}>
+          <View style={styles.col}>
+            <Text>[ ] Conservation</Text>
+            <Text>[ ] Cataloguing</Text>
+            <Text>[ ] Exhibit</Text>
+            <Text>[ ] Digitization</Text>
+            <Text>[ ] Hold Shelf/Cart</Text>
+            <Text>[ ] Reading Room</Text>
+            <Text>[ ] Class</Text>
+            <Text>[ ] Other</Text>
+          </View>
+          <View style={styles.col}>
+            <Text>Pulled by:</Text>
+            <Text>Location:</Text>
+          </View>
+          <View style={styles.lastCol}>
+            <Text>Reshelved by:</Text>
+            <Text>Reshelved on date:</Text>
           </View>
         </View>
       </View>
