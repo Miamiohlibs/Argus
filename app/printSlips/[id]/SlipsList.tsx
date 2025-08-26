@@ -1,13 +1,12 @@
 import getEntries from '@/app/actions/getEntries';
-import Slip from './Slip';
 import RequestSlip from './RequestSlip';
-import { EntryWithItems } from '@/types/EntryWithItems';
+// import { EntryWithItems } from '@/types/EntryWithItems';
 import { getUserByClerkUserId } from '@/app/actions/getUser';
 
-type EntriesResult = {
-  entries: EntryWithItems[];
-  totalCount: number;
-};
+// type EntriesResult = {
+//   entries: EntryWithItems[];
+//   totalCount: number;
+// };
 
 export default async function SlipsList({ id }: { id: string }) {
   const { data } = await getEntries(id);
