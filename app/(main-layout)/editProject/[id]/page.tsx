@@ -5,6 +5,7 @@ import getProject from '@/app/actions/getProject';
 // import { Project } from '@prisma/client';
 import canEdit from '@/lib/canEdit';
 import { redirect } from 'next/navigation';
+import { unauthorized } from 'next/navigation';
 
 interface EditProjectPageProps {
   params: Promise<{ id: string }>;
@@ -23,14 +24,18 @@ export default async function EditProjectPage({
 
   console.log(currentUser);
   console.log(project);
-  return (
-    <>
-      <ProjectForm
-        user={currentUser}
-        action={updateProject}
-        project={project}
-        basePath={process.env.NEXT_PUBLIC_APP_BASEPATH ?? '/'}
-      />
-    </>
-  );
+  if (currentUser != undefined) {
+    return (
+      <>
+        <ProjectForm
+          user={currentUser}
+          action={updateProject}
+          project={project}
+          basePath={process.env.NEXT_PUBLIC_APP_BASEPATH ?? '/'}
+        />
+      </>
+    );
+  } else {
+    unauthorized();
+  }
 }
