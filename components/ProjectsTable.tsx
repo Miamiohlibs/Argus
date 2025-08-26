@@ -9,6 +9,7 @@ import { Button } from 'react-bootstrap';
 import getProjects from '@/app/actions/getProjects';
 import DeleteProjectButton from './DeleteProjectButton';
 import { User } from '@prisma/client';
+// import canEdit from '@/lib/canEdit';
 
 // Use Prisma's generated type that includes the user relation
 type ProjectWithUser = Prisma.ProjectGetPayload<{
@@ -84,23 +85,33 @@ export default function ProjectsTable({
       name: 'Tools',
       cell: (row: ProjectWithUser) => {
         // Check if current user can edit this project
-        const canEdit =
-          user?.role === 'admin' ||
-          user?.role === 'superadmin' ||
-          row.user.clerkUserId === user?.clerkUserId;
-        console.log(
-          'Row User:',
-          row.user?.clerkUserId,
-          'Current User:',
-          user?.clerkUserId,
-          'Can edit:',
-          canEdit,
-          'for project:',
-          row.title
-        );
+        // note: I tried using @/lib/canEdit here and and couldn't get it to work
+        const canEditBool =
+          user?.role !== 'user' &&
+          (user?.role === 'admin' ||
+            user?.role === 'superadmin' ||
+            row.user.clerkUserId === user?.clerkUserId);
+        // console.log(
+        //   'Row User:',
+        //   row.user?.clerkUserId,
+        //   'Current User:',
+        //   user?.clerkUserId,
+        //   'Can edit:',
+        //   canEditBool,
+        //   'for project:',
+        //   row.title
+        // );
 
-        if (!canEdit) {
-          return <></>;
+        if (!canEditBool) {
+          return (
+            <>
+              <Link href={`/slips/${row.id}`}>
+                <Button variant="outline-primary" size="sm">
+                  Print
+                </Button>
+              </Link>
+            </>
+          );
         }
 
         return (
@@ -110,7 +121,7 @@ export default function ProjectsTable({
                 Edit
               </Button>
             </Link>
-            <Link href={`/printSlips/${row.id}`}>
+            <Link href={`/slips/${row.id}`}>
               <Button variant="outline-primary" size="sm">
                 Print
               </Button>

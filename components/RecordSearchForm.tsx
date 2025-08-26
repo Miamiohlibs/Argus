@@ -6,20 +6,22 @@ import { toast } from 'react-toastify';
 // import { bibById } from '@/app/actions/almaSearch';
 import { bibHoldings } from '@/app/actions/almaSearch';
 import { useState } from 'react';
-import BibEntry from './BibEntry';
-import HoldingEntry from './HoldingEntry';
-import type { AlmaMmsidSearchResult } from '@/types/AlmaMmsidSearchResult';
+import type { CondensedBibHoldings } from '@/types/CondensedBibHoldings';
+import BibResultsWrapper from './BibResultsWrapper';
 
 interface RecordSearchFormProps {
-  projectId: string | number;
+  projectId: number;
+  userCanEditPage: boolean;
 }
 
-type MmsidSearchResultOrNull = AlmaMmsidSearchResult | null;
-
-const RecordSearchForm = ({ projectId }: RecordSearchFormProps) => {
+const RecordSearchForm = ({
+  projectId,
+  userCanEditPage,
+}: RecordSearchFormProps) => {
   const formRef = useRef<HTMLFormElement>(null);
   // const router = useRouter(); // Changed from useNavigate
-  const [results, setresults] = useState<MmsidSearchResultOrNull>(null); // State to hold search results
+  // const [results, setresults] = useState<MmsidSearchResultOrNull>(null); // State to hold search results
+  const [results, setresults] = useState<CondensedBibHoldings[] | null>(null);
 
   const handleSubmit = async (formData: FormData) => {
     const mms_id = formData.get('mms-id');
@@ -33,7 +35,7 @@ const RecordSearchForm = ({ projectId }: RecordSearchFormProps) => {
       //   router.push('/'); // Redirect to home on error
     } else {
       // toast.success('Lookup successful');
-      setresults(data); // Set the results state with the fetched data
+      setresults(data || null); // Set the results state with the fetched data
       // Optionally, you can redirect or perform other actions with the results
       // router.push('/'); // Uncomment if you want to redirect after successful search
     }
@@ -89,21 +91,56 @@ const RecordSearchForm = ({ projectId }: RecordSearchFormProps) => {
           </InputGroup>
         </Form.Group>
       </Form> */}
+      {/* Expecting array of : 
+  {
+  bib_data: AlmaItemHoldingBibData;
+  holding_data: AlmaItemHoldingHoldingData;
+  items: AlmaItemHoldingItemData[];
+  locationCodes: string;
+  }
+  */}
+      {/* {results?.map((holding) => (
+        <div key={holding.bib_data.mms_id}>
+          {holding && holding.bib_data ? (
+            <>
+              <BibEntryComponent entry={holding.bib_data} />
+            </>
+          ) : (
+            <p>No results found.</p>
+          )}
+          {holding ? (
+            <>
+              <HoldingEntry holdings={results.holding} projectId={projectId} />
+            </>
+          ) : null}
+        </div>
+      ))} */}
 
-      <div>
-        {results && results.bib_data ? (
-          <>
-            <BibEntry entry={results.bib_data} />
-          </>
-        ) : (
-          <p>No results found.</p>
-        )}
-        {results && results.holding ? (
-          <>
-            <HoldingEntry holdings={results.holding} projectId={projectId} />
-          </>
-        ) : null}
-      </div>
+      <BibResultsWrapper
+        projectId={projectId}
+        holdingsData={results ?? undefined}
+        actionType={'add'}
+        isEditor={userCanEditPage}
+      />
+
+      {/* {results ? (
+        results.map((holding) => {
+          return (
+            <div key={holding.holding_data.holding_id}>
+              <BibEntryComponent entry={holding.bib_data} />
+              <HoldingEntry
+                holdings={holding.holding_data}
+                items={holding.items}
+                bibData={holding.bib_data}
+                projectId={projectId}
+                locationCodes={holding.locationCodes}
+              />
+            </div>
+          );
+        })
+      ) : (
+        <p>No Results Found</p>
+      )} */}
       <pre>{JSON.stringify(results, null, 2)}</pre>
     </>
   );

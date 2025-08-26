@@ -1,22 +1,11 @@
 'use server';
 import { db } from '@/lib/db';
-// import { auth } from '@clerk/nextjs/server';
-import type { Prisma } from '@prisma/client';
-
-// Define the type that matches what you're actually returning
-type ProjectWithUserAndBib = Prisma.ProjectGetPayload<{
-  include: { user: true; bibEntries: true };
-}>;
+import type { ProjectWithUserAndBib } from '@/types/ProjectWithUserAndBib';
 
 async function getProject(params: { id: string }): Promise<{
   project?: ProjectWithUserAndBib;
   error?: string;
 }> {
-  // const { userId } = await auth();
-  // if (!userId) {
-  //   return { error: 'User not found' };
-  // }
-
   try {
     const project = await db.project.findUniqueOrThrow({
       where: {

@@ -7,14 +7,16 @@ import { toast } from 'react-toastify';
 import { useEffect } from 'react';
 // import { useRouter } from 'next/navigation'; // Changed from react-router-dom
 import { Project } from '@prisma/client';
+import { ProjectData } from '@/types/ProjectData';
 
 type ProjectActionResult =
-  | { success: true; data: unknown; error?: never }
+  | { success: true; data: ProjectData; error?: never }
   | { success: false; error: string; data?: never };
 
 interface ProjectFormProps {
   user: User | null;
   project?: Project | null;
+  basePath: string | null;
   action: (
     prevState: unknown,
     formData: FormData
@@ -28,8 +30,12 @@ export default function ProjectForm({
   user,
   project = undefined,
   action,
+  basePath,
 }: ProjectFormProps) {
   const [state, formAction] = useActionState(action, null);
+  if (basePath === null) {
+    basePath = '/';
+  }
 
   // Handle notifications
   useEffect(() => {
@@ -43,12 +49,13 @@ export default function ProjectForm({
           ? 'Project updated successfully'
           : 'Project created successfully'
       );
+      console.log(`State`, JSON.stringify(state.data));
       // Client-side redirect after showing toast
       setTimeout(() => {
-        window.location.href = '/';
-      }, 1500); // Give time for toast to show
+        window.location.href = `${basePath}/project/${state.data?.id}`;
+      }, 500); // Give time for toast to show
     }
-  }, [state, project]);
+  }, [state, project, basePath]);
 
   return (
     <Card className="shadow-sm">

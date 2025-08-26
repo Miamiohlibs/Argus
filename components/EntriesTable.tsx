@@ -8,13 +8,20 @@ import DeleteButton from './DeleteButton';
 import deleteEntry from '@/app/actions/deleteEntry';
 import { toast } from 'react-toastify';
 import { EntryWithItems } from '@/types/EntryWithItems';
+import { User } from '@prisma/client';
 
 // Define the props interface
 interface EntriesTableProps {
   entries?: EntryWithItems[];
+  user: User;
+  ownerClerkId: string;
 }
 
-export default function EntriesTable({ entries = [] }: EntriesTableProps) {
+export default function EntriesTable({
+  entries = [],
+  user,
+  ownerClerkId,
+}: EntriesTableProps) {
   const [currentEntries, setCurrentEntries] = useState<EntryWithItems[]>([]); // Track current entries
   const [filteredEntries, setFilteredEntries] = useState<EntryWithItems[]>([]);
   const [loading, setLoading] = useState(true);
@@ -63,7 +70,7 @@ export default function EntriesTable({ entries = [] }: EntriesTableProps) {
       name: 'Title',
       selector: (row: EntryWithItems) => row.itemTitle ?? '',
       cell: (row: EntryWithItems) => (
-        <Link href={`/entry/${row.id}`}>
+        <Link href={`/editEntry/${row.id}`}>
           {row.itemTitle || 'Untitled Project'}
         </Link>
       ),
@@ -109,21 +116,23 @@ export default function EntriesTable({ entries = [] }: EntriesTableProps) {
       name: 'Tools',
       cell: (row: EntryWithItems) => {
         // Check if current user can edit this project
-        const canEdit = true;
-        // const canEdit =
-        //   user?.role === 'admin' ||
-        //   user?.role === 'superadmin' ||
-        //   row.user.clerkUserId === user?.clerkUserId;
-        // console.log(
-        //   'Row User:',
-        //   row.user?.clerkUserId,
-        //   'Current User:',
-        //   user?.clerkUserId,
-        //   'Can edit:',
-        //   canEdit,
-        //   'for project:',
-        //   row.title
-        // );
+        // const canEdit = true;
+        const canEdit =
+          user !== null &&
+          user !== undefined &&
+          (user?.role === 'admin' ||
+            user?.role === 'superadmin' ||
+            ownerClerkId === user?.clerkUserId);
+        console.log(
+          'Row User:',
+          ownerClerkId,
+          'Current User:',
+          user?.clerkUserId,
+          'Can edit:',
+          canEdit,
+          'for project:',
+          row.itemTitle
+        );
         const LinkOutUrl = row.url ?? undefined;
         const LinkOut = LinkOutUrl ? (
           <Link href={LinkOutUrl} target="_blank">
@@ -138,7 +147,7 @@ export default function EntriesTable({ entries = [] }: EntriesTableProps) {
         return (
           <>
             {LinkOut}
-            <Link href={`#`}>
+            <Link href={`/editEntry/${row.id}`}>
               <Button variant="outline-primary" size="sm" className="me-1">
                 Edit
               </Button>
