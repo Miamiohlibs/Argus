@@ -49,6 +49,8 @@ model BibEntry {
   almaId     String
   almaIdType String
   author     String
+  pub_date   String?
+  publisher  String?
   callNumber String?
   location   String
   notes      String?
