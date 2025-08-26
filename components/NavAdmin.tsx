@@ -2,25 +2,27 @@ import NextLink from 'next/link';
 import { Nav, NavItem, NavLink } from 'react-bootstrap';
 import checkAccess from '@/lib/checkAccess';
 
-const AdminNav = async () => {
+const NavAdmin = async () => {
   // Check if the user has access to admin features
   const hasAccess = await checkAccess({
     permittedRoles: ['admin', 'superadmin'],
     inline: true,
   });
-  console.log('AdminNav - hasAccess:', hasAccess);
+  console.log('NavAdmin - hasAccess:', hasAccess);
   if (!hasAccess) {
     return null; // If no access, do not render the admin navigation
   }
   return (
     <>
-      <Nav className="me-3">
-        <NavItem>
-          <NavLink as={NextLink} href="/admin/users">Users</NavLink>
-        </NavItem>
-      </Nav>
+      {/* <Nav className="me-3"> */}
+      <NavItem>
+        <NavLink as={NextLink} href="/admin/users">
+          Users
+        </NavLink>
+      </NavItem>
+      {/* </Nav> */}
     </>
   );
 };
 
-export default AdminNav;
+export default NavAdmin;

@@ -10,7 +10,7 @@ export default async function CreateProjectPage() {
   const isEditor = await isEditorOrAbove();
   const basePath = process.env.NEXT_PUBLIC_APP_BASEPATH ?? '/';
 
-  if (isEditor) {
+  if (isEditor && currentUser != undefined) {
     return (
       <>
         <ProjectForm
