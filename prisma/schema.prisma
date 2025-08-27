@@ -69,6 +69,7 @@ model ItemEntry {
   location    String?
   call_number String?
   copy_id     String?
+  barcode     String?
   BibEntry    BibEntry? @relation(fields: [bibEntryId], references: [id])
   bibEntryId  String?
 }
