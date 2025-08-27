@@ -60,10 +60,11 @@ const HoldingEntry = ({
         // Find the matching item from the items array
         const matchingItem = items.find(
           (item) =>
-            item.description === existingItem.description &&
-            item.location.value === existingItem.location &&
-            item.call_number === existingItem.call_number &&
-            item.copy_id === existingItem.copy_id
+            item.description == existingItem.description &&
+            item.location.value == existingItem.location &&
+            item.call_number == existingItem.call_number &&
+            item.barcode == existingItem.barcode &&
+            item.copy_id == existingItem.copy_id
         );
 
         if (matchingItem) {
@@ -122,6 +123,7 @@ const HoldingEntry = ({
         call_number: item.call_number || null,
         copy_id: item.copy_id || null,
         bibEntryId: 'unknown',
+        barcode: item.barcode || null,
       };
     });
 

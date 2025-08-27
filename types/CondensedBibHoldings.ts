@@ -9,6 +9,7 @@ export interface AlmaItemDataPlusHoldingDetails
   copy_id: string;
   holding_id: string;
   call_number: string;
+  barcode: string;
 }
 
 export type CondensedBibHoldings = {

@@ -37,6 +37,7 @@ const entryAction = async ({
       location: item.location,
       call_number: item.call_number,
       copy_id: item.copy_id,
+      barcode: item.barcode,
     }));
 
     // Prepare the data object
