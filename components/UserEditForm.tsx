@@ -20,15 +20,20 @@ export default function UserEditForm({ user }: { user: User }) {
   // type Role = (typeof validRoles)[number];
   const [status, setStatus] = useState(user.status);
   const validStatuses = Object.values(UserStatus);
+  const [affiliation, setAffiliation] = useState(user.affiliation);
+  const validAffiliations = Object.values(UserAffiliation);
   // type Role = (typeof validRoles)[number];
 
   const handleChange =
-    (targetField: 'role' | 'status') =>
+    (targetField: 'role' | 'status' | 'affiliation') =>
     (e: React.ChangeEvent<HTMLSelectElement>) => {
-      console.log(`changing target: ${targetField}, ${e.target.value}`);
+      // console.log(`changing target: ${targetField}, ${e.target.value}`);
       switch (targetField) {
         case 'role':
           setRole(e.target.value as Role);
+          break;
+        case 'affiliation':
+          setAffiliation(e.target.value as UserAffiliation);
           break;
         case 'status':
           setStatus(e.target.value as UserStatus);
@@ -41,6 +46,7 @@ export default function UserEditForm({ user }: { user: User }) {
     const updatedUser = await updateUser(user.id, {
       role: role as Role,
       status: status as UserStatus,
+      affiliation: affiliation as UserAffiliation,
     });
     if (updatedUser.error) {
       console.error('Error updating user:', updatedUser.error);
@@ -54,11 +60,21 @@ export default function UserEditForm({ user }: { user: User }) {
       {r.charAt(0).toUpperCase() + r.slice(1)}
     </option>
   ));
-  statusPulldown.unshift(
+  let affiliationPulldown = validAffiliations.map((r) => (
+    <option key={r} value={r}>
+      {r.charAt(0).toUpperCase() + r.slice(1)}
+    </option>
+  ));
+  let blankPullDownOption = (
     <option key="none" value="">
       None
     </option>
   );
+  // statusPulldown.unshift(
+  //   <option key="none" value="">
+  //     None
+  //   </option>
+  // );
   return (
     <Form onSubmit={handleSubmit}>
       <InputGroup>
@@ -76,13 +92,24 @@ export default function UserEditForm({ user }: { user: User }) {
         </FormSelect>
       </InputGroup>
       <InputGroup>
+        <FormLabel htmlFor="affiliation">Affiliation</FormLabel>
+        <FormSelect
+          id="affiliation"
+          value={affiliation ?? ''}
+          onChange={handleChange('affiliation')}
+        >
+          {affiliationPulldown.unshift(blankPullDownOption) &&
+            affiliationPulldown}
+        </FormSelect>
+      </InputGroup>
+      <InputGroup>
         <FormLabel htmlFor="status">Status</FormLabel>
         <FormSelect
           id="status"
           value={status ?? ''}
           onChange={handleChange('status')}
         >
-          {statusPulldown}
+          {statusPulldown.unshift(blankPullDownOption) && statusPulldown}
         </FormSelect>
       </InputGroup>
       <Button className="btn btn-primary" type="submit">
