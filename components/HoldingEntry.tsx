@@ -19,8 +19,10 @@ import type { SafeStringifyInput } from '@/types/SafeStringInput';
 interface miniItemData {
   pid: string;
   barcode: string;
-  description: string;
+  description?: string;
   location: string;
+  call_number?: string;
+  copy_id?: string;
   item_id: string;
 }
 
@@ -46,6 +48,7 @@ const HoldingEntry = ({
   const [selectedItems, setSelectedItems] = useState<miniItemData[]>([]);
   const [isInitialized, setIsInitialized] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
+  console.log('Existing Entry:', existingEntry);
 
   // Initialize selectedItems with existing entry items
   useEffect(() => {
@@ -56,7 +59,11 @@ const HoldingEntry = ({
       existingEntry.items.forEach((existingItem) => {
         // Find the matching item from the items array
         const matchingItem = items.find(
-          (item) => item.description === existingItem.description
+          (item) =>
+            item.description === existingItem.description &&
+            item.location.value === existingItem.location &&
+            item.call_number === existingItem.call_number &&
+            item.copy_id === existingItem.copy_id
         );
 
         if (matchingItem) {
@@ -65,6 +72,8 @@ const HoldingEntry = ({
             barcode: matchingItem.barcode || '',
             description: matchingItem.description || '',
             location: matchingItem.location.value,
+            call_number: matchingItem.call_number || '',
+            copy_id: matchingItem.copy_id || '',
             item_id: `item-${matchingItem.pid || items.indexOf(matchingItem)}`,
           });
         }
@@ -107,9 +116,11 @@ const HoldingEntry = ({
       console.log(`Item descripiton: ${JSON.stringify(item)}`);
       // console.log(`Desc:${description} Loc:${location}`);
       return {
-        description: item.description,
+        description: item.description || '',
         id: 'unknown',
         location: item.location || 'unknown',
+        call_number: item.call_number || null,
+        copy_id: item.copy_id || null,
         bibEntryId: 'unknown',
       };
     });
@@ -267,6 +278,8 @@ const HoldingEntry = ({
                 barcode: item.barcode || '',
                 description: item.description || '',
                 location: item.location.value,
+                call_number: item.call_number || '',
+                copy_id: item.copy_id || '',
                 item_id: `item-${item.pid || index}`,
               };
 

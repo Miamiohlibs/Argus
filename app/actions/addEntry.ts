@@ -35,6 +35,8 @@ const entryAction = async ({
     const itemDescriptions = itemData.map((item) => ({
       description: item.description,
       location: item.location,
+      call_number: item.call_number,
+      copy_id: item.copy_id,
     }));
 
     // Prepare the data object
