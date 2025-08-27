@@ -10,6 +10,10 @@ import {
   AlmaItemHoldingItemData,
   AlmaItemHoldingBibData,
 } from '@/types/AlmaItem';
+import type {
+  CondensedBibHoldings,
+  AlmaItemDataPlusHoldingDetails,
+} from '@/types/CondensedBibHoldings';
 import type { SafeStringifyInput } from '@/types/SafeStringInput';
 
 interface miniItemData {
@@ -22,8 +26,7 @@ interface miniItemData {
 
 interface HoldingEntryProps {
   bibData: AlmaItemHoldingBibData;
-  holdings: AlmaItemHoldingHoldingData;
-  items: AlmaItemHoldingItemData[];
+  items: AlmaItemDataPlusHoldingDetails[];
   locationCodes: string;
   projectId: string | number;
   actionType: 'add' | 'edit';
@@ -33,7 +36,6 @@ interface HoldingEntryProps {
 
 const HoldingEntry = ({
   bibData,
-  holdings,
   items,
   locationCodes,
   projectId,
@@ -166,7 +168,7 @@ const HoldingEntry = ({
   }
   return (
     <Form onSubmit={handleSubmit}>
-      <div key={holdings.holding_id} className="mb-4 border p-3">
+      <div key={'holding'} className="mb-4 border p-3">
         <Form.Control
           type="hidden"
           name="project_id"
@@ -204,18 +206,8 @@ const HoldingEntry = ({
         />
         <Form.Control
           type="hidden"
-          name="holdings_id"
-          value={safeStringify(holdings.holding_id)}
-        />
-        <Form.Control
-          type="hidden"
           name="holdings_location_code"
           value={safeStringify(locationCodes)}
-        />
-        <Form.Control
-          type="hidden"
-          name="holdings_call"
-          value={safeStringify(holdings.call_number)}
         />
         <Form.Control
           type="hidden"
@@ -231,7 +223,7 @@ const HoldingEntry = ({
           />
         )}
 
-        <Form.Group controlId={`mmsIdSearch-${holdings.holding_id}`}>
+        <Form.Group controlId={`mmsIdSearch`}>
           <InputGroup className="mb-3">
             <InputGroup.Text id="holding-note">Note</InputGroup.Text>
             <Form.Control
@@ -254,7 +246,7 @@ const HoldingEntry = ({
           {location_desc || 'Unknown Location'} ({location_value || 'N/A'})
         </p>
         <p>
-          Call Number: <strong>{holdings.call_number || 'N/A'}</strong>
+          {/* Call Number: <strong>{holdings.call_number || 'N/A'}</strong> */}
         </p>
 
         {/* Item Selection */}
@@ -264,9 +256,7 @@ const HoldingEntry = ({
               const itemLabel =
                 items.length === 1
                   ? 'Sole Item'
-                  : `Item: ${
-                      item.description || `Unknown Item: ${items.length}`
-                    }`;
+                  : `Item: ${item.description || `Unknown Item`}`;
 
               const itemData: miniItemData = {
                 pid: item.pid || '',
