@@ -55,17 +55,17 @@ export default function UserEditForm({ user }: { user: User }) {
     toast.success('User role updated successfully');
   };
 
-  let statusPulldown = validStatuses.map((r) => (
+  const statusPulldown = validStatuses.map((r) => (
     <option key={r} value={r}>
       {r.charAt(0).toUpperCase() + r.slice(1)}
     </option>
   ));
-  let affiliationPulldown = validAffiliations.map((r) => (
+  const affiliationPulldown = validAffiliations.map((r) => (
     <option key={r} value={r}>
       {r.charAt(0).toUpperCase() + r.slice(1)}
     </option>
   ));
-  let blankPullDownOption = (
+  const blankPullDownOption = (
     <option key="none" value="">
       None
     </option>
