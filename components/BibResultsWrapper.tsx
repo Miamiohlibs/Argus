@@ -5,7 +5,7 @@ import HoldingEntry from './HoldingEntry';
 
 interface BibResultsWrapperProps {
   projectId: number | undefined;
-  holdingsData: CondensedBibHoldings[] | undefined;
+  holdingsData: CondensedBibHoldings | undefined;
   actionType: 'add' | 'edit';
   existingEntry?: EntryWithItems;
   isEditor: boolean;
@@ -20,21 +20,16 @@ export default function BibResultsWrapper({
 }: BibResultsWrapperProps) {
   return holdingsData ? (
     <>
-      {holdingsData.map((holding) => (
-        <div key={holding.holding_data.holding_id}>
-          <BibEntryComponent entry={holding.bib_data} />
-          <HoldingEntry
-            holdings={holding.holding_data}
-            items={holding.items}
-            bibData={holding.bib_data}
-            projectId={projectId !== undefined ? projectId : 0}
-            locationCodes={holding.locationCodes}
-            actionType={actionType}
-            existingEntry={existingEntry}
-            isEditor={isEditor}
-          />
-        </div>
-      ))}
+      <BibEntryComponent entry={holdingsData.bib_data} />
+      <HoldingEntry
+        items={holdingsData.items}
+        bibData={holdingsData.bib_data}
+        projectId={projectId !== undefined ? projectId : 0}
+        locationCodes={holdingsData.locationCodes}
+        actionType={actionType}
+        existingEntry={existingEntry}
+        isEditor={isEditor}
+      />
     </>
   ) : (
     <p>No Results Found</p>

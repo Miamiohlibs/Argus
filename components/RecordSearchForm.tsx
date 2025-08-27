@@ -21,7 +21,7 @@ const RecordSearchForm = ({
   const formRef = useRef<HTMLFormElement>(null);
   // const router = useRouter(); // Changed from useNavigate
   // const [results, setresults] = useState<MmsidSearchResultOrNull>(null); // State to hold search results
-  const [results, setresults] = useState<CondensedBibHoldings[] | null>(null);
+  const [results, setresults] = useState<CondensedBibHoldings | null>(null);
 
   const handleSubmit = async (formData: FormData) => {
     const mms_id = formData.get('mms-id');

@@ -1,7 +1,10 @@
 import { EntryWithItems } from '@/types/EntryWithItems';
 import { bibHoldings } from '@/app/actions/almaSearch';
 import getEntryById from '@/app/actions/getEntryById';
-import { CondensedBibHoldings } from '@/types/CondensedBibHoldings';
+import {
+  CondensedBibHoldings,
+  AlmaItemDataPlusHoldingDetails,
+} from '@/types/CondensedBibHoldings';
 import BibResultsWrapper from '@/components/BibResultsWrapper';
 import { Button } from 'react-bootstrap';
 import Link from 'next/link';
@@ -25,7 +28,7 @@ export default async function EditEntryPage({
   const {
     data: holdingsData,
     error: holdingsError,
-  }: { data?: CondensedBibHoldings[]; error?: string } = await bibHoldings({
+  }: { data?: CondensedBibHoldings; error?: string } = await bibHoldings({
     mms_id: mmsId,
   });
   if (holdingsError) {
@@ -35,7 +38,7 @@ export default async function EditEntryPage({
   return (
     <>
       <h1>
-        Editing: <i>{holdingsData && holdingsData[0].bib_data.title}</i>
+        Editing: <i>{holdingsData && holdingsData.bib_data.title}</i>
       </h1>
       <Link href={`/project/${projectId}`}>
         <Button variant="outline-secondary">Back to Project</Button>

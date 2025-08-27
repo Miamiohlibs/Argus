@@ -7,7 +7,10 @@ import type {
   AlmaItemApiResponse,
   AlmaItemHoldingItemData,
 } from '@/types/AlmaItem';
-import type { CondensedBibHoldings } from '@/types/CondensedBibHoldings';
+import type {
+  CondensedBibHoldings,
+  AlmaItemDataPlusHoldingDetails,
+} from '@/types/CondensedBibHoldings';
 
 export async function findByBarcode(barcode: string) {
   try {
@@ -83,25 +86,30 @@ function condenseBibHoldings(response: AlmaItemApiResponse) {
     ...new Set(response.item.map((item) => item.holding_data.holding_id)),
   ];
   // console.log(uniqBibHoldings);
-  const output: CondensedBibHoldings[] = [];
+  const output: CondensedBibHoldings = {
+    bib_data: response.item[0].bib_data,
+    items: [],
+    locationCodes: '',
+  };
   uniqHoldings.forEach((holdingId) => {
     const allMatchingHoldings: AlmaItem[] = response.item.filter(
-      (item) => (item.holding_data.holding_id = holdingId)
+      (item) => item.holding_data.holding_id == holdingId
     );
-    const allMatchingItems: AlmaItemHoldingItemData[] = allMatchingHoldings.map(
-      (holding) => holding.item_data
-    );
+    const allMatchingItems: AlmaItemDataPlusHoldingDetails[] =
+      allMatchingHoldings.map((holding) => ({
+        ...holding.item_data,
+        copy_id: holding.holding_data.copy_id,
+        holding_id: holding.holding_data.holding_id,
+        call_number: holding.holding_data.call_number,
+      }));
+    // valuable info from holding:
+    // - copy_id, holding_id, call_number
     const bib_data = allMatchingHoldings[0].bib_data;
     const locationCodes = [
       ...new Set(response.item.map((item) => item.item_data.location.value)),
     ].join(',');
 
-    output.push({
-      bib_data,
-      locationCodes,
-      holding_data: allMatchingHoldings[0].holding_data,
-      items: allMatchingItems,
-    });
+    output.items.push(...allMatchingItems);
   });
   return output;
 }

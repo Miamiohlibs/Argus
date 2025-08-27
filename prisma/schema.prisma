@@ -65,7 +65,11 @@ model BibEntry {
 
 model ItemEntry {
   id          String    @id @default(uuid())
-  description String
+  description String?
+  location    String?
+  call_number String?
+  copy_id     String?
+  barcode     String?
   BibEntry    BibEntry? @relation(fields: [bibEntryId], references: [id])
   bibEntryId  String?
 }
