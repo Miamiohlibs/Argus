@@ -95,6 +95,16 @@ export default function UserTable({
       sortable: true,
     },
     {
+      name: 'Status',
+      selector: (row: User) => row.status ?? '',
+      sortable: true,
+    },
+    {
+      name: 'Affiliation',
+      selector: (row: User) => row.affiliation ?? '',
+      sortable: true,
+    },
+    {
       name: 'Tools',
       cell: (row: User) =>
         (canDeleteSuperAdmin || row.role !== 'superadmin') &&

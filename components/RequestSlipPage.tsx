@@ -177,22 +177,42 @@ export const RequestSlipPage = ({
               <Text>Miami University</Text>
             </View>
             <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
+              <View
+                style={
+                  userAffiliation == 'Other'
+                    ? styles.checkedBox
+                    : styles.checkbox
+                }
+              />
               <Text>Other</Text>
             </View>
           </View>
           <View style={styles.colNoRightBorder}>
             <Text style={styles.sectionHeader}>Status</Text>
             <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
+              <View
+                style={
+                  userStatus == 'Undergrad'
+                    ? styles.checkedBox
+                    : styles.checkbox
+                }
+              />
               <Text>Undergraduate</Text>
             </View>
             <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
+              <View
+                style={
+                  userStatus == 'Graduate' ? styles.checkedBox : styles.checkbox
+                }
+              />
               <Text>Graduate</Text>
             </View>
             <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
+              <View
+                style={
+                  userStatus == 'Faculty' ? styles.checkedBox : styles.checkbox
+                }
+              />
               <Text>Faculty</Text>
             </View>
           </View>
@@ -200,15 +220,27 @@ export const RequestSlipPage = ({
           <View style={styles.lastCol}>
             <View style={styles.blankLine}>{/* Blank on purpose*/}</View>
             <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
+              <View
+                style={
+                  userStatus == 'Alumni' ? styles.checkedBox : styles.checkbox
+                }
+              />
               <Text>Alumni</Text>
             </View>
             <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
+              <View
+                style={
+                  userStatus == 'Staff' ? styles.checkedBox : styles.checkbox
+                }
+              />
               <Text>Staff</Text>
             </View>
             <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
+              <View
+                style={
+                  userStatus == 'Other' ? styles.checkedBox : styles.checkbox
+                }
+              />
               <Text>Other</Text>
             </View>
           </View>
