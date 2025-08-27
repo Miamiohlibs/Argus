@@ -1,7 +1,11 @@
-// app/pdf/RequestSlip.tsx
+// app/pdf/MultipagePdf.tsx
 import { Document, StyleSheet } from '@react-pdf/renderer';
 import { RequestSlipProps } from '@/types/RequestSlipProps';
 import { RequestSlipPage } from './RequestSlipPage';
+
+// This page is called by: app/api/slipsPdf/[...slub]/route.tsx
+// That is where the data comes from
+
 // const styles = StyleSheet.create({
 //   page: { padding: 10, fontSize: 10 },
 //   section: { border: '1pt solid black', marginBottom: 5 },

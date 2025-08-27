@@ -3,6 +3,8 @@ export type RequestSlipProps = {
   title?: string;
   location?: string;
   callNumber?: string | undefined;
+  publisher?: string;
+  pub_date?: string;
   notes?: string;
   userName?: string;
   userEmail?: string;

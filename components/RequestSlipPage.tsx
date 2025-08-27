@@ -25,6 +25,8 @@ type RequestSlipProps = {
   date?: string;
   location?: string;
   callNumber?: string;
+  publisher?: string;
+  pub_date?: string;
   itemInfo?: string;
   notes?: string;
   userName?: string;
