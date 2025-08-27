@@ -4,6 +4,8 @@ export interface User {
   email: string;
   name: string;
   role: string;
+  status?: string;
+  affiliation?: string;
   imageUrl?: string;
   createdAt: Date;
   updatedAt: Date;
