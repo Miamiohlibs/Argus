@@ -4,7 +4,7 @@ import { renderToStream } from '@react-pdf/renderer';
 // import { RequestSlipProps } from '@/types/RequestSlipProps';
 // import { MultiPagePdf } from '@/components/MultipagePdf';
 // import getEntries from '@/app/actions/getEntries';
-import RequestSlip from '@/components/RequestSlip';
+import RequestSlip from '@/components/RequestSlipDemo';
 
 export async function GET() {
   //   req: NextRequest,

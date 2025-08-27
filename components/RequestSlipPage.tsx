@@ -1,37 +1,6 @@
-// app/pdf/RequestSlip.tsx
+// app/pdf/RequestSlipPage.tsx
 import { Page, Text, View } from '@react-pdf/renderer';
-
-// const styles = StyleSheet.create({
-//   page: { padding: 10, fontSize: 10 },
-//   section: { border: '1pt solid black', marginBottom: 5 },
-//   header: {
-//     textAlign: 'center',
-//     fontSize: 12,
-//     marginBottom: 5,
-//     fontWeight: 'bold',
-//   },
-//   row: { flexDirection: 'row', borderBottom: '1pt solid black' },
-//   cell: { flex: 1, padding: 4, borderRight: '1pt solid black' },
-//   cellLast: { flex: 1, padding: 4 },
-//   label: { fontWeight: 'bold' },
-//   checkboxRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 2 },
-//   checkbox: { width: 8, height: 8, border: '1pt solid black', marginRight: 4 },
-//   checkedBox: { width: 8, height: 8, backgroundColor: 'black', marginRight: 4 },
-// });
-
-type RequestSlipProps = {
-  author?: string;
-  title?: string;
-  date?: string;
-  location?: string;
-  callNumber?: string;
-  itemInfo?: string;
-  notes?: string;
-  userName?: string;
-  userEmail?: string;
-  affiliation?: 'Miami' | 'Other';
-  status?: 'Undergrad' | 'Graduate' | 'Faculty' | 'Staff' | 'Alumni' | 'Other';
-};
+import type { RequestSlipProps } from '@/types/RequestSlipProps';
 
 export const RequestSlipPage = ({
   author,
@@ -43,8 +12,8 @@ export const RequestSlipPage = ({
   notes,
   userName,
   userEmail,
-  affiliation,
-  status,
+  userAffiliation,
+  userStatus,
   styles,
 }: RequestSlipProps & { styles: any }) => {
   return (
@@ -200,7 +169,9 @@ export const RequestSlipPage = ({
             <View style={styles.checkboxRow}>
               <View
                 style={
-                  affiliation == 'Miami' ? styles.checkedBox : styles.checkbox
+                  userAffiliation == 'Miami'
+                    ? styles.checkedBox
+                    : styles.checkbox
                 }
               />
               <Text>Miami University</Text>

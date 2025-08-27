@@ -41,6 +41,8 @@ const entryAction = async ({
       itemTitle: bibData.title as string,
       author: bibData.author as string,
       location: bibData.holdings_location_code as string,
+      pub_date: bibData.date_of_publication as string,
+      publisher: bibData.publisher_const as string,
       callNumber: bibData.holdings_call as string,
       projectId: projectId,
       totalItems: parseInt(bibData.total_item_count as string) || 1,
