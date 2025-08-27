@@ -1,9 +1,9 @@
 import Guest from '@/components/Guest';
 import { currentUser } from '@clerk/nextjs/server';
-import AddTransaction from '@/components/AddTransaction';
-import Balance from '@/components/Balance';
-import IncomeExpense from '@/components/IncomeExpense';
-import TransactionList from '@/components/TransactionList';
+import AddTransaction from '@/components/_AddTransaction';
+import Balance from '@/components/_Balance';
+import IncomeExpense from '@/components/_IncomeExpense';
+import TransactionList from '@/components/_TransactionList';
 
 const ExpenseTracker = async () => {
   const user = await currentUser();
