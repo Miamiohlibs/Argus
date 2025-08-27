@@ -86,7 +86,7 @@ function condenseBibHoldings(response: AlmaItemApiResponse) {
   const output: CondensedBibHoldings[] = [];
   uniqHoldings.forEach((holdingId) => {
     const allMatchingHoldings: AlmaItem[] = response.item.filter(
-      (item) => (item.holding_data.holding_id = holdingId)
+      (item) => item.holding_data.holding_id == holdingId
     );
     const allMatchingItems: AlmaItemHoldingItemData[] = allMatchingHoldings.map(
       (holding) => holding.item_data
