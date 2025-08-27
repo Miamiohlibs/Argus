@@ -241,10 +241,10 @@ const HoldingEntry = ({
           </InputGroup>
         </Form.Group>
 
-        <p>
+        {/* <p>
           <strong>{library_desc || 'Unknown Library'}</strong> &mdash;{' '}
           {location_desc || 'Unknown Location'} ({location_value || 'N/A'})
-        </p>
+        </p> */}
         <p>
           {/* Call Number: <strong>{holdings.call_number || 'N/A'}</strong> */}
         </p>
@@ -252,11 +252,15 @@ const HoldingEntry = ({
         {/* Item Selection */}
         <ul style={{ listStyleType: 'none', paddingLeft: 0 }}>
           {items ? (
-            items.map((item: AlmaItemHoldingItemData, index: number) => {
+            items.map((item: AlmaItemDataPlusHoldingDetails, index: number) => {
+              const copyNo =
+                parseInt(item.copy_id) > 1 ? `, Copy: ${item.copy_id}` : '';
+              const description =
+                item.description != '' ? `, ${item.description}` : '';
               const itemLabel =
                 items.length === 1
                   ? 'Sole Item'
-                  : `Item: ${item.description || `Unknown Item`}`;
+                  : `Item: ${item.location.value}: ${item.call_number} ${description} ${copyNo}`;
 
               const itemData: miniItemData = {
                 pid: item.pid || '',
@@ -281,7 +285,10 @@ const HoldingEntry = ({
                     onChange={(e) =>
                       handleItemCheck(itemData, e.target.checked)
                     }
-                    value={`${item.barcode};;;${item.location.value}` || ''}
+                    value={
+                      `${item.barcode};;;${item.location.value};;;${item.call_number};;;${item.description};;;${item.copy_id}` ||
+                      ''
+                    }
                   />
                 </li>
               );
