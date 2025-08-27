@@ -123,16 +123,16 @@ export default function EntriesTable({
           (user?.role === 'admin' ||
             user?.role === 'superadmin' ||
             ownerClerkId === user?.clerkUserId);
-        console.log(
-          'Row User:',
-          ownerClerkId,
-          'Current User:',
-          user?.clerkUserId,
-          'Can edit:',
-          canEdit,
-          'for project:',
-          row.itemTitle
-        );
+        // console.log(
+        //   'Row User:',
+        //   ownerClerkId,
+        //   'Current User:',
+        //   user?.clerkUserId,
+        //   'Can edit:',
+        //   canEdit,
+        //   'for project:',
+        //   row.itemTitle
+        // );
         const LinkOutUrl = row.url ?? undefined;
         const LinkOut = LinkOutUrl ? (
           <Link href={LinkOutUrl} target="_blank">
