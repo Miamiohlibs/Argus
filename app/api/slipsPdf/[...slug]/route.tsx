@@ -1,10 +1,11 @@
 // app/api/pdf/route.tsx
 import { NextRequest, NextResponse } from 'next/server';
 import { renderToStream } from '@react-pdf/renderer';
-// import { RequestSlipProps } from '@/types/RequestSlipProps';
+import { RequestSlipProps } from '@/types/RequestSlipProps';
 import { MultiPagePdf } from '@/components/MultipagePdf';
 import getEntries from '@/app/actions/getEntries';
 import getProject from '@/app/actions/getProject';
+import filenamify from 'filenamify';
 
 export async function GET(
   req: NextRequest,
@@ -16,7 +17,7 @@ export async function GET(
   const { project } = await getProject({ id });
 
   const entries = data?.entries ?? [];
-  const items = entries.map((entry) => {
+  const items: RequestSlipProps[] = entries.map((entry) => {
     // console.log('One entry:', JSON.stringify(entry));
     const affiliation =
       project?.user.email && project?.user.email.includes('@miamioh.edu')
@@ -36,13 +37,15 @@ export async function GET(
   });
 
   const stream = await renderToStream(<MultiPagePdf books={items} />);
-  const filename = 'pullslip.pdf';
-  // params.title !== null ? `Pull slip: ${params.title}.pdf` : 'pullslip.pdf';
+  const filename = project?.title
+    ? filenamify(`${project.title} - Pull Slips`)
+    : 'pullslips';
+  // console.log('filename:', filename);
 
   return new NextResponse(stream as any, {
     headers: {
       'Content-Type': 'application/pdf',
-      'Content-Disposition': `inline; filename=${filename}.pdf`,
+      'Content-Disposition': `inline; filename="${filename}.pdf"`,
     },
   });
 }
