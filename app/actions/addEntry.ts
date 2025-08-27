@@ -34,6 +34,7 @@ const entryAction = async ({
 
     const itemDescriptions = itemData.map((item) => ({
       description: item.description,
+      location: item.location,
     }));
 
     // Prepare the data object

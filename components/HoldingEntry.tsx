@@ -16,6 +16,7 @@ interface miniItemData {
   pid: string;
   barcode: string;
   description: string;
+  location: string;
   item_id: string;
 }
 
@@ -61,6 +62,7 @@ const HoldingEntry = ({
             pid: matchingItem.pid || '',
             barcode: matchingItem.barcode || '',
             description: matchingItem.description || '',
+            location: matchingItem.location.value,
             item_id: `item-${matchingItem.pid || items.indexOf(matchingItem)}`,
           });
         }
@@ -100,9 +102,12 @@ const HoldingEntry = ({
     console.log('Selected Items:', selectedItems);
 
     const itemsToSubmit = selectedItems.map((item) => {
+      console.log(`Item descripiton: ${JSON.stringify(item)}`);
+      // console.log(`Desc:${description} Loc:${location}`);
       return {
         description: item.description,
         id: 'unknown',
+        location: item.location || 'unknown',
         bibEntryId: 'unknown',
       };
     });
@@ -267,6 +272,7 @@ const HoldingEntry = ({
                 pid: item.pid || '',
                 barcode: item.barcode || '',
                 description: item.description || '',
+                location: item.location.value,
                 item_id: `item-${item.pid || index}`,
               };
 
@@ -285,7 +291,7 @@ const HoldingEntry = ({
                     onChange={(e) =>
                       handleItemCheck(itemData, e.target.checked)
                     }
-                    value={item.barcode || ''}
+                    value={`${item.barcode};;;${item.location.value}` || ''}
                   />
                 </li>
               );
