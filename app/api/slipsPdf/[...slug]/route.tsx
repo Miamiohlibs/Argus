@@ -1,7 +1,7 @@
-// app/api/pdf/route.tsx
+// app/api/slipsPdf/[...slub]/route.tsx
 import { NextRequest, NextResponse } from 'next/server';
 import { renderToStream } from '@react-pdf/renderer';
-// import { RequestSlipProps } from '@/types/RequestSlipProps';
+import { RequestSlipProps } from '@/types/RequestSlipProps';
 import { MultiPagePdf } from '@/components/MultipagePdf';
 import getEntries from '@/app/actions/getEntries';
 import getProject from '@/app/actions/getProject';
@@ -16,9 +16,9 @@ export async function GET(
   const { project } = await getProject({ id });
 
   const entries = data?.entries ?? [];
-  const items = entries.map((entry) => {
+  const items: RequestSlipProps[] = entries.map((entry) => {
     // console.log('One entry:', JSON.stringify(entry));
-    const affiliation =
+    const userAffiliation =
       project?.user.email && project?.user.email.includes('@miamioh.edu')
         ? 'Miami'
         : 'Other';
@@ -27,15 +27,17 @@ export async function GET(
       title: entry.itemTitle,
       callNumber: entry.callNumber ?? undefined,
       notes: entry.notes ?? undefined,
+      date: entry.pub_date ?? undefined,
       location: entry.location,
       itemInfo: entry.items.map((item) => item.description).join(', '),
       userName: project?.user.name,
       userEmail: project?.user.email,
-      affiliation,
+      userAffiliation,
     };
   });
 
   const stream = await renderToStream(<MultiPagePdf books={items} />);
+
   const filename = 'pullslip.pdf';
   // params.title !== null ? `Pull slip: ${params.title}.pdf` : 'pullslip.pdf';
 

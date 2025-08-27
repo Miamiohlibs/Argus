@@ -2,7 +2,7 @@
 import type { Project } from '@prisma/client';
 import getProjects from '@/app/actions/getProjects';
 // import PullListItem from './PullListItem';
-import ProjectItem from './ProjectItem';
+import ProjectItem from './_ProjectItem';
 import Link from 'next/link';
 
 const ProjectList = async () => {
