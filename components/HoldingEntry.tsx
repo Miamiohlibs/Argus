@@ -13,6 +13,7 @@ import {
 import type {
   CondensedBibHoldings,
   AlmaItemDataPlusHoldingDetails,
+  AlmaItemHoldingBibDataPlusCallAndLocation,
 } from '@/types/CondensedBibHoldings';
 import type { SafeStringifyInput } from '@/types/SafeStringInput';
 
@@ -27,7 +28,7 @@ interface miniItemData {
 }
 
 interface HoldingEntryProps {
-  bibData: AlmaItemHoldingBibData;
+  bibData: AlmaItemHoldingBibDataPlusCallAndLocation;
   items: AlmaItemDataPlusHoldingDetails[];
   locationCodes: string;
   projectId: string | number;
@@ -109,7 +110,7 @@ const HoldingEntry = ({
     for (const [key, value] of formData.entries()) {
       allFormData[key] = value;
     }
-
+    // KEN: CALL & BIB MISSING FROM allFormData
     console.log('All Form Data:', allFormData);
     console.log('Selected Items:', selectedItems);
 
@@ -206,6 +207,16 @@ const HoldingEntry = ({
           type="hidden"
           name="place_of_publication"
           value={safeStringify(bibData?.place_of_publication)}
+        />
+        <Form.Control
+          type="hidden"
+          name="location"
+          value={safeStringify(bibData?.location)}
+        />
+        <Form.Control
+          type="hidden"
+          name="call_number"
+          value={safeStringify(bibData?.call_number)}
         />
         <Form.Control
           type="hidden"

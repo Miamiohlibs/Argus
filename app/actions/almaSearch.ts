@@ -85,12 +85,24 @@ function condenseBibHoldings(response: AlmaItemApiResponse) {
   const uniqHoldings = [
     ...new Set(response.item.map((item) => item.holding_data.holding_id)),
   ];
+  const allCallNumbersArr = [
+    ...new Set(response.item.map((item) => item.holding_data.call_number)),
+  ];
+  const allCallNumbers: string = allCallNumbersArr.join(',');
+  //  response.item[0].bib_data.
+  const allLocationsArr = [
+    ...new Set(response.item.map((item) => item.item_data.location.value)),
+  ];
+  const allLocations = allLocationsArr.join(',');
   // console.log(uniqBibHoldings);
   const output: CondensedBibHoldings = {
     bib_data: response.item[0].bib_data,
     items: [],
     locationCodes: '',
   };
+  output.bib_data.call_number = allCallNumbers;
+  output.bib_data.location = allLocations;
+
   uniqHoldings.forEach((holdingId) => {
     const allMatchingHoldings: AlmaItem[] = response.item.filter(
       (item) => item.holding_data.holding_id == holdingId

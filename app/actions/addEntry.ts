@@ -40,14 +40,32 @@ const entryAction = async ({
       barcode: item.barcode,
     }));
 
+    let selectedLocationsArr = [
+      ...new Set(itemData.map((item) => item.location)),
+    ];
+    const selectedLocations =
+      selectedLocationsArr.length > 0
+        ? selectedLocationsArr.join(',')
+        : bibData.location;
+
+    const selectedCallNumbersArr = [
+      ...new Set(itemData.map((item) => item.call_number)),
+    ];
+
+    const selectedCallNumbers =
+      selectedCallNumbersArr.length > 0
+        ? selectedCallNumbersArr.join(',')
+        : bibData.call_number;
+
+    console.log('received bibData', JSON.stringify(bibData));
     // Prepare the data object
     const entryData = {
       itemTitle: bibData.title as string,
       author: bibData.author as string,
-      location: bibData.holdings_location_code as string,
+      location: selectedLocations as string,
       pub_date: bibData.date_of_publication as string,
       publisher: bibData.publisher_const as string,
-      callNumber: bibData.holdings_call as string,
+      callNumber: selectedCallNumbers as string,
       projectId: projectId,
       totalItems: parseInt(bibData.total_item_count as string) || 1,
       url: url as string,
