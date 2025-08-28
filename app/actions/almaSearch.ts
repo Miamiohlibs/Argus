@@ -12,15 +12,15 @@ import type {
   AlmaItemDataPlusHoldingDetails,
 } from '@/types/CondensedBibHoldings';
 
-export async function findByBarcode(barcode: string) {
+export async function findByBarcode(barcode: string): Promise<AlmaItem> {
   try {
     const alma = new SearchBibs({
       baseUrl: process.env.ALMA_BASEURL || '',
       apiKey: process.env.ALMA_API_KEY || '',
     });
-    const results = await alma.barcodeLookup(barcode);
+    const results: AlmaItem = await alma.barcodeLookup(barcode);
     console.log('Search results by barcode:', results);
-    return { data: results };
+    return results;
   } catch (error) {
     console.error('Error searching by barcode:', error);
     throw error;
@@ -121,6 +121,24 @@ export async function bibHoldings({ mms_id }: { mms_id: string }) {
     );
 
     const condensedResults = condenseBibHoldings(results);
+    if (condensedResults !== undefined) {
+      return { data: condensedResults };
+    }
+    return { error: 'Error fetching holdings' };
+  } catch (error) {
+    console.error('Error fetching holdings:', error);
+    return { error: 'Holdings lookup failed with message:' + `: ${error}` };
+  }
+}
+
+export async function bibHoldingsByBarcode({ barcode }: { barcode: string }) {
+  try {
+    const results: AlmaItem = await findByBarcode(barcode);
+    const wrapped: AlmaItemApiResponse = {
+      total_record_count: 1,
+      item: [results],
+    };
+    const condensedResults = condenseBibHoldings(wrapped);
     if (condensedResults !== undefined) {
       return { data: condensedResults };
     }
