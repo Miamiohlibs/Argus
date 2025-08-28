@@ -38,7 +38,13 @@ export default function ProjectsTable({
   // Normalize the limitToUser prop to ensure consistency
   const normalizedLimitToUser = Boolean(limitToUser);
 
-  const handleDelete = (projectId: number) => {
+  const handleDelete = (projectId: number) => (event: React.MouseEvent) => {
+    const confirmed = window.confirm(
+      'Are you sure you want to delete this project?'
+    );
+    event.stopPropagation(); // prevents script from firing twice
+    if (!confirmed) return;
+
     console.log(`Delete project with ID: ${projectId}`);
     const updatedProjects = projects.filter(
       (project) => project.id !== projectId
