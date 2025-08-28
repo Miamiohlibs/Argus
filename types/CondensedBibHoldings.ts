@@ -12,8 +12,13 @@ export interface AlmaItemDataPlusHoldingDetails
   barcode: string;
 }
 
+export interface AlmaItemHoldingBibDataPlusCallAndLocation
+  extends AlmaItemHoldingBibData {
+  call_number?: string;
+  location?: string;
+}
 export type CondensedBibHoldings = {
-  bib_data: AlmaItemHoldingBibData;
+  bib_data: AlmaItemHoldingBibDataPlusCallAndLocation;
   // holding_data: AlmaItemHoldingHoldingData;
   items: AlmaItemDataPlusHoldingDetails[];
   locationCodes: string;
