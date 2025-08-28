@@ -40,12 +40,22 @@ const entryAction = async ({
       barcode: item.barcode,
     }));
 
-    const selectedLocations = [
+    let selectedLocationsArr = [
       ...new Set(itemData.map((item) => item.location)),
-    ].join(',');
-    const selectedCallNumbers = [
+    ];
+    const selectedLocations =
+      selectedLocationsArr.length > 0
+        ? selectedLocationsArr.join(',')
+        : bibData.location;
+
+    const selectedCallNumbersArr = [
       ...new Set(itemData.map((item) => item.call_number)),
-    ].join(',');
+    ];
+
+    const selectedCallNumbers =
+      selectedCallNumbersArr.length > 0
+        ? selectedCallNumbersArr.join(',')
+        : bibData.call_number;
 
     console.log('received bibData', JSON.stringify(bibData));
     // Prepare the data object
