@@ -28,6 +28,11 @@ export default function EntriesTable({
   const [filterText, setFilterText] = useState('');
 
   const handleDelete = async (entryId: string) => {
+    const confirmed = window.confirm(
+      'Are you sure you want to delete this entry?'
+    );
+    if (!confirmed) return;
+
     console.log(`Delete entry with ID: ${entryId}`);
 
     const { error } = await deleteEntry(entryId); // also gets {message}
