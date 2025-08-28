@@ -4,7 +4,7 @@ import { useRef } from 'react';
 import { toast } from 'react-toastify';
 // import { useRouter } from 'next/navigation'; // Changed from react-router-dom
 // import { bibById } from '@/app/actions/almaSearch';
-import { bibHoldings } from '@/app/actions/almaSearch';
+import { bibHoldings, bibHoldingsByBarcode } from '@/app/actions/almaSearch';
 import { useState } from 'react';
 import type { CondensedBibHoldings } from '@/types/CondensedBibHoldings';
 import BibResultsWrapper from './BibResultsWrapper';
@@ -24,11 +24,24 @@ const RecordSearchForm = ({
   const [results, setresults] = useState<CondensedBibHoldings | null>(null);
 
   const handleSubmit = async (formData: FormData) => {
-    const mms_id = formData.get('mms-id');
-    // const { data, error } = await bibById({ mms_id: mms_id?.toString() || '' });
-    const { data, error } = await bibHoldings({
-      mms_id: mms_id?.toString() || '',
-    });
+    let data, error;
+    if (formData.get('searchType') == 'mms-id') {
+      const mms_id = formData.get('mms-id');
+      // const { data: bibData, error: bibError } = await bibById({ mms_id: mms_id?.toString() || '' });
+      const result = await bibHoldings({
+        mms_id: mms_id?.toString() || '',
+      });
+      data = result.data;
+      error = result.error;
+    } else if (formData.get('searchType') == 'barcode') {
+      const barcode = formData.get('barcode');
+      const result = await bibHoldingsByBarcode({
+        barcode: barcode?.toString() || '',
+      });
+      data = result.data;
+      error = result.error;
+    }
+
     // console.log('Data from bibById:', data);
     if (error) {
       toast.error('Lookup failed');
@@ -60,6 +73,7 @@ const RecordSearchForm = ({
   return (
     <>
       <Form ref={formRef} action={handleSubmit}>
+        <Form.Control type="hidden" name="searchType" value="mms-id" />
         <Form.Group controlId="mmsIdSearch">
           <InputGroup className="mb-3">
             <InputGroup.Text id="mms-id">MMS ID</InputGroup.Text>
@@ -75,7 +89,8 @@ const RecordSearchForm = ({
           </InputGroup>
         </Form.Group>
       </Form>
-      {/* <Form ref={formRef} action={handleBarcodeSearch}>
+      <Form ref={formRef} action={handleSubmit}>
+        <Form.Control type="hidden" name="searchType" value="barcode" />
         <Form.Group controlId="barcodeSearch">
           <InputGroup className="mb-3">
             <InputGroup.Text id="barcode">Barcode</InputGroup.Text>
@@ -90,31 +105,7 @@ const RecordSearchForm = ({
             </Button>
           </InputGroup>
         </Form.Group>
-      </Form> */}
-      {/* Expecting array of : 
-  {
-  bib_data: AlmaItemHoldingBibData;
-  holding_data: AlmaItemHoldingHoldingData;
-  items: AlmaItemHoldingItemData[];
-  locationCodes: string;
-  }
-  */}
-      {/* {results?.map((holding) => (
-        <div key={holding.bib_data.mms_id}>
-          {holding && holding.bib_data ? (
-            <>
-              <BibEntryComponent entry={holding.bib_data} />
-            </>
-          ) : (
-            <p>No results found.</p>
-          )}
-          {holding ? (
-            <>
-              <HoldingEntry holdings={results.holding} projectId={projectId} />
-            </>
-          ) : null}
-        </div>
-      ))} */}
+      </Form>
 
       <BibResultsWrapper
         projectId={projectId}
