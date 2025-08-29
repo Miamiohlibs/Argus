@@ -1,3 +1,4 @@
+import logger from '@/lib/logger';
 import { PrimoSearchResponse } from '@/types/PrimoSearchResponse';
 
 //NEXT_PUBLIC_PRIMO_QUERYSTRING
@@ -8,7 +9,7 @@ import { PrimoSearchResponse } from '@/types/PrimoSearchResponse';
 function verifyEnv() {
   if (
     !(
-      process.env.ALMA_BASE_URL &&
+      process.env.ALMA_BASEURL &&
       process.env.PRIMO_API_KEY &&
       process.env.PRIMO_QUERYSTRING
     )
@@ -20,21 +21,28 @@ function verifyEnv() {
   return true;
 }
 
-async function ExecutePrimoQuery(query: string) {
+async function ExecutePrimoQuery(
+  query: string
+): Promise<{ result?: PrimoSearchResponse; error?: string }> {
   try {
     verifyEnv();
   } catch (error) {
-    return { error };
+    return { error: error as string };
   }
   try {
     let queryUrl =
-      process.env.ALMA_BASE_URL +
+      process.env.ALMA_BASEURL +
       '/primo/v1/search?apikey=' +
       process.env.PRIMO_API_KEY +
+      '&' +
       process.env.PRIMO_QUERYSTRING +
       '&q=' +
       query;
-    const result = await fetch(queryUrl);
+    logger.debug({ callingUrl: queryUrl });
+    const response = await fetch(queryUrl);
+    const data = await response.json();
+    // logger.debug('result', data);
+    return { result: data };
   } catch (error) {
     return { error };
   }
@@ -45,18 +53,23 @@ export async function getMmsIdByCallNumber({
   precision,
 }: {
   callNumber: string;
-  precision: 'exact' | 'contains' | undefined | null;
+  precision?: 'exact' | 'contains' | undefined | null;
 }) {
   if (typeof precision != 'string') {
     precision = 'exact';
   }
   try {
-    const response: PrimoSearchResponse = await ExecutePrimoQuery(
-      `holding_call_number,${precision},${callNumber}`
-    );
-    const mms_ids = response.docs.map((doc) => doc.pnx.display?.mms);
+    const { result, error }: { result?: PrimoSearchResponse; error?: string } =
+      await ExecutePrimoQuery(`holding_call_number,${precision},${callNumber}`);
+    if (error) {
+      return { error: 'error received at getMmsIdByCallNumber: ' + error };
+    }
+    logger.debug(result);
+    const mms_ids = result
+      ? result.docs.map((doc) => doc.pnx.display?.mms)
+      : [];
     return mms_ids;
   } catch (error) {
-    return { error };
+    return { error: 'caught error in getMmsIdByCallNumber: ' + error };
   }
 }
