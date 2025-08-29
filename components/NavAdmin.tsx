@@ -1,5 +1,5 @@
 import NextLink from 'next/link';
-import { Nav, NavItem, NavLink } from 'react-bootstrap';
+import { NavItem, NavLink } from 'react-bootstrap';
 import checkAccess from '@/lib/checkAccess';
 
 const NavAdmin = async () => {

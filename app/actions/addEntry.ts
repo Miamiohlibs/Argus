@@ -40,7 +40,7 @@ const entryAction = async ({
       barcode: item.barcode,
     }));
 
-    let selectedLocationsArr = [
+    const selectedLocationsArr = [
       ...new Set(itemData.map((item) => item.location)),
     ];
     const selectedLocations =
