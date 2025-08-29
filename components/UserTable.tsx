@@ -1,4 +1,5 @@
 'use client';
+import logger from '@/lib/logger';
 import { TableColumn } from 'react-data-table-component';
 import { useEffect, useState } from 'react';
 import DataTable from 'react-data-table-component';
@@ -24,7 +25,7 @@ export default function UserTable({
   const [filterText, setFilterText] = useState('');
 
   const handleDelete = async (userIdtoDelete: string) => {
-    console.log(`Delete user with ID: ${userIdtoDelete}`);
+    logger.verbose(`Delete user with ID: ${userIdtoDelete}`);
     const confirmed = window.confirm(
       'Are you sure you want to delete this user and all their projects?'
     );

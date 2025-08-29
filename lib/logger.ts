@@ -4,7 +4,6 @@ const { combine, timestamp, json, errors } = winston.format;
 import path from 'path';
 
 const logDirectory = path.join(process.cwd(), 'logs');
-// console.log('***', logDirectory);
 
 // Ensure the log directory exists (optional, but good practice)
 import fs from 'fs';

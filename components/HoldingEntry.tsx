@@ -1,4 +1,5 @@
 'use client';
+import logger from '@/lib/logger';
 import { Form, Button, InputGroup } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 import { useRef } from 'react';
@@ -49,7 +50,7 @@ const HoldingEntry = ({
   const [selectedItems, setSelectedItems] = useState<miniItemData[]>([]);
   const [isInitialized, setIsInitialized] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
-  console.log('Existing Entry:', existingEntry);
+  logger.verbose('Existing Entry:', existingEntry);
 
   // Initialize selectedItems with existing entry items
   useEffect(() => {
@@ -89,12 +90,12 @@ const HoldingEntry = ({
   const handleItemCheck = (item: miniItemData, checked: boolean) => {
     if (checked) {
       setSelectedItems((prev) => [...prev, item]);
-      console.log('selected items after adding:', [...selectedItems, item]);
+      logger.verbose('selected items after adding:', [...selectedItems, item]);
     } else {
       setSelectedItems((prev) =>
         prev.filter((selectedItem) => selectedItem.item_id !== item.item_id)
       );
-      console.log(
+      logger.verbose(
         'selected items after removing:',
         selectedItems.filter(
           (selectedItem) => selectedItem.item_id !== item.item_id
@@ -111,12 +112,12 @@ const HoldingEntry = ({
       allFormData[key] = value;
     }
     // KEN: CALL & BIB MISSING FROM allFormData
-    console.log('All Form Data:', allFormData);
-    console.log('Selected Items:', selectedItems);
+    logger.verbose('All Form Data:', allFormData);
+    logger.verbose('Selected Items:', selectedItems);
 
     const itemsToSubmit = selectedItems.map((item) => {
-      console.log(`Item descripiton: ${JSON.stringify(item)}`);
-      // console.log(`Desc:${description} Loc:${location}`);
+      logger.verbose(`Item descripiton: ${JSON.stringify(item)}`);
+      // logger.verbose(`Desc:${description} Loc:${location}`);
       return {
         description: item.description || '',
         id: 'unknown',
@@ -141,7 +142,7 @@ const HoldingEntry = ({
       toast.success(
         `Entry ${actionType === 'add' ? 'added' : 'updated'} successfully`
       );
-      console.log('Entry saved:', data);
+      logger.verbose('Entry saved:', data);
 
       if (actionType === 'add') {
         formRef.current?.reset();
@@ -166,7 +167,7 @@ const HoldingEntry = ({
     location_desc = items[0].location?.desc;
     location_value = items[0].location?.value;
     library_desc = items[0].library?.desc;
-    console.log(`set: ${location_desc}, ${library_desc}, ${location_value}`);
+    logger.verbose(`set: ${location_desc}, ${library_desc}, ${location_value}`);
   }
 
   if (!isEditor) {

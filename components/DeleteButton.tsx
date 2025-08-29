@@ -1,5 +1,5 @@
 'use client';
-
+import logger from '@/lib/logger';
 import { useState } from 'react';
 import { Button } from 'react-bootstrap';
 interface DeleteButtonProps {
@@ -18,7 +18,7 @@ export default function DeleteButton({ label, onDelete }: DeleteButtonProps) {
       await onDelete();
     } catch (err) {
       setError(`Failed to delete ${label}`);
-      console.log(err);
+      logger.error(err);
     } finally {
       setLoading(false);
     }

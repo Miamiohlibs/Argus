@@ -1,4 +1,5 @@
 'use server';
+import logger from '@/lib/logger';
 import { db } from '@/lib/db';
 import { auth } from '@clerk/nextjs/server';
 import { isAdmin } from '@/lib/canEdit';
@@ -13,7 +14,7 @@ async function deleteProject(entryId: string): Promise<{
   }
 
   const userIsAdmin = await isAdmin();
-  console.log(
+  logger.verbose(
     `deletion request on ${entryId} by ${userId}; isAdmin: ${userIsAdmin.toString()}`
   );
 
@@ -50,7 +51,7 @@ async function deleteProject(entryId: string): Promise<{
 
     return { message: 'Deleted entry' };
   } catch (error) {
-    console.log('DB error:', error);
+    logger.verbose('DB error:', error);
     return { error: 'Database error' };
   }
 }

@@ -1,7 +1,6 @@
 // import 'dotenv/config';
 'use server';
 import { SearchBibs } from '@kenxirwin/alma-search';
-
 import type {
   AlmaItem,
   AlmaItemApiResponse,
@@ -11,6 +10,7 @@ import type {
   CondensedBibHoldings,
   AlmaItemDataPlusHoldingDetails,
 } from '@/types/CondensedBibHoldings';
+import logger from '@/lib/logger';
 
 export async function findByBarcode(barcode: string): Promise<AlmaItem> {
   try {
@@ -19,10 +19,10 @@ export async function findByBarcode(barcode: string): Promise<AlmaItem> {
       apiKey: process.env.ALMA_API_KEY || '',
     });
     const results: AlmaItem = await alma.barcodeLookup(barcode);
-    console.log('Search results by barcode:', results);
+    logger.verbose('Search results by barcode:', results);
     return results;
   } catch (error) {
-    console.error('Error searching by barcode:', error);
+    logger.error('Error searching by barcode:', error);
     throw error;
   }
 }
@@ -35,10 +35,10 @@ export async function bibById({ mms_id }: { mms_id: string }) {
     });
 
     const results = await alma.idLookup({ mms_id });
-    console.log('Search results by ID:', results);
+    logger.verbose('Search results by ID:', results);
     return { data: results };
   } catch (error) {
-    console.error('Error searching by ID:', error);
+    logger.error('Error searching by ID:', error);
     return { error: 'Lookup failed with message:' + `: ${error}` };
   }
 }
@@ -94,7 +94,7 @@ function condenseBibHoldings(response: AlmaItemApiResponse) {
     ...new Set(response.item.map((item) => item.item_data.location.value)),
   ];
   const allLocations = allLocationsArr.join(',');
-  // console.log(uniqBibHoldings);
+  // logger.verbose(uniqBibHoldings);
   const output: CondensedBibHoldings = {
     bib_data: response.item[0].bib_data,
     items: [],
@@ -138,7 +138,7 @@ export async function bibHoldings({ mms_id }: { mms_id: string }) {
     }
     return { error: 'Error fetching holdings' };
   } catch (error) {
-    console.error('Error fetching holdings:', error);
+    logger.error('Error fetching holdings:', error);
     return { error: 'Holdings lookup failed with message:' + `: ${error}` };
   }
 }
@@ -156,7 +156,7 @@ export async function bibHoldingsByBarcode({ barcode }: { barcode: string }) {
     }
     return { error: 'Error fetching holdings' };
   } catch (error) {
-    console.error('Error fetching holdings:', error);
+    logger.error('Error fetching holdings:', error);
     return { error: 'Holdings lookup failed with message:' + `: ${error}` };
   }
 }

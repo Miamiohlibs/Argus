@@ -1,4 +1,5 @@
 'use server';
+import logger from '@/lib/logger';
 import { auth } from '@clerk/nextjs/server';
 import { db } from '@/lib/db';
 import { checkUser } from '@/lib/checkUser';
@@ -37,7 +38,7 @@ export async function createProject(
 
     // get logged in user
     const { userId } = await auth();
-    console.log(userId);
+    logger.verbose(userId);
 
     // check for user
     if (!userId) {
@@ -51,7 +52,7 @@ export async function createProject(
       });
 
       if (!existingUser) {
-        console.log(`User with clerkUserId ${userId} not found in database`);
+        logger.error(`User with clerkUserId ${userId} not found in database`);
         return {
           success: false,
           error:
@@ -59,7 +60,7 @@ export async function createProject(
         };
       }
 
-      // console.log({
+      // logger.verbose({
       //   data: {
       //     title,
       //     notes,
@@ -83,7 +84,7 @@ export async function createProject(
         },
       });
 
-      console.log('Created PullList with user relationship:', {
+      logger.verbose('Created PullList with user relationship:', {
         pullListId: created.id,
         title: created.title,
         userId: created.userId,
@@ -98,14 +99,14 @@ export async function createProject(
 
       return { success: true, data: created };
     } catch (error) {
-      console.error('Error creating Project:', error);
+      logger.error('Error creating Project:', error);
       return {
         success: false,
         error: 'Project not added: ' + JSON.stringify(error),
       };
     }
   } catch (error) {
-    console.error('Error creating project:', error);
+    logger.error('Error creating project:', error);
     return { success: false, error: 'Failed to create project' };
   }
 }
@@ -114,7 +115,7 @@ export async function updateProject(
   prevState: unknown,
   formData: FormData
 ): Promise<ProjectActionResult> {
-  console.log('starting UpdateProject...');
+  logger.verbose('starting UpdateProject...');
   try {
     const user = await checkUser();
     if (!user) {
@@ -130,15 +131,15 @@ export async function updateProject(
       where: { id: parseInt(projectId) },
     });
 
-    console.log('found existing project: ', existingProject);
+    logger.verbose('found existing project: ', existingProject);
 
     if (!existingProject) {
-      console.log('Project not found');
+      logger.verbose('Project not found');
       return { success: false, error: 'Project not found' };
     }
 
     if (existingProject?.userId !== user.clerkUserId) {
-      console.log(`${existingProject?.userId} !== ${user.clerkUserId}`);
+      logger.verbose(`${existingProject?.userId} !== ${user.clerkUserId}`);
       return { success: false, error: 'Not authorized' };
     }
 
@@ -149,10 +150,10 @@ export async function updateProject(
         notes: notes || null,
       },
     });
-    console.log('returning updated project');
+    logger.verbose('returning updated project');
     return { success: true, data: updatedProject };
   } catch (error) {
-    console.error('Error updating project:', error);
+    logger.error('Error updating project:', error);
     return { success: false, error: 'Failed to update project' };
   }
 }

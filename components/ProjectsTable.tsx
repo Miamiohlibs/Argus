@@ -1,4 +1,5 @@
 'use client';
+import logger from '@/lib/logger';
 import { TableColumn } from 'react-data-table-component';
 import { useEffect, useState } from 'react';
 import DataTable from 'react-data-table-component';
@@ -34,7 +35,7 @@ export default function ProjectsTable({
   const [filterText, setFilterText] = useState('');
 
   // const username = await
-  console.log(`Current user: ${user}`);
+  // logger.verbose(`Current user: ${user}`);
   // Normalize the limitToUser prop to ensure consistency
   const normalizedLimitToUser = Boolean(limitToUser);
 
@@ -45,7 +46,7 @@ export default function ProjectsTable({
     event.stopPropagation(); // prevents script from firing twice
     if (!confirmed) return;
 
-    console.log(`Delete project with ID: ${projectId}`);
+    logger.verbose(`Delete project with ID: ${projectId}`);
     const updatedProjects = projects.filter(
       (project) => project.id !== projectId
     );
@@ -97,7 +98,7 @@ export default function ProjectsTable({
           (user?.role === 'admin' ||
             user?.role === 'superadmin' ||
             row.user.clerkUserId === user?.clerkUserId);
-        // console.log(
+        // logger.verbose(
         //   'Row User:',
         //   row.user?.clerkUserId,
         //   'Current User:',

@@ -1,4 +1,5 @@
 'use client';
+import logger from '@/lib/logger';
 import { Button, Form, InputGroup } from 'react-bootstrap';
 import { useRef } from 'react';
 import { toast } from 'react-toastify';
@@ -42,7 +43,7 @@ const RecordSearchForm = ({
       error = result.error;
     }
 
-    // console.log('Data from bibById:', data);
+    // logger.verbose('Data from bibById:', data);
     if (error) {
       toast.error('Lookup failed');
       //   router.push('/'); // Redirect to home on error
@@ -58,7 +59,7 @@ const RecordSearchForm = ({
   //   const { data, error } = await bibById({
   //     mms_id: barcode?.toString() || '',
   //   });
-  //   // console.log('Data from bibById:', data);
+  //   // logger.verbose('Data from bibById:', data);
   //   if (error) {
   //     toast.error('Lookup failed');
   //     //   router.push('/'); // Redirect to home on error

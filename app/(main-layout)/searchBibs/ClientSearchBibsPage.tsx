@@ -1,4 +1,5 @@
 'use client';
+import logger from '@/lib/logger';
 import RecordSearchForm from '@/components/RecordSearchForm';
 import { useSearchParams } from 'next/navigation';
 import { Button } from 'react-bootstrap';
@@ -47,10 +48,3 @@ const ClientSearchBibsPage = ({
 };
 
 export default ClientSearchBibsPage;
-//   try {
-//     const results = await findByBarcode(barcode);
-//     console.log('Search results by barcode:', results.bib_data);
-//     return <pre>{JSON.stringify(results.bib_data, null, 2)}</pre>;
-//   } catch (error) {
-//     console.error('Error searching by barcode:', error);
-//   }

@@ -1,6 +1,6 @@
+import logger from '@/lib/logger';
 import { redirect } from 'next/navigation';
 import getUserRole from '@/app/actions/getUserRole';
-import logger from './logger';
 
 type CheckAccessProps = {
   permittedRoles: string[];
@@ -24,7 +24,7 @@ export default async function checkAccess(
     // Redirect to home if the user does not have access
     redirect('/');
   }
-  console.log('User has access with role:', role);
+  logger.verbose('User has access with role:', role);
   // Optionally return the role if needed
   return role;
 }

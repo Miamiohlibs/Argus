@@ -1,4 +1,5 @@
 'use server';
+import logger from '@/lib/logger';
 import { db } from '@/lib/db';
 import { auth } from '@clerk/nextjs/server';
 import { revalidatePath } from 'next/cache';
@@ -22,7 +23,7 @@ async function deleteTransaction(transactionId: string): Promise<{
     revalidatePath('/');
     return { message: 'Deleted transaction' };
   } catch (error) {
-    console.log('DB error:', error);
+    logger.verbose('DB error:', error);
     return { error: 'Database error' };
   }
 }
