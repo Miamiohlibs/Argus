@@ -5,13 +5,13 @@ import { useRef } from 'react';
 import { toast } from 'react-toastify';
 import entryAction from '@/app/actions/addEntry';
 import { EntryWithItems } from '@/types/EntryWithItems';
-import {
-  AlmaItemHoldingHoldingData,
-  AlmaItemHoldingItemData,
-  AlmaItemHoldingBibData,
-} from '@/types/AlmaItem';
+// import {
+//   AlmaItemHoldingHoldingData,
+//   AlmaItemHoldingItemData,
+//   AlmaItemHoldingBibData,
+// } from '@/types/AlmaItem';
 import type {
-  CondensedBibHoldings,
+  // CondensedBibHoldings,
   AlmaItemDataPlusHoldingDetails,
   AlmaItemHoldingBibDataPlusCallAndLocation,
 } from '@/types/CondensedBibHoldings';
