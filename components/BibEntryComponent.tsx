@@ -1,4 +1,3 @@
-import logger from '@/lib/logger';
 import type { AlmaItemHoldingBibData } from '@/types/AlmaItem';
 const BibEntryComponent = ({
   entry,
@@ -7,7 +6,7 @@ const BibEntryComponent = ({
   entry: AlmaItemHoldingBibData;
   // projectId: string | number;
 }) => {
-  logger.verbose(entry);
+  console.log(entry);
   const fields = [
     'author',
     'title',

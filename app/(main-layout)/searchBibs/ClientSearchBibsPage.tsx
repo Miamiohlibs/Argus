@@ -1,5 +1,4 @@
 'use client';
-import logger from '@/lib/logger';
 import RecordSearchForm from '@/components/RecordSearchForm';
 import { useSearchParams } from 'next/navigation';
 import { Button } from 'react-bootstrap';
