@@ -1,5 +1,4 @@
 'use client';
-import logger from '@/lib/logger';
 import { Button, Form, InputGroup } from 'react-bootstrap';
 import { useRef } from 'react';
 import { toast } from 'react-toastify';
@@ -43,7 +42,7 @@ const RecordSearchForm = ({
       error = result.error;
     }
 
-    // logger.verbose('Data from bibById:', data);
+    // console.log('Data from bibById:', data);
     if (error) {
       toast.error('Lookup failed');
       //   router.push('/'); // Redirect to home on error
@@ -54,22 +53,6 @@ const RecordSearchForm = ({
       // router.push('/'); // Uncomment if you want to redirect after successful search
     }
   };
-  // const handleBarcodeSearch = async (formData: FormData) => {
-  //   const barcode = formData.get('barcode');
-  //   const { data, error } = await bibById({
-  //     mms_id: barcode?.toString() || '',
-  //   });
-  //   // logger.verbose('Data from bibById:', data);
-  //   if (error) {
-  //     toast.error('Lookup failed');
-  //     //   router.push('/'); // Redirect to home on error
-  //   } else {
-  //     // toast.success('Lookup successful');
-  //     setresults(data); // Set the results state with the fetched data
-  //     // Optionally, you can redirect or perform other actions with the results
-  //     // router.push('/'); // Uncomment if you want to redirect after successful search
-  //   }
-  // };
 
   return (
     <>

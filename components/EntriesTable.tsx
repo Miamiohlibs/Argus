@@ -1,5 +1,4 @@
 'use client';
-import logger from '@/lib/logger';
 import { TableColumn } from 'react-data-table-component';
 import { useEffect, useState } from 'react';
 import DataTable from 'react-data-table-component';
@@ -34,7 +33,7 @@ export default function EntriesTable({
     );
     if (!confirmed) return;
 
-    logger.verbose(`Delete entry with ID: ${entryId}`);
+    console.log(`Delete entry with ID: ${entryId}`);
 
     const { error } = await deleteEntry(entryId); // also gets {message}
     if (error) {
@@ -129,7 +128,7 @@ export default function EntriesTable({
           (user?.role === 'admin' ||
             user?.role === 'superadmin' ||
             ownerClerkId === user?.clerkUserId);
-        // logger.verbose(
+        // console.log(
         //   'Row User:',
         //   ownerClerkId,
         //   'Current User:',

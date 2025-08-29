@@ -1,5 +1,4 @@
 'use client';
-import logger from '@/lib/logger';
 import { useRef } from 'react';
 import addTransaction from '@/app/actions/addTransaction';
 import { toast } from 'react-toastify';
@@ -7,14 +6,14 @@ import { toast } from 'react-toastify';
 const AddTransaction = () => {
   const formRef = useRef<HTMLFormElement>(null);
   const clientAction = async (formData: FormData) => {
-    // logger.verbose(formData.get('text'), formData.get('amount'));
+    // console.log(formData.get('text'), formData.get('amount'));
     const { data, error } = await addTransaction(formData);
 
     if (error) {
       toast.error(error);
     } else {
       toast.success('Transaction added');
-      logger.verbose(data);
+      console.log(data);
       formRef.current?.reset();
     }
   };

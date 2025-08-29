@@ -1,5 +1,4 @@
 'use client';
-import logger from '@/lib/logger';
 import { useState } from 'react';
 import updateUser from '@/app/actions/updateUser';
 import { toast } from 'react-toastify';
@@ -28,7 +27,7 @@ export default function UserEditForm({ user }: { user: User }) {
   const handleChange =
     (targetField: 'role' | 'status' | 'affiliation') =>
     (e: React.ChangeEvent<HTMLSelectElement>) => {
-      // logger.verbose(`changing target: ${targetField}, ${e.target.value}`);
+      // console.log(`changing target: ${targetField}, ${e.target.value}`);
       switch (targetField) {
         case 'role':
           setRole(e.target.value as Role);
@@ -50,7 +49,7 @@ export default function UserEditForm({ user }: { user: User }) {
       affiliation: affiliation as UserAffiliation,
     });
     if (updatedUser.error) {
-      logger.error('Error updating user:', updatedUser.error);
+      console.error('Error updating user:', updatedUser.error);
       return;
     }
     toast.success('User role updated successfully');
