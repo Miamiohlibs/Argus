@@ -1,3 +1,4 @@
+import logger from '@/lib/logger';
 import checkAccess from './checkAccess';
 import getProject from '@/app/actions/getProject';
 import { currentUser } from '@clerk/nextjs/server';
@@ -59,7 +60,7 @@ export async function isOwner(projectId: number | string): Promise<boolean> {
     const isOwner: boolean = project.userId == clerkUser?.id;
     return isOwner;
   } catch (err) {
-    console.log('error checking editor status', err);
+    logger.error('error checking editor status', err);
     return false;
   }
 }

@@ -1,4 +1,5 @@
 'use server';
+import logger from '@/lib/logger';
 import { db } from '@/lib/db';
 import { auth } from '@clerk/nextjs/server';
 import { revalidatePath } from 'next/cache';
@@ -13,10 +14,10 @@ async function deleteProject(projectId: number): Promise<{
   if (!userId) {
     return { error: 'User not found' };
   }
-  console.log(`deletion request on project ${projectId} by ${userId}`);
+  logger.verbose(`deletion request on project ${projectId} by ${userId}`);
   const isEditor = await canEdit(projectId);
   if (!isEditor) {
-    console.log(`deletion permission denied on ${projectId} by ${userId}`);
+    logger.verbose(`deletion permission denied on ${projectId} by ${userId}`);
     // unauthorized();
     return { error: 'Delete permission denied' };
   }
@@ -31,7 +32,7 @@ async function deleteProject(projectId: number): Promise<{
     revalidatePath('/');
     return { message: 'Deleted project' };
   } catch (error) {
-    console.log('DB error:', error);
+    logger.verbose('DB error:', error);
     return { error: 'Database error' };
   }
 }

@@ -34,11 +34,17 @@ export default function ProjectsTable({
   const [filterText, setFilterText] = useState('');
 
   // const username = await
-  console.log(`Current user: ${user}`);
+  // console.log(`Current user: ${user}`);
   // Normalize the limitToUser prop to ensure consistency
   const normalizedLimitToUser = Boolean(limitToUser);
 
-  const handleDelete = (projectId: number) => {
+  const handleDelete = (projectId: number) => (event: React.MouseEvent) => {
+    const confirmed = window.confirm(
+      'Are you sure you want to delete this project?'
+    );
+    event.stopPropagation(); // prevents script from firing twice
+    if (!confirmed) return;
+
     console.log(`Delete project with ID: ${projectId}`);
     const updatedProjects = projects.filter(
       (project) => project.id !== projectId
@@ -91,7 +97,7 @@ export default function ProjectsTable({
           (user?.role === 'admin' ||
             user?.role === 'superadmin' ||
             row.user.clerkUserId === user?.clerkUserId);
-        // console.log(
+        // logger.verbose(
         //   'Row User:',
         //   row.user?.clerkUserId,
         //   'Current User:',

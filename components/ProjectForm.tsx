@@ -49,7 +49,6 @@ export default function ProjectForm({
           ? 'Project updated successfully'
           : 'Project created successfully'
       );
-      console.log(`State`, JSON.stringify(state.data));
       // Client-side redirect after showing toast
       setTimeout(() => {
         window.location.href = `${basePath}/project/${state.data?.id}`;

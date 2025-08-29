@@ -1,4 +1,5 @@
 'use server';
+import logger from '@/lib/logger';
 import { db } from '@/lib/db';
 import { auth } from '@clerk/nextjs/server';
 import { Transaction } from '@/types/Transaction';
@@ -21,7 +22,7 @@ async function getTransactions(): Promise<{
     });
     return { transactions };
   } catch (error) {
-    console.log('DB error:', error);
+    logger.error('DB error:', error);
     return { error: 'Database error' };
   }
 }

@@ -1,6 +1,6 @@
 import { Transaction } from '@/types/Transaction';
 import getTransactions from '@/app/actions/getTransactions';
-import TransactionItem from './TransactionItem';
+import TransactionItem from './_TransactionItem';
 
 const TransactionList = async () => {
   const { transactions, error } = await getTransactions();

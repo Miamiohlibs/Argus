@@ -6,9 +6,12 @@ const BibEntryComponent = ({
   entry: AlmaItemHoldingBibData;
   // projectId: string | number;
 }) => {
+  console.log(entry);
   const fields = [
     'author',
     'title',
+    'location',
+    'call_number',
     'date_of_publication',
     'publisher_const',
     'place_of_publication',

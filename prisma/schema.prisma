@@ -19,14 +19,16 @@ datasource db {
 }
 
 model User {
-  id           String        @id @default(uuid())
-  clerkUserId  String        @unique
-  email        String        @unique
+  id           String           @id @default(uuid())
+  clerkUserId  String           @unique
+  email        String           @unique
   name         String
-  role         Role          @default(user)
+  role         Role             @default(user)
+  affiliation  UserAffiliation?
+  status       UserStatus?
   imageUrl     String?
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
   transactions Transaction[]
   projects     Project[]
 }
@@ -49,6 +51,8 @@ model BibEntry {
   almaId     String
   almaIdType String
   author     String
+  pub_date   String?
+  publisher  String?
   callNumber String?
   location   String
   notes      String?
@@ -61,7 +65,11 @@ model BibEntry {
 
 model ItemEntry {
   id          String    @id @default(uuid())
-  description String
+  description String?
+  location    String?
+  call_number String?
+  copy_id     String?
+  barcode     String?
   BibEntry    BibEntry? @relation(fields: [bibEntryId], references: [id])
   bibEntryId  String?
 }
@@ -71,6 +79,20 @@ enum Role {
   editor
   admin
   superadmin
+}
+
+enum UserAffiliation {
+  Miami
+  Other
+}
+
+enum UserStatus {
+  Undergrad
+  Graduate
+  Faculty
+  Staff
+  Alumni
+  Other
 }
 
 // This was from the original tutorial, not used in Watson

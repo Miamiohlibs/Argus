@@ -1,10 +1,12 @@
-// app/api/pdf/route.tsx
+// app/api/slipsPdf/[...slub]/route.tsx
+import logger from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server';
 import { renderToStream } from '@react-pdf/renderer';
-// import { RequestSlipProps } from '@/types/RequestSlipProps';
+import { RequestSlipProps } from '@/types/RequestSlipProps';
 import { MultiPagePdf } from '@/components/MultipagePdf';
 import getEntries from '@/app/actions/getEntries';
 import getProject from '@/app/actions/getProject';
+import filenamify from 'filenamify';
 
 export async function GET(
   req: NextRequest,
@@ -16,33 +18,57 @@ export async function GET(
   const { project } = await getProject({ id });
 
   const entries = data?.entries ?? [];
-  const items = entries.map((entry) => {
-    // console.log('One entry:', JSON.stringify(entry));
-    const affiliation =
-      project?.user.email && project?.user.email.includes('@miamioh.edu')
-        ? 'Miami'
-        : 'Other';
+  const items: RequestSlipProps[] = entries.map((entry) => {
+    // logger.verbose('One entry:', JSON.stringify(entry));
+
+    // format item info -- comma separate if minimal info; separate with newlines if longer
+
     return {
       author: entry.author,
       title: entry.itemTitle,
       callNumber: entry.callNumber ?? undefined,
       notes: entry.notes ?? undefined,
+      date: entry.pub_date ?? undefined,
       location: entry.location,
-      itemInfo: entry.items.map((item) => item.description).join(', '),
+      itemInfo:
+        entry.items &&
+        entry.items.map((item) => {
+          let info: string = '';
+          // let partCount = 0;
+          if (item.location != entry.location) {
+            info += `(${item.location}) `;
+            // partCount++;
+          }
+          if (item.call_number != entry.callNumber) {
+            info += `${item.call_number}`;
+            // partCount++;
+          }
+          if (item.description) {
+            info += item.description;
+          }
+          if (item.copy_id && parseInt(item.copy_id) > 1) {
+            info += ` c.${item.copy_id}`;
+            // partCount++;
+          }
+          return info;
+        }),
       userName: project?.user.name,
       userEmail: project?.user.email,
-      affiliation,
+      userAffiliation: project?.user.affiliation ?? undefined,
+      userStatus: project?.user.status ?? undefined,
     };
   });
 
   const stream = await renderToStream(<MultiPagePdf books={items} />);
-  const filename = 'pullslip.pdf';
-  // params.title !== null ? `Pull slip: ${params.title}.pdf` : 'pullslip.pdf';
+  const filename = project?.title
+    ? filenamify(`${project.title} - Pull Slips`)
+    : 'pullslips';
+  // logger.verbose('filename:', filename);
 
   return new NextResponse(stream as any, {
     headers: {
       'Content-Type': 'application/pdf',
-      'Content-Disposition': `inline; filename=${filename}.pdf`,
+      'Content-Disposition': `inline; filename="${filename}.pdf"`,
     },
   });
 }

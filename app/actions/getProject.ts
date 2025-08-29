@@ -1,4 +1,5 @@
 'use server';
+import logger from '@/lib/logger';
 import { db } from '@/lib/db';
 import type { ProjectWithUserAndBib } from '@/types/ProjectWithUserAndBib';
 
@@ -16,10 +17,10 @@ async function getProject(params: { id: string }): Promise<{
         bibEntries: true, // Include related bib entries if needed
       },
     });
-    // console.log('Fetched projects:', projects);
+    // logger.verbose('Fetched projects:', projects);
     return { project };
   } catch (error) {
-    console.log('DB error:', error);
+    logger.error('DB error:', error);
     return { error: 'Database error' };
   }
 }

@@ -6,6 +6,7 @@ import getProject from '@/app/actions/getProject';
 import canEdit from '@/lib/canEdit';
 import { redirect } from 'next/navigation';
 import { unauthorized } from 'next/navigation';
+import logger from '@/lib/logger';
 
 interface EditProjectPageProps {
   params: Promise<{ id: string }>;
@@ -22,8 +23,8 @@ export default async function EditProjectPage({
     redirect(`/project/${id}`); // go to non-edit version of project page
   }
 
-  console.log(currentUser);
-  console.log(project);
+  logger.debug({ currentUser });
+  logger.debug({ project });
   if (currentUser != undefined) {
     return (
       <>
