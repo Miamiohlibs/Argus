@@ -1,6 +1,6 @@
 import NextLink from 'next/link';
-import { Nav, NavItem, NavLink } from 'react-bootstrap';
-import checkAccess from '@/lib/checkAccess';
+import { NavItem, NavLink } from 'react-bootstrap';
+// import checkAccess from '@/lib/checkAccess';
 import { isEditorOrAbove } from '@/lib/canEdit';
 const NavEditor = async () => {
   // Check if the user has access to admin features
