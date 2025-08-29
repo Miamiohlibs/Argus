@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation';
 import getUserRole from '@/app/actions/getUserRole';
+import logger from './logger';
 
 type CheckAccessProps = {
   permittedRoles: string[];
@@ -15,8 +16,7 @@ export default async function checkAccess(
     : checkAccessProps;
 
   const { role } = await getUserRole();
-  console.log('Checking User role:', role);
-  console.log('Permitted roles:', config.permittedRoles);
+  logger.silly({ role, permittedRoles: config.permittedRoles });
   if (!role || !config.permittedRoles.includes(role)) {
     if (config.inline && config.inline === true) {
       return false; // Return false if inline check is requested
