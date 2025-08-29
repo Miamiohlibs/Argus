@@ -155,8 +155,8 @@ export const RequestSlipPage = ({
             <Text style={styles.centerText}>{location}</Text>
             <Text style={styles.centerText}>{callNumber ?? ''}</Text>
             {volumeLabel}
-            {itemInfo?.map((item) => {
-              return <Text>{item}</Text>;
+            {itemInfo?.map((item, i) => {
+              return <Text key={`item-${i}`}>{item}</Text>;
             })}
           </View>
         </View>
