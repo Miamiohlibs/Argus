@@ -1,10 +1,7 @@
 import { EntryWithItems } from '@/types/EntryWithItems';
 import { bibHoldings } from '@/app/actions/almaSearch';
 import getEntryById from '@/app/actions/getEntryById';
-import {
-  CondensedBibHoldings,
-  AlmaItemDataPlusHoldingDetails,
-} from '@/types/CondensedBibHoldings';
+import { CondensedBibHoldings } from '@/types/CondensedBibHoldings';
 import BibResultsWrapper from '@/components/BibResultsWrapper';
 import { Button } from 'react-bootstrap';
 import Link from 'next/link';
