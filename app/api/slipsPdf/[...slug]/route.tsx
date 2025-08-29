@@ -20,6 +20,8 @@ export async function GET(
   const items: RequestSlipProps[] = entries.map((entry) => {
     // console.log('One entry:', JSON.stringify(entry));
 
+    // format item info -- comma separate if minimal info; separate with newlines if longer
+
     return {
       author: entry.author,
       title: entry.itemTitle,
@@ -27,7 +29,28 @@ export async function GET(
       notes: entry.notes ?? undefined,
       date: entry.pub_date ?? undefined,
       location: entry.location,
-      itemInfo: entry.items.map((item) => item.description).join(', '),
+      itemInfo:
+        entry.items &&
+        entry.items.map((item) => {
+          let info: string = '';
+          // let partCount = 0;
+          if (item.location != entry.location) {
+            info += `(${item.location}) `;
+            // partCount++;
+          }
+          if (item.call_number != entry.callNumber) {
+            info += `${item.call_number}`;
+            // partCount++;
+          }
+          if (item.description) {
+            info += item.description;
+          }
+          if (item.copy_id && parseInt(item.copy_id) > 1) {
+            info += ` c.${item.copy_id}`;
+            // partCount++;
+          }
+          return info;
+        }),
       userName: project?.user.name,
       userEmail: project?.user.email,
       userAffiliation: project?.user.affiliation ?? undefined,

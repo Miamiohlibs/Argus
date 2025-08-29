@@ -3,26 +3,9 @@ import { Document, StyleSheet } from '@react-pdf/renderer';
 import { RequestSlipProps } from '@/types/RequestSlipProps';
 import { RequestSlipPage } from './RequestSlipPage';
 
-// This page is called by: app/api/slipsPdf/[...slub]/route.tsx
+// This component is called by: app/api/slipsPdf/[...slub]/route.tsx
 // That is where the data comes from
-
-// const styles = StyleSheet.create({
-//   page: { padding: 10, fontSize: 10 },
-//   section: { border: '1pt solid black', marginBottom: 5 },
-//   header: {
-//     textAlign: 'center',
-//     fontSize: 12,
-//     marginBottom: 5,
-//     fontWeight: 'bold',
-//   },
-//   row: { flexDirection: 'row', borderBottom: '1pt solid black' },
-//   cell: { flex: 1, padding: 4, borderRight: '1pt solid black' },
-//   cellLast: { flex: 1, padding: 4 },
-//   label: { fontWeight: 'bold' },
-//   checkboxRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 2 },
-//   checkbox: { width: 8, height: 8, border: '1pt solid black', marginRight: 4 },
-//   checkedBox: { width: 8, height: 8, backgroundColor: 'black', marginRight: 4 },
-// });
+// This component repeatedly calls RequestSlipPage to print each page
 
 const styles = StyleSheet.create({
   page: {

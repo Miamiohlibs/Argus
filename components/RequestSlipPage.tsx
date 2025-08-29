@@ -1,4 +1,5 @@
 // app/pdf/RequestSlipPage.tsx
+// called by ./MultipagePdf with one bib's data
 import { Page, Text, View } from '@react-pdf/renderer';
 import type { RequestSlipProps } from '@/types/RequestSlipProps';
 
@@ -16,6 +17,17 @@ export const RequestSlipPage = ({
   userStatus,
   styles,
 }: RequestSlipProps & { styles: any }) => {
+  console.log('Item Info', itemInfo);
+  const volumeLabel = // only show if items to show
+    itemInfo && itemInfo.length > 1 ? (
+      <>
+        <Text style={styles.blankLine} />
+        <Text>Volume(s):</Text>
+        <Text style={styles.blankLine} />
+      </>
+    ) : (
+      <Text></Text>
+    );
   return (
     <Page size="LETTER" style={styles.page}>
       {/* Header */}
@@ -142,8 +154,10 @@ export const RequestSlipPage = ({
             <Text style={styles.label}>CALL NUMBER</Text>
             <Text style={styles.centerText}>{location}</Text>
             <Text style={styles.centerText}>{callNumber ?? ''}</Text>
-            <Text>Volume(s):</Text>
-            <Text style={styles.paragraph}>{itemInfo}</Text>
+            {volumeLabel}
+            {itemInfo?.map((item) => {
+              return <Text>{item}</Text>;
+            })}
           </View>
         </View>
       </View>
