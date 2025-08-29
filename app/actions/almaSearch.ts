@@ -5,7 +5,7 @@ import { SearchBibs } from '@kenxirwin/alma-search';
 import type {
   AlmaItem,
   AlmaItemApiResponse,
-  AlmaItemHoldingItemData,
+  // AlmaItemHoldingItemData,
 } from '@/types/AlmaItem';
 import type {
   CondensedBibHoldings,
@@ -116,10 +116,10 @@ function condenseBibHoldings(response: AlmaItemApiResponse) {
       }));
     // valuable info from holding:
     // - copy_id, holding_id, call_number
-    const bib_data = allMatchingHoldings[0].bib_data;
-    const locationCodes = [
-      ...new Set(response.item.map((item) => item.item_data.location.value)),
-    ].join(',');
+    // const bib_data = allMatchingHoldings[0].bib_data;
+    // const locationCodes = [
+    //   ...new Set(response.item.map((item) => item.item_data.location.value)),
+    // ].join(',');
 
     output.items.push(...allMatchingItems);
   });
