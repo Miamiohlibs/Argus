@@ -1,10 +1,11 @@
+import logger from '@/lib/logger';
 import { currentUser } from '@clerk/nextjs/server';
 import { db } from '@/lib/db';
 import { Prisma } from '@prisma/client';
 
 export const checkUser = async () => {
   const user = await currentUser();
-  // console.log(user);
+  logger.silly(user);
   //check for current logged in clerk user
   if (!user) {
     return null;
@@ -44,7 +45,7 @@ export const checkUser = async () => {
         checkUser(); // try again
       }
     } else {
-      console.error('An unexpected error occurred:', error);
+      logger.error('An unexpected error occurred:', error);
     }
   }
 

@@ -1,4 +1,5 @@
 'use server';
+import logger from '@/lib/logger';
 import { db } from '@/lib/db';
 import { auth } from '@clerk/nextjs/server';
 
@@ -15,10 +16,10 @@ async function getUserRole(): Promise<{
     const user = await db.user.findUniqueOrThrow({
       where: { clerkUserId: userId },
     });
-    console.log(user.role);
+    logger.verbose(user.role);
     return { role: user.role };
   } catch (error) {
-    console.log('DB error:', error);
+    logger.verbose('DB error:', error);
     return { error: 'Database error' };
   }
 }

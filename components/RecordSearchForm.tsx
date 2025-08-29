@@ -53,22 +53,6 @@ const RecordSearchForm = ({
       // router.push('/'); // Uncomment if you want to redirect after successful search
     }
   };
-  // const handleBarcodeSearch = async (formData: FormData) => {
-  //   const barcode = formData.get('barcode');
-  //   const { data, error } = await bibById({
-  //     mms_id: barcode?.toString() || '',
-  //   });
-  //   // console.log('Data from bibById:', data);
-  //   if (error) {
-  //     toast.error('Lookup failed');
-  //     //   router.push('/'); // Redirect to home on error
-  //   } else {
-  //     // toast.success('Lookup successful');
-  //     setresults(data); // Set the results state with the fetched data
-  //     // Optionally, you can redirect or perform other actions with the results
-  //     // router.push('/'); // Uncomment if you want to redirect after successful search
-  //   }
-  // };
 
   return (
     <>

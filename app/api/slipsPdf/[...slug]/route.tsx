@@ -1,4 +1,5 @@
 // app/api/slipsPdf/[...slub]/route.tsx
+import logger from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server';
 import { renderToStream } from '@react-pdf/renderer';
 import { RequestSlipProps } from '@/types/RequestSlipProps';
@@ -18,7 +19,7 @@ export async function GET(
 
   const entries = data?.entries ?? [];
   const items: RequestSlipProps[] = entries.map((entry) => {
-    // console.log('One entry:', JSON.stringify(entry));
+    // logger.verbose('One entry:', JSON.stringify(entry));
 
     // format item info -- comma separate if minimal info; separate with newlines if longer
 
@@ -62,7 +63,7 @@ export async function GET(
   const filename = project?.title
     ? filenamify(`${project.title} - Pull Slips`)
     : 'pullslips';
-  // console.log('filename:', filename);
+  // logger.verbose('filename:', filename);
 
   return new NextResponse(stream as any, {
     headers: {

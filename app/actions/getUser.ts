@@ -1,4 +1,5 @@
 'use server';
+import logger from '@/lib/logger';
 import { db } from '@/lib/db';
 // import { User } from '@/types/User';
 import { User } from '@prisma/client';
@@ -13,13 +14,13 @@ export async function getUserByClerkUserId(clerkUserId: string): Promise<{
         clerkUserId,
       },
     });
-    console.log('Fetched user by Clerk ID:', user);
+    logger.verbose('Fetched user by Clerk ID:', user);
     if (!user || user === null) {
       return { error: 'No user found' };
     }
     return { user };
   } catch (error) {
-    console.log('DB error:', error);
+    logger.error('DB error:', error);
     return { error: 'Database error' };
   }
 }
@@ -34,7 +35,7 @@ export default async function getUser(id: string): Promise<{
         id,
       },
     });
-    console.log('Fetched user:', user);
+    logger.verbose('Fetched user:', user);
     if (!user || user === null) {
       return { error: 'No user found' };
     }
@@ -47,7 +48,7 @@ export default async function getUser(id: string): Promise<{
     };
     return { user: safeUser };
   } catch (error) {
-    console.log('DB error:', error);
+    logger.verbose('DB error:', error);
     return { error: 'Database error' };
   }
 }

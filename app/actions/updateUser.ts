@@ -1,4 +1,5 @@
 'use server';
+import logger from '@/lib/logger';
 import { db } from '@/lib/db';
 // import { User } from '@/types/User';
 import { User } from '@prisma/client';
@@ -14,7 +15,7 @@ async function updateUser(
         ...data,
       },
     });
-    console.log('Updated user:', updatedUser);
+    logger.verbose('Updated user:', updatedUser);
     const safeUser: User = {
       ...updatedUser,
       name: updatedUser.name ?? undefined,
@@ -22,36 +23,9 @@ async function updateUser(
     };
     return { user: safeUser };
   } catch (error) {
-    console.log('DB error:', error);
+    logger.error('DB error:', error);
     return { error: 'Database error' };
   }
 }
-// async function getUser(id: string): Promise<{
-//   user?: User | undefined;
-//   error?: string;
-// }> {
-//   try {
-//     const user = await db.user.findUniqueOrThrow({
-//       where: {
-//         id,
-//       },
-//     });
-//     console.log('Fetched user:', user);
-//     if (!user || user === null) {
-//       return { error: 'No user found' };
-//     }
-//     // Ensure 'name' is string or undefined, not null
-//     // Ensure 'imageUrl' is string or undefined, not null
-//     const safeUser = {
-//       ...user,
-//       name: user.name ?? undefined,
-//       imageUrl: user.imageUrl ?? undefined,
-//     };
-//     return { user: safeUser };
-//   } catch (error) {
-//     console.log('DB error:', error);
-//     return { error: 'Database error' };
-//   }
-// }
 
 export default updateUser;

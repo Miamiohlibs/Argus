@@ -1,3 +1,4 @@
+import logger from '@/lib/logger';
 // import { PullList } from '@/types/PullList';
 import type { Project } from '@prisma/client';
 import getProjects from '@/app/actions/getProjects';
@@ -7,7 +8,7 @@ import Link from 'next/link';
 
 const ProjectList = async () => {
   const { projects, error } = await getProjects();
-  console.log('Projects:', projects);
+  logger.verbose('Projects:', projects);
   if (error) {
     return <p className="error">{error}</p>;
   }

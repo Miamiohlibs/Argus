@@ -1,4 +1,5 @@
 'use server';
+import logger from '@/lib/logger';
 import { db } from '@/lib/db';
 import { auth } from '@clerk/nextjs/server';
 import { isAdmin, isSuperAdmin } from '@/lib/canEdit';
@@ -11,11 +12,11 @@ async function deleteUser(userIdToDelete: string): Promise<{
   if (!userId) {
     return { error: 'User not found' };
   }
-  console.log(`deletion request for user ${userIdToDelete} by ${userId}`);
+  logger.verbose(`deletion request for user ${userIdToDelete} by ${userId}`);
   const canDelete = await isAdmin();
   const canDeleteSuperAdmin = await isSuperAdmin();
   if (!canDelete) {
-    console.log(
+    logger.verbose(
       `user deletion permission denied on ${userIdToDelete} by ${userId}`
     );
     return { error: 'Delete user permission denied' };
@@ -31,7 +32,7 @@ async function deleteUser(userIdToDelete: string): Promise<{
     // admin cannot delete superadmin
     deleteRequirementsArray.push({ role: { not: 'superadmin' } });
   }
-  console.log(
+  logger.verbose(
     'attempting to delete with requirements:',
     deleteRequirementsArray
   );
@@ -49,7 +50,7 @@ async function deleteUser(userIdToDelete: string): Promise<{
     }
     return { message: 'Deleted project' };
   } catch (error) {
-    console.log('DB error:', error);
+    logger.verbose('DB error:', error);
     return { error: 'Database error' };
   }
 }

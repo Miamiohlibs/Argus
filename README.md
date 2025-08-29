@@ -17,6 +17,12 @@ ALMA_PERMALINK_BASEURL= # your local alma permalink base url, e.g. https://ohiol
 PORT=3333 # or whatever port you want to use
 ```
 
+Optionally include minimum level of logging:
+
+```
+LOG_LEVEL=info #info is the default, choose from: error,warn,info,verbose,debug,silly
+```
+
 ## Getting Started
 
 First, run the development server:

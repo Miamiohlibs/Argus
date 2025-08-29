@@ -1,4 +1,5 @@
 'use server';
+import logger from '@/lib/logger';
 import { db } from '@/lib/db';
 import { ItemEntry } from '@prisma/client';
 
@@ -21,16 +22,16 @@ const entryAction = async ({
         ? process.env.ALMA_PERMALINK_BASEURL + bibData.mms_id
         : undefined;
 
-    console.log(
+    logger.verbose(
       `${actionType === 'add' ? 'Adding' : 'Updating'} entry with bibData:`,
       bibData
     );
-    console.log(`environment: ${process.env.ALMA_PERMALINK_BASEURL}`);
+    logger.verbose(`environment: ${process.env.ALMA_PERMALINK_BASEURL}`);
 
     const projectId = parseInt(
       (bibData.project_id as string).replace(/"/g, '')
     );
-    console.log('Project ID:', projectId);
+    logger.verbose('Project ID:', projectId);
 
     const itemDescriptions = itemData.map((item) => ({
       description: item.description,
@@ -57,7 +58,7 @@ const entryAction = async ({
         ? selectedCallNumbersArr.join(',')
         : bibData.call_number;
 
-    console.log('received bibData', JSON.stringify(bibData));
+    logger.verbose('received bibData', JSON.stringify(bibData));
     // Prepare the data object
     const entryData = {
       itemTitle: bibData.title as string,
@@ -89,7 +90,7 @@ const entryAction = async ({
           items: true,
         },
       });
-      console.log('Entry added successfully:', response);
+      logger.verbose('Entry added successfully:', response);
     } else {
       // Update existing entry
       if (!existingEntryId) {
@@ -124,12 +125,12 @@ const entryAction = async ({
         return updatedEntry;
       });
 
-      console.log('Entry updated successfully:', response);
+      logger.verbose('Entry updated successfully:', response);
     }
 
     return { data: response, error: null };
   } catch (error) {
-    console.error(
+    logger.error(
       `Error ${actionType === 'add' ? 'adding' : 'updating'} entry:`,
       error
     );

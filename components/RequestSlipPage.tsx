@@ -1,5 +1,6 @@
 // app/pdf/RequestSlipPage.tsx
 // called by ./MultipagePdf with one bib's data
+import logger from '@/lib/logger';
 import { Page, Text, View } from '@react-pdf/renderer';
 import type { RequestSlipProps } from '@/types/RequestSlipProps';
 
@@ -17,7 +18,7 @@ export const RequestSlipPage = ({
   userStatus,
   styles,
 }: RequestSlipProps & { styles: any }) => {
-  console.log('Item Info', itemInfo);
+  logger.verbose('Item Info', itemInfo);
   const volumeLabel = // only show if items to show
     itemInfo && itemInfo.length > 1 ? (
       <>
