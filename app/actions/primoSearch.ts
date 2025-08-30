@@ -1,11 +1,6 @@
 import logger from '@/lib/logger';
 import { PrimoSearchResponse } from '@/types/PrimoSearchResponse';
 
-//NEXT_PUBLIC_PRIMO_QUERYSTRING
-//NEXT_PUBLIC_USE_PRIMO
-//ALMA_BASE_URL
-//path: /primo/v1/search
-
 function verifyEnv() {
   if (
     !(
@@ -41,10 +36,10 @@ async function ExecutePrimoQuery(
     logger.debug({ callingUrl: queryUrl });
     const response = await fetch(queryUrl);
     const data = await response.json();
-    // logger.debug('result', data);
     return { result: data };
   } catch (error) {
-    return { error };
+    logger.error({ error: `Error in ExecutePrimoQuery(${query}): ${error}` });
+    return { error: `Error in ExecutePrimoQuery(${query}): ${error}` };
   }
 }
 
@@ -64,12 +59,14 @@ export async function getMmsIdByCallNumber({
     if (error) {
       return { error: 'error received at getMmsIdByCallNumber: ' + error };
     }
-    logger.debug(result);
     const mms_ids = result
       ? result.docs.map((doc) => doc.pnx.display?.mms)
       : [];
     return mms_ids;
   } catch (error) {
+    logger.error({
+      error: `Error in getMmsIdByCallNumber(${callNumber}): ${error}`,
+    });
     return { error: 'caught error in getMmsIdByCallNumber: ' + error };
   }
 }
