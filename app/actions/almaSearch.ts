@@ -1,6 +1,7 @@
 // import 'dotenv/config';
 'use server';
 import { SearchBibs } from '@kenxirwin/alma-search';
+import { getMmsIdByCallNumber } from './primoSearch';
 import type {
   AlmaItem,
   AlmaItemApiResponse,
@@ -158,5 +159,39 @@ export async function bibHoldingsByBarcode({ barcode }: { barcode: string }) {
   } catch (error) {
     logger.error('Error fetching holdings:', error);
     return { error: 'Holdings lookup failed with message:' + `: ${error}` };
+  }
+}
+
+export async function bibHoldingsByCallNumber({
+  call_number,
+}: {
+  call_number: string;
+}) {
+  try {
+    const mms_ids = await getMmsIdByCallNumber({ callNumber: call_number });
+    if (mms_ids === undefined) {
+      const errString = `No results found for call number ${call_number}`;
+      console.error(errString);
+      return { error: errString };
+    }
+    if (
+      mms_ids &&
+      mms_ids != undefined &&
+      Array.isArray(mms_ids) &&
+      mms_ids.length == 1
+    ) {
+      const mms_id: string = typeof mms_ids[0] == 'string' ? mms_ids[0] : '';
+      const { data, error } = await bibHoldings({ mms_id });
+      if (error) {
+        throw new Error(error);
+      }
+      return { data };
+    } else {
+      throw new Error(`invalid search results`);
+    }
+  } catch (error) {
+    const errString = `Error finding bib record from call number ${call_number}: ${error}`;
+    logger.error(errString);
+    return { error: errString };
   }
 }

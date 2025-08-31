@@ -4,7 +4,11 @@ import { useRef } from 'react';
 import { toast } from 'react-toastify';
 // import { useRouter } from 'next/navigation'; // Changed from react-router-dom
 // import { bibById } from '@/app/actions/almaSearch';
-import { bibHoldings, bibHoldingsByBarcode } from '@/app/actions/almaSearch';
+import {
+  bibHoldings,
+  bibHoldingsByBarcode,
+  bibHoldingsByCallNumber,
+} from '@/app/actions/almaSearch';
 import { useState } from 'react';
 import type { CondensedBibHoldings } from '@/types/CondensedBibHoldings';
 import BibResultsWrapper from './BibResultsWrapper';
@@ -40,6 +44,13 @@ const RecordSearchForm = ({
       });
       data = result.data;
       error = result.error;
+    } else if (formData.get('searchType') == 'call_number') {
+      const call_number = formData.get('call_number');
+      if (typeof call_number == 'string') {
+        const result = await bibHoldingsByCallNumber({ call_number });
+        data = result.data;
+        error = result.error;
+      }
     }
 
     // console.log('Data from bibById:', data);
@@ -83,6 +94,23 @@ const RecordSearchForm = ({
               placeholder="Enter Barcode"
               aria-label="Barcode"
               aria-describedby="barcode"
+            />
+            <Button type="submit" variant="primary">
+              Search
+            </Button>
+          </InputGroup>
+        </Form.Group>
+      </Form>
+      <Form ref={formRef} action={handleSubmit}>
+        <Form.Control type="hidden" name="searchType" value="call_number" />
+        <Form.Group controlId="callNumberSearch">
+          <InputGroup className="mb-3">
+            <InputGroup.Text id="call_number">Call Number</InputGroup.Text>
+            <Form.Control
+              name="call_number"
+              placeholder="Enter Call Number"
+              aria-label="Call Number"
+              aria-describedby="Call Number"
             />
             <Button type="submit" variant="primary">
               Search
