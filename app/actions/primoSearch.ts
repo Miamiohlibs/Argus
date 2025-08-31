@@ -25,7 +25,7 @@ async function ExecutePrimoQuery(
     return { error: error as string };
   }
   try {
-    let queryUrl =
+    const queryUrl =
       process.env.ALMA_BASEURL +
       '/primo/v1/search?apikey=' +
       process.env.PRIMO_API_KEY +
