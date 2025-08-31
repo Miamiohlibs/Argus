@@ -60,8 +60,9 @@ export async function getMmsIdByCallNumber({
       return { error: 'error received at getMmsIdByCallNumber: ' + error };
     }
     const mms_ids = result
-      ? result.docs.map((doc) => doc.pnx.display?.mms)
+      ? result.docs.map((doc) => doc.pnx.display?.mms).flat()
       : [];
+    logger.debug(`*** primo returns MMS: ${JSON.stringify(mms_ids)}`);
     return mms_ids;
   } catch (error) {
     logger.error({
