@@ -16,10 +16,14 @@ export interface AlmaItemHoldingBibDataPlusCallAndLocation
   extends AlmaItemHoldingBibData {
   call_number?: string;
   location?: string;
+  locationNames?: string;
+  locationNamesAndCodes?: string;
 }
 export type CondensedBibHoldings = {
   bib_data: AlmaItemHoldingBibDataPlusCallAndLocation;
   // holding_data: AlmaItemHoldingHoldingData;
   items: AlmaItemDataPlusHoldingDetails[];
   locationCodes: string;
+  locationNames?: string;
+  locationInfo?: string;
 };

@@ -11,6 +11,8 @@ const BibEntryComponent = ({
     'author',
     'title',
     'location',
+    'locationNames',
+    'locationNamesAndCodes',
     'call_number',
     'date_of_publication',
     'publisher_const',
