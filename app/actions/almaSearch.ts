@@ -13,6 +13,41 @@ import type {
 } from '@/types/CondensedBibHoldings';
 import logger from '@/lib/logger';
 
+export async function lookupAny(input: string) {
+  const INST_CODE = process.env.NEXT_PUBLIC_INST_CODE
+    ? process.env.NEXT_PUBLIC_INST_CODE
+    : '';
+  const BARCODE_PREFIX = process.env.NEXT_PUBLIC_BARCODE_PREFIX
+    ? process.env.NEXT_PUBLIC_BARCODE_PREFIX
+    : '';
+  const urlRe = /^https?\:\/\//;
+  const almaMmsRe = new RegExp('alma(99\\d+' + INST_CODE.toString() + ')$');
+  const mmsRe = new RegExp('^(99\\d+' + INST_CODE.toString() + ')$');
+  const barcodeRe = new RegExp('(^' + BARCODE_PREFIX.toString() + '\\d+)$');
+  const callRe = /^[A-Z]{1,3}\s*[0-9]{1,4}(\.[0-9]+)?\s*/;
+
+  if (input.match(urlRe)) {
+    let found = input.match(almaMmsRe);
+    if (Array.isArray(found)) {
+      return await bibHoldings({ mms_id: found[1] });
+    } else {
+      console.log(
+        `No MMS_ID found in url: ${input}. Hint: Permalink URLs will only work here if they end in ...alma99 followed by a bunch of digits. If you have a different sort of permalink, try looking up by Barcode or Call Number.`
+      );
+    }
+  } else if (input.match(mmsRe)) {
+    return await bibHoldings({ mms_id: input });
+  } else if (input.match(barcodeRe)) {
+    return await bibHoldingsByBarcode({ barcode: input });
+  } else if (input.match(callRe)) {
+    return await bibHoldingsByCallNumber({ call_number: input });
+  } else {
+    return {
+      error: `Could not identify item based on Permalink URL, MMS_ID, Barcode or Call Number: ${input}`,
+    };
+  }
+}
+
 export async function findByBarcode(barcode: string): Promise<AlmaItem> {
   try {
     const alma = new SearchBibs({
