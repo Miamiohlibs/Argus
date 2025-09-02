@@ -16,10 +16,6 @@ const entryAction = async ({
   actionType,
   existingEntryId,
 }: EntryActionData) => {
-  console.log('bibData: ', bibData);
-  console.log('itemData: ', itemData);
-  console.log('actionType: ', actionType);
-  console.log('existingEntryId: ', existingEntryId);
   try {
     const url =
       bibData.mms_id && process.env.ALMA_PERMALINK_BASEURL
