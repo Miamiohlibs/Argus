@@ -8,6 +8,7 @@ import {
   bibHoldings,
   bibHoldingsByBarcode,
   bibHoldingsByCallNumber,
+  bibHoldingsByAny,
 } from '@/app/actions/almaSearch';
 import { useState } from 'react';
 import type { CondensedBibHoldings } from '@/types/CondensedBibHoldings';
@@ -29,7 +30,12 @@ const RecordSearchForm = ({
 
   const handleSubmit = async (formData: FormData) => {
     let data, error;
-    if (formData.get('searchType') == 'mms-id') {
+    if (formData.get('searchType') == 'any') {
+      const input = formData.get('any-input')?.toString() ?? '';
+      const result = await bibHoldingsByAny(input);
+      data = result.data;
+      error = result.error;
+    } else if (formData.get('searchType') == 'mms-id') {
       const mms_id = formData.get('mms-id');
       // const { data: bibData, error: bibError } = await bibById({ mms_id: mms_id?.toString() || '' });
       const result = await bibHoldings({
@@ -111,6 +117,23 @@ const RecordSearchForm = ({
               placeholder="Enter Call Number"
               aria-label="Call Number"
               aria-describedby="Call Number"
+            />
+            <Button type="submit" variant="primary">
+              Search
+            </Button>
+          </InputGroup>
+        </Form.Group>
+      </Form>
+      <Form ref={formRef} action={handleSubmit}>
+        <Form.Control type="hidden" name="searchType" value="any" />
+        <Form.Group controlId="anySearch">
+          <InputGroup className="mb-3">
+            <InputGroup.Text id="any-input-label">Search by...</InputGroup.Text>
+            <Form.Control
+              name="any-input"
+              placeholder="Enter Call Number, Barcode, MMS_ID, or Permalink URL"
+              aria-label="Search String"
+              aria-describedby="any-input-label"
             />
             <Button type="submit" variant="primary">
               Search
