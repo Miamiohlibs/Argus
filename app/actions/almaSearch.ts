@@ -27,7 +27,7 @@ export async function bibHoldingsByAny(input: string) {
   const callRe = /^[A-Z]{1,3}\s*[0-9]{1,4}(\.[0-9]+)?\s*/;
 
   if (input.match(urlRe)) {
-    let found = input.match(almaMmsRe);
+    const found = input.match(almaMmsRe);
     if (Array.isArray(found)) {
       return await bibHoldings({ mms_id: found[1] });
     } else {
