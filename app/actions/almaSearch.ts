@@ -13,7 +13,7 @@ import type {
 } from '@/types/CondensedBibHoldings';
 import logger from '@/lib/logger';
 
-export async function lookupAny(input: string) {
+export async function bibHoldingsByAny(input: string) {
   const INST_CODE = process.env.NEXT_PUBLIC_INST_CODE
     ? process.env.NEXT_PUBLIC_INST_CODE
     : '';
@@ -41,11 +41,10 @@ export async function lookupAny(input: string) {
     return await bibHoldingsByBarcode({ barcode: input });
   } else if (input.match(callRe)) {
     return await bibHoldingsByCallNumber({ call_number: input });
-  } else {
-    return {
-      error: `Could not identify item based on Permalink URL, MMS_ID, Barcode or Call Number: ${input}`,
-    };
   }
+  return {
+    error: `Could not identify item based on Permalink URL, MMS_ID, Barcode or Call Number: ${input}`,
+  };
 }
 
 export async function findByBarcode(barcode: string): Promise<AlmaItem> {
