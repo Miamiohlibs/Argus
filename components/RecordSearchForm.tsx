@@ -4,12 +4,7 @@ import { useRef } from 'react';
 import { toast } from 'react-toastify';
 // import { useRouter } from 'next/navigation'; // Changed from react-router-dom
 // import { bibById } from '@/app/actions/almaSearch';
-import {
-  bibHoldings,
-  bibHoldingsByBarcode,
-  bibHoldingsByCallNumber,
-  bibHoldingsByAny,
-} from '@/app/actions/almaSearch';
+import { bibHoldingsByAny } from '@/app/actions/almaSearch';
 import { useState } from 'react';
 import type { CondensedBibHoldings } from '@/types/CondensedBibHoldings';
 import BibResultsWrapper from './BibResultsWrapper';
@@ -35,95 +30,18 @@ const RecordSearchForm = ({
       const result = await bibHoldingsByAny(input);
       data = result.data;
       error = result.error;
-    } else if (formData.get('searchType') == 'mms-id') {
-      const mms_id = formData.get('mms-id');
-      // const { data: bibData, error: bibError } = await bibById({ mms_id: mms_id?.toString() || '' });
-      const result = await bibHoldings({
-        mms_id: mms_id?.toString() || '',
-      });
-      data = result.data;
-      error = result.error;
-    } else if (formData.get('searchType') == 'barcode') {
-      const barcode = formData.get('barcode');
-      const result = await bibHoldingsByBarcode({
-        barcode: barcode?.toString() || '',
-      });
-      data = result.data;
-      error = result.error;
-    } else if (formData.get('searchType') == 'call_number') {
-      const call_number = formData.get('call_number');
-      if (typeof call_number == 'string') {
-        const result = await bibHoldingsByCallNumber({ call_number });
-        data = result.data;
-        error = result.error;
-      }
     }
 
-    // console.log('Data from bibById:', data);
     if (error) {
-      toast.error('Lookup failed');
-      //   router.push('/'); // Redirect to home on error
+      toast.error(`Lookup failed -- ${error}`);
     } else {
       // toast.success('Lookup successful');
       setresults(data || null); // Set the results state with the fetched data
-      // Optionally, you can redirect or perform other actions with the results
-      // router.push('/'); // Uncomment if you want to redirect after successful search
     }
   };
 
   return (
     <>
-      <Form ref={formRef} action={handleSubmit}>
-        <Form.Control type="hidden" name="searchType" value="mms-id" />
-        <Form.Group controlId="mmsIdSearch">
-          <InputGroup className="mb-3">
-            <InputGroup.Text id="mms-id">MMS ID</InputGroup.Text>
-            <Form.Control
-              name="mms-id"
-              placeholder="Enter MMS ID"
-              aria-label="MMS ID"
-              aria-describedby="mms-id"
-            />
-            <Button type="submit" variant="primary">
-              Search
-            </Button>
-          </InputGroup>
-        </Form.Group>
-      </Form>
-      <Form ref={formRef} action={handleSubmit}>
-        <Form.Control type="hidden" name="searchType" value="barcode" />
-        <Form.Group controlId="barcodeSearch">
-          <InputGroup className="mb-3">
-            <InputGroup.Text id="barcode">Barcode</InputGroup.Text>
-            <Form.Control
-              name="barcode"
-              placeholder="Enter Barcode"
-              aria-label="Barcode"
-              aria-describedby="barcode"
-            />
-            <Button type="submit" variant="primary">
-              Search
-            </Button>
-          </InputGroup>
-        </Form.Group>
-      </Form>
-      <Form ref={formRef} action={handleSubmit}>
-        <Form.Control type="hidden" name="searchType" value="call_number" />
-        <Form.Group controlId="callNumberSearch">
-          <InputGroup className="mb-3">
-            <InputGroup.Text id="call_number">Call Number</InputGroup.Text>
-            <Form.Control
-              name="call_number"
-              placeholder="Enter Call Number"
-              aria-label="Call Number"
-              aria-describedby="Call Number"
-            />
-            <Button type="submit" variant="primary">
-              Search
-            </Button>
-          </InputGroup>
-        </Form.Group>
-      </Form>
       <Form ref={formRef} action={handleSubmit}>
         <Form.Control type="hidden" name="searchType" value="any" />
         <Form.Group controlId="anySearch">
