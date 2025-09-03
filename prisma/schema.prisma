@@ -74,6 +74,9 @@ model ItemEntry {
   call_number   String?
   copy_id       String?
   barcode       String?
+  box           String?
+  folder        String?
+  ms            String?
   BibEntry      BibEntry? @relation(fields: [bibEntryId], references: [id])
   bibEntryId    String?
 }
