@@ -11,6 +11,7 @@ export const RequestSlipPage = ({
   location,
   callNumber,
   itemInfo,
+  highlightedItemIndex,
   notes,
   userName,
   userEmail,
@@ -157,7 +158,17 @@ export const RequestSlipPage = ({
             <Text style={styles.centerText}>{callNumber ?? ''}</Text>
             {volumeLabel}
             {itemInfo?.map((item, i) => {
-              return <Text key={`item-${i}`}>{item}</Text>;
+              const styleTag = i == highlightedItemIndex ? styles.bold : {};
+              const counter =
+                i == highlightedItemIndex && itemInfo.length > 1
+                  ? ` (slip ${i + 1}/${itemInfo.length} for this bib record)`
+                  : '';
+              item += counter;
+              return (
+                <Text key={`item-${i}`} style={styleTag}>
+                  {item}
+                </Text>
+              );
             })}
           </View>
         </View>
