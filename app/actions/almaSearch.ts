@@ -27,7 +27,7 @@ export async function bibHoldingsByAny(input: string) {
   const callRe = /^[A-Z]{1,3}\s*[0-9]{1,4}(\.[0-9]+)?\s*/;
 
   if (input.match(urlRe)) {
-    let found = input.match(almaMmsRe);
+    const found = input.match(almaMmsRe);
     if (Array.isArray(found)) {
       return await bibHoldings({ mms_id: found[1] });
     } else {
@@ -128,15 +128,32 @@ function condenseBibHoldings(response: AlmaItemApiResponse) {
   const allLocationsArr = [
     ...new Set(response.item.map((item) => item.item_data.location.value)),
   ];
+  const allLocationNamesArr = [
+    ...new Set(response.item.map((item) => item.item_data.location.desc)),
+  ];
+  const allLocationsNameAndCodeArr = [
+    ...new Set(
+      response.item.map(
+        (item) =>
+          `${item.item_data.location.desc} (${item.item_data.location.value})`
+      )
+    ),
+  ];
   const allLocations = allLocationsArr.join(',');
+  const allLocationNames = allLocationNamesArr.join(',');
+  const allLocationsNameAndCode = allLocationsNameAndCodeArr.join(',');
   // logger.verbose(uniqBibHoldings);
   const output: CondensedBibHoldings = {
     bib_data: response.item[0].bib_data,
     items: [],
     locationCodes: '',
+    locationInfo: '',
+    locationNames: '',
   };
   output.bib_data.call_number = allCallNumbers;
   output.bib_data.location = allLocations;
+  output.bib_data.locationNames = allLocationNames;
+  output.bib_data.locationNamesAndCodes = allLocationsNameAndCode;
 
   uniqHoldings.forEach((holdingId) => {
     const allMatchingHoldings: AlmaItem[] = response.item.filter(

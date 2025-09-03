@@ -29,14 +29,14 @@ export async function GET(
       callNumber: entry.callNumber ?? undefined,
       notes: entry.notes ?? undefined,
       date: entry.pub_date ?? undefined,
-      location: entry.location,
+      location: `${entry.location_display} (${entry.location})`,
       itemInfo:
         entry.items &&
         entry.items.map((item) => {
           let info: string = '';
           // let partCount = 0;
           if (item.location != entry.location) {
-            info += `(${item.location}) `;
+            info += `${item.location_name} (${item.location}) `;
             // partCount++;
           }
           if (item.call_number != entry.callNumber) {
