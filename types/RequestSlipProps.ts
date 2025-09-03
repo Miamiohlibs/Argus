@@ -6,7 +6,8 @@ export type RequestSlipProps = {
   publisher?: string;
   date?: string;
   notes?: string;
-  itemInfo?: string[] | undefined;
+  itemInfo?: string[] | never[] | undefined;
+  highlightedItemIndex?: number;
   userName?: string;
   userEmail?: string;
   userAffiliation?: 'Miami' | 'Other';
