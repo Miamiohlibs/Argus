@@ -16,6 +16,9 @@ const entryAction = async ({
   actionType,
   existingEntryId,
 }: EntryActionData) => {
+  console.log('bibData', bibData);
+  console.log('itemData', itemData);
+  console.log('actionType', actionType);
   try {
     const url =
       bibData.mms_id && process.env.ALMA_PERMALINK_BASEURL
@@ -26,8 +29,14 @@ const entryAction = async ({
       `${actionType === 'add' ? 'Adding' : 'Updating'} entry with bibData:`,
       bibData
     );
-    logger.verbose(`environment: ${process.env.ALMA_PERMALINK_BASEURL}`);
 
+    if (bibData.project_id === undefined && bibData.projectId !== undefined) {
+      bibData.project_id = bibData.projectId;
+    }
+    if (bibData.title === undefined && bibData.itemTitle !== undefined) {
+      bibData.title = bibData.itemTitle;
+    }
+    console.log('bibData.project_id', bibData.project_id);
     const projectId = parseInt(
       (bibData.project_id as string).replace(/"/g, '')
     );

@@ -28,7 +28,7 @@ const errorLogTransport = new winston.transports.DailyRotateFile({
 
 const logger = winston.createLogger({
   level: process.env.LOG_LEVEL || 'info',
-  format: combine(timestamp(), json()),
+  format: combine(timestamp(), winston.format.simple()),
   transports: [
     combinedLogTransport,
     errorLogTransport,
