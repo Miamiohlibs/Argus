@@ -26,6 +26,7 @@ export default function BibResultsWrapper({
         bibData={holdingsData.bib_data}
         projectId={projectId !== undefined ? projectId : 0}
         locationCodes={holdingsData.locationCodes}
+        locationNames={holdingsData.locationNames ?? ''}
         actionType={actionType}
         existingEntry={existingEntry}
         isEditor={isEditor}
