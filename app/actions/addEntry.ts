@@ -50,6 +50,9 @@ const entryAction = async ({
       call_number: item.call_number,
       copy_id: item.copy_id,
       barcode: item.barcode,
+      box: item.box,
+      folder: item.folder,
+      ms: item.ms,
     }));
 
     const selectedLocationsArr = [
@@ -86,13 +89,14 @@ const entryAction = async ({
       location: selectedLocations as string,
       location_codes: selectedLocations as string,
       location_display: selectedLocationNames as string,
-      pub_date: bibData.date_of_publication as string,
+      pub_date:
+        (bibData.date_of_publication as string) ?? (bibData.pub_date as string),
       publisher: bibData.publisher_const as string,
       callNumber: selectedCallNumbers as string,
       projectId: projectId,
       totalItems: parseInt(bibData.total_item_count as string) || 1,
       url: url as string,
-      notes: bibData.holdingNote as string,
+      notes: (bibData.holdingNote as string) ?? (bibData.notes as string),
       almaId: bibData.mms_id as string,
       almaIdType: 'mms_id' as const,
     };

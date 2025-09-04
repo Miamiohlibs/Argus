@@ -44,7 +44,7 @@ const CustomEntryForm = ({
       almaIdType: 'unknown',
       location: formData.get('itemLocation') as string,
       pub_date: formData.get('pub_date') as string,
-      notes: (formData.get('notes') as string) || '',
+      notes: (formData.get('itemNotes') as string) || '',
       projectId: projectId,
     };
     // Convert nulls to empty strings for FormData compatibility
@@ -88,7 +88,7 @@ const CustomEntryForm = ({
       box: string | null;
       folder: string | null;
       ms: string | null;
-      notes: string | null;
+      //   notes: string | null;
     } = {
       description: (formData.get('itemDescription') as string) ?? null,
       id: 'unknown',
@@ -102,7 +102,7 @@ const CustomEntryForm = ({
       box: (formData.get('itemBox') as string) ?? null,
       folder: (formData.get('itemFolder') as string) ?? null,
       ms: (formData.get('itemMs') as string) ?? null,
-      notes: (formData.get('itemNotes') as string) ?? null,
+      //   notes: (formData.get('itemNotes') as string) ?? null,
     };
 
     const { data, error } = await entryAction({
@@ -196,12 +196,12 @@ const CustomEntryForm = ({
               name="itemLocation"
               aria-describedby="location-note"
               placeholder="Location"
-              defaultValue={itemData?.location ?? ''}
+              defaultValue={existingEntry?.location ?? ''}
             />
           </InputGroup>
         </Form.Group>
 
-        <Form.Group className="mb-2">
+        {/* <Form.Group className="mb-2">
           <InputGroup>
             <InputGroup.Text id="publisher-note">Publisher</InputGroup.Text>
             <Form.Control
@@ -213,7 +213,7 @@ const CustomEntryForm = ({
               defaultValue={existingEntry?.publisher ?? ''}
             />
           </InputGroup>
-        </Form.Group>
+        </Form.Group> */}
 
         <Form.Group className="mb-2">
           <InputGroup>
@@ -225,20 +225,6 @@ const CustomEntryForm = ({
               aria-describedby="pub-date-note"
               placeholder="Publication Date"
               defaultValue={existingEntry?.pub_date ?? ''}
-            />
-          </InputGroup>
-        </Form.Group>
-
-        <Form.Group className="mb-2">
-          <InputGroup>
-            <InputGroup.Text id="description-note">Description</InputGroup.Text>
-            <Form.Control
-              type="text"
-              id="itemDescription"
-              name="itemDescription"
-              aria-describedby="description-note"
-              placeholder="Description"
-              defaultValue={itemData?.description ?? ''}
             />
           </InputGroup>
         </Form.Group>
