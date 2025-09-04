@@ -17,15 +17,19 @@ import BackToProjectButton from '@/components/BackToProjectButton';
 interface CustomEntryFormProps {
   projectId?: number;
   existingEntry?: EntryWithItems;
+  editable?: boolean;
 }
 
 const CustomEntryForm = ({
   projectId,
   existingEntry,
+  editable = true,
 }: CustomEntryFormProps) => {
-  const pageHeaderText = existingEntry
+  const pageHeaderText = !existingEntry
+    ? 'New Custom Entry'
+    : editable
     ? `Edit Custom Entry: ${existingEntry.itemTitle}`
-    : 'New Custom Entry';
+    : `Viewing Custom Entry: ${existingEntry.itemTitle}`;
 
   const handleSubmit = async (event: React.SyntheticEvent<HTMLFormElement>) => {
     console.log('starting handleSubmit');
@@ -167,7 +171,8 @@ const CustomEntryForm = ({
               id="itemTitle"
               name="itemTitle"
               aria-describedby="title-note"
-              placeholder="Title"
+              placeholder={editable ? 'Title' : ''}
+              disabled={!editable}
               defaultValue={existingEntry?.itemTitle ?? ''}
             />
           </InputGroup>
@@ -183,7 +188,8 @@ const CustomEntryForm = ({
               id="author"
               name="author"
               aria-describedby="author-note"
-              placeholder="Author"
+              placeholder={editable ? 'Author' : ''}
+              disabled={!editable}
               defaultValue={existingEntry?.author ?? ''}
             />
           </InputGroup>
@@ -198,7 +204,8 @@ const CustomEntryForm = ({
               id="itemLocation"
               name="itemLocation"
               aria-describedby="location-note"
-              placeholder="Location"
+              placeholder={editable ? 'Location' : ''}
+              disabled={!editable}
               defaultValue={existingEntry?.location ?? ''}
             />
           </InputGroup>
@@ -226,7 +233,8 @@ const CustomEntryForm = ({
               id="pub_date"
               name="pub_date"
               aria-describedby="pub-date-note"
-              placeholder="Publication Date"
+              placeholder={editable ? 'Publication Date' : ''}
+              disabled={!editable}
               defaultValue={existingEntry?.pub_date ?? ''}
             />
           </InputGroup>
@@ -240,7 +248,8 @@ const CustomEntryForm = ({
               id="itemCallNumber"
               name="itemCallNumber"
               aria-describedby="call-number-note"
-              placeholder="Item Call Number"
+              placeholder={editable ? 'Item Call Number' : ''}
+              disabled={!editable}
               defaultValue={itemData?.call_number ?? ''}
             />
           </InputGroup>
@@ -254,7 +263,8 @@ const CustomEntryForm = ({
               id="itemCopy"
               name="itemCopy"
               aria-describedby="copy-note"
-              placeholder="Item Copy"
+              placeholder={editable ? 'Item Copy' : ''}
+              disabled={!editable}
               defaultValue={itemData?.copy_id ?? ''}
             />
           </InputGroup>
@@ -268,8 +278,9 @@ const CustomEntryForm = ({
               id="itemBox"
               name="itemBox"
               aria-describedby="box-note"
-              placeholder="Item Box"
+              placeholder={editable ? 'Item Box' : ''}
               defaultValue={itemData?.box ?? ''}
+              disabled={!editable}
             />
           </InputGroup>
         </Form.Group>
@@ -282,7 +293,8 @@ const CustomEntryForm = ({
               id="itemFolder"
               name="itemFolder"
               aria-describedby="folder-note"
-              placeholder="Item Folder"
+              placeholder={editable ? 'Item Folder' : ''}
+              disabled={!editable}
               defaultValue={itemData?.folder ?? ''}
             />
           </InputGroup>
@@ -296,7 +308,8 @@ const CustomEntryForm = ({
               id="itemMs"
               name="itemMs"
               aria-describedby="ms-note"
-              placeholder="Item MS"
+              placeholder={editable ? 'Item MS' : ''}
+              disabled={!editable}
               defaultValue={itemData?.ms ?? ''}
             />
           </InputGroup>
@@ -310,21 +323,24 @@ const CustomEntryForm = ({
               id="itemNotes"
               name="itemNotes"
               aria-describedby="notes-note"
-              placeholder="Item Notes"
+              placeholder={editable ? 'Item Notes' : ''}
+              disabled={!editable}
               defaultValue={existingEntry?.notes ?? ''}
             />
           </InputGroup>
         </Form.Group>
 
-        <Button
-          type="submit"
-          className="btn btn-primary"
-          onClick={() => {
-            console.log('Form submitted');
-          }}
-        >
-          Submit
-        </Button>
+        {editable && (
+          <Button
+            type="submit"
+            className="btn btn-primary"
+            onClick={() => {
+              console.log('Form submitted');
+            }}
+          >
+            Submit
+          </Button>
+        )}
       </Form>
     </>
   );
