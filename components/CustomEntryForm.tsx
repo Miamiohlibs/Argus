@@ -156,7 +156,9 @@ const CustomEntryForm = ({
         />
         <Form.Group className="mb-2">
           <InputGroup>
-            <InputGroup.Text id="title-note">Title</InputGroup.Text>
+            <InputGroup.Text id="title-note" className="text-primary">
+              Title <sup>*</sup>
+            </InputGroup.Text>
             <Form.Control
               type="text"
               id="itemTitle"
@@ -170,7 +172,9 @@ const CustomEntryForm = ({
 
         <Form.Group className="mb-2">
           <InputGroup>
-            <InputGroup.Text id="author-note">Author</InputGroup.Text>
+            <InputGroup.Text className="text-primary" id="author-note">
+              Author <sup>*</sup>
+            </InputGroup.Text>
             <Form.Control
               type="text"
               id="author"
@@ -178,6 +182,21 @@ const CustomEntryForm = ({
               aria-describedby="author-note"
               placeholder="Author"
               defaultValue={existingEntry?.author ?? ''}
+            />
+          </InputGroup>
+        </Form.Group>
+        <Form.Group className="mb-2">
+          <InputGroup>
+            <InputGroup.Text id="location-note" className="text-primary">
+              Location <sup>*</sup>
+            </InputGroup.Text>
+            <Form.Control
+              type="text"
+              id="itemLocation"
+              name="itemLocation"
+              aria-describedby="location-note"
+              placeholder="Location"
+              defaultValue={itemData?.location ?? ''}
             />
           </InputGroup>
         </Form.Group>
@@ -220,20 +239,6 @@ const CustomEntryForm = ({
               aria-describedby="description-note"
               placeholder="Description"
               defaultValue={itemData?.description ?? ''}
-            />
-          </InputGroup>
-        </Form.Group>
-
-        <Form.Group className="mb-2">
-          <InputGroup>
-            <InputGroup.Text id="location-note">Location</InputGroup.Text>
-            <Form.Control
-              type="text"
-              id="itemLocation"
-              name="itemLocation"
-              aria-describedby="location-note"
-              placeholder="Location"
-              defaultValue={itemData?.location ?? ''}
             />
           </InputGroup>
         </Form.Group>
