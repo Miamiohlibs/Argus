@@ -12,6 +12,7 @@ import {
   FormLabel,
 } from 'react-bootstrap';
 import { BibEntry, ItemEntry } from '@prisma/client';
+import BackToProjectButton from '@/components/BackToProjectButton';
 
 interface CustomEntryFormProps {
   projectId?: number;
@@ -137,6 +138,8 @@ const CustomEntryForm = ({
   return (
     <>
       {<h1>{pageHeaderText}</h1>}
+      {projectId && <BackToProjectButton projectId={projectId} />}
+
       <Form ref={formRef} onSubmit={handleSubmit}>
         {/* text fields for BibEntry and ItemEntry fields
        // // bib: itemTitle, author
