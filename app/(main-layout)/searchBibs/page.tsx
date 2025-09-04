@@ -22,6 +22,7 @@ async function SearchBibsPage({ searchParams }: SearchBibsPageProps) {
   }
   const projectId = numericId;
   const userCanEditPage = await canEdit(projectId);
+  console.log('can edit:', userCanEditPage);
   return (
     <ServerDataFetcher projectId={projectId.toString()}>
       <ClientSearchBibsPage
