@@ -65,6 +65,14 @@ export async function isOwner(projectId: number | string): Promise<boolean> {
   }
 }
 
+export async function nonOwnerEditor(projectId: number) {
+  const canEditBool: boolean = await canEdit(projectId?.toString() ?? 0);
+  const isOwnerBool: boolean = await isOwner(projectId?.toString() ?? 0);
+  const nonOwnerAlert = canEditBool && !isOwnerBool;
+
+  return { canEditBool, isOwnerBool, nonOwnerAlert };
+}
+
 export default async function canEdit(
   projectId: number | string
 ): Promise<boolean> {
