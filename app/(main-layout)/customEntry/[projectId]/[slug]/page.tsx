@@ -1,15 +1,17 @@
 import CustomEntryForm from '@/components/CustomEntryForm';
-import { param } from 'jquery';
 import getEntryById from '@/app/actions/getEntryById';
 import { EntryWithItems } from '@/types/EntryWithItems';
 import canEdit from '@/lib/canEdit';
-import { currentUser } from '@clerk/nextjs/server';
-import { checkUser } from '@/lib/checkUser';
+
+// app/(main-layout)/customEntry/[projectId]/[slug]/page.tsx
+// Type error: Type '{ params: { projectId: number; slug: string; }; }' does not satisfy the constraint 'PageProps'.
+//   Types of property 'params' are incompatible.
+//     Type '{ projectId: number; slug: string; }' is missing the following properties from type 'Promise<any>': then, catch, finally, [Symbol.toStringTag]
 
 export default async function CustomEntryPage({
   params,
 }: {
-  params: { projectId: number; slug: string };
+  params: Promise<{ projectId: number; slug: string }>;
 }) {
   const paramsUnpacked = await params;
   const slugs = await paramsUnpacked.slug;
