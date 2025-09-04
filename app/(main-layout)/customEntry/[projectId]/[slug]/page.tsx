@@ -1,7 +1,8 @@
 import CustomEntryForm from '@/components/CustomEntryForm';
 import getEntryById from '@/app/actions/getEntryById';
 import { EntryWithItems } from '@/types/EntryWithItems';
-import canEdit from '@/lib/canEdit';
+import canEdit, { nonOwnerEditor } from '@/lib/canEdit';
+import NonOwnerAlert from '@/components/NonOwnerAlert';
 
 // app/(main-layout)/customEntry/[projectId]/[slug]/page.tsx
 // Type error: Type '{ params: { projectId: number; slug: string; }; }' does not satisfy the constraint 'PageProps'.
@@ -22,7 +23,7 @@ export default async function CustomEntryPage({
   // console.log(
   //   `loading custom page with projectId: ${projectId} and existing: ${existingEntryId}`
   // );
-  const canEditBool: boolean = await canEdit(projectId?.toString() ?? 0);
+  const { canEditBool, nonOwnerAlert } = await nonOwnerEditor(projectId);
 
   if (existingEntryId !== 'new') {
     // Load existing entry data
@@ -42,6 +43,8 @@ export default async function CustomEntryPage({
     ) {
       return (
         <>
+          <NonOwnerAlert />
+          <p>Bobs your uncle!</p>
           <CustomEntryForm
             projectId={projectId}
             existingEntry={existingEntry}
@@ -55,6 +58,8 @@ export default async function CustomEntryPage({
   } else {
     return (
       <>
+        {' '}
+        {nonOwnerAlert && <NonOwnerAlert />}
         <CustomEntryForm projectId={projectId} editable={canEditBool} />
       </>
     );

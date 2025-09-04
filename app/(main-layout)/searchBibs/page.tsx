@@ -1,6 +1,6 @@
 import ClientSearchBibsPage from './ClientSearchBibsPage';
 import ServerDataFetcher from './ServerDataFetcher';
-import canEdit from '@/lib/canEdit';
+import canEdit, { nonOwnerEditor } from '@/lib/canEdit';
 
 interface SearchBibsPageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -21,12 +21,14 @@ async function SearchBibsPage({ searchParams }: SearchBibsPageProps) {
     return <>`Invalid project ID: ${tempId}`</>;
   }
   const projectId = numericId;
-  const userCanEditPage = await canEdit(projectId);
+  const { canEditBool, nonOwnerAlert } = await nonOwnerEditor(projectId);
+
   return (
     <ServerDataFetcher projectId={projectId.toString()}>
       <ClientSearchBibsPage
         projectId={projectId}
-        userCanEditPage={userCanEditPage}
+        userCanEditPage={canEditBool}
+        nonOwnerAlert={nonOwnerAlert}
       />
     </ServerDataFetcher>
   );

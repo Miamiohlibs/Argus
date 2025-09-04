@@ -2,15 +2,18 @@
 import RecordSearchForm from '@/components/RecordSearchForm';
 import { useSearchParams } from 'next/navigation';
 import BackToProjectButton from '@/components/BackToProjectButton';
+import NonOwnerAlert from '@/components/NonOwnerAlert';
 
 interface ClientSearchBibsPageProps {
   projectId?: number;
   userCanEditPage: boolean;
+  nonOwnerAlert: boolean;
 }
 
 const ClientSearchBibsPage = ({
   projectId,
   userCanEditPage,
+  nonOwnerAlert,
 }: ClientSearchBibsPageProps) => {
   // You can still use useSearchParams if needed for other params
   const params = useSearchParams();
@@ -31,6 +34,7 @@ const ClientSearchBibsPage = ({
 
   return (
     <>
+      {nonOwnerAlert && <NonOwnerAlert />}
       <h1>Search Bibs</h1>
       <BackToProjectButton projectId={clientProjectId} />
       <RecordSearchForm
