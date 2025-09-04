@@ -210,7 +210,6 @@ export const RequestSlipPage = ({
           </View>
           <View style={styles.col}>
             <Text>Pulled by:</Text>
-            <Text>Location:</Text>
           </View>
           <View style={styles.lastCol}>
             <Text>Reshelved by:</Text>
