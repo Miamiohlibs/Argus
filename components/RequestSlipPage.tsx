@@ -61,8 +61,8 @@ export const RequestSlipPage = ({
               Manuscript #<Text style={styles.bold}>{ms}</Text>
             </Text>
             <Text>
-              Box {<Text style={styles.bold}>{box}</Text>} Folder{' '}
-              {<Text style={styles.bold}>{folder}</Text>}
+              Box {<Text style={styles.bold}>{box}</Text>}
+              {'      '}Folder {<Text style={styles.bold}>{folder}</Text>}
             </Text>
             <Text>Other information</Text>
             <Text style={styles.paragraph}>{notes}</Text>
@@ -99,6 +99,9 @@ export const RequestSlipPage = ({
             <Text style={styles.bold}>
               {userName} ({userEmail})
             </Text>
+            {'      '}
+            Printed:{' '}
+            <Text style={styles.bold}>{new Date().toLocaleDateString()}</Text>
           </Text>
         </View>
         <View style={styles.row}>
