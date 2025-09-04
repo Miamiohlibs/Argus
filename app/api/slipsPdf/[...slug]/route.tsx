@@ -50,6 +50,9 @@ export async function GET(
         notes: entry.notes ?? undefined,
         date: entry.pub_date ?? undefined,
         location: `${entry.location_display} (${entry.location})`,
+        ms: entry.items[0].ms ?? undefined,
+        box: entry.items[0].box ?? undefined,
+        folder: entry.items[0].folder ?? undefined,
         itemInfo: itemInfos, // full array of all items
         highlightedItemIndex: idx, // which one is current
         userName: project?.user.name,
@@ -67,6 +70,9 @@ export async function GET(
           notes: entry.notes ?? undefined,
           date: entry.pub_date ?? undefined,
           location: `${entry.location_display} (${entry.location})`,
+          box: '',
+          folder: '',
+          ms: '',
           itemInfo: [],
           highlightedItemIndex: 0,
           userName: project?.user.name,

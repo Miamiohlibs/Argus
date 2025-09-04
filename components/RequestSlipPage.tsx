@@ -13,6 +13,9 @@ export const RequestSlipPage = ({
   itemInfo,
   highlightedItemIndex,
   notes,
+  box,
+  folder,
+  ms,
   userName,
   userEmail,
   userAffiliation,
@@ -45,98 +48,6 @@ export const RequestSlipPage = ({
       <View style={styles.section}>
         <View style={styles.row}>
           <View style={styles.col}>
-            <Text style={styles.label}>TYPE OF MATERIAL</Text>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text>Vault</Text>
-            </View>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text>Rare</Text>
-            </View>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text>German</Text>
-            </View>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text>Russian</Text>
-            </View>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text>Miami Archives</Text>
-            </View>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text>Thesis/Dissertation</Text>
-            </View>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text>Manuscript</Text>
-            </View>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text>Western College</Text>
-            </View>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text>Oxford College</Text>
-            </View>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text>Reference College</Text>
-            </View>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text>Archives VF</Text>
-            </View>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text>Map</Text>
-            </View>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text>Honors Paper</Text>
-            </View>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text>Photograph: </Text>
-              <View style={styles.checkboxRow}>
-                <View style={styles.checkbox} />
-                <Text>Print </Text>
-              </View>
-              <View style={styles.checkboxRow}>
-                <View style={styles.checkbox} />
-                <Text>Negative</Text>
-              </View>
-            </View>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text>Media</Text>
-            </View>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text>Other</Text>
-            </View>
-            {/* Add more as needed */}
-            <View style={styles.label}>
-              <Text>SIZE (if applicable)</Text>
-            </View>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text>Small</Text>
-            </View>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text>Folio</Text>
-            </View>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text>Double Oversize</Text>
-            </View>
-          </View>
-
-          <View style={styles.col}>
             <Text>
               Author: <Text style={styles.bold}>{author}</Text>
             </Text>
@@ -146,8 +57,13 @@ export const RequestSlipPage = ({
             <Text>
               Date of item: <Text style={styles.bold}>{date}</Text>
             </Text>
-            <Text>Manuscript #</Text>
-            <Text>Box ________ Folder ________</Text>
+            <Text>
+              Manuscript #<Text style={styles.bold}>{ms}</Text>
+            </Text>
+            <Text>
+              Box {<Text style={styles.bold}>{box}</Text>} Folder{' '}
+              {<Text style={styles.bold}>{folder}</Text>}
+            </Text>
             <Text>Other information</Text>
             <Text style={styles.paragraph}>{notes}</Text>
           </View>
