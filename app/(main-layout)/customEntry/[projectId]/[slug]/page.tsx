@@ -2,6 +2,7 @@ import CustomEntryForm from '@/components/CustomEntryForm';
 import { param } from 'jquery';
 import getEntryById from '@/app/actions/getEntryById';
 import { EntryWithItems } from '@/types/EntryWithItems';
+import BackToProjectButton from '@/components/BackToProjectButton';
 
 export default async function CustomEntryPage({
   params,
@@ -35,6 +36,7 @@ export default async function CustomEntryPage({
     ) {
       return (
         <>
+          <BackToProjectButton projectId={projectId} />
           <CustomEntryForm
             projectId={projectId}
             existingEntry={existingEntry}
