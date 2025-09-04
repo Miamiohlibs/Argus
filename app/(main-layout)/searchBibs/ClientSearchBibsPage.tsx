@@ -1,8 +1,7 @@
 'use client';
 import RecordSearchForm from '@/components/RecordSearchForm';
 import { useSearchParams } from 'next/navigation';
-import { Button } from 'react-bootstrap';
-import Link from 'next/link';
+import BackToProjectButton from '@/components/BackToProjectButton';
 
 interface ClientSearchBibsPageProps {
   projectId?: number;
@@ -33,11 +32,7 @@ const ClientSearchBibsPage = ({
   return (
     <>
       <h1>Search Bibs</h1>
-      <Link href={`/project/${clientProjectId}`}>
-        <Button variant="outline-secondary" className="mb-3">
-          Back to Project
-        </Button>
-      </Link>
+      <BackToProjectButton projectId={clientProjectId} />
       <RecordSearchForm
         projectId={clientProjectId}
         userCanEditPage={userCanEditPage}

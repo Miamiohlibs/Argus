@@ -43,13 +43,20 @@ export async function GET(
 
     if (itemInfos.length > 0) {
       // One object per item, highlighting the index
+      const locationStr =
+        entry.location == entry.location_display
+          ? entry.location_display
+          : `${entry.location_display} (${entry.location})`;
       return itemInfos.map((_, idx) => ({
         author: entry.author,
         title: entry.itemTitle,
         callNumber: entry.callNumber ?? undefined,
         notes: entry.notes ?? undefined,
         date: entry.pub_date ?? undefined,
-        location: `${entry.location_display} (${entry.location})`,
+        location: locationStr,
+        ms: entry.items[0].ms ?? undefined,
+        box: entry.items[0].box ?? undefined,
+        folder: entry.items[0].folder ?? undefined,
         itemInfo: itemInfos, // full array of all items
         highlightedItemIndex: idx, // which one is current
         userName: project?.user.name,
@@ -67,6 +74,9 @@ export async function GET(
           notes: entry.notes ?? undefined,
           date: entry.pub_date ?? undefined,
           location: `${entry.location_display} (${entry.location})`,
+          box: '',
+          folder: '',
+          ms: '',
           itemInfo: [],
           highlightedItemIndex: 0,
           userName: project?.user.name,

@@ -27,6 +27,9 @@ interface miniItemData {
   call_number?: string;
   copy_id?: string;
   item_id: string;
+  box?: string;
+  folder?: string;
+  ms?: string;
 }
 
 interface HoldingEntryProps {
@@ -133,6 +136,9 @@ const HoldingEntry = ({
         copy_id: item.copy_id || null,
         bibEntryId: 'unknown',
         barcode: item.barcode || null,
+        box: item.box || null,
+        folder: item.folder || null,
+        ms: item.ms || null,
       };
     });
 

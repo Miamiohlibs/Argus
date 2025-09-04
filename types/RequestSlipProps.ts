@@ -4,6 +4,9 @@ export type RequestSlipProps = {
   location?: string;
   callNumber?: string | undefined;
   publisher?: string;
+  box?: string;
+  folder?: string;
+  ms?: string;
   date?: string;
   notes?: string;
   itemInfo?: string[] | never[] | undefined;
