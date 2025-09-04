@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useRef } from 'react';
 import entryAction from '@/app/actions/addEntry';
 import { toast } from 'react-toastify';
-
+import { EntryWithItems } from '@/types/EntryWithItems';
 import {
   Form,
   FormControl,
@@ -15,7 +15,7 @@ import { BibEntry, ItemEntry } from '@prisma/client';
 
 interface CustomEntryFormProps {
   projectId?: number;
-  existingEntry?: ItemEntry & { bibEntry: BibEntry };
+  existingEntry?: EntryWithItems;
 }
 
 const CustomEntryForm = ({
@@ -23,7 +23,7 @@ const CustomEntryForm = ({
   existingEntry,
 }: CustomEntryFormProps) => {
   const pageHeaderText = existingEntry
-    ? `Edit Custom Entry: ${existingEntry.bibEntry.itemTitle}`
+    ? `Edit Custom Entry: ${existingEntry.itemTitle}`
     : 'New Custom Entry';
 
   const handleSubmit = async (event: React.SyntheticEvent<HTMLFormElement>) => {
@@ -128,6 +128,11 @@ const CustomEntryForm = ({
     }
   };
 
+  let itemData: ItemEntry | undefined = undefined;
+  if (existingEntry && existingEntry.items && existingEntry?.items.length > 0) {
+    itemData = existingEntry.items[0];
+  }
+
   const formRef = useRef<HTMLFormElement>(null);
   return (
     <>
@@ -158,6 +163,7 @@ const CustomEntryForm = ({
               name="itemTitle"
               aria-describedby="title-note"
               placeholder="Title"
+              defaultValue={existingEntry?.itemTitle ?? ''}
             />
           </InputGroup>
         </Form.Group>
@@ -171,6 +177,7 @@ const CustomEntryForm = ({
               name="author"
               aria-describedby="author-note"
               placeholder="Author"
+              defaultValue={existingEntry?.author ?? ''}
             />
           </InputGroup>
         </Form.Group>
@@ -183,7 +190,8 @@ const CustomEntryForm = ({
               id="publisher"
               name="publisher"
               aria-describedby="publisher-note"
-              placeholder="Author"
+              placeholder="Publisher"
+              defaultValue={existingEntry?.publisher ?? ''}
             />
           </InputGroup>
         </Form.Group>
@@ -197,6 +205,7 @@ const CustomEntryForm = ({
               name="pub_date"
               aria-describedby="pub-date-note"
               placeholder="Publication Date"
+              defaultValue={existingEntry?.pub_date ?? ''}
             />
           </InputGroup>
         </Form.Group>
@@ -210,6 +219,7 @@ const CustomEntryForm = ({
               name="itemDescription"
               aria-describedby="description-note"
               placeholder="Description"
+              defaultValue={itemData?.description ?? ''}
             />
           </InputGroup>
         </Form.Group>
@@ -223,6 +233,7 @@ const CustomEntryForm = ({
               name="itemLocation"
               aria-describedby="location-note"
               placeholder="Location"
+              defaultValue={itemData?.location ?? ''}
             />
           </InputGroup>
         </Form.Group>
@@ -236,6 +247,7 @@ const CustomEntryForm = ({
               name="itemCallNumber"
               aria-describedby="call-number-note"
               placeholder="Item Call Number"
+              defaultValue={itemData?.call_number ?? ''}
             />
           </InputGroup>
         </Form.Group>
@@ -249,6 +261,7 @@ const CustomEntryForm = ({
               name="itemCopy"
               aria-describedby="copy-note"
               placeholder="Item Copy"
+              defaultValue={itemData?.copy_id ?? ''}
             />
           </InputGroup>
         </Form.Group>
@@ -262,6 +275,7 @@ const CustomEntryForm = ({
               name="itemBox"
               aria-describedby="box-note"
               placeholder="Item Box"
+              defaultValue={itemData?.box ?? ''}
             />
           </InputGroup>
         </Form.Group>
@@ -275,6 +289,7 @@ const CustomEntryForm = ({
               name="itemFolder"
               aria-describedby="folder-note"
               placeholder="Item Folder"
+              defaultValue={itemData?.folder ?? ''}
             />
           </InputGroup>
         </Form.Group>
@@ -288,6 +303,7 @@ const CustomEntryForm = ({
               name="itemMs"
               aria-describedby="ms-note"
               placeholder="Item MS"
+              defaultValue={itemData?.ms ?? ''}
             />
           </InputGroup>
         </Form.Group>
@@ -301,6 +317,7 @@ const CustomEntryForm = ({
               name="itemNotes"
               aria-describedby="notes-note"
               placeholder="Item Notes"
+              defaultValue={existingEntry?.notes ?? ''}
             />
           </InputGroup>
         </Form.Group>
