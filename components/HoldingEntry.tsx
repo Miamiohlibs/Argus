@@ -5,25 +5,38 @@ import { useRef } from 'react';
 import { toast } from 'react-toastify';
 import entryAction from '@/app/actions/addEntry';
 import { EntryWithItems } from '@/types/EntryWithItems';
-import {
-  AlmaItemHoldingHoldingData,
-  AlmaItemHoldingItemData,
-  AlmaItemHoldingBibData,
-} from '@/types/AlmaItem';
+// import {
+//   AlmaItemHoldingHoldingData,
+//   AlmaItemHoldingItemData,
+//   AlmaItemHoldingBibData,
+// } from '@/types/AlmaItem';
+import type {
+  // CondensedBibHoldings,
+  AlmaItemDataPlusHoldingDetails,
+  AlmaItemHoldingBibDataPlusCallAndLocation,
+} from '@/types/CondensedBibHoldings';
 import type { SafeStringifyInput } from '@/types/SafeStringInput';
 
 interface miniItemData {
   pid: string;
   barcode: string;
-  description: string;
+  description?: string;
+  location: string;
+  location_code?: string;
+  location_name?: string;
+  call_number?: string;
+  copy_id?: string;
   item_id: string;
+  box?: string;
+  folder?: string;
+  ms?: string;
 }
 
 interface HoldingEntryProps {
-  bibData: AlmaItemHoldingBibData;
-  holdings: AlmaItemHoldingHoldingData;
-  items: AlmaItemHoldingItemData[];
+  bibData: AlmaItemHoldingBibDataPlusCallAndLocation;
+  items: AlmaItemDataPlusHoldingDetails[];
   locationCodes: string;
+  locationNames: string;
   projectId: string | number;
   actionType: 'add' | 'edit';
   existingEntry?: EntryWithItems;
@@ -32,9 +45,9 @@ interface HoldingEntryProps {
 
 const HoldingEntry = ({
   bibData,
-  holdings,
   items,
   locationCodes,
+  locationNames,
   projectId,
   actionType,
   existingEntry,
@@ -43,6 +56,7 @@ const HoldingEntry = ({
   const [selectedItems, setSelectedItems] = useState<miniItemData[]>([]);
   const [isInitialized, setIsInitialized] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
+  console.log('Existing Entry:', existingEntry);
 
   // Initialize selectedItems with existing entry items
   useEffect(() => {
@@ -53,7 +67,12 @@ const HoldingEntry = ({
       existingEntry.items.forEach((existingItem) => {
         // Find the matching item from the items array
         const matchingItem = items.find(
-          (item) => item.description === existingItem.description
+          (item) =>
+            item.description == existingItem.description &&
+            item.location.value == existingItem.location &&
+            item.call_number == existingItem.call_number &&
+            item.barcode == existingItem.barcode &&
+            item.copy_id == existingItem.copy_id
         );
 
         if (matchingItem) {
@@ -61,6 +80,10 @@ const HoldingEntry = ({
             pid: matchingItem.pid || '',
             barcode: matchingItem.barcode || '',
             description: matchingItem.description || '',
+            location: matchingItem.location.value,
+            location_name: matchingItem.location.desc || '',
+            call_number: matchingItem.call_number || '',
+            copy_id: matchingItem.copy_id || '',
             item_id: `item-${matchingItem.pid || items.indexOf(matchingItem)}`,
           });
         }
@@ -72,6 +95,7 @@ const HoldingEntry = ({
   }, [existingEntry, items, isInitialized]);
 
   const handleItemCheck = (item: miniItemData, checked: boolean) => {
+    console.log('working on item:', item);
     if (checked) {
       setSelectedItems((prev) => [...prev, item]);
       console.log('selected items after adding:', [...selectedItems, item]);
@@ -95,15 +119,26 @@ const HoldingEntry = ({
     for (const [key, value] of formData.entries()) {
       allFormData[key] = value;
     }
-
+    // KEN: CALL & BIB MISSING FROM allFormData
     console.log('All Form Data:', allFormData);
     console.log('Selected Items:', selectedItems);
 
     const itemsToSubmit = selectedItems.map((item) => {
+      console.log(`Item descripiton: ${JSON.stringify(item)}`);
+      // console.log(`Desc:${description} Loc:${location}`);
       return {
-        description: item.description,
+        description: item.description || '',
         id: 'unknown',
+        location: item.location || 'unknown',
+        location_name: item.location_name || '',
+        location_code: item.location_code || '',
+        call_number: item.call_number || null,
+        copy_id: item.copy_id || null,
         bibEntryId: 'unknown',
+        barcode: item.barcode || null,
+        box: item.box || null,
+        folder: item.folder || null,
+        ms: item.ms || null,
       };
     });
 
@@ -161,7 +196,7 @@ const HoldingEntry = ({
   }
   return (
     <Form onSubmit={handleSubmit}>
-      <div key={holdings.holding_id} className="mb-4 border p-3">
+      <div key={'holding'} className="mb-4 border p-3">
         <Form.Control
           type="hidden"
           name="project_id"
@@ -189,6 +224,21 @@ const HoldingEntry = ({
         />
         <Form.Control
           type="hidden"
+          name="location"
+          value={safeStringify(bibData?.location)}
+        />
+        <Form.Control
+          type="hidden"
+          name="locationNames"
+          value={safeStringify(bibData?.locationNames)}
+        />
+        <Form.Control
+          type="hidden"
+          name="call_number"
+          value={safeStringify(bibData?.call_number)}
+        />
+        <Form.Control
+          type="hidden"
           name="date_of_publication"
           value={safeStringify(bibData?.date_of_publication)}
         />
@@ -199,18 +249,8 @@ const HoldingEntry = ({
         />
         <Form.Control
           type="hidden"
-          name="holdings_id"
-          value={safeStringify(holdings.holding_id)}
-        />
-        <Form.Control
-          type="hidden"
           name="holdings_location_code"
           value={safeStringify(locationCodes)}
-        />
-        <Form.Control
-          type="hidden"
-          name="holdings_call"
-          value={safeStringify(holdings.call_number)}
         />
         <Form.Control
           type="hidden"
@@ -226,7 +266,7 @@ const HoldingEntry = ({
           />
         )}
 
-        <Form.Group controlId={`mmsIdSearch-${holdings.holding_id}`}>
+        <Form.Group controlId={`mmsIdSearch`}>
           <InputGroup className="mb-3">
             <InputGroup.Text id="holding-note">Note</InputGroup.Text>
             <Form.Control
@@ -244,29 +284,36 @@ const HoldingEntry = ({
           </InputGroup>
         </Form.Group>
 
-        <p>
+        {/* <p>
           <strong>{library_desc || 'Unknown Library'}</strong> &mdash;{' '}
           {location_desc || 'Unknown Location'} ({location_value || 'N/A'})
-        </p>
+        </p> */}
         <p>
-          Call Number: <strong>{holdings.call_number || 'N/A'}</strong>
+          {/* Call Number: <strong>{holdings.call_number || 'N/A'}</strong> */}
         </p>
 
         {/* Item Selection */}
         <ul style={{ listStyleType: 'none', paddingLeft: 0 }}>
           {items ? (
-            items.map((item: AlmaItemHoldingItemData, index: number) => {
+            items.map((item: AlmaItemDataPlusHoldingDetails, index: number) => {
+              const copyNo =
+                parseInt(item.copy_id) > 1 ? `, Copy: ${item.copy_id}` : '';
+              const description =
+                item.description != '' ? `, ${item.description}` : '';
               const itemLabel =
                 items.length === 1
                   ? 'Sole Item'
-                  : `Item: ${
-                      item.description || `Unknown Item: ${items.length}`
-                    }`;
+                  : `Item: ${item.location.value}: ${item.call_number} ${description} ${copyNo} (${item.library.desc}: ${item.location.desc})`;
 
               const itemData: miniItemData = {
                 pid: item.pid || '',
                 barcode: item.barcode || '',
                 description: item.description || '',
+                location: item.location.value,
+                location_code: item.location.value,
+                location_name: item.location.desc,
+                call_number: item.call_number || '',
+                copy_id: item.copy_id || '',
                 item_id: `item-${item.pid || index}`,
               };
 
@@ -285,7 +332,10 @@ const HoldingEntry = ({
                     onChange={(e) =>
                       handleItemCheck(itemData, e.target.checked)
                     }
-                    value={item.barcode || ''}
+                    value={
+                      `${item.barcode};;;${item.location.value};;;${item.location.desc};;;${item.call_number};;;${item.description};;;${item.copy_id}` ||
+                      ''
+                    }
                   />
                 </li>
               );

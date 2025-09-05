@@ -1,4 +1,5 @@
 'use server';
+import logger from '@/lib/logger';
 import { db } from '@/lib/db';
 import { EntryWithItems } from '@/types/EntryWithItems';
 
@@ -29,7 +30,9 @@ async function getEntries(projectId: string): Promise<{
     //   items: entry.items ?? [],
     // }));
 
-    console.log(`Fetched ${entries.length} entries for project ${projectId}`);
+    logger.verbose(
+      `Fetched ${entries.length} entries for project ${projectId}`
+    );
 
     return {
       data: {
@@ -38,7 +41,7 @@ async function getEntries(projectId: string): Promise<{
       },
     };
   } catch (error) {
-    console.error('DB error fetching entries:', error);
+    logger.error('DB error fetching entries:', error);
     return { error: 'Failed to fetch entries from database' };
   }
 }

@@ -19,14 +19,16 @@ datasource db {
 }
 
 model User {
-  id           String        @id @default(uuid())
-  clerkUserId  String        @unique
-  email        String        @unique
+  id           String           @id @default(uuid())
+  clerkUserId  String           @unique
+  email        String           @unique
   name         String
-  role         Role          @default(user)
+  role         Role             @default(user)
+  affiliation  UserAffiliation?
+  status       UserStatus?
   imageUrl     String?
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
   transactions Transaction[]
   projects     Project[]
 }
@@ -44,26 +46,39 @@ model Project {
 }
 
 model BibEntry {
-  id         String      @id @default(uuid())
-  itemTitle  String
-  almaId     String
-  almaIdType String
-  author     String
-  callNumber String?
-  location   String
-  notes      String?
-  totalItems Int?        @default(1)
-  url        String?
-  items      ItemEntry[]
-  projectId  Int
-  project    Project     @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  id               String      @id @default(uuid())
+  itemTitle        String
+  almaId           String?
+  almaIdType       String?
+  author           String
+  pub_date         String?
+  publisher        String?
+  callNumber       String?
+  location         String
+  location_codes   String?
+  location_display String?
+  notes            String?
+  totalItems       Int?        @default(1)
+  url              String?
+  items            ItemEntry[]
+  projectId        Int
+  project          Project     @relation(fields: [projectId], references: [id], onDelete: Cascade)
 }
 
 model ItemEntry {
-  id          String    @id @default(uuid())
-  description String
-  BibEntry    BibEntry? @relation(fields: [bibEntryId], references: [id])
-  bibEntryId  String?
+  id            String    @id @default(uuid())
+  description   String?
+  location      String?
+  location_code String?
+  location_name String?
+  call_number   String?
+  copy_id       String?
+  barcode       String?
+  box           String?
+  folder        String?
+  ms            String?
+  BibEntry      BibEntry? @relation(fields: [bibEntryId], references: [id])
+  bibEntryId    String?
 }
 
 enum Role {
@@ -71,6 +86,20 @@ enum Role {
   editor
   admin
   superadmin
+}
+
+enum UserAffiliation {
+  Miami
+  Other
+}
+
+enum UserStatus {
+  Undergrad
+  Graduate
+  Faculty
+  Staff
+  Alumni
+  Other
 }
 
 // This was from the original tutorial, not used in Watson

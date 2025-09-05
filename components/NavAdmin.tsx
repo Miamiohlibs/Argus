@@ -1,5 +1,6 @@
+import logger from '@/lib/logger';
 import NextLink from 'next/link';
-import { Nav, NavItem, NavLink } from 'react-bootstrap';
+import { NavItem, NavLink } from 'react-bootstrap';
 import checkAccess from '@/lib/checkAccess';
 
 const NavAdmin = async () => {
@@ -8,7 +9,7 @@ const NavAdmin = async () => {
     permittedRoles: ['admin', 'superadmin'],
     inline: true,
   });
-  console.log('NavAdmin - hasAccess:', hasAccess);
+  logger.verbose('NavAdmin - hasAccess:', hasAccess);
   if (!hasAccess) {
     return null; // If no access, do not render the admin navigation
   }

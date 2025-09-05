@@ -1,4 +1,5 @@
 'use server';
+import logger from '@/lib/logger';
 import { db } from '@/lib/db';
 import { ItemEntry } from '@prisma/client';
 
@@ -15,37 +16,87 @@ const entryAction = async ({
   actionType,
   existingEntryId,
 }: EntryActionData) => {
+  console.log('bibData', bibData);
+  console.log('itemData', itemData);
+  console.log('actionType', actionType);
   try {
     const url =
       bibData.mms_id && process.env.ALMA_PERMALINK_BASEURL
         ? process.env.ALMA_PERMALINK_BASEURL + bibData.mms_id
         : undefined;
 
-    console.log(
+    logger.verbose(
       `${actionType === 'add' ? 'Adding' : 'Updating'} entry with bibData:`,
       bibData
     );
-    console.log(`environment: ${process.env.ALMA_PERMALINK_BASEURL}`);
 
+    if (bibData.project_id === undefined && bibData.projectId !== undefined) {
+      bibData.project_id = bibData.projectId;
+    }
+    if (bibData.title === undefined && bibData.itemTitle !== undefined) {
+      bibData.title = bibData.itemTitle;
+    }
+    console.log('bibData.project_id', bibData.project_id);
     const projectId = parseInt(
       (bibData.project_id as string).replace(/"/g, '')
     );
-    console.log('Project ID:', projectId);
+    logger.verbose('Project ID:', projectId);
 
     const itemDescriptions = itemData.map((item) => ({
       description: item.description,
+      location: item.location,
+      location_code: item.location_code,
+      location_name: item.location_name,
+      call_number: item.call_number,
+      copy_id: item.copy_id,
+      barcode: item.barcode,
+      box: item.box,
+      folder: item.folder,
+      ms: item.ms,
     }));
 
+    const selectedLocationsArr = [
+      ...new Set(itemData.map((item) => item.location)),
+    ];
+    const selectedLocations =
+      selectedLocationsArr.length > 0
+        ? selectedLocationsArr.join(',')
+        : bibData.location;
+
+    const selectedLocationNamesArr = [
+      ...new Set(itemData.map((item) => item.location_name)),
+    ];
+
+    const selectedLocationNames =
+      selectedLocationNamesArr.length > 0
+        ? selectedLocationNamesArr.join(',')
+        : bibData.location_name;
+
+    const selectedCallNumbersArr = [
+      ...new Set(itemData.map((item) => item.call_number)),
+    ];
+
+    const selectedCallNumbers =
+      selectedCallNumbersArr.length > 0
+        ? selectedCallNumbersArr.join(',')
+        : bibData.call_number;
+
+    logger.verbose('received bibData', JSON.stringify(bibData));
     // Prepare the data object
     const entryData = {
       itemTitle: bibData.title as string,
       author: bibData.author as string,
-      location: bibData.holdings_location_code as string,
-      callNumber: bibData.holdings_call as string,
+      location: selectedLocations as string,
+      location_codes: selectedLocations as string,
+      location_display: selectedLocationNames as string,
+      pub_date:
+        (bibData.date_of_publication as string) ?? (bibData.pub_date as string),
+      publisher: bibData.publisher_const as string,
+      callNumber: selectedCallNumbers as string,
       projectId: projectId,
       totalItems: parseInt(bibData.total_item_count as string) || 1,
       url: url as string,
-      notes: bibData.holdingNote as string,
+      notes: (bibData.holdingNote as string) ?? (bibData.notes as string),
       almaId: bibData.mms_id as string,
       almaIdType: 'mms_id' as const,
     };
@@ -65,7 +116,7 @@ const entryAction = async ({
           items: true,
         },
       });
-      console.log('Entry added successfully:', response);
+      logger.verbose('Entry added successfully:', response);
     } else {
       // Update existing entry
       if (!existingEntryId) {
@@ -100,12 +151,12 @@ const entryAction = async ({
         return updatedEntry;
       });
 
-      console.log('Entry updated successfully:', response);
+      logger.verbose('Entry updated successfully:', response);
     }
 
     return { data: response, error: null };
   } catch (error) {
-    console.error(
+    logger.error(
       `Error ${actionType === 'add' ? 'adding' : 'updating'} entry:`,
       error
     );

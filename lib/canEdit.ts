@@ -1,3 +1,4 @@
+import logger from '@/lib/logger';
 import checkAccess from './checkAccess';
 import getProject from '@/app/actions/getProject';
 import { currentUser } from '@clerk/nextjs/server';
@@ -59,9 +60,17 @@ export async function isOwner(projectId: number | string): Promise<boolean> {
     const isOwner: boolean = project.userId == clerkUser?.id;
     return isOwner;
   } catch (err) {
-    console.log('error checking editor status', err);
+    logger.error('error checking editor status', err);
     return false;
   }
+}
+
+export async function nonOwnerEditor(projectId: number) {
+  const canEditBool: boolean = await canEdit(projectId?.toString() ?? 0);
+  const isOwnerBool: boolean = await isOwner(projectId?.toString() ?? 0);
+  const nonOwnerAlert = canEditBool && !isOwnerBool;
+
+  return { canEditBool, isOwnerBool, nonOwnerAlert };
 }
 
 export default async function canEdit(

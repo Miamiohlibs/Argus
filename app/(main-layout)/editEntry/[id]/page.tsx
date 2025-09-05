@@ -5,7 +5,8 @@ import { CondensedBibHoldings } from '@/types/CondensedBibHoldings';
 import BibResultsWrapper from '@/components/BibResultsWrapper';
 import { Button } from 'react-bootstrap';
 import Link from 'next/link';
-import canEdit from '@/lib/canEdit';
+import canEdit, { nonOwnerEditor } from '@/lib/canEdit';
+import NonOwnerAlert from '@/components/NonOwnerAlert';
 
 export default async function EditEntryPage({
   params,
@@ -22,10 +23,11 @@ export default async function EditEntryPage({
   }
   const projectId = existingEntry?.projectId;
   const mmsId = existingEntry?.almaId ?? '';
+  const { nonOwnerAlert } = await nonOwnerEditor(parseInt(id, 10));
   const {
     data: holdingsData,
     error: holdingsError,
-  }: { data?: CondensedBibHoldings[]; error?: string } = await bibHoldings({
+  }: { data?: CondensedBibHoldings; error?: string } = await bibHoldings({
     mms_id: mmsId,
   });
   if (holdingsError) {
@@ -34,8 +36,9 @@ export default async function EditEntryPage({
   const canEditBool: boolean = await canEdit(projectId?.toString() ?? 0);
   return (
     <>
+      {nonOwnerAlert && <NonOwnerAlert />}
       <h1>
-        Editing: <i>{holdingsData && holdingsData[0].bib_data.title}</i>
+        Editing: <i>{holdingsData && holdingsData.bib_data.title}</i>
       </h1>
       <Link href={`/project/${projectId}`}>
         <Button variant="outline-secondary">Back to Project</Button>

@@ -1,37 +1,8 @@
-// app/pdf/RequestSlip.tsx
+// app/pdf/RequestSlipPage.tsx
+// called by ./MultipagePdf with one bib's data
+import logger from '@/lib/logger';
 import { Page, Text, View } from '@react-pdf/renderer';
-
-// const styles = StyleSheet.create({
-//   page: { padding: 10, fontSize: 10 },
-//   section: { border: '1pt solid black', marginBottom: 5 },
-//   header: {
-//     textAlign: 'center',
-//     fontSize: 12,
-//     marginBottom: 5,
-//     fontWeight: 'bold',
-//   },
-//   row: { flexDirection: 'row', borderBottom: '1pt solid black' },
-//   cell: { flex: 1, padding: 4, borderRight: '1pt solid black' },
-//   cellLast: { flex: 1, padding: 4 },
-//   label: { fontWeight: 'bold' },
-//   checkboxRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 2 },
-//   checkbox: { width: 8, height: 8, border: '1pt solid black', marginRight: 4 },
-//   checkedBox: { width: 8, height: 8, backgroundColor: 'black', marginRight: 4 },
-// });
-
-type RequestSlipProps = {
-  author?: string;
-  title?: string;
-  date?: string;
-  location?: string;
-  callNumber?: string;
-  itemInfo?: string;
-  notes?: string;
-  userName?: string;
-  userEmail?: string;
-  affiliation?: 'Miami' | 'Other';
-  status?: 'Undergrad' | 'Graduate' | 'Faculty' | 'Staff' | 'Alumni' | 'Other';
-};
+import type { RequestSlipProps } from '@/types/RequestSlipProps';
 
 export const RequestSlipPage = ({
   author,
@@ -40,13 +11,30 @@ export const RequestSlipPage = ({
   location,
   callNumber,
   itemInfo,
+  highlightedItemIndex,
   notes,
+  box,
+  folder,
+  ms,
   userName,
   userEmail,
-  affiliation,
-  status,
+  userAffiliation,
+  userStatus,
   styles,
+  personPrinting,
+  projectName,
 }: RequestSlipProps & { styles: any }) => {
+  logger.verbose('Item Info', itemInfo);
+  const volumeLabel = // only show if items to show
+    itemInfo && itemInfo.length > 1 ? (
+      <>
+        <Text style={styles.blankLine} />
+        <Text>Volume(s):</Text>
+        <Text style={styles.blankLine} />
+      </>
+    ) : (
+      <Text></Text>
+    );
   return (
     <Page size="LETTER" style={styles.page}>
       {/* Header */}
@@ -62,98 +50,6 @@ export const RequestSlipPage = ({
       <View style={styles.section}>
         <View style={styles.row}>
           <View style={styles.col}>
-            <Text style={styles.label}>TYPE OF MATERIAL</Text>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text>Vault</Text>
-            </View>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text>Rare</Text>
-            </View>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text>German</Text>
-            </View>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text>Russian</Text>
-            </View>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text>Miami Archives</Text>
-            </View>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text>Thesis/Dissertation</Text>
-            </View>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text>Manuscript</Text>
-            </View>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text>Western College</Text>
-            </View>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text>Oxford College</Text>
-            </View>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text>Reference College</Text>
-            </View>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text>Archives VF</Text>
-            </View>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text>Map</Text>
-            </View>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text>Honors Paper</Text>
-            </View>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text>Photograph: </Text>
-              <View style={styles.checkboxRow}>
-                <View style={styles.checkbox} />
-                <Text>Print </Text>
-              </View>
-              <View style={styles.checkboxRow}>
-                <View style={styles.checkbox} />
-                <Text>Negative</Text>
-              </View>
-            </View>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text>Media</Text>
-            </View>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text>Other</Text>
-            </View>
-            {/* Add more as needed */}
-            <View style={styles.label}>
-              <Text>SIZE (if applicable)</Text>
-            </View>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text>Small</Text>
-            </View>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text>Folio</Text>
-            </View>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text>Double Oversize</Text>
-            </View>
-          </View>
-
-          <View style={styles.col}>
             <Text>
               Author: <Text style={styles.bold}>{author}</Text>
             </Text>
@@ -163,8 +59,13 @@ export const RequestSlipPage = ({
             <Text>
               Date of item: <Text style={styles.bold}>{date}</Text>
             </Text>
-            <Text>Manuscript #</Text>
-            <Text>Box ________ Folder ________</Text>
+            <Text>
+              Manuscript #<Text style={styles.bold}>{ms}</Text>
+            </Text>
+            <Text>
+              Box {<Text style={styles.bold}>{box}</Text>}
+              {'      '}Folder {<Text style={styles.bold}>{folder}</Text>}
+            </Text>
             <Text>Other information</Text>
             <Text style={styles.paragraph}>{notes}</Text>
           </View>
@@ -173,8 +74,20 @@ export const RequestSlipPage = ({
             <Text style={styles.label}>CALL NUMBER</Text>
             <Text style={styles.centerText}>{location}</Text>
             <Text style={styles.centerText}>{callNumber ?? ''}</Text>
-            <Text>Volume(s):</Text>
-            <Text style={styles.paragraph}>{itemInfo}</Text>
+            {volumeLabel}
+            {itemInfo?.map((item, i) => {
+              const styleTag = i == highlightedItemIndex ? styles.bold : {};
+              const counter =
+                i == highlightedItemIndex && itemInfo.length > 1
+                  ? ` (slip ${i + 1}/${itemInfo.length} for this bib record)`
+                  : '';
+              item += counter;
+              return (
+                <Text key={`item-${i}`} style={styleTag}>
+                  {item}
+                </Text>
+              );
+            })}
           </View>
         </View>
       </View>
@@ -188,6 +101,11 @@ export const RequestSlipPage = ({
             <Text style={styles.bold}>
               {userName} ({userEmail})
             </Text>
+            {'      '}
+            Printed:{' '}
+            <Text style={styles.bold}>{new Date().toLocaleDateString()}</Text>
+            {'      '}
+            For:<Text style={styles.bold}> {projectName}</Text>
           </Text>
         </View>
         <View style={styles.row}>
@@ -200,28 +118,50 @@ export const RequestSlipPage = ({
             <View style={styles.checkboxRow}>
               <View
                 style={
-                  affiliation == 'Miami' ? styles.checkedBox : styles.checkbox
+                  userAffiliation == 'Miami'
+                    ? styles.checkedBox
+                    : styles.checkbox
                 }
               />
               <Text>Miami University</Text>
             </View>
             <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
+              <View
+                style={
+                  userAffiliation == 'Other'
+                    ? styles.checkedBox
+                    : styles.checkbox
+                }
+              />
               <Text>Other</Text>
             </View>
           </View>
           <View style={styles.colNoRightBorder}>
             <Text style={styles.sectionHeader}>Status</Text>
             <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
+              <View
+                style={
+                  userStatus == 'Undergrad'
+                    ? styles.checkedBox
+                    : styles.checkbox
+                }
+              />
               <Text>Undergraduate</Text>
             </View>
             <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
+              <View
+                style={
+                  userStatus == 'Graduate' ? styles.checkedBox : styles.checkbox
+                }
+              />
               <Text>Graduate</Text>
             </View>
             <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
+              <View
+                style={
+                  userStatus == 'Faculty' ? styles.checkedBox : styles.checkbox
+                }
+              />
               <Text>Faculty</Text>
             </View>
           </View>
@@ -229,15 +169,27 @@ export const RequestSlipPage = ({
           <View style={styles.lastCol}>
             <View style={styles.blankLine}>{/* Blank on purpose*/}</View>
             <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
+              <View
+                style={
+                  userStatus == 'Alumni' ? styles.checkedBox : styles.checkbox
+                }
+              />
               <Text>Alumni</Text>
             </View>
             <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
+              <View
+                style={
+                  userStatus == 'Staff' ? styles.checkedBox : styles.checkbox
+                }
+              />
               <Text>Staff</Text>
             </View>
             <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
+              <View
+                style={
+                  userStatus == 'Other' ? styles.checkedBox : styles.checkbox
+                }
+              />
               <Text>Other</Text>
             </View>
           </View>
@@ -251,18 +203,42 @@ export const RequestSlipPage = ({
         </Text>
         <View style={styles.row}>
           <View style={styles.col}>
-            <Text>[ ] Conservation</Text>
-            <Text>[ ] Cataloguing</Text>
-            <Text>[ ] Exhibit</Text>
-            <Text>[ ] Digitization</Text>
-            <Text>[ ] Hold Shelf/Cart</Text>
-            <Text>[ ] Reading Room</Text>
-            <Text>[ ] Class</Text>
-            <Text>[ ] Other</Text>
+            <View style={styles.checkboxRow}>
+              <View style={styles.checkbox} />
+              <Text> Conservation</Text>
+            </View>
+            <View style={styles.checkboxRow}>
+              <View style={styles.checkbox} />
+              <Text> Cataloguing</Text>
+            </View>
+            <View style={styles.checkboxRow}>
+              <View style={styles.checkbox} />
+              <Text> Exhibit</Text>
+            </View>
+            <View style={styles.checkboxRow}>
+              <View style={styles.checkbox} />
+              <Text> Digitization</Text>
+            </View>
+            <View style={styles.checkboxRow}>
+              <View style={styles.checkbox} />
+              <Text> Hold Shelf/Cart</Text>
+            </View>
+            <View style={styles.checkboxRow}>
+              <View style={styles.checkbox} />
+              <Text> Reading Room</Text>
+            </View>
+            <View style={styles.checkboxRow}>
+              <View style={styles.checkbox} />
+              <Text> Class</Text>
+            </View>
+            <View style={styles.checkboxRow}>
+              <View style={styles.checkbox} />
+              <Text> Other</Text>
+            </View>
           </View>
           <View style={styles.col}>
+            <Text>Slip printed by: {personPrinting}</Text>
             <Text>Pulled by:</Text>
-            <Text>Location:</Text>
           </View>
           <View style={styles.lastCol}>
             <Text>Reshelved by:</Text>

@@ -2,6 +2,7 @@
 import { auth } from '@clerk/nextjs/server';
 import { db } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
+import logger from '@/lib/logger';
 
 interface TransactionData {
   text: string;
@@ -27,7 +28,7 @@ async function addTransaction(formData: FormData): Promise<TransactionResult> {
 
   // get logged in user
   const { userId } = await auth();
-  console.log(userId);
+  logger.verbose(userId);
 
   // check for user
   if (!userId) {
@@ -46,7 +47,7 @@ async function addTransaction(formData: FormData): Promise<TransactionResult> {
     return { data: transactionData };
   } catch (error) {
     return { error: 'Transaction not added' };
-    console.log(error);
+    logger.verbose(error);
   }
 }
 

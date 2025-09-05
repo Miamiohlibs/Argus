@@ -1,17 +1,19 @@
 'use client';
 import RecordSearchForm from '@/components/RecordSearchForm';
 import { useSearchParams } from 'next/navigation';
-import { Button } from 'react-bootstrap';
-import Link from 'next/link';
+import BackToProjectButton from '@/components/BackToProjectButton';
+import NonOwnerAlert from '@/components/NonOwnerAlert';
 
 interface ClientSearchBibsPageProps {
   projectId?: number;
   userCanEditPage: boolean;
+  nonOwnerAlert: boolean;
 }
 
 const ClientSearchBibsPage = ({
   projectId,
   userCanEditPage,
+  nonOwnerAlert,
 }: ClientSearchBibsPageProps) => {
   // You can still use useSearchParams if needed for other params
   const params = useSearchParams();
@@ -32,12 +34,9 @@ const ClientSearchBibsPage = ({
 
   return (
     <>
+      {nonOwnerAlert && <NonOwnerAlert />}
       <h1>Search Bibs</h1>
-      <Link href={`/project/${clientProjectId}`}>
-        <Button variant="outline-secondary" className="mb-3">
-          Back to Project
-        </Button>
-      </Link>
+      <BackToProjectButton projectId={clientProjectId} />
       <RecordSearchForm
         projectId={clientProjectId}
         userCanEditPage={userCanEditPage}
@@ -47,10 +46,3 @@ const ClientSearchBibsPage = ({
 };
 
 export default ClientSearchBibsPage;
-//   try {
-//     const results = await findByBarcode(barcode);
-//     console.log('Search results by barcode:', results.bib_data);
-//     return <pre>{JSON.stringify(results.bib_data, null, 2)}</pre>;
-//   } catch (error) {
-//     console.error('Error searching by barcode:', error);
-//   }

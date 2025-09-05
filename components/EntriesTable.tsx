@@ -28,6 +28,11 @@ export default function EntriesTable({
   const [filterText, setFilterText] = useState('');
 
   const handleDelete = async (entryId: string) => {
+    const confirmed = window.confirm(
+      'Are you sure you want to delete this entry?'
+    );
+    if (!confirmed) return;
+
     console.log(`Delete entry with ID: ${entryId}`);
 
     const { error } = await deleteEntry(entryId); // also gets {message}
@@ -70,7 +75,14 @@ export default function EntriesTable({
       name: 'Title',
       selector: (row: EntryWithItems) => row.itemTitle ?? '',
       cell: (row: EntryWithItems) => (
-        <Link href={`/editEntry/${row.id}`}>
+        <Link
+          href={
+            // if no external url, then it's a custom entry -- use the link for that format
+            row.url == undefined
+              ? `/customEntry/${row.projectId}/${row.id}`
+              : `/editEntry/${row.id}`
+          }
+        >
           {row.itemTitle || 'Untitled Project'}
         </Link>
       ),
@@ -123,16 +135,16 @@ export default function EntriesTable({
           (user?.role === 'admin' ||
             user?.role === 'superadmin' ||
             ownerClerkId === user?.clerkUserId);
-        console.log(
-          'Row User:',
-          ownerClerkId,
-          'Current User:',
-          user?.clerkUserId,
-          'Can edit:',
-          canEdit,
-          'for project:',
-          row.itemTitle
-        );
+        // console.log(
+        //   'Row User:',
+        //   ownerClerkId,
+        //   'Current User:',
+        //   user?.clerkUserId,
+        //   'Can edit:',
+        //   canEdit,
+        //   'for project:',
+        //   row.itemTitle
+        // );
         const LinkOutUrl = row.url ?? undefined;
         const LinkOut = LinkOutUrl ? (
           <Link href={LinkOutUrl} target="_blank">
@@ -147,7 +159,14 @@ export default function EntriesTable({
         return (
           <>
             {LinkOut}
-            <Link href={`/editEntry/${row.id}`}>
+            <Link
+              href={
+                // if no external url, then it's a custom entry -- use the link for that format
+                row.url == undefined
+                  ? `/customEntry/${row.projectId}/${row.id}`
+                  : `/editEntry/${row.id}`
+              }
+            >
               <Button variant="outline-primary" size="sm" className="me-1">
                 Edit
               </Button>
