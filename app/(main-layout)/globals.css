@@ -11,10 +11,10 @@ body {
   min-height: 100vh;
   margin: 0;
   font-family: 'Lato', sans-serif;
-  padding-bottom: 2em;  /* accounts for sticky footer */
+  /* padding-bottom: 2em;  */
 }
 footer { 
-  position: fixed;
+  /* position: fixed; */
   bottom: 0;
   width: 100%;
 }
