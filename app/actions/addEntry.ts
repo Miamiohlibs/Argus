@@ -1,14 +1,7 @@
 'use server';
 import logger from '@/lib/logger';
 import { db } from '@/lib/db';
-import { ItemEntry } from '@prisma/client';
-
-interface EntryActionData {
-  bibData: Record<string, FormDataEntryValue>;
-  itemData: ItemEntry[];
-  actionType: 'add' | 'edit';
-  existingEntryId?: string;
-}
+import EntryActionData from '@/types/EntryActionData';
 
 const entryAction = async ({
   bibData,
