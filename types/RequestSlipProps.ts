@@ -21,4 +21,6 @@ export type RequestSlipProps = {
     | 'Staff'
     | 'Alumni'
     | 'Other';
+  personPrinting?: string;
+  projectName?: string;
 };
