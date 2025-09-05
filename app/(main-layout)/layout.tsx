@@ -4,6 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './globals.css';
 import { ClerkProvider } from '@clerk/nextjs';
 import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -29,6 +30,7 @@ export default function RootLayout({
           <Header />
           <main className="container-fluid px-4 py-3">{children}</main>
           <ToastContainer />
+          <Footer />
         </body>
       </html>
     </ClerkProvider>

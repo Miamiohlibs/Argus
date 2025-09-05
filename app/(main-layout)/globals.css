@@ -12,7 +12,11 @@ body {
   margin: 0;
   font-family: 'Lato', sans-serif;
 }
-
+footer { 
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
 .bib-entry{
   background-color: #ddd;
   box-shadow: var(--box-shadow);
