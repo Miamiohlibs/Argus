@@ -5,7 +5,7 @@
 ### Added
 
 - added location names (e.g. "Periodicals") in addition to location codes (e.g. "specp")
-- one unified searchbox seaches by call number, barcode, mms_id, or permalink URL. NOTE: permalink URL must contain an MMS_ID to work; if it doesn't, you'll probably need to use the barcode or call_number.
+- one unified searchbox searches by call number, barcode, mms_id, or permalink URL. NOTE: permalink URL must contain an MMS_ID to work; if it doesn't, you'll probably need to use the barcode or call_number.
 - added option to create a custom entry
 - display warning banner for admins when changing someone else's content
 - added page footer with version info
