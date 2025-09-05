@@ -1,6 +1,7 @@
 // import { getMmsIdByCallNumber } from '@/app/actions/primoSearch';
 import { bibHoldingsByAny } from '@/app/actions/almaSearch';
 import { NextResponse } from 'next/server';
+import { CondensedBibHoldings } from '@/types/CondensedBibHoldings';
 
 export async function GET() {
   const arr = [
@@ -10,7 +11,10 @@ export async function GET() {
     // '991017357419708518', // Earth
     '991000024539708518', // Orwell
   ];
-  const response = await Promise.all(
+  const response: Array<{
+    data?: CondensedBibHoldings;
+    error?: string;
+  }> = await Promise.all(
     arr.map(async (item) => {
       return await bibHoldingsByAny(item);
     })
