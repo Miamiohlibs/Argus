@@ -1,9 +1,10 @@
-import { Alert, AlertHeading } from 'react-bootstrap';
+import { Alert } from 'react-bootstrap';
+import { ExclamationTriangle } from 'react-bootstrap-icons';
 const NonOwnerAlert = () => {
   return (
     <Alert variant="warning">
-      <AlertHeading>Warning!</AlertHeading>
-      You have admin edit permissions, but you are not the owner of this entry.
+      <ExclamationTriangle /> You have admin edit permissions, but you are not
+      the owner of this entry. With great power comes great responsibility!
     </Alert>
   );
 };
