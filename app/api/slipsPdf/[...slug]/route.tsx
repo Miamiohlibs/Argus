@@ -7,6 +7,7 @@ import { MultiPagePdf } from '@/components/MultipagePdf';
 import getEntries from '@/app/actions/getEntries';
 import getProject from '@/app/actions/getProject';
 import filenamify from 'filenamify';
+import { checkUser } from '@/lib/checkUser';
 
 export async function GET(
   req: NextRequest,
@@ -16,6 +17,7 @@ export async function GET(
   const id = slug; // why this two-step? idk but it seemed necessary to build
   const { data } = await getEntries(id);
   const { project } = await getProject({ id });
+  const user = await checkUser();
 
   const entries = data?.entries ?? [];
   // return one slip per item (or one per bib if there are no items)
@@ -63,6 +65,8 @@ export async function GET(
         userEmail: project?.user.email,
         userAffiliation: project?.user.affiliation ?? undefined,
         userStatus: project?.user.status ?? undefined,
+        personPrinting: user?.name ?? 'Unknown',
+        projectName: project?.title,
       }));
     } else {
       // Fallback: no items, return a single object
@@ -83,6 +87,8 @@ export async function GET(
           userEmail: project?.user.email,
           userAffiliation: project?.user.affiliation ?? undefined,
           userStatus: project?.user.status ?? undefined,
+          personPrinting: user?.name ?? 'Unknown',
+          projectName: project?.title,
         },
       ];
     }

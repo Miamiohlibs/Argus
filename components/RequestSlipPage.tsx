@@ -21,6 +21,8 @@ export const RequestSlipPage = ({
   userAffiliation,
   userStatus,
   styles,
+  personPrinting,
+  projectName,
 }: RequestSlipProps & { styles: any }) => {
   logger.verbose('Item Info', itemInfo);
   const volumeLabel = // only show if items to show
@@ -102,6 +104,8 @@ export const RequestSlipPage = ({
             {'      '}
             Printed:{' '}
             <Text style={styles.bold}>{new Date().toLocaleDateString()}</Text>
+            {'      '}
+            For:<Text style={styles.bold}> {projectName}</Text>
           </Text>
         </View>
         <View style={styles.row}>
@@ -199,16 +203,41 @@ export const RequestSlipPage = ({
         </Text>
         <View style={styles.row}>
           <View style={styles.col}>
-            <Text>[ ] Conservation</Text>
-            <Text>[ ] Cataloguing</Text>
-            <Text>[ ] Exhibit</Text>
-            <Text>[ ] Digitization</Text>
-            <Text>[ ] Hold Shelf/Cart</Text>
-            <Text>[ ] Reading Room</Text>
-            <Text>[ ] Class</Text>
-            <Text>[ ] Other</Text>
+            <View style={styles.checkboxRow}>
+              <View style={styles.checkbox} />
+              <Text> Conservation</Text>
+            </View>
+            <View style={styles.checkboxRow}>
+              <View style={styles.checkbox} />
+              <Text> Cataloguing</Text>
+            </View>
+            <View style={styles.checkboxRow}>
+              <View style={styles.checkbox} />
+              <Text> Exhibit</Text>
+            </View>
+            <View style={styles.checkboxRow}>
+              <View style={styles.checkbox} />
+              <Text> Digitization</Text>
+            </View>
+            <View style={styles.checkboxRow}>
+              <View style={styles.checkbox} />
+              <Text> Hold Shelf/Cart</Text>
+            </View>
+            <View style={styles.checkboxRow}>
+              <View style={styles.checkbox} />
+              <Text> Reading Room</Text>
+            </View>
+            <View style={styles.checkboxRow}>
+              <View style={styles.checkbox} />
+              <Text> Class</Text>
+            </View>
+            <View style={styles.checkboxRow}>
+              <View style={styles.checkbox} />
+              <Text> Other</Text>
+            </View>
           </View>
           <View style={styles.col}>
+            <Text>Slip printed by: {personPrinting}</Text>
             <Text>Pulled by:</Text>
           </View>
           <View style={styles.lastCol}>
