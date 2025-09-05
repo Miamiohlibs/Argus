@@ -72,18 +72,6 @@ const styles = StyleSheet.create({
     marginRight: 4,
   },
   checkedBox: { width: 8, height: 8, backgroundColor: 'black', marginRight: 4 },
-  // mt: {
-  //   marginTop: '5px',
-  // },
-  // mb: {
-  //   marginBottom: '5px',
-  // },
-  // ml: {
-  //   marginLeft: '5px',
-  // },
-  // mr: {
-  //   marginRight: '5px',
-  // },
   paragraph: {
     margin: '5px',
     fontWeight: 'bold',

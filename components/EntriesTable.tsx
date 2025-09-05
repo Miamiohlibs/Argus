@@ -75,7 +75,14 @@ export default function EntriesTable({
       name: 'Title',
       selector: (row: EntryWithItems) => row.itemTitle ?? '',
       cell: (row: EntryWithItems) => (
-        <Link href={`/editEntry/${row.id}`}>
+        <Link
+          href={
+            // if no external url, then it's a custom entry -- use the link for that format
+            row.url == undefined
+              ? `/customEntry/${row.projectId}/${row.id}`
+              : `/editEntry/${row.id}`
+          }
+        >
           {row.itemTitle || 'Untitled Project'}
         </Link>
       ),
@@ -152,7 +159,14 @@ export default function EntriesTable({
         return (
           <>
             {LinkOut}
-            <Link href={`/editEntry/${row.id}`}>
+            <Link
+              href={
+                // if no external url, then it's a custom entry -- use the link for that format
+                row.url == undefined
+                  ? `/customEntry/${row.projectId}/${row.id}`
+                  : `/editEntry/${row.id}`
+              }
+            >
               <Button variant="outline-primary" size="sm" className="me-1">
                 Edit
               </Button>

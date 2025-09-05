@@ -11,14 +11,24 @@ const RecordSearchButton = ({
   className,
 }: RecordSearchButtonProps) => {
   return (
-    <Link
-      href={`/searchBibs?projectId=${projectId.toString()}`}
-      className={className}
-    >
-      <Button variant="primary" size="sm">
-        Add an Item
-      </Button>
-    </Link>
+    <>
+      <Link
+        href={`/searchBibs?projectId=${projectId.toString()}`}
+        className={className}
+      >
+        <Button variant="primary" size="sm">
+          Add Alma Item
+        </Button>
+      </Link>
+      <Link
+        href={`/customEntry/${projectId.toString()}/new`}
+        className={className}
+      >
+        <Button variant="primary" size="sm">
+          Add Custom Item
+        </Button>
+      </Link>
+    </>
   );
 };
 

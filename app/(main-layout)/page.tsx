@@ -5,6 +5,7 @@ import CreateProjectButton from '@/components/CreateProjectButton';
 import { checkUser } from '@/lib/checkUser';
 import { isEditorOrAbove } from '@/lib/canEdit';
 import { redirect } from 'next/navigation';
+
 const Home = async () => {
   const user = await checkUser();
   const clerkUserInfo = (await currentUser()) ?? { firstName: 'Guest' };

@@ -1,6 +1,7 @@
 // import 'dotenv/config';
 'use server';
 import { SearchBibs } from '@kenxirwin/alma-search';
+import { getMmsIdByCallNumber } from './primoSearch';
 import type {
   AlmaItem,
   AlmaItemApiResponse,
@@ -11,6 +12,40 @@ import type {
   AlmaItemDataPlusHoldingDetails,
 } from '@/types/CondensedBibHoldings';
 import logger from '@/lib/logger';
+
+export async function bibHoldingsByAny(input: string) {
+  const INST_CODE = process.env.NEXT_PUBLIC_INST_CODE
+    ? process.env.NEXT_PUBLIC_INST_CODE
+    : '';
+  const BARCODE_PREFIX = process.env.NEXT_PUBLIC_BARCODE_PREFIX
+    ? process.env.NEXT_PUBLIC_BARCODE_PREFIX
+    : '';
+  const urlRe = /^https?\:\/\//;
+  const almaMmsRe = new RegExp('alma(99\\d+' + INST_CODE.toString() + ')$');
+  const mmsRe = new RegExp('^(99\\d+' + INST_CODE.toString() + ')$');
+  const barcodeRe = new RegExp('(^' + BARCODE_PREFIX.toString() + '\\d+)$');
+  const callRe = /^[A-Z]{1,3}\s*[0-9]{1,4}(\.[0-9]+)?\s*/;
+
+  if (input.match(urlRe)) {
+    const found = input.match(almaMmsRe);
+    if (Array.isArray(found)) {
+      return await bibHoldings({ mms_id: found[1] });
+    } else {
+      console.log(
+        `No MMS_ID found in url: ${input}. Hint: Permalink URLs will only work here if they end in ...alma99 followed by a bunch of digits. If you have a different sort of permalink, try looking up by Barcode or Call Number.`
+      );
+    }
+  } else if (input.match(mmsRe)) {
+    return await bibHoldings({ mms_id: input });
+  } else if (input.match(barcodeRe)) {
+    return await bibHoldingsByBarcode({ barcode: input });
+  } else if (input.match(callRe)) {
+    return await bibHoldingsByCallNumber({ call_number: input });
+  }
+  return {
+    error: `Could not identify item based on Permalink URL, MMS_ID, Barcode or Call Number: ${input}`,
+  };
+}
 
 export async function findByBarcode(barcode: string): Promise<AlmaItem> {
   try {
@@ -93,15 +128,32 @@ function condenseBibHoldings(response: AlmaItemApiResponse) {
   const allLocationsArr = [
     ...new Set(response.item.map((item) => item.item_data.location.value)),
   ];
+  const allLocationNamesArr = [
+    ...new Set(response.item.map((item) => item.item_data.location.desc)),
+  ];
+  const allLocationsNameAndCodeArr = [
+    ...new Set(
+      response.item.map(
+        (item) =>
+          `${item.item_data.location.desc} (${item.item_data.location.value})`
+      )
+    ),
+  ];
   const allLocations = allLocationsArr.join(',');
+  const allLocationNames = allLocationNamesArr.join(',');
+  const allLocationsNameAndCode = allLocationsNameAndCodeArr.join(',');
   // logger.verbose(uniqBibHoldings);
   const output: CondensedBibHoldings = {
     bib_data: response.item[0].bib_data,
     items: [],
     locationCodes: '',
+    locationInfo: '',
+    locationNames: '',
   };
   output.bib_data.call_number = allCallNumbers;
   output.bib_data.location = allLocations;
+  output.bib_data.locationNames = allLocationNames;
+  output.bib_data.locationNamesAndCodes = allLocationsNameAndCode;
 
   uniqHoldings.forEach((holdingId) => {
     const allMatchingHoldings: AlmaItem[] = response.item.filter(
@@ -158,5 +210,39 @@ export async function bibHoldingsByBarcode({ barcode }: { barcode: string }) {
   } catch (error) {
     logger.error('Error fetching holdings:', error);
     return { error: 'Holdings lookup failed with message:' + `: ${error}` };
+  }
+}
+
+export async function bibHoldingsByCallNumber({
+  call_number,
+}: {
+  call_number: string;
+}) {
+  try {
+    const mms_ids = await getMmsIdByCallNumber({ callNumber: call_number });
+    if (mms_ids === undefined) {
+      const errString = `No results found for call number ${call_number}`;
+      console.error(errString);
+      return { error: errString };
+    }
+    if (
+      mms_ids &&
+      mms_ids != undefined &&
+      Array.isArray(mms_ids) &&
+      mms_ids.length == 1
+    ) {
+      const mms_id: string = typeof mms_ids[0] == 'string' ? mms_ids[0] : '';
+      const { data, error } = await bibHoldings({ mms_id });
+      if (error) {
+        throw new Error(error);
+      }
+      return { data };
+    } else {
+      throw new Error(`invalid search results`);
+    }
+  } catch (error) {
+    const errString = `Error finding bib record from call number ${call_number}: ${error}`;
+    logger.error(errString);
+    return { error: errString };
   }
 }

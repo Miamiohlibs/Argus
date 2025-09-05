@@ -11,8 +11,13 @@ body {
   min-height: 100vh;
   margin: 0;
   font-family: 'Lato', sans-serif;
+  /* padding-bottom: 2em;  */
 }
-
+footer { 
+  /* position: fixed; */
+  bottom: 0;
+  width: 100%;
+}
 .bib-entry{
   background-color: #ddd;
   box-shadow: var(--box-shadow);

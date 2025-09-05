@@ -11,12 +11,18 @@ export const RequestSlipPage = ({
   location,
   callNumber,
   itemInfo,
+  highlightedItemIndex,
   notes,
+  box,
+  folder,
+  ms,
   userName,
   userEmail,
   userAffiliation,
   userStatus,
   styles,
+  personPrinting,
+  projectName,
 }: RequestSlipProps & { styles: any }) => {
   logger.verbose('Item Info', itemInfo);
   const volumeLabel = // only show if items to show
@@ -44,98 +50,6 @@ export const RequestSlipPage = ({
       <View style={styles.section}>
         <View style={styles.row}>
           <View style={styles.col}>
-            <Text style={styles.label}>TYPE OF MATERIAL</Text>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text>Vault</Text>
-            </View>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text>Rare</Text>
-            </View>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text>German</Text>
-            </View>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text>Russian</Text>
-            </View>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text>Miami Archives</Text>
-            </View>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text>Thesis/Dissertation</Text>
-            </View>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text>Manuscript</Text>
-            </View>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text>Western College</Text>
-            </View>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text>Oxford College</Text>
-            </View>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text>Reference College</Text>
-            </View>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text>Archives VF</Text>
-            </View>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text>Map</Text>
-            </View>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text>Honors Paper</Text>
-            </View>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text>Photograph: </Text>
-              <View style={styles.checkboxRow}>
-                <View style={styles.checkbox} />
-                <Text>Print </Text>
-              </View>
-              <View style={styles.checkboxRow}>
-                <View style={styles.checkbox} />
-                <Text>Negative</Text>
-              </View>
-            </View>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text>Media</Text>
-            </View>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text>Other</Text>
-            </View>
-            {/* Add more as needed */}
-            <View style={styles.label}>
-              <Text>SIZE (if applicable)</Text>
-            </View>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text>Small</Text>
-            </View>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text>Folio</Text>
-            </View>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text>Double Oversize</Text>
-            </View>
-          </View>
-
-          <View style={styles.col}>
             <Text>
               Author: <Text style={styles.bold}>{author}</Text>
             </Text>
@@ -145,8 +59,13 @@ export const RequestSlipPage = ({
             <Text>
               Date of item: <Text style={styles.bold}>{date}</Text>
             </Text>
-            <Text>Manuscript #</Text>
-            <Text>Box ________ Folder ________</Text>
+            <Text>
+              Manuscript #<Text style={styles.bold}>{ms}</Text>
+            </Text>
+            <Text>
+              Box {<Text style={styles.bold}>{box}</Text>}
+              {'      '}Folder {<Text style={styles.bold}>{folder}</Text>}
+            </Text>
             <Text>Other information</Text>
             <Text style={styles.paragraph}>{notes}</Text>
           </View>
@@ -157,7 +76,17 @@ export const RequestSlipPage = ({
             <Text style={styles.centerText}>{callNumber ?? ''}</Text>
             {volumeLabel}
             {itemInfo?.map((item, i) => {
-              return <Text key={`item-${i}`}>{item}</Text>;
+              const styleTag = i == highlightedItemIndex ? styles.bold : {};
+              const counter =
+                i == highlightedItemIndex && itemInfo.length > 1
+                  ? ` (slip ${i + 1}/${itemInfo.length} for this bib record)`
+                  : '';
+              item += counter;
+              return (
+                <Text key={`item-${i}`} style={styleTag}>
+                  {item}
+                </Text>
+              );
             })}
           </View>
         </View>
@@ -172,6 +101,11 @@ export const RequestSlipPage = ({
             <Text style={styles.bold}>
               {userName} ({userEmail})
             </Text>
+            {'      '}
+            Printed:{' '}
+            <Text style={styles.bold}>{new Date().toLocaleDateString()}</Text>
+            {'      '}
+            For:<Text style={styles.bold}> {projectName}</Text>
           </Text>
         </View>
         <View style={styles.row}>
@@ -269,18 +203,42 @@ export const RequestSlipPage = ({
         </Text>
         <View style={styles.row}>
           <View style={styles.col}>
-            <Text>[ ] Conservation</Text>
-            <Text>[ ] Cataloguing</Text>
-            <Text>[ ] Exhibit</Text>
-            <Text>[ ] Digitization</Text>
-            <Text>[ ] Hold Shelf/Cart</Text>
-            <Text>[ ] Reading Room</Text>
-            <Text>[ ] Class</Text>
-            <Text>[ ] Other</Text>
+            <View style={styles.checkboxRow}>
+              <View style={styles.checkbox} />
+              <Text> Conservation</Text>
+            </View>
+            <View style={styles.checkboxRow}>
+              <View style={styles.checkbox} />
+              <Text> Cataloguing</Text>
+            </View>
+            <View style={styles.checkboxRow}>
+              <View style={styles.checkbox} />
+              <Text> Exhibit</Text>
+            </View>
+            <View style={styles.checkboxRow}>
+              <View style={styles.checkbox} />
+              <Text> Digitization</Text>
+            </View>
+            <View style={styles.checkboxRow}>
+              <View style={styles.checkbox} />
+              <Text> Hold Shelf/Cart</Text>
+            </View>
+            <View style={styles.checkboxRow}>
+              <View style={styles.checkbox} />
+              <Text> Reading Room</Text>
+            </View>
+            <View style={styles.checkboxRow}>
+              <View style={styles.checkbox} />
+              <Text> Class</Text>
+            </View>
+            <View style={styles.checkboxRow}>
+              <View style={styles.checkbox} />
+              <Text> Other</Text>
+            </View>
           </View>
           <View style={styles.col}>
+            <Text>Slip printed by: {personPrinting}</Text>
             <Text>Pulled by:</Text>
-            <Text>Location:</Text>
           </View>
           <View style={styles.lastCol}>
             <Text>Reshelved by:</Text>

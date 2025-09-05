@@ -22,15 +22,21 @@ interface miniItemData {
   barcode: string;
   description?: string;
   location: string;
+  location_code?: string;
+  location_name?: string;
   call_number?: string;
   copy_id?: string;
   item_id: string;
+  box?: string;
+  folder?: string;
+  ms?: string;
 }
 
 interface HoldingEntryProps {
   bibData: AlmaItemHoldingBibDataPlusCallAndLocation;
   items: AlmaItemDataPlusHoldingDetails[];
   locationCodes: string;
+  locationNames: string;
   projectId: string | number;
   actionType: 'add' | 'edit';
   existingEntry?: EntryWithItems;
@@ -41,6 +47,7 @@ const HoldingEntry = ({
   bibData,
   items,
   locationCodes,
+  locationNames,
   projectId,
   actionType,
   existingEntry,
@@ -74,6 +81,7 @@ const HoldingEntry = ({
             barcode: matchingItem.barcode || '',
             description: matchingItem.description || '',
             location: matchingItem.location.value,
+            location_name: matchingItem.location.desc || '',
             call_number: matchingItem.call_number || '',
             copy_id: matchingItem.copy_id || '',
             item_id: `item-${matchingItem.pid || items.indexOf(matchingItem)}`,
@@ -87,6 +95,7 @@ const HoldingEntry = ({
   }, [existingEntry, items, isInitialized]);
 
   const handleItemCheck = (item: miniItemData, checked: boolean) => {
+    console.log('working on item:', item);
     if (checked) {
       setSelectedItems((prev) => [...prev, item]);
       console.log('selected items after adding:', [...selectedItems, item]);
@@ -121,10 +130,15 @@ const HoldingEntry = ({
         description: item.description || '',
         id: 'unknown',
         location: item.location || 'unknown',
+        location_name: item.location_name || '',
+        location_code: item.location_code || '',
         call_number: item.call_number || null,
         copy_id: item.copy_id || null,
         bibEntryId: 'unknown',
         barcode: item.barcode || null,
+        box: item.box || null,
+        folder: item.folder || null,
+        ms: item.ms || null,
       };
     });
 
@@ -215,6 +229,11 @@ const HoldingEntry = ({
         />
         <Form.Control
           type="hidden"
+          name="locationNames"
+          value={safeStringify(bibData?.locationNames)}
+        />
+        <Form.Control
+          type="hidden"
           name="call_number"
           value={safeStringify(bibData?.call_number)}
         />
@@ -284,13 +303,15 @@ const HoldingEntry = ({
               const itemLabel =
                 items.length === 1
                   ? 'Sole Item'
-                  : `Item: ${item.location.value}: ${item.call_number} ${description} ${copyNo}`;
+                  : `Item: ${item.location.value}: ${item.call_number} ${description} ${copyNo} (${item.library.desc}: ${item.location.desc})`;
 
               const itemData: miniItemData = {
                 pid: item.pid || '',
                 barcode: item.barcode || '',
                 description: item.description || '',
                 location: item.location.value,
+                location_code: item.location.value,
+                location_name: item.location.desc,
                 call_number: item.call_number || '',
                 copy_id: item.copy_id || '',
                 item_id: `item-${item.pid || index}`,
@@ -312,7 +333,7 @@ const HoldingEntry = ({
                       handleItemCheck(itemData, e.target.checked)
                     }
                     value={
-                      `${item.barcode};;;${item.location.value};;;${item.call_number};;;${item.description};;;${item.copy_id}` ||
+                      `${item.barcode};;;${item.location.value};;;${item.location.desc};;;${item.call_number};;;${item.description};;;${item.copy_id}` ||
                       ''
                     }
                   />
