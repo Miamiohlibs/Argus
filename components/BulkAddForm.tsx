@@ -1,5 +1,5 @@
 'use client';
-import { Form, Button } from 'react-bootstrap';
+import { Form, Button, Alert } from 'react-bootstrap';
 import bulkAddEntries, { LookupAndAddSingleEntry } from '@/app/actions/bulkAdd';
 import { useState, useEffect } from 'react';
 import BulkAddResults from './BulkAddResults';
@@ -13,13 +13,18 @@ interface BulkAddResponse {
 
 const BulkAddForm = ({ projectId }: { projectId: string }) => {
   const [results, setResults] = useState<BulkAddResponse[]>([]);
+  const [totalSubmissions, setTotalSubmissions] = useState(0);
+  const [finalNotice, setFinalNotice] = useState<string | null>(null);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+    setResults([]);
+    setTotalSubmissions(0);
+    setFinalNotice(null);
     const form = event.currentTarget as HTMLFormElement;
     const formData = new FormData(form);
-    console.log('Form submitted with data:', formData.get('entries'));
     const entries = formData.get('entries')?.toString().split('\n') || [];
+    setTotalSubmissions(entries.length);
     entries.forEach(async (entry) => {
       const { query, status, message } = await LookupAndAddSingleEntry(
         entry.trim(),
@@ -31,16 +36,35 @@ const BulkAddForm = ({ projectId }: { projectId: string }) => {
         { query: entry, message, status },
       ]);
     });
-    // console.log('Entries:', entries);
-    // console.log('Project ID:', projectId);
-
-    // const response = await bulkAddEntries(entries, projectId);
-    // console.log('Bulk add response:', response);
   };
+
+  useEffect(() => {
+    if (totalSubmissions === 0) return;
+    if (results.length < totalSubmissions) {
+      return;
+    }
+    if (results.length == totalSubmissions && totalSubmissions > 0) {
+      const totalSuccess = results.filter((r) => r.status === 'success').length;
+      setFinalNotice(
+        `Total submissions: ${totalSubmissions}, Successful: ${totalSuccess}`
+      );
+    }
+  }, [results]);
 
   return (
     <>
+      {totalSubmissions > 0 && finalNotice == null && (
+        <Alert variant="info" className="mt-3">
+          Submitting {totalSubmissions} entries...
+        </Alert>
+      )}
       <BulkAddResults entries={results} />
+
+      {totalSubmissions > 0 && finalNotice !== null && (
+        <Alert variant="info" className="mt-3">
+          {finalNotice}
+        </Alert>
+      )}
       <Form onSubmit={handleSubmit}>
         <Form.Label>Enter entries (one per line):</Form.Label>
         <Form.Control

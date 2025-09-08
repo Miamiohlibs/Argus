@@ -8,7 +8,6 @@ interface BulkAddResponse {
 const BulkAddResults = ({ entries }: { entries: BulkAddResponse[] }) => {
   return (
     <div>
-      <h3>Bulk Add Results</h3>
       <div>
         {entries.map((entry, index) => (
           <Alert
