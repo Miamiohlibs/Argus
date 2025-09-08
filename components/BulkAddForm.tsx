@@ -4,7 +4,7 @@ import bulkAddEntries, { LookupAndAddSingleEntry } from '@/app/actions/bulkAdd';
 import { useState, useEffect } from 'react';
 import BulkAddResults from './BulkAddResults';
 import { bibHoldingsByAny } from '@/app/actions/almaSearch';
-
+import { useRef } from 'react';
 interface BulkAddResponse {
   query: string;
   message: string;
@@ -53,6 +53,7 @@ const BulkAddForm = ({ projectId }: { projectId: string }) => {
     }
   }, [results]);
 
+  const formRef = useRef<HTMLFormElement>(null);
   return (
     <>
       {totalSubmissions > 0 && finalNotice == null && (
@@ -68,7 +69,7 @@ const BulkAddForm = ({ projectId }: { projectId: string }) => {
           {finalNotice}
         </Alert>
       )}
-      <Form onSubmit={handleSubmit}>
+      <Form onSubmit={handleSubmit} ref={formRef}>
         <Form.Label>Enter entries (one per line):</Form.Label>
         <Form.Control
           as="textarea"
@@ -82,6 +83,17 @@ const BulkAddForm = ({ projectId }: { projectId: string }) => {
 
         <Button type="submit" className="btn btn-primary mt-3">
           Submit
+        </Button>
+        <Button
+          type="button"
+          variant="outline-secondary"
+          className="ms-2 mt-3"
+          onClick={() => {
+            // clear form contents
+            formRef.current?.reset();
+          }}
+        >
+          Clear Form
         </Button>
       </Form>
     </>

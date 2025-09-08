@@ -8,17 +8,18 @@ export default async function BulkAddPage({
 }: {
   params: { id: string };
 }) {
+  const pageParams = await params;
   const projectResponse: {
     project?: ProjectWithUserAndBib;
     error?: string;
-  } = await getProject({ id: params.id });
+  } = await getProject({ id: pageParams.id });
   const { project, error } = projectResponse;
   if (project) {
     return (
       <>
         <h1>Bulk Add Items: {project?.title}</h1>
-        <BackToProjectButton projectId={parseInt(params.id)} />
-        <BulkAddForm projectId={params.id} />
+        <BackToProjectButton projectId={parseInt(pageParams.id)} />
+        <BulkAddForm projectId={pageParams.id} />
       </>
     );
   } else {
