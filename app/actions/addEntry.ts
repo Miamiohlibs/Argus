@@ -1,14 +1,7 @@
 'use server';
 import logger from '@/lib/logger';
 import { db } from '@/lib/db';
-import { ItemEntry } from '@prisma/client';
-
-interface EntryActionData {
-  bibData: Record<string, FormDataEntryValue>;
-  itemData: ItemEntry[];
-  actionType: 'add' | 'edit';
-  existingEntryId?: string;
-}
+import EntryActionData from '@/types/EntryActionData';
 
 const entryAction = async ({
   bibData,
@@ -154,14 +147,14 @@ const entryAction = async ({
       logger.verbose('Entry updated successfully:', response);
     }
 
-    return { data: response, error: null };
+    return { data: response, error: undefined };
   } catch (error) {
     logger.error(
       `Error ${actionType === 'add' ? 'adding' : 'updating'} entry:`,
       error
     );
     return {
-      data: null,
+      data: undefined,
       error: `Failed to ${actionType === 'add' ? 'add' : 'update'} entry: ${
         error instanceof Error ? error.message : 'Unknown error'
       }`,
