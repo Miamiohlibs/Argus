@@ -1,5 +1,5 @@
 'use client';
-import { Form, Button, Alert } from 'react-bootstrap';
+import { Form, Button, Alert, Spinner } from 'react-bootstrap';
 import bulkAddEntries, { LookupAndAddSingleEntry } from '@/app/actions/bulkAdd';
 import { useState, useEffect } from 'react';
 import BulkAddResults from './BulkAddResults';
@@ -45,8 +45,9 @@ const BulkAddForm = ({ projectId }: { projectId: string }) => {
     }
     if (results.length == totalSubmissions && totalSubmissions > 0) {
       const totalSuccess = results.filter((r) => r.status === 'success').length;
+      const totalErrors = results.filter((r) => r.status === 'error').length;
       setFinalNotice(
-        `Total submissions: ${totalSubmissions}, Successful: ${totalSuccess}`
+        `Total submissions: ${totalSubmissions}, Successful: ${totalSuccess}, Errors: ${totalErrors}`
       );
     }
   }, [results]);
@@ -55,6 +56,7 @@ const BulkAddForm = ({ projectId }: { projectId: string }) => {
     <>
       {totalSubmissions > 0 && finalNotice == null && (
         <Alert variant="info" className="mt-3">
+          <Spinner animation="border" size="sm" className="me-2" />
           Submitting {totalSubmissions} entries...
         </Alert>
       )}

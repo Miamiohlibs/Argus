@@ -32,7 +32,6 @@ export async function LookupAndAddSingleEntry(
         data?: object;
       } = await entryAction(entryData);
       let finalMessage, finalStatus: 'success' | 'error';
-      console.log('Database response to BulkAdd:', databaseResponse);
       if (databaseResponse.error) {
         console.error(
           'Error adding entry to database:',
