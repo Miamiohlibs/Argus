@@ -5,6 +5,66 @@ import { NextResponse } from 'next/server';
 import { CondensedBibHoldings } from '@/types/CondensedBibHoldings';
 import { ItemEntry, BibEntry } from '@prisma/client';
 
+export async function LookupAndAddSingleEntry(
+  searchString: string,
+  project_id: string
+): Promise<{ query: string; message: string; status: 'success' | 'error' }> {
+  // get holdings
+  const result: { error?: string; data?: CondensedBibHoldings } =
+    await bibHoldingsByAny(searchString);
+  const { error, data } = result;
+
+  if (error !== undefined) {
+    return { status: 'error', query: searchString, message: error };
+  }
+  // if not error, prep data for database submission
+  if (data !== undefined) {
+    const itemData = createItemData(data);
+    const bibData = createBibData({ holdings: data, project_id });
+    if (bibData && itemData) {
+      const entryData: EntryActionData = {
+        bibData: bibData,
+        itemData: itemData,
+        actionType: 'add',
+      };
+      const databaseResponse: {
+        error?: string;
+        data?: object;
+      } = await entryAction(entryData);
+      let finalMessage, finalStatus: 'success' | 'error';
+      console.log('Database response to BulkAdd:', databaseResponse);
+      if (databaseResponse.error) {
+        console.error(
+          'Error adding entry to database:',
+          databaseResponse.error
+        );
+        finalMessage = databaseResponse.error;
+        finalStatus = 'error';
+      } else {
+        finalMessage =
+          'Entry added successfully: ' +
+          JSON.stringify(databaseResponse.data?.itemTitle);
+        finalStatus = 'success';
+      }
+      return {
+        status: finalStatus,
+        query: searchString,
+        message: finalMessage,
+      };
+    }
+    return {
+      status: 'error',
+      query: searchString,
+      message: 'Failed add entry to database (' + bibData.title + ')',
+    };
+  }
+  return {
+    status: 'error',
+    query: searchString,
+    message: 'Failed add entry to database',
+  };
+}
+
 export default async function bulkAddEntries(
   searchStrings: string[],
   project_id: string

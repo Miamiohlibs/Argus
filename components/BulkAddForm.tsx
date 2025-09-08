@@ -1,12 +1,18 @@
 'use client';
 import { Form, Button } from 'react-bootstrap';
-import bulkAddEntries from '@/app/actions/bulkAdd';
+import bulkAddEntries, { LookupAndAddSingleEntry } from '@/app/actions/bulkAdd';
 import { useState, useEffect } from 'react';
 import BulkAddResults from './BulkAddResults';
 import { bibHoldingsByAny } from '@/app/actions/almaSearch';
 
+interface BulkAddResponse {
+  query: string;
+  message: string;
+  status: 'success' | 'error';
+}
+
 const BulkAddForm = ({ projectId }: { projectId: string }) => {
-  const [results, setResults] = useState<object[]>([]);
+  const [results, setResults] = useState<BulkAddResponse[]>([]);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -15,9 +21,11 @@ const BulkAddForm = ({ projectId }: { projectId: string }) => {
     console.log('Form submitted with data:', formData.get('entries'));
     const entries = formData.get('entries')?.toString().split('\n') || [];
     entries.forEach(async (entry) => {
-      const { error, data } = await bibHoldingsByAny(entry.trim());
-      const message = data ? data?.bib_data.title : error;
-      const status = data ? 'success' : 'error';
+      const { query, status, message } = await LookupAndAddSingleEntry(
+        entry.trim(),
+        projectId
+      );
+
       setResults((prev) => [
         ...(prev || []),
         { query: entry, message, status },
