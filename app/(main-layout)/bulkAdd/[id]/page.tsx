@@ -6,20 +6,21 @@ import BackToProjectButton from '@/components/BackToProjectButton';
 export default async function BulkAddPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
+  //   params: { id: string };
 }) {
-  const pageParams = await params;
+  const { id } = await params;
   const projectResponse: {
     project?: ProjectWithUserAndBib;
     error?: string;
-  } = await getProject({ id: pageParams.id });
+  } = await getProject({ id });
   const { project, error } = projectResponse;
   if (project) {
     return (
       <>
         <h1>Bulk Add Items: {project?.title}</h1>
-        <BackToProjectButton projectId={parseInt(pageParams.id)} />
-        <BulkAddForm projectId={pageParams.id} />
+        <BackToProjectButton projectId={parseInt(id)} />
+        <BulkAddForm projectId={id} />
       </>
     );
   } else {

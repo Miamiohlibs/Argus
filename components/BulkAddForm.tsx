@@ -1,9 +1,8 @@
 'use client';
 import { Form, Button, Alert, Spinner } from 'react-bootstrap';
-import bulkAddEntries, { LookupAndAddSingleEntry } from '@/app/actions/bulkAdd';
+import { LookupAndAddSingleEntry } from '@/app/actions/bulkAdd';
 import { useState, useEffect } from 'react';
 import BulkAddResults from './BulkAddResults';
-import { bibHoldingsByAny } from '@/app/actions/almaSearch';
 import { useRef } from 'react';
 interface BulkAddResponse {
   query: string;
@@ -27,7 +26,7 @@ const BulkAddForm = ({ projectId }: { projectId: string }) => {
     const entries = allEntries.filter((item) => item.trim() !== '');
     setTotalSubmissions(entries.length);
     entries.forEach(async (entry) => {
-      const { query, status, message } = await LookupAndAddSingleEntry(
+      const { status, message } = await LookupAndAddSingleEntry(
         entry.trim(),
         projectId
       );
@@ -51,7 +50,7 @@ const BulkAddForm = ({ projectId }: { projectId: string }) => {
         `Total submissions: ${totalSubmissions}, Successful: ${totalSuccess}, Errors: ${totalErrors}`
       );
     }
-  }, [results]);
+  }, [results, totalSubmissions]);
 
   const formRef = useRef<HTMLFormElement>(null);
   return (

@@ -11,10 +11,10 @@ import { checkUser } from '@/lib/checkUser';
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: Promise<{ slug: string }> }
+  { params }: { params: Promise<{ slug: string[] }> }
 ) {
   const { slug } = await params;
-  const id = slug; // why this two-step? idk but it seemed necessary to build
+  const id = slug[0]; // why this two-step? idk but it seemed necessary to build
   const { data } = await getEntries(id);
   const { project } = await getProject({ id });
   const user = await checkUser();
