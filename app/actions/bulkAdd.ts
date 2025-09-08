@@ -29,7 +29,7 @@ export async function LookupAndAddSingleEntry(
       };
       const databaseResponse: {
         error?: string;
-        data?: object;
+        data?: { itemTitle: string; [key: string]: unknown };
       } = await entryAction(entryData);
       let finalMessage, finalStatus: 'success' | 'error';
       if (databaseResponse.error) {
