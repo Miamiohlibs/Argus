@@ -23,7 +23,8 @@ const BulkAddForm = ({ projectId }: { projectId: string }) => {
     setFinalNotice(null);
     const form = event.currentTarget as HTMLFormElement;
     const formData = new FormData(form);
-    const entries = formData.get('entries')?.toString().split('\n') || [];
+    const allEntries = formData.get('entries')?.toString().split('\n') || [];
+    const entries = allEntries.filter((item) => item.trim() !== '');
     setTotalSubmissions(entries.length);
     entries.forEach(async (entry) => {
       const { query, status, message } = await LookupAndAddSingleEntry(
