@@ -3,13 +3,12 @@ import logger from '@/lib/logger';
 import { auth } from '@clerk/nextjs/server';
 import { db } from '@/lib/db';
 import { checkUser } from '@/lib/checkUser';
-// import { redirect } from 'next/navigation';
-
-// import { revalidatePath } from 'next/cache';
-// import { redirect } from 'next/navigation';
-// import { redirect } from 'next/dist/server/api-utils';
-// import { Project } from '@prisma/client';
+import type { Prisma } from '@prisma/client';
 import { ProjectData } from '@/types/ProjectData';
+
+type ProjectWithUser = Prisma.ProjectGetPayload<{
+  include: { user: true };
+}>;
 
 type ProjectActionResult =
   | { success: true; data: ProjectData; error?: never }
@@ -157,3 +156,45 @@ export async function updateProject(
     return { success: false, error: 'Failed to update project' };
   }
 }
+
+export async function getProjects(
+  {
+    limitToUser,
+  }: {
+    limitToUser?: boolean;
+  } = { limitToUser: true }
+): Promise<{
+  projects?: ProjectWithUser[];
+  error?: string;
+}> {
+  const { userId } = await auth();
+  if (!userId) {
+    return { error: 'User not found' };
+  }
+
+  try {
+    const projects = await db.project.findMany({
+      where: {
+        ...(limitToUser ? { userId } : {}),
+      },
+      include: {
+        user: true, // Include user details if needed
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+    // logger.verbose('Fetched projects:', projects);
+    return { projects };
+  } catch (error) {
+    logger.error('DB error:', error);
+    return { error: 'Database error' };
+  }
+}
+
+// export async function duplicateProject(
+//   projectId: number,
+//   newOwnerId: string
+// ){
+
+// }
