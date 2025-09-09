@@ -105,7 +105,7 @@ export const MultiPagePdf = ({ books }: { books: RequestSlipProps[] }) => {
         })} */}
       {pairsArr.map((pair, i) => {
         return (
-          <Page>
+          <Page key={`page-${i}`} size="LETTER">
             <RequestSlipHalfPage {...pair[0]} styles={styles} />
             {pair[1] && <RequestSlipHalfPage {...pair[1]} styles={styles} />}
           </Page>
