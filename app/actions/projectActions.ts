@@ -291,6 +291,7 @@ export async function duplicateProject(projectId: string) {
     return {
       message: 'Project duplicated successfully',
       data: duplicatedProject,
+      success: true,
     };
   } catch (error) {
     logger.error('Error duplicating project:', error);
