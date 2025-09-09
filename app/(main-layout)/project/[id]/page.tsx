@@ -7,6 +7,8 @@ import Link from 'next/link';
 import { Button } from 'react-bootstrap';
 // import canEdit from '@/lib/canEdit';
 import canEdit from '@/lib/canEdit';
+// import { duplicateProject } from '@/app/actions/projectActions';
+import DuplicateProjectButton from '@/components/DuplicateProjectButton';
 
 export default async function ProjectPage({
   params,
@@ -40,10 +42,12 @@ export default async function ProjectPage({
         )}
 
         <Link href={`/slips/${id}`}>
-          <Button variant="outline-primary" size="sm">
+          <Button variant="outline-primary" size="sm" className={'me-2'}>
             Print Slips
           </Button>
         </Link>
+
+        {canEditBool && <DuplicateProjectButton id={id.toString()} />}
       </div>
 
       {bibEntries && bibEntries.data?.entries && user ? (

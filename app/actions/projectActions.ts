@@ -257,9 +257,43 @@ export async function deleteProject(projectId: number): Promise<{
     return { error: 'Database error' };
   }
 }
-// export async function duplicateProject(
-//   projectId: number,
-//   newOwnerId: string
-// ){
 
-// }
+export async function duplicateProject(projectId: string) {
+  const { userId } = await auth();
+  if (!userId) {
+    return { error: 'User not found' };
+  }
+
+  const isEditor = await canEdit(projectId);
+
+  if (!isEditor) {
+    return { error: 'Not authorized' };
+  }
+
+  try {
+    const project = await db.project.findUnique({
+      where: { id: parseInt(projectId) },
+      include: { bibEntries: true, user: true },
+    });
+
+    if (!project) {
+      return { error: 'Project not found' };
+    }
+
+    const duplicatedProject = await db.project.create({
+      data: {
+        title: `Copy of ${project.title}`,
+        notes: `Copied from ${project.user.name} with notes: ${project.notes}`,
+        userId: userId,
+      },
+    });
+
+    return {
+      message: 'Project duplicated successfully',
+      data: duplicatedProject,
+    };
+  } catch (error) {
+    logger.error('Error duplicating project:', error);
+    return { error: 'Failed to duplicate project' };
+  }
+}
