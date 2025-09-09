@@ -1,5 +1,5 @@
 import BulkAddForm from '@/components/BulkAddForm';
-import getProject from '@/app/actions/getProject';
+import { getProject } from '@/app/actions/projectActions';
 import { ProjectWithUserAndBib } from '@/types/ProjectWithUserAndBib';
 import BackToProjectButton from '@/components/BackToProjectButton';
 

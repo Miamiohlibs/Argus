@@ -3,8 +3,10 @@ import logger from '@/lib/logger';
 import { auth } from '@clerk/nextjs/server';
 import { db } from '@/lib/db';
 import { checkUser } from '@/lib/checkUser';
+import canEdit, { isAdmin } from '@/lib/canEdit';
 import type { Prisma } from '@prisma/client';
 import { ProjectData } from '@/types/ProjectData';
+import type { ProjectWithUserAndBib } from '@/types/ProjectWithUserAndBib';
 
 type ProjectWithUser = Prisma.ProjectGetPayload<{
   include: { user: true };
@@ -157,6 +159,28 @@ export async function updateProject(
   }
 }
 
+export async function getProject(params: { id: string }): Promise<{
+  project?: ProjectWithUserAndBib;
+  error?: string;
+}> {
+  try {
+    const project = await db.project.findUniqueOrThrow({
+      where: {
+        id: parseInt(params.id, 10),
+      },
+      include: {
+        user: true, // Include user details if needed
+        bibEntries: true, // Include related bib entries if needed
+      },
+    });
+    // logger.verbose('Fetched projects:', projects);
+    return { project };
+  } catch (error) {
+    logger.error('DB error:', error);
+    return { error: 'Database error' };
+  }
+}
+
 export async function getProjects(
   {
     limitToUser,
@@ -192,6 +216,47 @@ export async function getProjects(
   }
 }
 
+export async function deleteProject(projectId: number): Promise<{
+  message?: string;
+  error?: string;
+}> {
+  const { userId } = await auth();
+  if (!userId) {
+    return { error: 'User not found' };
+  }
+  logger.verbose(`deletion request on project ${projectId} by ${userId}`);
+  const isEditor = await canEdit(projectId);
+  const userIsAdmin = await isAdmin();
+
+  if (!isEditor) {
+    logger.verbose(`deletion permission denied on ${projectId} by ${userId}`);
+    // unauthorized();
+    return { error: 'Delete permission denied' };
+  }
+
+  // if admin, don't limit them to deleting own project
+  try {
+    if (userIsAdmin) {
+      await db.project.delete({
+        where: {
+          id: projectId,
+        },
+      });
+      return { message: 'Deleted project' };
+    } else {
+      await db.project.delete({
+        where: {
+          id: projectId,
+          userId,
+        },
+      });
+      return { message: 'Deleted project' };
+    }
+  } catch (error) {
+    logger.verbose('DB error:', error);
+    return { error: 'Database error' };
+  }
+}
 // export async function duplicateProject(
 //   projectId: number,
 //   newOwnerId: string

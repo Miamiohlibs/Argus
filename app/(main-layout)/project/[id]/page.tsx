@@ -1,4 +1,4 @@
-import getProject from '@/app/actions/getProject';
+import { getProject } from '@/app/actions/projectActions';
 import RecordSearchButton from '@/components/RecordSearchButton';
 import { checkUser } from '@/lib/checkUser';
 import getEntries from '@/app/actions/getEntries';
