@@ -8,7 +8,6 @@ import type { Prisma } from '@prisma/client';
 import { ProjectData } from '@/types/ProjectData';
 import type { ProjectWithUserAndBib } from '@/types/ProjectWithUserAndBib';
 import entryAction from './addEntry';
-import EntryActionData from '@/types/EntryActionData';
 import { ItemEntry } from '@prisma/client';
 
 type ProjectWithUser = Prisma.ProjectGetPayload<{
@@ -295,35 +294,6 @@ export async function duplicateProject(projectId: string) {
       return { error: 'Failed to create duplicated project' };
     }
 
-    //   project.bibEntries.map(async (entry) => {
-    //     await db.bibEntry.create({
-    //       data: {
-    //         ...entry,
-    //         id: undefined,
-    //         projectId: duplicatedProject.id,
-    //       },
-    //     });
-
-    //     const items = await db.bibEntry.findUnique({
-    //       where: {
-    //         id: entry.id,
-    //       },
-    //       include: { items: true },
-    //     });
-    //     await Promise.all(
-    //       items.map(async (item) => {
-    //         await db.itemEntry.create({
-    //           data: {
-    //             ...item,
-    //             id: undefined,
-    //             entryId: entry.id,
-    //           },
-    //         });
-    //       })
-    //     );
-    //   })
-    // );
-
     const bibEntries = await db.bibEntry.findMany({
       where: {
         projectId: project.id,
@@ -342,7 +312,6 @@ export async function duplicateProject(projectId: string) {
       if (bibDataAsAny.almaId && bibDataAsAny.almaIdType == 'mms_id') {
         bibDataAsAny.mms_id = bibDataAsAny.almaId;
       }
-      const bibData: Record<string, FormDataEntryValue> = { ...bibDataAsAny };
       const itemDataAsAny: any[] = entry.items.map((item) => ({ ...item }));
       itemDataAsAny.map((entry) => {
         delete entry.id;
