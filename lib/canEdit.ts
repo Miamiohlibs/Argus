@@ -1,6 +1,6 @@
 import logger from '@/lib/logger';
 import checkAccess from './checkAccess';
-import getProject from '@/app/actions/getProject';
+import { getProject } from '@/app/actions/projectActions';
 import { currentUser } from '@clerk/nextjs/server';
 import type { ProjectWithUserAndBib } from '@/types/ProjectWithUserAndBib';
 

@@ -16,7 +16,12 @@ const Header = async () => {
   const user = await checkUser();
 
   return (
-    <Navbar bg="dark" variant="dark" expand="lg" className="px-2">
+    <Navbar
+      bg={process.env.NEXT_PUBLIC_NAV_COLOR || 'dark'}
+      variant="dark"
+      expand="lg"
+      className="px-2"
+    >
       <NavbarBrand as={NextLink} href="/">
         <Image
           src={`${process.env.NEXT_PUBLIC_APP_BASEPATH}/peacock-logo.png`}
@@ -24,7 +29,9 @@ const Header = async () => {
           width={40}
           height={40}
         />
-        <span className="ps-2">Watson/Argus</span>
+        <span className="ps-2">
+          Watson/Argus {process.env.NEXT_PUBLIC_NAV_LABEL || ''}
+        </span>
       </NavbarBrand>
       <Nav className="ms-auto me-3 text-light">
         <NavEditor />

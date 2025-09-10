@@ -1,7 +1,7 @@
 import logger from '@/lib/logger';
 import { checkUser } from '@/lib/checkUser';
 import canEdit from '@/lib/canEdit';
-import getProject from '@/app/actions/getProject';
+// import {getProject} from '@/app/actions/projectActions';
 
 interface ServerDataFetcherProps {
   projectId: string;

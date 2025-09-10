@@ -21,9 +21,9 @@ export default async function EditEntryPage({
   if (existingEntryError) {
     return <>Unable to retrieve existing entry</>;
   }
-  const projectId = existingEntry?.projectId;
+  const projectId = existingEntry?.projectId ?? 0;
   const mmsId = existingEntry?.almaId ?? '';
-  const { nonOwnerAlert } = await nonOwnerEditor(parseInt(id, 10));
+  const { nonOwnerAlert, canEditBool } = await nonOwnerEditor(projectId);
   const {
     data: holdingsData,
     error: holdingsError,
@@ -33,7 +33,7 @@ export default async function EditEntryPage({
   if (holdingsError) {
     return <>Error refreshing catalog data</>;
   }
-  const canEditBool: boolean = await canEdit(projectId?.toString() ?? 0);
+
   return (
     <>
       {nonOwnerAlert && <NonOwnerAlert />}

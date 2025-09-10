@@ -1,17 +1,18 @@
 // app/pdf/MultipagePdf.tsx
-import { Document, StyleSheet } from '@react-pdf/renderer';
+import { Document, Page, StyleSheet } from '@react-pdf/renderer';
 import { RequestSlipProps } from '@/types/RequestSlipProps';
-import { RequestSlipPage } from './RequestSlipPage';
+import { RequestSlipHalfPage } from './RequestSlipHalfPage';
 
 // This component is called by: app/api/slipsPdf/[...slub]/route.tsx
 // That is where the data comes from
-// This component repeatedly calls RequestSlipPage to print each page
+// This component repeatedly calls RequestSlipHalfPage to print each page
 
 const styles = StyleSheet.create({
-  page: {
+  halfpage: {
     padding: 20,
     fontSize: 9,
     fontFamily: 'Times-Roman',
+    height: '50%',
   },
   header: {
     textAlign: 'center',
@@ -79,14 +80,37 @@ const styles = StyleSheet.create({
 });
 
 export const MultiPagePdf = ({ books }: { books: RequestSlipProps[] }) => {
+  // get pairs of books to pass to <RequestSlipPage />
+  const pairsArr = books
+    .map((element, index, array) => {
+      if (index % 2 == 0) {
+        if (array[index + 1] !== undefined) {
+          return [element, array[index + 1]];
+        } else {
+          return [element];
+        }
+      } else {
+        return null;
+      }
+    })
+    .filter((entry) => Array.isArray(entry));
+
   return (
     <Document>
-      {books &&
+      {/* {books &&
         books.map((book, i) => {
           return (
-            <RequestSlipPage key={`book-${i}`} {...book} styles={styles} />
+            <RequestSlipHalfPage key={`book-${i}`} {...book} styles={styles} />
           );
-        })}
+        })} */}
+      {pairsArr.map((pair, i) => {
+        return (
+          <Page key={`page-${i}`} size="LETTER">
+            <RequestSlipHalfPage {...pair[0]} styles={styles} />
+            {pair[1] && <RequestSlipHalfPage {...pair[1]} styles={styles} />}
+          </Page>
+        );
+      })}
     </Document>
   );
 };
