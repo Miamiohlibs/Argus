@@ -3,8 +3,9 @@ import logger from '@/lib/logger';
 import { db } from '@/lib/db';
 import { auth } from '@clerk/nextjs/server';
 import { isAdmin } from '@/lib/canEdit';
+import { updateProjectLastUpdated } from './projectActions';
 
-async function deleteProject(entryId: string): Promise<{
+async function deleteEntry(entryId: string): Promise<{
   message?: string;
   error?: string;
 }> {
@@ -56,4 +57,4 @@ async function deleteProject(entryId: string): Promise<{
   }
 }
 
-export default deleteProject;
+export default deleteEntry;
