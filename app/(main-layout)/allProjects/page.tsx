@@ -11,11 +11,11 @@ const AllProjectsPage = async () => {
   const isEditor = await isEditorOrAbove();
 
   return (
-    <main>
-      <h2>All Projects</h2>
+    <>
+      <h1 className="h2">All Projects</h1>
       {isEditor && <CreateProjectButton />}
       <ProjectsTable limitToUser={false} user={user} />
-    </main>
+    </>
   );
 };
 

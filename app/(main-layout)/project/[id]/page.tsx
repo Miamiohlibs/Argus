@@ -30,7 +30,7 @@ export default async function ProjectPage({
 
   return (
     <>
-      <h1>{project?.title}</h1>
+      <h1 className="h2">{project?.title}</h1>
       <p>Owner: {project?.user.name}</p>
       {/* <p>Is Basic(lib): {isBasicUserBool.toString()}</p>
       <p>Is Admin(lib): {isOwnerBool.toString()}</p>

@@ -18,11 +18,11 @@ const Home = async () => {
     redirect('/allProjects');
   }
   return (
-    <main>
-      <h2>{clerkUserInfo.firstName}&apos;s Projects</h2>
+    <>
+      <h1 className="h2">{clerkUserInfo.firstName}&apos;s Projects</h1>
       <div className="mb-3">{isEditor && <CreateProjectButton />}</div>
       <ProjectsTable limitToUser={true} user={user} />
-    </main>
+    </>
   );
 };
 

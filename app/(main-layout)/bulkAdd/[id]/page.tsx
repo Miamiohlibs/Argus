@@ -18,7 +18,7 @@ export default async function BulkAddPage({
   if (project) {
     return (
       <>
-        <h1>Bulk Add Items: {project?.title}</h1>
+        <h1 className="h2">Bulk Add Items: {project?.title}</h1>
         <BackToProjectButton projectId={parseInt(id)} />
         <BulkAddForm projectId={id} />
       </>
