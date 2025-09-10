@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.5.0 - 2025-09-10
+
+### Added
+
+- adds bulk-add feature
+- adds option to display different colors and/or logo text in header (used for visually distinguishing between dev, test, and prod environments). uses new .env variables: NEXT_PUBLIC_NAV_COLOR, NEXT_PUBLIC_NAV_LABEL
+- adds a "duplicate list" feature to copy a list from another user (or your own)
+
+### Changed
+
+- bumps "next" to 15.5.2
+- admins can delete any project
+- print two slips per page instead of one
+- project "Updated" date will be updated on changes to list contents (add/delete/edit BibEntry or ItemEntry), not only when the project entry itself is updated
+- moved getProject, getProjects, deleteProject actions to projectActions file
+
+### Fixed
+
+- fixes footer placement
+- fixed bugs incorrectly showing nonOwnerAlert to admin's using the editEntry or customEntry edit features
+
 ## 0.4.0 - 2025-09-05
 
 ### Added
