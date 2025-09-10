@@ -339,6 +339,9 @@ export async function duplicateProject(projectId: string) {
       delete bibDataAsAny.items;
       delete bibDataAsAny.id;
       bibDataAsAny.project_id = duplicatedProject.id.toString();
+      if (bibDataAsAny.almaId && bibDataAsAny.almaIdType == 'mms_id') {
+        bibDataAsAny.mms_id = bibDataAsAny.almaId;
+      }
       const bibData: Record<string, FormDataEntryValue> = { ...bibDataAsAny };
       const itemDataAsAny: any[] = entry.items.map((item) => ({ ...item }));
       itemDataAsAny.map((entry) => {
