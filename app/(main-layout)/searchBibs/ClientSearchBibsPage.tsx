@@ -35,7 +35,7 @@ const ClientSearchBibsPage = ({
   return (
     <>
       {nonOwnerAlert && <NonOwnerAlert />}
-      <h1>Search Bibs</h1>
+      <h1 className="h2">Search Alma Catalog for Item</h1>
       <BackToProjectButton projectId={clientProjectId} />
       <RecordSearchForm
         projectId={clientProjectId}

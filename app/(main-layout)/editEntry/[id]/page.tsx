@@ -37,7 +37,7 @@ export default async function EditEntryPage({
   return (
     <>
       {nonOwnerAlert && <NonOwnerAlert />}
-      <h1>
+      <h1 className="h2">
         Editing: <i>{holdingsData && holdingsData.bib_data.title}</i>
       </h1>
       <Link href={`/project/${projectId}`}>

@@ -1,6 +1,6 @@
 {
   "name": "watson-argus",
-  "version": "0.6.0-dev",
+  "version": "0.5.1-dev",
   "private": true,
   "type": "module",
   "scripts": {

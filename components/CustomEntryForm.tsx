@@ -134,7 +134,7 @@ const CustomEntryForm = ({
   const formRef = useRef<HTMLFormElement>(null);
   return (
     <>
-      {<h1>{pageHeaderText}</h1>}
+      {<h1 className="h2">{pageHeaderText}</h1>}
       {projectId && <BackToProjectButton projectId={projectId} />}
 
       <Form ref={formRef} onSubmit={handleSubmit}>
