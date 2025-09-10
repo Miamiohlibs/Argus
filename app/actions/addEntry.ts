@@ -9,9 +9,9 @@ const entryAction = async ({
   actionType,
   existingEntryId,
 }: EntryActionData) => {
-  console.log('bibData', bibData);
-  console.log('itemData', itemData);
-  console.log('actionType', actionType);
+  // console.log('bibData', bibData);
+  // console.log('itemData', itemData);
+  // console.log('actionType', actionType);
   try {
     const url =
       bibData.mms_id && process.env.ALMA_PERMALINK_BASEURL
@@ -29,7 +29,7 @@ const entryAction = async ({
     if (bibData.title === undefined && bibData.itemTitle !== undefined) {
       bibData.title = bibData.itemTitle;
     }
-    console.log('bibData.project_id', bibData.project_id);
+    // console.log('bibData.project_id', bibData.project_id);
     const projectId = parseInt(
       (bibData.project_id as string).replace(/"/g, '')
     );

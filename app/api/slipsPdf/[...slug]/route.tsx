@@ -5,7 +5,7 @@ import { renderToStream } from '@react-pdf/renderer';
 import { RequestSlipProps } from '@/types/RequestSlipProps';
 import { MultiPagePdf } from '@/components/MultipagePdf';
 import getEntries from '@/app/actions/getEntries';
-import getProject from '@/app/actions/getProject';
+import { getProject } from '@/app/actions/projectActions';
 import filenamify from 'filenamify';
 import { checkUser } from '@/lib/checkUser';
 

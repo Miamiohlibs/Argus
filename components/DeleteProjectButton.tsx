@@ -1,7 +1,7 @@
 'use client';
 import { Project } from '@prisma/client';
 import { toast } from 'react-toastify';
-import deleteProject from '@/app/actions/deleteProject';
+import { deleteProject } from '@/app/actions/projectActions';
 import { Button } from 'react-bootstrap';
 // import { useRouter } from 'next/navigation';
 import { useState } from 'react';
