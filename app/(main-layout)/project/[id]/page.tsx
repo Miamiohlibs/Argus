@@ -60,7 +60,9 @@ export default async function ProjectPage({
         <p>No bibliography entries found.</p>
       )}
       <p className="mt-5">Notes: {project?.notes}</p>
-      <pre>{JSON.stringify(bibEntries.data?.entries, null, 2)}</pre>
+      {process.env.NEXT_PUBLIC_IS_DEV_ENV && (
+        <pre>{JSON.stringify(bibEntries.data?.entries, null, 2)}</pre>
+      )}
     </>
   );
 }

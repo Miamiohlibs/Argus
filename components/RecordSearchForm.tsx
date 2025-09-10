@@ -85,7 +85,9 @@ const RecordSearchForm = ({
       ) : (
         <p>No Results Found</p>
       )} */}
-      <pre>{JSON.stringify(results, null, 2)}</pre>
+      {process.env.NEXT_PUBLIC_IS_DEV_ENV && (
+        <pre>{JSON.stringify(results, null, 2)}</pre>
+      )}
     </>
   );
 };
