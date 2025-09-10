@@ -22,12 +22,13 @@ async function deleteEntry(entryId: string): Promise<{
   // if admin, allow delete regardless of ownership
   try {
     if (userIsAdmin) {
-      await db.bibEntry.delete({
+      const deleteResponse = await db.bibEntry.delete({
         where: {
           id: entryId,
           // userId,
         },
       });
+      await updateProjectLastUpdated(deleteResponse.projectId);
     } else {
       // require user == owner
       // find out if project has user
@@ -45,9 +46,11 @@ async function deleteEntry(entryId: string): Promise<{
       }
 
       //delete entry if no exception throw (if user owns project)
-      await db.bibEntry.delete({
+      const deleteResponse = await db.bibEntry.delete({
         where: { id: entryId },
       });
+
+      await updateProjectLastUpdated(deleteResponse.projectId);
     }
 
     return { message: 'Deleted entry' };
