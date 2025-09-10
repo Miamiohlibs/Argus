@@ -338,6 +338,7 @@ export async function duplicateProject(projectId: string) {
       const bibDataAsAny: any = { ...entry };
       delete bibDataAsAny.items;
       delete bibDataAsAny.id;
+      bibDataAsAny.total_item_count = bibDataAsAny.totalItems;
       bibDataAsAny.project_id = duplicatedProject.id.toString();
       if (bibDataAsAny.almaId && bibDataAsAny.almaIdType == 'mms_id') {
         bibDataAsAny.mms_id = bibDataAsAny.almaId;
@@ -358,7 +359,8 @@ export async function duplicateProject(projectId: string) {
     });
 
     await Promise.all(objToAdd.map((entry) => entryAction(entry)));
-    console.log('First item to add', JSON.stringify(objToAdd[0], null, 2));
+    console.log('*** objToAdd', JSON.stringify(objToAdd, null, 2));
+    // console.log('First item to add', JSON.stringify(objToAdd[0], null, 2));
 
     return {
       message: 'Project duplicated successfully',
