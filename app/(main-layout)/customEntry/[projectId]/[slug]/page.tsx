@@ -43,7 +43,7 @@ export default async function CustomEntryPage({
     ) {
       return (
         <>
-          <NonOwnerAlert />
+          {nonOwnerAlert && <NonOwnerAlert />}
           <CustomEntryForm
             projectId={projectId}
             existingEntry={existingEntry}

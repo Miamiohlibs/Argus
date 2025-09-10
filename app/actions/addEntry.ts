@@ -2,6 +2,7 @@
 import logger from '@/lib/logger';
 import { db } from '@/lib/db';
 import EntryActionData from '@/types/EntryActionData';
+import { updateProjectLastUpdated } from '@/app/actions/projectActions';
 
 const entryAction = async ({
   bibData,
@@ -110,6 +111,7 @@ const entryAction = async ({
         },
       });
       logger.verbose('Entry added successfully:', response);
+      await updateProjectLastUpdated(projectId);
     } else {
       // Update existing entry
       if (!existingEntryId) {
@@ -140,6 +142,7 @@ const entryAction = async ({
             items: true,
           },
         });
+        await updateProjectLastUpdated(projectId);
 
         return updatedEntry;
       });

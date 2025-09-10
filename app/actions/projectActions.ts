@@ -114,6 +114,14 @@ export async function createProject(
   }
 }
 
+export async function updateProjectLastUpdated(projectId: number) {
+  console.log('*** updating project ', projectId);
+  const updatedProject = await db.project.update({
+    where: { id: projectId },
+    data: { updatedAt: new Date() },
+  });
+}
+
 export async function updateProject(
   prevState: unknown,
   formData: FormData

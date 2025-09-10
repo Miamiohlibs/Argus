@@ -3,8 +3,9 @@ import logger from '@/lib/logger';
 import { db } from '@/lib/db';
 import { auth } from '@clerk/nextjs/server';
 import { isAdmin } from '@/lib/canEdit';
+import { updateProjectLastUpdated } from './projectActions';
 
-async function deleteProject(entryId: string): Promise<{
+async function deleteEntry(entryId: string): Promise<{
   message?: string;
   error?: string;
 }> {
@@ -21,12 +22,13 @@ async function deleteProject(entryId: string): Promise<{
   // if admin, allow delete regardless of ownership
   try {
     if (userIsAdmin) {
-      await db.bibEntry.delete({
+      const deleteResponse = await db.bibEntry.delete({
         where: {
           id: entryId,
           // userId,
         },
       });
+      await updateProjectLastUpdated(deleteResponse.projectId);
     } else {
       // require user == owner
       // find out if project has user
@@ -44,9 +46,11 @@ async function deleteProject(entryId: string): Promise<{
       }
 
       //delete entry if no exception throw (if user owns project)
-      await db.bibEntry.delete({
+      const deleteResponse = await db.bibEntry.delete({
         where: { id: entryId },
       });
+
+      await updateProjectLastUpdated(deleteResponse.projectId);
     }
 
     return { message: 'Deleted entry' };
@@ -56,4 +60,4 @@ async function deleteProject(entryId: string): Promise<{
   }
 }
 
-export default deleteProject;
+export default deleteEntry;
