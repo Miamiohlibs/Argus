@@ -4,7 +4,7 @@ import logger from '@/lib/logger';
 import { Page, Text, View } from '@react-pdf/renderer';
 import type { RequestSlipProps } from '@/types/RequestSlipProps';
 
-export const RequestSlipPage = ({
+export const RequestSlipHalfPage = ({
   author,
   title,
   date,
@@ -36,7 +36,7 @@ export const RequestSlipPage = ({
       <Text></Text>
     );
   return (
-    <Page size="LETTER" style={styles.page}>
+    <View style={styles.halfpage}>
       {/* Header */}
       <View style={styles.header}>
         <Text style={styles.title}>Miami University Libraries</Text>
@@ -246,6 +246,6 @@ export const RequestSlipPage = ({
           </View>
         </View>
       </View>
-    </Page>
+    </View>
   );
 };

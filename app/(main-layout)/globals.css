@@ -8,10 +8,14 @@
 
 body {
   background-color: #f7f7f7;
-  min-height: 100vh;
+  /* min-height: 100vh; */
   margin: 0;
   font-family: 'Lato', sans-serif;
   /* padding-bottom: 2em;  */
+}
+main{
+  min-height: 80vh;
+
 }
 footer { 
   /* position: fixed; */

@@ -1,14 +1,8 @@
 'use server';
 import logger from '@/lib/logger';
 import { db } from '@/lib/db';
-import { ItemEntry } from '@prisma/client';
-
-interface EntryActionData {
-  bibData: Record<string, FormDataEntryValue>;
-  itemData: ItemEntry[];
-  actionType: 'add' | 'edit';
-  existingEntryId?: string;
-}
+import EntryActionData from '@/types/EntryActionData';
+import { updateProjectLastUpdated } from '@/app/actions/projectActions';
 
 const entryAction = async ({
   bibData,
@@ -16,9 +10,9 @@ const entryAction = async ({
   actionType,
   existingEntryId,
 }: EntryActionData) => {
-  console.log('bibData', bibData);
-  console.log('itemData', itemData);
-  console.log('actionType', actionType);
+  // console.log('bibData', bibData);
+  // console.log('itemData', itemData);
+  // console.log('actionType', actionType);
   try {
     const url =
       bibData.mms_id && process.env.ALMA_PERMALINK_BASEURL
@@ -36,7 +30,7 @@ const entryAction = async ({
     if (bibData.title === undefined && bibData.itemTitle !== undefined) {
       bibData.title = bibData.itemTitle;
     }
-    console.log('bibData.project_id', bibData.project_id);
+    // console.log('bibData.project_id', bibData.project_id);
     const projectId = parseInt(
       (bibData.project_id as string).replace(/"/g, '')
     );
@@ -117,6 +111,7 @@ const entryAction = async ({
         },
       });
       logger.verbose('Entry added successfully:', response);
+      await updateProjectLastUpdated(projectId);
     } else {
       // Update existing entry
       if (!existingEntryId) {
@@ -147,6 +142,7 @@ const entryAction = async ({
             items: true,
           },
         });
+        await updateProjectLastUpdated(projectId);
 
         return updatedEntry;
       });
@@ -154,14 +150,14 @@ const entryAction = async ({
       logger.verbose('Entry updated successfully:', response);
     }
 
-    return { data: response, error: null };
+    return { data: response, error: undefined };
   } catch (error) {
     logger.error(
       `Error ${actionType === 'add' ? 'adding' : 'updating'} entry:`,
       error
     );
     return {
-      data: null,
+      data: undefined,
       error: `Failed to ${actionType === 'add' ? 'add' : 'update'} entry: ${
         error instanceof Error ? error.message : 'Unknown error'
       }`,

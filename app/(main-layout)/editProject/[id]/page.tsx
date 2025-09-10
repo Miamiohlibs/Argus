@@ -1,7 +1,7 @@
 import ProjectForm from '@/components/ProjectForm';
 import { checkUser } from '@/lib/checkUser';
 import { updateProject } from '@/app/actions/projectActions';
-import getProject from '@/app/actions/getProject';
+import { getProject } from '@/app/actions/projectActions';
 // import { Project } from '@prisma/client';
 import canEdit, { nonOwnerEditor } from '@/lib/canEdit';
 import { redirect } from 'next/navigation';

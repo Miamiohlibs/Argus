@@ -28,6 +28,11 @@ const RecordSearchButton = ({
           Add Custom Item
         </Button>
       </Link>
+      <Link href={`/bulkAdd/${projectId.toString()}`} className={className}>
+        <Button variant="primary" size="sm">
+          Bulk Add Items
+        </Button>
+      </Link>
     </>
   );
 };

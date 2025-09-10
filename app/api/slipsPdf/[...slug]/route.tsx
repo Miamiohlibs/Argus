@@ -5,16 +5,16 @@ import { renderToStream } from '@react-pdf/renderer';
 import { RequestSlipProps } from '@/types/RequestSlipProps';
 import { MultiPagePdf } from '@/components/MultipagePdf';
 import getEntries from '@/app/actions/getEntries';
-import getProject from '@/app/actions/getProject';
+import { getProject } from '@/app/actions/projectActions';
 import filenamify from 'filenamify';
 import { checkUser } from '@/lib/checkUser';
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: Promise<{ slug: string }> }
+  { params }: { params: Promise<{ slug: string[] }> }
 ) {
   const { slug } = await params;
-  const id = slug; // why this two-step? idk but it seemed necessary to build
+  const id = slug[0]; // why this two-step? idk but it seemed necessary to build
   const { data } = await getEntries(id);
   const { project } = await getProject({ id });
   const user = await checkUser();

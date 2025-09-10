@@ -6,7 +6,7 @@ import { Prisma } from '@prisma/client';
 // import { User as ClerkUser } from '@clerk/nextjs';
 import Link from 'next/link';
 import { Button } from 'react-bootstrap';
-import getProjects from '@/app/actions/getProjects';
+import { getProjects } from '@/app/actions/projectActions';
 import DeleteProjectButton from './DeleteProjectButton';
 import { User } from '@prisma/client';
 // import canEdit from '@/lib/canEdit';
