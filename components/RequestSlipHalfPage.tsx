@@ -1,7 +1,7 @@
 // app/pdf/RequestSlipPage.tsx
 // called by ./MultipagePdf with one bib's data
 import logger from '@/lib/logger';
-import { Page, Text, View } from '@react-pdf/renderer';
+import { Text, View } from '@react-pdf/renderer';
 import type { RequestSlipProps } from '@/types/RequestSlipProps';
 
 export const RequestSlipHalfPage = ({

@@ -130,7 +130,7 @@ export default function UserTable({
   ];
   return (
     <DataTable
-      title="User List"
+      // title="User List"
       columns={columns}
       data={filteredUsers}
       progressPending={loading}
@@ -142,6 +142,7 @@ export default function UserTable({
         <input
           type="text"
           placeholder="Search by name, email, or role"
+          aria-label="Search users by name, email, or role"
           value={filterText}
           onChange={(e) => setFilterText(e.target.value)}
           className="p-2 border rounded w-full md:w-1/3"

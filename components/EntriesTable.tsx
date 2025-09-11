@@ -191,7 +191,8 @@ export default function EntriesTable({
       subHeaderComponent={
         <input
           type="text"
-          placeholder="Search projects..."
+          placeholder="Search entries..."
+          aria-label="Search entries"
           value={filterText}
           onChange={(e) => setFilterText(e.target.value)}
           className="p-2 border rounded w-full md:w-1/3"

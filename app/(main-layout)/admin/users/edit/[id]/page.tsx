@@ -20,9 +20,9 @@ export default async function UserEditPage({
       <Link href="/admin/users" className="btn btn-secondary mb-4">
         Back to Users
       </Link>
-      <h1>Edit User Permissions</h1>
+      <h1 className="h2">Edit User Permissions</h1>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-        <h2>{user.name}</h2>
+        <h2 className="h3">{user.name}</h2>
         <p>Email: {user.email}</p>
         <UserEditForm user={user} />
       </div>
