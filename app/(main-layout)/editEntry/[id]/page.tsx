@@ -6,6 +6,8 @@ import BibResultsWrapper from '@/components/BibResultsWrapper';
 import { nonOwnerEditor } from '@/lib/canEdit';
 import NonOwnerAlert from '@/components/NonOwnerAlert';
 import ProjectButtons from '@/components/ProjectButtons';
+import ProjectInfoBlock from '@/components/ProjectInfoBlock';
+import { getProject } from '@/app/actions/projectActions';
 
 export default async function EditEntryPage({
   params,
@@ -21,6 +23,8 @@ export default async function EditEntryPage({
     return <>Unable to retrieve existing entry</>;
   }
   const projectId = existingEntry?.projectId ?? 0;
+  const { project } = await getProject({ id: projectId.toString() });
+
   const mmsId = existingEntry?.almaId ?? '';
   const { nonOwnerAlert, canEditBool } = await nonOwnerEditor(projectId);
   const {
@@ -42,7 +46,9 @@ export default async function EditEntryPage({
         canEdit={canEditBool}
         onPage="editEntry"
         projectId={projectId}
+        divClass="mb-2"
       />
+      {project && <ProjectInfoBlock project={project} />}
       {/* Note : this section duplicates part of RecordSearchForm -- we should dedup the code */}
       <BibResultsWrapper
         projectId={projectId}
