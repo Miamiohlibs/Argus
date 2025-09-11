@@ -1,7 +1,9 @@
 import BulkAddForm from '@/components/BulkAddForm';
 import { getProject } from '@/app/actions/projectActions';
 import { ProjectWithUserAndBib } from '@/types/ProjectWithUserAndBib';
-import BackToProjectButton from '@/components/BackToProjectButton';
+import ProjectButtons from '@/components/ProjectButtons';
+import canEdit, { nonOwnerEditor } from '@/lib/canEdit';
+import NonOwnerAlert from '@/components/NonOwnerAlert';
 
 export default async function BulkAddPage({
   params,
@@ -15,11 +17,18 @@ export default async function BulkAddPage({
     error?: string;
   } = await getProject({ id });
   const { project, error } = projectResponse;
+  const { canEditBool, nonOwnerAlert } = await nonOwnerEditor(parseInt(id));
+
   if (project) {
     return (
       <>
-        <h1>Bulk Add Items: {project?.title}</h1>
-        <BackToProjectButton projectId={parseInt(id)} />
+        <h1 className="h2">Bulk Add Items: {project?.title}</h1>
+        <ProjectButtons
+          projectId={parseInt(id)}
+          onPage="bulkAdd"
+          canEdit={canEditBool}
+          divClass="mb-3"
+        />
         <BulkAddForm projectId={id} />
       </>
     );

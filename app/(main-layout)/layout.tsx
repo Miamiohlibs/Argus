@@ -27,8 +27,13 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en">
         <body className={`${roboto.className}`}>
+          <div id="skiplink" className="visually-hidden-focusable">
+            <a href="#main-content">Skip to Main Content</a>
+          </div>
           <Header />
-          <main className="container-fluid px-4 py-3">{children}</main>
+          <main className="container-fluid px-4 py-3" id="main-content">
+            {children}
+          </main>
           <ToastContainer />
           <Footer />
         </body>

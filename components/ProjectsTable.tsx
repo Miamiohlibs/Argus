@@ -177,6 +177,7 @@ export default function ProjectsTable({
           type="text"
           placeholder="Search projects..."
           value={filterText}
+          aria-label="Search projects"
           onChange={(e) => setFilterText(e.target.value)}
           className="p-2 border rounded w-full md:w-1/3"
         />
