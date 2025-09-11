@@ -32,7 +32,8 @@ NEXT_PUBLIC_USE_PRIMO=true
 PRIMO_QUERYSTRING=tab=Everything&scope=MyInst_and_CI&vid=01OHIOLINK_MU:MU #use your scope and vid
 PRIMO_API_KEY=
 NEXT_PUBLIC_NAV_COLOR=primary #suggested: primary, dark, success (bootstrap theme colors suitable for light text)
-NEXT_PUBLIC_NAV_LABEL= This text will be appended to the Argus logo text
+NEXT_PUBLIC_NAV_LABEL= #This text will be appended to the Argus logo text
+NEXT_PUBLIC_IS_DEV_ENV=false #when true, will display some ugly-useful JSON data on some results pages
 PORT=3333 # or whatever port you want to use
 NODE_ENV=development #or production -- note: production required to 'npm run build'; doesn't build under developement
 ```
