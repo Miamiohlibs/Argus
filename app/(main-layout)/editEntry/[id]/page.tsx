@@ -7,6 +7,7 @@ import { Button } from 'react-bootstrap';
 import Link from 'next/link';
 import canEdit, { nonOwnerEditor } from '@/lib/canEdit';
 import NonOwnerAlert from '@/components/NonOwnerAlert';
+import ProjectButtons from '@/components/ProjectButtons';
 
 export default async function EditEntryPage({
   params,
@@ -40,9 +41,11 @@ export default async function EditEntryPage({
       <h1 className="h2">
         Editing: <i>{holdingsData && holdingsData.bib_data.title}</i>
       </h1>
-      <Link href={`/project/${projectId}`}>
-        <Button variant="outline-secondary">Back to Project</Button>
-      </Link>
+      <ProjectButtons
+        canEdit={canEditBool}
+        onPage="editEntry"
+        projectId={projectId}
+      />
       {/* Note : this section duplicates part of RecordSearchForm -- we should dedup the code */}
       <BibResultsWrapper
         projectId={projectId}
