@@ -47,6 +47,22 @@ footer {
   color: #fff;
 }
 
+.navbar.bg-primary .nav-link:focus,
+.navbar.bg-success .nav-link:focus
+{
+    outline: 1px auto #fff;
+        /* outline-offset: 2px; */
+
+}
+
+.navbar button:focus, 
+.navbar.bg-primary button:focus, .navbar.bg-primary button:focus-visible
+.navbar.bg-success button:focus, .navbar.bg-success button:focus-visible
+{
+    outline: 2px auto #fff;
+    outline-offset: 2px;
+}
+
 .navbar.bg-primary  .nav-link:hover,
 .navbar.bg-primary  .navbar-brand:hover,
 .navbar.bg-success  .nav-link:hover,
@@ -54,4 +70,16 @@ footer {
 {
   color: #dddddd; /* Slightly darker white for hover state */
   text-decoration: underline;
+  
+}
+.guest button:focus, .guest button:focus-visible {
+  outline: 2px solid yellow;
+  outline-offset: 2px;
+}
+
+.rdt_TableCol_Sortable:focus-visible {
+  font-weight: bold !important;
+  text-decoration: underline;
+  color: blue;
+  opacity: 1 !important;
 }
