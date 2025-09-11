@@ -4,7 +4,8 @@ import { ProjectWithUserAndBib } from '@/types/ProjectWithUserAndBib';
 import ProjectButtons from '@/components/ProjectButtons';
 import canEdit, { nonOwnerEditor } from '@/lib/canEdit';
 import NonOwnerAlert from '@/components/NonOwnerAlert';
-
+import ProjectInfoBlock from '@/components/ProjectInfoBlock';
+import { unauthorized } from 'next/navigation';
 export default async function BulkAddPage({
   params,
 }: {
@@ -19,9 +20,13 @@ export default async function BulkAddPage({
   const { project, error } = projectResponse;
   const { canEditBool, nonOwnerAlert } = await nonOwnerEditor(parseInt(id));
 
+  if (!canEditBool) {
+    return unauthorized();
+  }
   if (project) {
     return (
       <>
+        {nonOwnerAlert && <NonOwnerAlert />}
         <h1 className="h2">Bulk Add Items: {project?.title}</h1>
         <ProjectButtons
           projectId={parseInt(id)}
@@ -29,6 +34,7 @@ export default async function BulkAddPage({
           canEdit={canEditBool}
           divClass="mb-3"
         />
+        <ProjectInfoBlock id={id} />
         <BulkAddForm projectId={id} />
       </>
     );
