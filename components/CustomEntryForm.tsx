@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import { EntryWithItems } from '@/types/EntryWithItems';
 import { Form, InputGroup, Button } from 'react-bootstrap';
 import { BibEntry, ItemEntry } from '@prisma/client';
-import BackToProjectButton from '@/components/BackToProjectButton';
+import ProjectButtons from '@/components/ProjectButtons';
 
 interface CustomEntryFormProps {
   projectId?: number;
@@ -56,22 +56,6 @@ const CustomEntryForm = ({
           : value,
       ])
     );
-
-    // const itemsToSubmit: Record<string, FormDataEntryValue> = {
-    //   id: 'unknown',
-    //   description: formData.get('itemDescription') ?? '',
-    //   location: formData.get('itemLocation') ?? '',
-    //   location_name: formData.get('itemLocation') ?? '',
-    //   location_code: '',
-    //   call_number: formData.get('itemCallNumber') ?? '',
-    //   copy_id: formData.get('itemCopy') ?? '',
-    //   bibEntryId: 'unknown',
-    //   barcode: '',
-    //   box: formData.get('itemBox') ?? '',
-    //   folder: formData.get('itemFolder') ?? '',
-    //   ms: formData.get('itemMs') ?? '',
-    //   notes: formData.get('itemNotes') ?? '',
-    // };
 
     const safeItemData: {
       description: string | null;
@@ -135,7 +119,14 @@ const CustomEntryForm = ({
   return (
     <>
       {<h1 className="h2">{pageHeaderText}</h1>}
-      {projectId && <BackToProjectButton projectId={projectId} />}
+      {projectId && (
+        <ProjectButtons
+          projectId={projectId}
+          onPage="customEntry"
+          canEdit={editable}
+          divClass="mb-3"
+        />
+      )}
 
       <Form ref={formRef} onSubmit={handleSubmit}>
         {/* text fields for BibEntry and ItemEntry fields

@@ -17,11 +17,11 @@ export default async function CustomEntryPage({
   const paramsUnpacked = await params;
   const slugs = await paramsUnpacked.slug;
   const projectId = await paramsUnpacked.projectId;
-  console.log(`projectId: ${projectId}`);
-  console.log('slugs', slugs);
+  // console.log(`projectId: ${projectId}`);
+  // console.log('slugs', slugs);
   const existingEntryId: string = slugs ? slugs : 'new';
   // console.log(
-  //   `loading custom page with projectId: ${projectId} and existing: ${existingEntryId}`
+  // `loading custom page with projectId: ${projectId} and existing: ${existingEntryId}`;
   // );
   const { canEditBool, nonOwnerAlert } = await nonOwnerEditor(projectId);
 
