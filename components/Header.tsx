@@ -37,7 +37,7 @@ const Header = async () => {
           height={40}
         />
         <span className="ps-2">
-          Watson/Argus {process.env.NEXT_PUBLIC_NAV_LABEL || ''}
+          Argus {process.env.NEXT_PUBLIC_NAV_LABEL || ''}
         </span>
       </NavbarBrand>
       <Nav className="ms-auto me-3 text-light">
