@@ -1,14 +1,9 @@
 import { getProject } from '@/app/actions/projectActions';
-import RecordSearchButton from '@/components/RecordSearchButton';
 import { checkUser } from '@/lib/checkUser';
 import getEntries from '@/app/actions/getEntries';
 import EntriesTable from '@/components/EntriesTable';
-import Link from 'next/link';
-import { Button } from 'react-bootstrap';
-// import canEdit from '@/lib/canEdit';
 import canEdit from '@/lib/canEdit';
-// import { duplicateProject } from '@/app/actions/projectActions';
-import DuplicateProjectButton from '@/components/DuplicateProjectButton';
+import ProjectButtons from '@/components/ProjectButtons';
 
 export default async function ProjectPage({
   params,
@@ -37,17 +32,11 @@ export default async function ProjectPage({
       <p>Is Owner(lib): {isAdminBool.toString()}</p>
       <p>Can Edit(lib): {canEditBool.toString()}</p> */}
       <div className={'mb-3'} id={'project tools'}>
-        {canEditBool && (
-          <RecordSearchButton projectId={id} className={'me-2'} />
-        )}
-
-        <Link href={`/slips/${id}`}>
-          <Button variant="outline-primary" size="sm" className={'me-2'}>
-            Print Slips
-          </Button>
-        </Link>
-
-        {canEditBool && <DuplicateProjectButton id={id.toString()} />}
+        <ProjectButtons
+          projectId={parseInt(id)}
+          canEdit={canEditBool}
+          onPage="project"
+        />
       </div>
 
       {bibEntries && bibEntries.data?.entries && user ? (

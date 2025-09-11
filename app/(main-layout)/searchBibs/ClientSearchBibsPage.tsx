@@ -1,7 +1,7 @@
 'use client';
 import RecordSearchForm from '@/components/RecordSearchForm';
 import { useSearchParams } from 'next/navigation';
-import BackToProjectButton from '@/components/BackToProjectButton';
+import ProjectButtons from '@/components/ProjectButtons';
 import NonOwnerAlert from '@/components/NonOwnerAlert';
 
 interface ClientSearchBibsPageProps {
@@ -36,7 +36,12 @@ const ClientSearchBibsPage = ({
     <>
       {nonOwnerAlert && <NonOwnerAlert />}
       <h1 className="h2">Search Alma Catalog for Item</h1>
-      <BackToProjectButton projectId={clientProjectId} />
+      <ProjectButtons
+        projectId={clientProjectId}
+        onPage="searchBibs"
+        canEdit={userCanEditPage}
+        divClass={'mb-3'}
+      />
       <RecordSearchForm
         projectId={clientProjectId}
         userCanEditPage={userCanEditPage}

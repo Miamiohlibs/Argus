@@ -69,7 +69,16 @@ export async function nonOwnerEditor(projectId: number) {
   const canEditBool: boolean = await canEdit(projectId?.toString() ?? 0);
   const isOwnerBool: boolean = await isOwner(projectId?.toString() ?? 0);
   const nonOwnerAlert = canEditBool && !isOwnerBool;
-
+  // console.log(
+  //   'project:',
+  //   projectId,
+  //   '; canEdit:',
+  //   canEditBool,
+  //   '; isOwner:',
+  //   isOwnerBool,
+  //   '; nonOwnerAlert:',
+  //   nonOwnerAlert
+  // );
   return { canEditBool, isOwnerBool, nonOwnerAlert };
 }
 
