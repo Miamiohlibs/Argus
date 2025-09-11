@@ -10,7 +10,7 @@ const entryAction = async ({
   actionType,
   existingEntryId,
 }: EntryActionData) => {
-  // console.log('bibData', bibData);
+  console.log('bibData', bibData);
   // console.log('itemData', itemData);
   // console.log('actionType', actionType);
   try {
@@ -64,7 +64,7 @@ const entryAction = async ({
     const selectedLocationNames =
       selectedLocationNamesArr.length > 0
         ? selectedLocationNamesArr.join(',')
-        : bibData.location_name;
+        : bibData.locationNames;
 
     const selectedCallNumbersArr = [
       ...new Set(itemData.map((item) => item.call_number)),
