@@ -11,6 +11,7 @@
 
 - moved all project-related buttons to the ProjectButtons link -- shows more buttons in more places (e.g. links to the Alma-add page from the Custom-add page)
 - hide JSON output from view except when new .env NEXT_PUBLIC_IS_DEV_ENV=true
+- changed name to Argus (was: Watson-Argus)
 
 ### Fixed
 
