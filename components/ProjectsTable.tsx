@@ -122,15 +122,17 @@ export default function ProjectsTable({
 
         return (
           <>
-            <Link href={`/editProject/${row.id}`}>
-              <Button variant="outline-primary" size="sm" className="me-1">
-                Edit
-              </Button>
+            <Link
+              href={`/editProject/${row.id}`}
+              className="me-1 btn btn-outline-primary btn-sm"
+            >
+              Edit
             </Link>
-            <Link href={`/slips/${row.id}`}>
-              <Button variant="outline-primary" size="sm">
-                Print
-              </Button>
+            <Link
+              href={`/slips/${row.id}`}
+              className="me-1 btn btn-outline-primary btn-sm"
+            >
+              Print
             </Link>
             <DeleteProjectButton
               project={row}
