@@ -1,7 +1,6 @@
-import { getProject } from '@/app/actions/projectActions';
+import { ProjectWithUserAndBib } from '@/types/ProjectWithUserAndBib';
 
-const ProjectInfoBlock = async ({ id }: { id: string }) => {
-  const { project } = await getProject({ id });
+const ProjectInfoBlock = ({ project }: { project: ProjectWithUserAndBib }) => {
   return (
     <>
       <div className="mb-3 text-muted small">
