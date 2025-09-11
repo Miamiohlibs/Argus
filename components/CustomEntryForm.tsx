@@ -118,16 +118,6 @@ const CustomEntryForm = ({
   const formRef = useRef<HTMLFormElement>(null);
   return (
     <>
-      {<h1 className="h2">{pageHeaderText}</h1>}
-      {projectId && (
-        <ProjectButtons
-          projectId={projectId}
-          onPage="customEntry"
-          canEdit={editable}
-          divClass="mb-3"
-        />
-      )}
-
       <Form ref={formRef} onSubmit={handleSubmit}>
         {/* text fields for BibEntry and ItemEntry fields
        // // bib: itemTitle, author

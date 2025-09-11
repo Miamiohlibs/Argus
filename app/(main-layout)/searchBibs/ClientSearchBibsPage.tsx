@@ -3,17 +3,21 @@ import RecordSearchForm from '@/components/RecordSearchForm';
 import { useSearchParams } from 'next/navigation';
 import ProjectButtons from '@/components/ProjectButtons';
 import NonOwnerAlert from '@/components/NonOwnerAlert';
+import ProjectMetadata from '@/components/ProjectMetadata';
+import { ProjectWithUserAndBib } from '@/types/ProjectWithUserAndBib';
 
 interface ClientSearchBibsPageProps {
   projectId?: number;
   userCanEditPage: boolean;
   nonOwnerAlert: boolean;
+  project: ProjectWithUserAndBib;
 }
 
 const ClientSearchBibsPage = ({
   projectId,
   userCanEditPage,
   nonOwnerAlert,
+  project,
 }: ClientSearchBibsPageProps) => {
   // You can still use useSearchParams if needed for other params
   const params = useSearchParams();
@@ -42,6 +46,7 @@ const ClientSearchBibsPage = ({
         canEdit={userCanEditPage}
         divClass={'mb-3'}
       />
+      <ProjectMetadata project={project} />
       <RecordSearchForm
         projectId={clientProjectId}
         userCanEditPage={userCanEditPage}
