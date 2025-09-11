@@ -64,7 +64,7 @@ const entryAction = async ({
     const selectedLocationNames =
       selectedLocationNamesArr.length > 0
         ? selectedLocationNamesArr.join(',')
-        : bibData.locationNames;
+        : bibData.location_names;
 
     const selectedCallNumbersArr = [
       ...new Set(itemData.map((item) => item.call_number)),
