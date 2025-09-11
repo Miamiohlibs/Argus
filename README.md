@@ -1,6 +1,6 @@
-# Watson/Argus
+# Argus
 
-Watson/Argus is a pull-slip manager for special collections. Library staff and researchers can create lists of bibliographic (bib) records from a connected Ex Libris Alma/Primo catalog to look up items by call number, barcode, or Alma's mms_id. Item records (for individual volumes) associate with each bib record can also be specified. Once lists are created, a user can generate pull slips for use in special collections.
+Argus is a pull-slip manager for special collections. Library staff and researchers can create lists of bibliographic (bib) records from a connected Ex Libris Alma/Primo catalog to look up items by call number, barcode, or Alma's mms_id. Item records (for individual volumes) associate with each bib record can also be specified. Once lists are created, a user can generate pull slips for use in special collections.
 
 User-created lists can be used to help researchers remember items of interest, and can help library workers easily re-use or update course-related items from one class/semester/year to the next, streamlining workflows and reducing duplicated effort.
 
@@ -32,7 +32,7 @@ NEXT_PUBLIC_USE_PRIMO=true
 PRIMO_QUERYSTRING=tab=Everything&scope=MyInst_and_CI&vid=01OHIOLINK_MU:MU #use your scope and vid
 PRIMO_API_KEY=
 NEXT_PUBLIC_NAV_COLOR=primary #suggested: primary, dark, success (bootstrap theme colors suitable for light text)
-NEXT_PUBLIC_NAV_LABEL= This text will be appended to the Watson/Argus logo text
+NEXT_PUBLIC_NAV_LABEL= This text will be appended to the Argus logo text
 PORT=3333 # or whatever port you want to use
 NODE_ENV=development #or production -- note: production required to 'npm run build'; doesn't build under developement
 ```
