@@ -3,7 +3,7 @@ import getEntryById from '@/app/actions/getEntryById';
 import { EntryWithItems } from '@/types/EntryWithItems';
 import canEdit, { nonOwnerEditor } from '@/lib/canEdit';
 import NonOwnerAlert from '@/components/NonOwnerAlert';
-import ProjectInfoBlock from '@/components/ProjectInfoBlock';
+import ProjectMetadata from '@/components/ProjectMetadata';
 import ProjectButtons from '@/components/ProjectButtons';
 import { getProject } from '@/app/actions/projectActions';
 
@@ -56,7 +56,7 @@ export default async function CustomEntryPage({
               divClass="mb-3"
             />
           )}
-          {project && <ProjectInfoBlock project={project} />}
+          {project && <ProjectMetadata project={project} />}
           <CustomEntryForm
             projectId={projectId}
             existingEntry={existingEntry}
@@ -80,7 +80,7 @@ export default async function CustomEntryPage({
             divClass="mb-3"
           />
         )}
-        {project && <ProjectInfoBlock project={project} />}
+        {project && <ProjectMetadata project={project} />}
         <CustomEntryForm projectId={projectId} editable={canEditBool} />
       </>
     );

@@ -6,7 +6,7 @@ import BibResultsWrapper from '@/components/BibResultsWrapper';
 import { nonOwnerEditor } from '@/lib/canEdit';
 import NonOwnerAlert from '@/components/NonOwnerAlert';
 import ProjectButtons from '@/components/ProjectButtons';
-import ProjectInfoBlock from '@/components/ProjectInfoBlock';
+import ProjectMetadata from '@/components/ProjectMetadata';
 import { getProject } from '@/app/actions/projectActions';
 
 export default async function EditEntryPage({
@@ -48,7 +48,7 @@ export default async function EditEntryPage({
         projectId={projectId}
         divClass="mb-2"
       />
-      {project && <ProjectInfoBlock project={project} />}
+      {project && <ProjectMetadata project={project} />}
       {/* Note : this section duplicates part of RecordSearchForm -- we should dedup the code */}
       <BibResultsWrapper
         projectId={projectId}

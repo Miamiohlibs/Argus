@@ -4,7 +4,7 @@ import { ProjectWithUserAndBib } from '@/types/ProjectWithUserAndBib';
 import ProjectButtons from '@/components/ProjectButtons';
 import canEdit, { nonOwnerEditor } from '@/lib/canEdit';
 import NonOwnerAlert from '@/components/NonOwnerAlert';
-import ProjectInfoBlock from '@/components/ProjectInfoBlock';
+import ProjectMetadata from '@/components/ProjectMetadata';
 import { unauthorized } from 'next/navigation';
 export default async function BulkAddPage({
   params,
@@ -34,7 +34,7 @@ export default async function BulkAddPage({
           canEdit={canEditBool}
           divClass="mb-3"
         />
-        <ProjectInfoBlock project={project} />
+        <ProjectMetadata project={project} />
         <BulkAddForm projectId={id} />
       </>
     );

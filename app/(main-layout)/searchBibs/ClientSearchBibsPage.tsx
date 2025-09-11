@@ -3,7 +3,7 @@ import RecordSearchForm from '@/components/RecordSearchForm';
 import { useSearchParams } from 'next/navigation';
 import ProjectButtons from '@/components/ProjectButtons';
 import NonOwnerAlert from '@/components/NonOwnerAlert';
-import ProjectInfoBlock from '@/components/ProjectInfoBlock';
+import ProjectMetadata from '@/components/ProjectMetadata';
 import { ProjectWithUserAndBib } from '@/types/ProjectWithUserAndBib';
 
 interface ClientSearchBibsPageProps {
@@ -46,7 +46,7 @@ const ClientSearchBibsPage = ({
         canEdit={userCanEditPage}
         divClass={'mb-3'}
       />
-      <ProjectInfoBlock project={project} />
+      <ProjectMetadata project={project} />
       <RecordSearchForm
         projectId={clientProjectId}
         userCanEditPage={userCanEditPage}

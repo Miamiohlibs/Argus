@@ -1,6 +1,6 @@
 import { ProjectWithUserAndBib } from '@/types/ProjectWithUserAndBib';
 
-const ProjectInfoBlock = ({ project }: { project: ProjectWithUserAndBib }) => {
+const ProjectMetadata = ({ project }: { project: ProjectWithUserAndBib }) => {
   return (
     <>
       <div className="mb-3 text-muted small">
@@ -13,4 +13,4 @@ const ProjectInfoBlock = ({ project }: { project: ProjectWithUserAndBib }) => {
   );
 };
 
-export default ProjectInfoBlock;
+export default ProjectMetadata;
