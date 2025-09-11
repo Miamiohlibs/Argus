@@ -1,5 +1,12 @@
 import NextLink from 'next/link';
-import { Nav, NavItem, NavLink, Navbar, NavbarBrand } from 'react-bootstrap';
+import {
+  Nav,
+  NavItem,
+  NavLink,
+  Navbar,
+  NavbarText,
+  NavbarBrand,
+} from 'react-bootstrap';
 import Image from 'next/image';
 import {
   SignInButton,
@@ -47,7 +54,10 @@ const Header = async () => {
           </NavItem>
         </SignedOut>
         <SignedIn>
-          <p className="text-light">{user?.name}</p> <UserButton />
+          {user?.name && (
+            <NavbarText className="text-light ms-4">{user?.name}</NavbarText>
+          )}
+          <UserButton />
         </SignedIn>
       </Nav>
     </Navbar>

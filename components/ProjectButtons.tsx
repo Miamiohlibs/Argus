@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import { Button } from 'react-bootstrap';
 import DuplicateProjectButton from './DuplicateProjectButton';
 
 const ProjectButtons = ({
@@ -17,43 +16,42 @@ const ProjectButtons = ({
   return (
     <div className={divClass}>
       {onPage !== 'project' && (
-        <Link href={`/project/${projectId}`} className={classNames}>
-          <Button variant="outline-secondary" size="sm">
-            Back to Project
-          </Button>
+        <Link
+          href={`/project/${projectId}`}
+          className={classNames + ' btn btn-outline-secondary btn-sm'}
+        >
+          Back to Project
         </Link>
       )}
       {canEdit && onPage !== 'searchBibs' && (
         <Link
           href={`/searchBibs?projectId=${projectId.toString()}`}
-          className={classNames}
+          className={classNames + ' btn btn-primary btn-sm'}
         >
-          <Button variant="primary" size="sm">
-            Add Alma Item
-          </Button>
+          Add Alma Item
         </Link>
       )}
       {canEdit && onPage !== 'customEntry' && (
         <Link
           href={`/customEntry/${projectId.toString()}/new`}
-          className={classNames}
+          className={classNames + ' btn btn-primary btn-sm'}
         >
-          <Button variant="primary" size="sm">
-            Add Custom Item
-          </Button>
+          Add Custom Item
         </Link>
       )}
       {canEdit && onPage !== 'bulkAdd' && (
-        <Link href={`/bulkAdd/${projectId.toString()}`} className={classNames}>
-          <Button variant="primary" size="sm">
-            Bulk Add Items
-          </Button>
+        <Link
+          href={`/bulkAdd/${projectId.toString()}`}
+          className={classNames + ' btn btn-primary btn-sm'}
+        >
+          Bulk Add Items
         </Link>
       )}
-      <Link href={`/slips/${projectId}`}>
-        <Button variant="outline-primary" size="sm" className={'me-2'}>
-          Print Slips
-        </Button>
+      <Link
+        href={`/slips/${projectId}`}
+        className={'me-2 btn btn-outline-primary btn-sm'}
+      >
+        Print Slips
       </Link>
 
       {canEdit && onPage == 'project' && (
