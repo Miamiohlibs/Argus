@@ -1,14 +1,8 @@
 import { getProject } from '@/app/actions/projectActions';
-// import RecordSearchButton from '@/components/RecordSearchButton';
 import { checkUser } from '@/lib/checkUser';
 import getEntries from '@/app/actions/getEntries';
 import EntriesTable from '@/components/EntriesTable';
-import Link from 'next/link';
-import { Button } from 'react-bootstrap';
-// import canEdit from '@/lib/canEdit';
 import canEdit from '@/lib/canEdit';
-// import { duplicateProject } from '@/app/actions/projectActions';
-// import DuplicateProjectButton from '@/components/DuplicateProjectButton';
 import ProjectButtons from '@/components/ProjectButtons';
 
 export default async function ProjectPage({
