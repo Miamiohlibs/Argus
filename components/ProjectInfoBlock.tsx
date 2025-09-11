@@ -1,5 +1,5 @@
 import { getProject } from '@/app/actions/projectActions';
-import { Row, Col, Card, CardBody } from 'react-bootstrap';
+
 const ProjectInfoBlock = async ({ id }: { id: string }) => {
   const { project } = await getProject({ id });
   return (
