@@ -77,9 +77,20 @@ footer {
   outline-offset: 2px;
 }
 
-.rdt_TableCol_Sortable:focus-visible {
+.rdt_TableCol {
+  font-size: 14px
+}
+
+.rdt_TableCol:focus-visible {
   font-weight: bold !important;
   text-decoration: underline;
   color: blue;
-  opacity: 1 !important;
+  opacity: 1.0 !important;
 }
+
+.rdt_TableCell a {
+  color: blue !important;
+}
+
+/* .sc-lgpSej {} */
+/*up and down sorting arrows in react-data-table */
