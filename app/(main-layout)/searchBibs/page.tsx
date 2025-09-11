@@ -1,6 +1,6 @@
 import ClientSearchBibsPage from './ClientSearchBibsPage';
 import ServerDataFetcher from './ServerDataFetcher';
-import canEdit, { nonOwnerEditor } from '@/lib/canEdit';
+import { nonOwnerEditor } from '@/lib/canEdit';
 
 interface SearchBibsPageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
