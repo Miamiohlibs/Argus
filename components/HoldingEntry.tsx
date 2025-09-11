@@ -229,7 +229,7 @@ const HoldingEntry = ({
         />
         <Form.Control
           type="hidden"
-          name="locationNames"
+          name="location_names"
           value={safeStringify(bibData?.locationNames)}
         />
         <Form.Control
