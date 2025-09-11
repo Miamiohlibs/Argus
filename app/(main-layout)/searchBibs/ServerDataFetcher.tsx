@@ -15,7 +15,6 @@ async function ServerDataFetcher({
 }: ServerDataFetcherProps) {
   const user = await checkUser();
   const canEditBool: boolean = await canEdit(projectId?.toString() ?? 0);
-
   if (!user || !canEditBool) {
     return unauthorized();
   }

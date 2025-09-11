@@ -34,7 +34,7 @@ export default async function BulkAddPage({
           canEdit={canEditBool}
           divClass="mb-3"
         />
-        <ProjectInfoBlock id={id} />
+        <ProjectInfoBlock project={project} />
         <BulkAddForm projectId={id} />
       </>
     );

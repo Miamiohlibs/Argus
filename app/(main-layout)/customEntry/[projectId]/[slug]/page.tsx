@@ -3,6 +3,9 @@ import getEntryById from '@/app/actions/getEntryById';
 import { EntryWithItems } from '@/types/EntryWithItems';
 import canEdit, { nonOwnerEditor } from '@/lib/canEdit';
 import NonOwnerAlert from '@/components/NonOwnerAlert';
+import ProjectInfoBlock from '@/components/ProjectInfoBlock';
+import ProjectButtons from '@/components/ProjectButtons';
+import { getProject } from '@/app/actions/projectActions';
 
 // app/(main-layout)/customEntry/[projectId]/[slug]/page.tsx
 // Type error: Type '{ params: { projectId: number; slug: string; }; }' does not satisfy the constraint 'PageProps'.
@@ -17,6 +20,7 @@ export default async function CustomEntryPage({
   const paramsUnpacked = await params;
   const slugs = await paramsUnpacked.slug;
   const projectId = await paramsUnpacked.projectId;
+  const { project } = await getProject({ id: projectId.toString() });
   // console.log(`projectId: ${projectId}`);
   // console.log('slugs', slugs);
   const existingEntryId: string = slugs ? slugs : 'new';
@@ -44,6 +48,15 @@ export default async function CustomEntryPage({
       return (
         <>
           {nonOwnerAlert && <NonOwnerAlert />}
+          {projectId && (
+            <ProjectButtons
+              projectId={projectId}
+              onPage="customEntry"
+              canEdit={canEditBool}
+              divClass="mb-3"
+            />
+          )}
+          {project && <ProjectInfoBlock project={project} />}
           <CustomEntryForm
             projectId={projectId}
             existingEntry={existingEntry}
@@ -59,6 +72,15 @@ export default async function CustomEntryPage({
       <>
         {' '}
         {nonOwnerAlert && <NonOwnerAlert />}
+        {projectId && (
+          <ProjectButtons
+            projectId={projectId}
+            onPage="customEntry"
+            canEdit={canEditBool}
+            divClass="mb-3"
+          />
+        )}
+        {project && <ProjectInfoBlock project={project} />}
         <CustomEntryForm projectId={projectId} editable={canEditBool} />
       </>
     );
