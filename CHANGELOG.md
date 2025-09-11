@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.5.1 - 2025-09-11
+
+### Added
+
+- added skip-link to main layout
+- added some basic documentation
+
+### Changed
+
+- moved all project-related buttons to the ProjectButtons link -- shows more buttons in more places (e.g. links to the Alma-add page from the Custom-add page)
+- hide JSON output from view except when new .env NEXT_PUBLIC_IS_DEV_ENV=true
+
+### Fixed
+
+- fixed bug preventing bibData.location_names from being saved in addEntry action
+- added aria-labels on data-tables
+- usability fixes: fixed some contrast and focus issues
+- embiggened some too-small fonts in data-table
+- start every page with h1
+- fixed layout of user.name in header
+
 ## 0.5.0 - 2025-09-10
 
 ### Added
