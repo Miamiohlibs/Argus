@@ -77,7 +77,7 @@ footer {
   outline-offset: 2px;
 }
 
-.rdt_TableCol {
+.rdt_TableCol, .rdt_TableCell {
   font-size: 14px
 }
 
@@ -94,3 +94,8 @@ footer {
 
 /* .sc-lgpSej {} */
 /*up and down sorting arrows in react-data-table */
+
+.custom-white-bg-outline:not(:hover):not(:focus):not(:hover):not(:focus-visible) {
+  background-color: white ; /* Forces white background  */
+}
+
