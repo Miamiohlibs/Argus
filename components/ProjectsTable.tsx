@@ -172,6 +172,8 @@ export default function ProjectsTable({
       data={filteredProjects}
       progressPending={loading}
       pagination
+      paginationPerPage={25}
+      paginationRowsPerPageOptions={[10, 25, 50, 100]}
       highlightOnHover
       striped
       subHeader
