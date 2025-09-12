@@ -43,8 +43,9 @@ footer {
 }
 
 .navbar.bg-primary .navbar-brand, .navbar.bg-success .navbar-brand,
-.navbar.bg-primary .nav-link, .navbar.bg-success .nav-link{ 
-  color: #fff;
+.navbar.bg-primary .nav-link, .navbar.bg-success .nav-link,
+.navbar-text.text-light { 
+  color: #fff !important;
 }
 
 .navbar.bg-primary .nav-link:focus,
