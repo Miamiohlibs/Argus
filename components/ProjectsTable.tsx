@@ -111,10 +111,11 @@ export default function ProjectsTable({
         if (!canEditBool) {
           return (
             <>
-              <Link href={`/slips/${row.id}`}>
-                <Button variant="outline-primary" size="sm">
-                  Print
-                </Button>
+              <Link
+                href={`/slips/${row.id}`}
+                className="btn btn-sm btn-outline-primary"
+              >
+                Print
               </Link>
             </>
           );
