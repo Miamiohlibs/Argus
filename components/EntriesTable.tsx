@@ -150,7 +150,7 @@ export default function EntriesTable({
           <Link
             href={LinkOutUrl}
             target="_blank"
-            className="btn btn-outline-info custom-white-bg-outline btn-sm me-1"
+            className="btn btn-outline-info btn-sm me-1"
           >
             Go
           </Link>
@@ -168,7 +168,7 @@ export default function EntriesTable({
                   ? `/customEntry/${row.projectId}/${row.id}`
                   : `/editEntry/${row.id}`
               }
-              className="me-1 btn btn-outline-primary custom-white-bg-outline btn-sm"
+              className="me-1 btn btn-outline-primary btn-sm"
             >
               Edit
             </Link>

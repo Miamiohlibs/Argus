@@ -28,7 +28,7 @@ export default function DeleteButton({ label, onDelete }: DeleteButtonProps) {
       <Button
         onClick={handleClick}
         disabled={loading}
-        className="custom-white-bg-outline"
+        className=""
         variant="outline-danger"
         size="sm"
       >
