@@ -135,6 +135,8 @@ export default function UserTable({
       data={filteredUsers}
       progressPending={loading}
       pagination
+      paginationPerPage={25}
+      paginationRowsPerPageOptions={[10, 25, 50, 100]}
       highlightOnHover
       striped
       subHeader
