@@ -69,7 +69,10 @@ const BulkAddForm = ({ projectId }: { projectId: string }) => {
         </Alert>
       )}
       <Form onSubmit={handleSubmit} ref={formRef}>
-        <Form.Label>Enter entries (one per line):</Form.Label>
+        <Form.Label htmlFor="entries" className="mb-3">
+          Enter entries (one per line). Add items by Call #, Barcode, Alma
+          MMS_ID, or Alma Permalink Url.
+        </Form.Label>
         <Form.Control
           as="textarea"
           id="entries"
