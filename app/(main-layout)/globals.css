@@ -89,8 +89,8 @@ footer {
   opacity: 1.0 !important;
 }
 
-.rdt_TableCell a:not('btn') {
-  color: blue !important;
+.rdt_TableCell a:not(.btn) {
+  color: #0000ff !important;
 }
 
 /* .sc-lgpSej {} */
