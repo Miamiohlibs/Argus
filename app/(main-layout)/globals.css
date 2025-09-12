@@ -88,7 +88,14 @@ footer {
   color: blue;
   opacity: 1.0 !important;
 }
+.rdt_TableCol_Sortable div, .rdt_TableCol div {
+    padding: 2px; 
+    margin: 2px;
+}
 
+.rdt_TableCol_Sortable:focus-visible div, .rdt_TableCol:focus-visible div {
+  outline: 2px solid #0000ff;
+}
 .rdt_TableCell a:not(.btn) {
   color: #0000ff !important;
 }
