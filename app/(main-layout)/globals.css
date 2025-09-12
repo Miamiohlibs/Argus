@@ -7,14 +7,14 @@
 }
 
 body {
-  background-color: #f7f7f7;
+  background-color: #ffffff;
   /* min-height: 100vh; */
   margin: 0;
   font-family: 'Lato', sans-serif;
   /* padding-bottom: 2em;  */
 }
 main{
-  min-height: 80vh;
+  min-height: 85vh;
 }
 footer { 
   /* position: fixed; */
@@ -43,8 +43,9 @@ footer {
 }
 
 .navbar.bg-primary .navbar-brand, .navbar.bg-success .navbar-brand,
-.navbar.bg-primary .nav-link, .navbar.bg-success .nav-link{ 
-  color: #fff;
+.navbar.bg-primary .nav-link, .navbar.bg-success .nav-link,
+.navbar-text.text-light { 
+  color: #fff !important;
 }
 
 .navbar.bg-primary .nav-link:focus,
@@ -73,11 +74,11 @@ footer {
   
 }
 .guest button:focus, .guest button:focus-visible {
-  outline: 2px solid yellow;
+  outline: 2px solid blue;
   outline-offset: 2px;
 }
 
-.rdt_TableCol {
+.rdt_TableCol, .rdt_TableCell {
   font-size: 14px
 }
 
@@ -87,10 +88,22 @@ footer {
   color: blue;
   opacity: 1.0 !important;
 }
-
-.rdt_TableCell a {
-  color: blue !important;
+.rdt_TableCol_Sortable div, .rdt_TableCol div {
+    padding: 2px; 
+    margin: 2px;
 }
 
+.rdt_TableCol_Sortable:focus-visible div, .rdt_TableCol:focus-visible div {
+  outline: 2px solid #0000ff;
+}
+.rdt_TableCell a:not(.btn) {
+  color: #0000ff !important;
+}
+
+.form-label { 
+  margin-bottom: 0;
+}
 /* .sc-lgpSej {} */
 /*up and down sorting arrows in react-data-table */
+
+

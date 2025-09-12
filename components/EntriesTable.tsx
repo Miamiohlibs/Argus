@@ -3,7 +3,6 @@ import { TableColumn } from 'react-data-table-component';
 import { useEffect, useState } from 'react';
 import DataTable from 'react-data-table-component';
 import Link from 'next/link';
-import { Button } from 'react-bootstrap';
 import DeleteButton from './DeleteButton';
 import deleteEntry from '@/app/actions/deleteEntry';
 import { toast } from 'react-toastify';
@@ -147,10 +146,12 @@ export default function EntriesTable({
         // );
         const LinkOutUrl = row.url ?? undefined;
         const LinkOut = LinkOutUrl ? (
-          <Link href={LinkOutUrl} target="_blank">
-            <Button variant="outline-info" size="sm" className="me-1">
-              Go
-            </Button>
+          <Link
+            href={LinkOutUrl}
+            target="_blank"
+            className="btn btn-outline-info btn-sm me-1"
+          >
+            Go
           </Link>
         ) : undefined;
         if (!canEdit) {
@@ -166,10 +167,9 @@ export default function EntriesTable({
                   ? `/customEntry/${row.projectId}/${row.id}`
                   : `/editEntry/${row.id}`
               }
+              className="me-1 btn btn-outline-primary btn-sm"
             >
-              <Button variant="outline-primary" size="sm" className="me-1">
-                Edit
-              </Button>
+              Edit
             </Link>
             <DeleteButton label="" onDelete={() => handleDelete(row.id)} />
           </>
