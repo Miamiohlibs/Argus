@@ -19,7 +19,7 @@ export default function BibResultsWrapper({
   isEditor,
 }: BibResultsWrapperProps) {
   return holdingsData ? (
-    <>
+    <div aria-live="polite">
       <BibEntryComponent entry={holdingsData.bib_data} />
       <HoldingEntry
         items={holdingsData.items}
@@ -31,7 +31,7 @@ export default function BibResultsWrapper({
         existingEntry={existingEntry}
         isEditor={isEditor}
       />
-    </>
+    </div>
   ) : (
     <p>No Results Found</p>
   );
