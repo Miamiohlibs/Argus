@@ -18,8 +18,13 @@ export default function BibResultsWrapper({
   existingEntry,
   isEditor,
 }: BibResultsWrapperProps) {
+  let wrapperOpts: Record<string, any> = {};
+  if (!existingEntry) {
+    wrapperOpts['aria-live'] = 'polite';
+  }
+
   return holdingsData ? (
-    <div aria-live="polite">
+    <div {...wrapperOpts}>
       <BibEntryComponent entry={holdingsData.bib_data} />
       <HoldingEntry
         items={holdingsData.items}
