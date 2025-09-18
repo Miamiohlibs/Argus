@@ -111,10 +111,11 @@ export default function ProjectsTable({
         if (!canEditBool) {
           return (
             <>
-              <Link href={`/slips/${row.id}`}>
-                <Button variant="outline-primary" size="sm">
-                  Print
-                </Button>
+              <Link
+                href={`/slips/${row.id}`}
+                className="btn btn-sm btn-outline-primary"
+              >
+                Print
               </Link>
             </>
           );
@@ -122,15 +123,17 @@ export default function ProjectsTable({
 
         return (
           <>
-            <Link href={`/editProject/${row.id}`}>
-              <Button variant="outline-primary" size="sm" className="me-1">
-                Edit
-              </Button>
+            <Link
+              href={`/editProject/${row.id}`}
+              className="me-1 btn btn-outline-primary btn-sm"
+            >
+              Edit
             </Link>
-            <Link href={`/slips/${row.id}`}>
-              <Button variant="outline-primary" size="sm">
-                Print
-              </Button>
+            <Link
+              href={`/slips/${row.id}`}
+              className="me-1 btn btn-outline-primary btn-sm"
+            >
+              Print
             </Link>
             <DeleteProjectButton
               project={row}
@@ -169,6 +172,8 @@ export default function ProjectsTable({
       data={filteredProjects}
       progressPending={loading}
       pagination
+      paginationPerPage={25}
+      paginationRowsPerPageOptions={[10, 25, 50, 100]}
       highlightOnHover
       striped
       subHeader

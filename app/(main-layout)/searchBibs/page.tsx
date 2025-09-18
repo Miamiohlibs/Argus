@@ -1,6 +1,7 @@
 import ClientSearchBibsPage from './ClientSearchBibsPage';
 import ServerDataFetcher from './ServerDataFetcher';
 import { nonOwnerEditor } from '@/lib/canEdit';
+import { getProject } from '@/app/actions/projectActions';
 
 interface SearchBibsPageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -22,16 +23,20 @@ async function SearchBibsPage({ searchParams }: SearchBibsPageProps) {
   }
   const projectId = numericId;
   const { canEditBool, nonOwnerAlert } = await nonOwnerEditor(projectId);
+  const { project } = await getProject({ id: projectId.toString() });
 
-  return (
-    <ServerDataFetcher projectId={projectId.toString()}>
-      <ClientSearchBibsPage
-        projectId={projectId}
-        userCanEditPage={canEditBool}
-        nonOwnerAlert={nonOwnerAlert}
-      />
-    </ServerDataFetcher>
-  );
+  if (project) {
+    return (
+      <ServerDataFetcher projectId={projectId.toString()}>
+        <ClientSearchBibsPage
+          projectId={projectId}
+          userCanEditPage={canEditBool}
+          nonOwnerAlert={nonOwnerAlert}
+          project={project}
+        />
+      </ServerDataFetcher>
+    );
+  }
 }
 
 export default SearchBibsPage;

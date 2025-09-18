@@ -1,6 +1,6 @@
 {
   "name": "argus",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "private": true,
   "type": "module",
   "scripts": {
@@ -28,6 +28,7 @@
     "react-data-table-component": "^7.7.0",
     "react-dom": "19.1.0",
     "react-toastify": "^11.0.5",
+    "sass": "^1.92.1",
     "winston": "^3.17.0",
     "winston-daily-rotate-file": "^5.0.0"
   },
