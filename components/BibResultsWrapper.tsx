@@ -18,7 +18,7 @@ export default function BibResultsWrapper({
   existingEntry,
   isEditor,
 }: BibResultsWrapperProps) {
-  let wrapperOpts: Record<string, any> = {};
+  const wrapperOpts: Record<string, any> = {};
   if (!existingEntry) {
     wrapperOpts['aria-live'] = 'polite';
   }
