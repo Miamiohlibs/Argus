@@ -5,7 +5,7 @@
 ### Added
 
 - added project name and owner to all project pages
-- added aria-live setting on bibSearch results
+- added aria-live setting on RecordSearchForm results
 
 ### Changed
 
