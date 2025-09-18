@@ -118,16 +118,6 @@ const CustomEntryForm = ({
   const formRef = useRef<HTMLFormElement>(null);
   return (
     <>
-      {<h1 className="h2">{pageHeaderText}</h1>}
-      {projectId && (
-        <ProjectButtons
-          projectId={projectId}
-          onPage="customEntry"
-          canEdit={editable}
-          divClass="mb-3"
-        />
-      )}
-
       <Form ref={formRef} onSubmit={handleSubmit}>
         {/* text fields for BibEntry and ItemEntry fields
        // // bib: itemTitle, author
@@ -147,15 +137,16 @@ const CustomEntryForm = ({
         />
         <Form.Group className="mb-2">
           <InputGroup>
-            <InputGroup.Text id="title-note" className="text-primary">
-              Title <sup>*</sup>
+            <InputGroup.Text id="title-note" className="bg-primary text-white">
+              <Form.Label htmlFor="itemTitle">Title</Form.Label>
+              <sup>*</sup>
             </InputGroup.Text>
             <Form.Control
               type="text"
               id="itemTitle"
               name="itemTitle"
               aria-describedby="title-note"
-              placeholder={editable ? 'Title' : ''}
+              placeholder={editable ? 'Title (required)' : ''}
               disabled={!editable}
               defaultValue={existingEntry?.itemTitle ?? ''}
             />
@@ -164,8 +155,8 @@ const CustomEntryForm = ({
 
         <Form.Group className="mb-2">
           <InputGroup>
-            <InputGroup.Text className="text-primary" id="author-note">
-              Author <sup>*</sup>
+            <InputGroup.Text className="bg-primary text-white" id="author-note">
+              <Form.Label htmlFor="author">Author</Form.Label> <sup>*</sup>
             </InputGroup.Text>
             <Form.Control
               type="text"
@@ -180,8 +171,12 @@ const CustomEntryForm = ({
         </Form.Group>
         <Form.Group className="mb-2">
           <InputGroup>
-            <InputGroup.Text id="location-note" className="text-primary">
-              Location <sup>*</sup>
+            <InputGroup.Text
+              id="location-note"
+              className="bg-primary text-white"
+            >
+              <Form.Label htmlFor="itemLocation">Location</Form.Label>{' '}
+              <sup>*</sup>
             </InputGroup.Text>
             <Form.Control
               type="text"
@@ -211,7 +206,9 @@ const CustomEntryForm = ({
 
         <Form.Group className="mb-2">
           <InputGroup>
-            <InputGroup.Text id="pub-date-note">Pub. Date</InputGroup.Text>
+            <InputGroup.Text id="pub-date-note">
+              <Form.Label htmlFor="pub_date">Publication Date</Form.Label>
+            </InputGroup.Text>
             <Form.Control
               type="text"
               id="pub_date"
@@ -226,7 +223,9 @@ const CustomEntryForm = ({
 
         <Form.Group className="mb-2">
           <InputGroup>
-            <InputGroup.Text id="call-number-note">Call Number</InputGroup.Text>
+            <InputGroup.Text id="call-number-note">
+              <Form.Label htmlFor="itemCallNumber">Call Number</Form.Label>
+            </InputGroup.Text>
             <Form.Control
               type="text"
               id="itemCallNumber"
@@ -241,7 +240,9 @@ const CustomEntryForm = ({
 
         <Form.Group className="mb-2">
           <InputGroup>
-            <InputGroup.Text id="copy-note">Copy</InputGroup.Text>
+            <InputGroup.Text id="copy-note">
+              <Form.Label htmlFor="itemCopy">Copy</Form.Label>
+            </InputGroup.Text>
             <Form.Control
               type="text"
               id="itemCopy"
@@ -256,7 +257,9 @@ const CustomEntryForm = ({
 
         <Form.Group className="mb-2">
           <InputGroup>
-            <InputGroup.Text id="box-note">Box</InputGroup.Text>
+            <InputGroup.Text id="box-note">
+              <Form.Label htmlFor="itemBox">Box</Form.Label>
+            </InputGroup.Text>
             <Form.Control
               type="text"
               id="itemBox"
@@ -271,7 +274,9 @@ const CustomEntryForm = ({
 
         <Form.Group className="mb-2">
           <InputGroup>
-            <InputGroup.Text id="folder-note">Folder</InputGroup.Text>
+            <InputGroup.Text id="folder-note">
+              <Form.Label htmlFor="itemFolder">Folder</Form.Label>
+            </InputGroup.Text>
             <Form.Control
               type="text"
               id="itemFolder"
@@ -286,13 +291,15 @@ const CustomEntryForm = ({
 
         <Form.Group className="mb-2">
           <InputGroup>
-            <InputGroup.Text id="ms-note">MS</InputGroup.Text>
+            <InputGroup.Text id="ms-note">
+              <Form.Label htmlFor="itemMs">Manuscript</Form.Label>
+            </InputGroup.Text>
             <Form.Control
               type="text"
               id="itemMs"
               name="itemMs"
               aria-describedby="ms-note"
-              placeholder={editable ? 'Item MS' : ''}
+              placeholder={editable ? 'Manuscript' : ''}
               disabled={!editable}
               defaultValue={itemData?.ms ?? ''}
             />
@@ -301,7 +308,9 @@ const CustomEntryForm = ({
 
         <Form.Group className="mb-2">
           <InputGroup>
-            <InputGroup.Text id="notes-note">Notes</InputGroup.Text>
+            <InputGroup.Text id="notes-note">
+              <Form.Label htmlFor="itemNotes">Notes</Form.Label>
+            </InputGroup.Text>
             <Form.Control
               type="text"
               id="itemNotes"

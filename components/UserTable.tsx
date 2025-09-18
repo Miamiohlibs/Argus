@@ -10,6 +10,7 @@ import { Button } from 'react-bootstrap';
 import DeleteButton from './DeleteButton';
 import deleteUser from '@/app/actions/deleteUser';
 import { toast } from 'react-toastify';
+import createUtilityClassName from 'react-bootstrap/esm/createUtilityClasses';
 
 export default function UserTable({
   user,
@@ -114,11 +115,10 @@ export default function UserTable({
         row.clerkUserId !== user.clerkUserId ? (
           <>
             <Link
-              href={`/admin/users/edit/${row.id}`} // change path to your route
+              href={`/admin/users/edit/${row.id}`}
+              className="me-1 btn btn-outline-primary btn-sm" // change path to your route
             >
-              <Button className="me-1" variant="outline-primary" size="sm">
-                Edit
-              </Button>
+              Edit
             </Link>
             <DeleteButton label="" onDelete={() => handleDelete(row.id)} />
           </>
@@ -135,6 +135,8 @@ export default function UserTable({
       data={filteredUsers}
       progressPending={loading}
       pagination
+      paginationPerPage={25}
+      paginationRowsPerPageOptions={[10, 25, 50, 100]}
       highlightOnHover
       striped
       subHeader

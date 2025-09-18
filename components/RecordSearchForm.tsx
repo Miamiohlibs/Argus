@@ -60,34 +60,18 @@ const RecordSearchForm = ({
         </Form.Group>
       </Form>
 
-      <BibResultsWrapper
-        projectId={projectId}
-        holdingsData={results ?? undefined}
-        actionType={'add'}
-        isEditor={userCanEditPage}
-      />
+      <div aria-live="assertive">
+        <BibResultsWrapper
+          projectId={projectId}
+          holdingsData={results ?? undefined}
+          actionType={'add'}
+          isEditor={userCanEditPage}
+        />
 
-      {/* {results ? (
-        results.map((holding) => {
-          return (
-            <div key={holding.holding_data.holding_id}>
-              <BibEntryComponent entry={holding.bib_data} />
-              <HoldingEntry
-                holdings={holding.holding_data}
-                items={holding.items}
-                bibData={holding.bib_data}
-                projectId={projectId}
-                locationCodes={holding.locationCodes}
-              />
-            </div>
-          );
-        })
-      ) : (
-        <p>No Results Found</p>
-      )} */}
-      {process.env.NEXT_PUBLIC_IS_DEV_ENV && (
-        <pre>{JSON.stringify(results, null, 2)}</pre>
-      )}
+        {process.env.NEXT_PUBLIC_IS_DEV_ENV && results && (
+          <pre>{JSON.stringify(results, null, 2)}</pre>
+        )}
+      </div>
     </>
   );
 };

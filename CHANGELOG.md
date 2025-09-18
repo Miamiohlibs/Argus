@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.5.2 - 2025-09-12
+
+### Added
+
+- added project name and owner to all project pages
+- added aria-live setting on RecordSearchForm results
+
+### Changed
+
+- increased defaults on number of rows in dataTables from 10 to 25
+- use unauthorized() instead of returning "unauthorized" as text response where relevant
+- use SCSS to override some bootstrap defaults for better accessiblity
+
+### Fixed
+
+- fixed broken and added missing Form.Label components on all forms
+- fixed some bad focus indicators
+- took all instances of a <Link> wrapped around at <Button> and used <Link className="btn"> instead
+
 ## 0.5.1 - 2025-09-11
 
 ### Added

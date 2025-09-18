@@ -1,0 +1,37 @@
+@import "bootstrap/scss/functions";
+
+// Override default Bootstrap variables
+$info: #117888;
+$min-contrast-ratio: 4.5;
+
+// Import rest of Bootstrap after overrides
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/maps";
+@import "bootstrap/scss/mixins";
+@import "bootstrap/scss/root";
+@import "bootstrap/scss/bootstrap"; // pulls in everything
+
+// Patch Bootstrap's button styles using a mixin override
+$btn-outline-bg: #fff !default;
+@mixin custom-btn-outline-bg {
+  @each $color, $value in $theme-colors {
+    .btn-outline-#{$color} {
+      background-color: $btn-outline-bg;
+      opacity: 1;
+
+      &:hover,
+      &:focus,
+      &:focus-visible,
+      &:active,
+      &.active,
+      .show > &.dropdown-toggle {
+        background-color: $value; // keep Bootstrap's intended hover/focus colors
+        color: color-contrast($value);
+      }
+    }
+  }
+}
+
+// 🔑 actually apply it
+@include custom-btn-outline-bg;
+
