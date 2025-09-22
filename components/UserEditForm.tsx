@@ -13,8 +13,11 @@ import {
 
 // import { User } from '@/types/User';
 // import { revalidatePath } from 'next/cache';
-
-export default function UserEditForm({ user }: { user: User }) {
+interface pageProps {
+  user: User;
+  actorIsSuperAdmin: boolean;
+}
+export default function UserEditForm({ user, actorIsSuperAdmin }: pageProps) {
   const [role, setRole] = useState(user.role);
   const validRoles = Object.values(Role);
   // type Role = (typeof validRoles)[number];
@@ -84,11 +87,14 @@ export default function UserEditForm({ user }: { user: User }) {
           value={role ?? ''}
           onChange={(e) => handleChange('role')(e)}
         >
-          {validRoles.map((r) => (
-            <option key={r} value={r}>
-              {r.charAt(0).toUpperCase() + r.slice(1)}
-            </option>
-          ))}
+          {validRoles.map(
+            (r) =>
+              (actorIsSuperAdmin || r != 'superadmin') && (
+                <option key={r} value={r}>
+                  {r.charAt(0).toUpperCase() + r.slice(1)}
+                </option>
+              )
+          )}
         </FormSelect>
       </InputGroup>
       <InputGroup>

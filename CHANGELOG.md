@@ -1,6 +1,13 @@
 # Changelog
 
-## 0.5.2 - 2025-09-12
+## 0.5.3 - 2025-09-22
+
+### Fixed
+
+- fixed ProjectsTable layout that was overflowing past viewport
+- fixed security bug: now admins cannot create superadmins
+
+## 0.5.2 - 2025-09-18
 
 ### Added
 
