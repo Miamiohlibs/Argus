@@ -75,17 +75,20 @@ export default function ProjectsTable({
       selector: (row: ProjectWithUser) =>
         new Date(row.createdAt).toLocaleDateString(),
       sortable: true,
+      width: '10em',
     },
     {
       name: 'Updated',
       selector: (row: ProjectWithUser) =>
         new Date(row.updatedAt).toLocaleDateString(),
       sortable: true,
+      width: '10em',
     },
     {
       name: 'Notes',
       selector: (row: ProjectWithUser) => row.notes ?? '',
       sortable: false,
+      wrap: true,
     },
     {
       name: 'Tools',
