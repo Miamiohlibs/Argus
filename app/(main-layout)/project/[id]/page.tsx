@@ -2,7 +2,7 @@ import { getProject } from '@/app/actions/projectActions';
 import { checkUser } from '@/lib/checkUser';
 import getEntries from '@/app/actions/getEntries';
 import EntriesTable from '@/components/EntriesTable';
-import canEdit from '@/lib/canEdit';
+import canEdit, { canPrint } from '@/lib/canEdit';
 import ProjectButtons from '@/components/ProjectButtons';
 
 export default async function ProjectPage({
@@ -22,6 +22,7 @@ export default async function ProjectPage({
   // const isOwnerBool = await isOwner(id);
   // const isAdminBool = await isAdmin();
   const canEditBool = await canEdit(id);
+  const canPrintBool = (await canPrint()) ?? false;
 
   return (
     <>
@@ -35,6 +36,7 @@ export default async function ProjectPage({
         <ProjectButtons
           projectId={parseInt(id)}
           canEdit={canEditBool}
+          canPrint={canPrintBool}
           onPage="project"
         />
       </div>
