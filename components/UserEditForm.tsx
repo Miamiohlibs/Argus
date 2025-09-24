@@ -25,10 +25,11 @@ export default function UserEditForm({ user, actorIsSuperAdmin }: pageProps) {
   const validStatuses = Object.values(UserStatus);
   const [affiliation, setAffiliation] = useState(user.affiliation);
   const validAffiliations = Object.values(UserAffiliation);
+  const [printSlips, setPrintSlips] = useState(user.printSlips);
   // type Role = (typeof validRoles)[number];
 
   const handleChange =
-    (targetField: 'role' | 'status' | 'affiliation') =>
+    (targetField: 'role' | 'status' | 'affiliation' | 'printSlips') =>
     (e: React.ChangeEvent<HTMLSelectElement>) => {
       // console.log(`changing target: ${targetField}, ${e.target.value}`);
       switch (targetField) {
@@ -41,6 +42,9 @@ export default function UserEditForm({ user, actorIsSuperAdmin }: pageProps) {
         case 'status':
           setStatus(e.target.value as UserStatus);
           break;
+        case 'printSlips':
+          setPrintSlips((e.target.value.toLowerCase() === 'true') as boolean);
+          break;
       }
     };
 
@@ -50,6 +54,7 @@ export default function UserEditForm({ user, actorIsSuperAdmin }: pageProps) {
       role: role as Role,
       status: status as UserStatus,
       affiliation: affiliation as UserAffiliation,
+      printSlips: printSlips as boolean,
     });
     if (updatedUser.error) {
       console.error('Error updating user:', updatedUser.error);
@@ -116,6 +121,17 @@ export default function UserEditForm({ user, actorIsSuperAdmin }: pageProps) {
           onChange={handleChange('status')}
         >
           {statusPulldown.unshift(blankPullDownOption) && statusPulldown}
+        </FormSelect>
+      </InputGroup>
+      <InputGroup>
+        <FormLabel htmlFor="printSlips">Print Slips permissions</FormLabel>
+        <FormSelect
+          id="printSlips"
+          value={printSlips.toString() ?? 'false'}
+          onChange={handleChange('printSlips')}
+        >
+          <option value="false">False</option>
+          <option value="true">True</option>
         </FormSelect>
       </InputGroup>
       <Button className="btn btn-primary" type="submit">
