@@ -2,7 +2,7 @@ import BulkAddForm from '@/components/BulkAddForm';
 import { getProject } from '@/app/actions/projectActions';
 import { ProjectWithUserAndBib } from '@/types/ProjectWithUserAndBib';
 import ProjectButtons from '@/components/ProjectButtons';
-import canEdit, { nonOwnerEditor } from '@/lib/canEdit';
+import canEdit, { nonOwnerEditor, canPrint } from '@/lib/canEdit';
 import NonOwnerAlert from '@/components/NonOwnerAlert';
 import ProjectMetadata from '@/components/ProjectMetadata';
 import { unauthorized } from 'next/navigation';
@@ -19,6 +19,7 @@ export default async function BulkAddPage({
   } = await getProject({ id });
   const { project, error } = projectResponse;
   const { canEditBool, nonOwnerAlert } = await nonOwnerEditor(parseInt(id));
+  const canPrintBool = (await canPrint()) ?? false;
 
   if (!canEditBool) {
     return unauthorized();
@@ -32,6 +33,7 @@ export default async function BulkAddPage({
           projectId={parseInt(id)}
           onPage="bulkAdd"
           canEdit={canEditBool}
+          canPrint={canPrintBool}
           divClass="mb-3"
         />
         <ProjectMetadata project={project} />
