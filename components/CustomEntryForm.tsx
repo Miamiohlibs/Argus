@@ -5,7 +5,6 @@ import { toast } from 'react-toastify';
 import { EntryWithItems } from '@/types/EntryWithItems';
 import { Form, InputGroup, Button } from 'react-bootstrap';
 import { BibEntry, ItemEntry } from '@prisma/client';
-import ProjectButtons from '@/components/ProjectButtons';
 
 interface CustomEntryFormProps {
   projectId?: number;
