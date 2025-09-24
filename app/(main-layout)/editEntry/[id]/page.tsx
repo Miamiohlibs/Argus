@@ -3,7 +3,7 @@ import { bibHoldings } from '@/app/actions/almaSearch';
 import getEntryById from '@/app/actions/getEntryById';
 import { CondensedBibHoldings } from '@/types/CondensedBibHoldings';
 import BibResultsWrapper from '@/components/BibResultsWrapper';
-import { nonOwnerEditor } from '@/lib/canEdit';
+import { nonOwnerEditor, canPrint } from '@/lib/canEdit';
 import NonOwnerAlert from '@/components/NonOwnerAlert';
 import ProjectButtons from '@/components/ProjectButtons';
 import ProjectMetadata from '@/components/ProjectMetadata';
@@ -27,6 +27,7 @@ export default async function EditEntryPage({
 
   const mmsId = existingEntry?.almaId ?? '';
   const { nonOwnerAlert, canEditBool } = await nonOwnerEditor(projectId);
+  const canPrintBool = (await canPrint()) ?? false;
   const {
     data: holdingsData,
     error: holdingsError,
@@ -44,6 +45,7 @@ export default async function EditEntryPage({
       </h1>
       <ProjectButtons
         canEdit={canEditBool}
+        canPrint={canPrintBool}
         onPage="editEntry"
         projectId={projectId}
         divClass="mb-2"
