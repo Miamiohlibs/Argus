@@ -2,6 +2,7 @@ import logger from '@/lib/logger';
 import checkAccess from './checkAccess';
 import { getProject } from '@/app/actions/projectActions';
 import { currentUser } from '@clerk/nextjs/server';
+import { getCurrentUser } from '@/app/actions/getUser';
 import type { ProjectWithUserAndBib } from '@/types/ProjectWithUserAndBib';
 
 export async function isBasicUser() {
@@ -80,6 +81,14 @@ export async function nonOwnerEditor(projectId: number) {
   //   nonOwnerAlert
   // );
   return { canEditBool, isOwnerBool, nonOwnerAlert };
+}
+
+export async function canPrint() {
+  const { user } = await getCurrentUser();
+  const canPrint =
+    user &&
+    (user?.printSlips || user?.role == 'admin' || user?.role == 'superadmin');
+  return canPrint;
 }
 
 export default async function canEdit(
