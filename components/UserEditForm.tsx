@@ -35,6 +35,8 @@ export default function UserEditForm({ user, actorIsSuperAdmin }: pageProps) {
       switch (targetField) {
         case 'role':
           setRole(e.target.value as Role);
+          ['admin', 'superadmin'].includes(e.target.value) &&
+            setPrintSlips(true);
           break;
         case 'affiliation':
           setAffiliation(e.target.value as UserAffiliation);
@@ -54,7 +56,9 @@ export default function UserEditForm({ user, actorIsSuperAdmin }: pageProps) {
       role: role as Role,
       status: status as UserStatus,
       affiliation: affiliation as UserAffiliation,
-      printSlips: printSlips as boolean,
+      printSlips: (printSlips ||
+        role == 'admin' ||
+        role == 'superadmin') as boolean,
     });
     if (updatedUser.error) {
       console.error('Error updating user:', updatedUser.error);
