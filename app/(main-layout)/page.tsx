@@ -6,21 +6,22 @@ import getUserInfo from '@/lib/getUserInfo';
 import { redirect } from 'next/navigation';
 
 const Home = async () => {
-  const { user, permissions } = await getUserInfo();
+  const {
+    user,
+    permissions: { isEditorOrAbove, canPrint },
+  } = await getUserInfo();
   const clerkUserInfo = (await currentUser()) ?? { firstName: 'Guest' };
-  const isEditor = permissions.isEditorOrAbove;
-  const canPrint = permissions.canPrint;
 
   if (!user) {
     return <Guest />;
   }
-  if (!isEditor) {
+  if (!isEditorOrAbove) {
     redirect('/allProjects');
   }
   return (
     <>
       <h1 className="h2">{clerkUserInfo.firstName}&apos;s Projects</h1>
-      <div className="mb-3">{isEditor && <CreateProjectButton />}</div>
+      <div className="mb-3">{isEditorOrAbove && <CreateProjectButton />}</div>
       <ProjectsTable limitToUser={true} user={user} canPrintBool={canPrint} />
     </>
   );
