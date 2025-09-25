@@ -3,7 +3,7 @@ import { bibHoldings } from '@/app/actions/almaSearch';
 import getEntryById from '@/app/actions/getEntryById';
 import { CondensedBibHoldings } from '@/types/CondensedBibHoldings';
 import BibResultsWrapper from '@/components/BibResultsWrapper';
-import { nonOwnerEditor, canPrint } from '@/lib/canEdit';
+import getUserInfo from '@/lib/getUserInfo';
 import NonOwnerAlert from '@/components/NonOwnerAlert';
 import ProjectButtons from '@/components/ProjectButtons';
 import ProjectMetadata from '@/components/ProjectMetadata';
@@ -26,8 +26,10 @@ export default async function EditEntryPage({
   const { project } = await getProject({ id: projectId.toString() });
 
   const mmsId = existingEntry?.almaId ?? '';
-  const { nonOwnerAlert, canEditBool } = await nonOwnerEditor(projectId);
-  const canPrintBool = (await canPrint()) ?? false;
+  const {
+    permissions: { canEdit, canPrint, nonOwnerEditor },
+  } = await getUserInfo(projectId);
+
   const {
     data: holdingsData,
     error: holdingsError,
@@ -39,13 +41,13 @@ export default async function EditEntryPage({
   }
   return (
     <>
-      {nonOwnerAlert && <NonOwnerAlert />}
+      {nonOwnerEditor && <NonOwnerAlert />}
       <h1 className="h2">
         Editing: <i>{holdingsData && holdingsData.bib_data.title}</i>
       </h1>
       <ProjectButtons
-        canEdit={canEditBool}
-        canPrint={canPrintBool}
+        canEdit={canEdit}
+        canPrint={canPrint}
         onPage="editEntry"
         projectId={projectId}
         divClass="mb-2"
@@ -57,17 +59,8 @@ export default async function EditEntryPage({
         holdingsData={holdingsData}
         actionType="edit"
         existingEntry={existingEntry}
-        isEditor={canEditBool}
+        isEditor={canEdit}
       />
     </>
   );
-
-  //   return (
-  //     <>
-
-  //       <BibEntryComponent entry={} />
-  //       <pre>{JSON.stringify(holdingsData, null, 2)}</pre>
-  //     </>
-  //   );
-  // }
 }
