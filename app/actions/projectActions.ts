@@ -1,9 +1,7 @@
 'use server';
 import logger from '@/lib/logger';
-import { auth } from '@clerk/nextjs/server';
 import { db } from '@/lib/db';
-import { checkUser } from '@/lib/checkUser';
-import canEdit, { isAdmin } from '@/lib/canEdit';
+import getUserInfo from '@/lib/getUserInfo';
 import type { Prisma } from '@prisma/client';
 import { ProjectData } from '@/types/ProjectData';
 import type { ProjectWithUserAndBib } from '@/types/ProjectWithUserAndBib';
@@ -23,7 +21,8 @@ export async function createProject(
   formData: FormData
 ): Promise<ProjectActionResult> {
   try {
-    const user = await checkUser();
+    const { user, permissions } = await getUserInfo();
+    // const user = await checkUser();
     if (!user) {
       return { success: false, error: 'User not authenticated' };
     }
@@ -40,22 +39,23 @@ export async function createProject(
     const notes: string = notesValue.toString();
 
     // get logged in user
-    const { userId } = await auth();
-    logger.verbose(userId);
+    logger.verbose(user.clerkUserId);
 
     // check for user
-    if (!userId) {
+    if (!user.clerkUserId) {
       return { success: false, error: 'User not found' };
     }
 
     try {
       // First, verify that the user exists in the database
       const existingUser = await db.user.findUnique({
-        where: { clerkUserId: userId },
+        where: { clerkUserId: user.clerkUserId },
       });
 
       if (!existingUser) {
-        logger.error(`User with clerkUserId ${userId} not found in database`);
+        logger.error(
+          `User with clerkUserId ${user.clerkUserId} not found in database`
+        );
         return {
           success: false,
           error:
@@ -80,7 +80,7 @@ export async function createProject(
         data: {
           title,
           notes,
-          userId,
+          userId: user.clerkUserId,
         },
         include: {
           user: true, // Include the user data to verify the relationship
@@ -128,7 +128,7 @@ export async function updateProject(
 ): Promise<ProjectActionResult> {
   logger.verbose('starting UpdateProject...');
   try {
-    const user = await checkUser();
+    const { user } = await getUserInfo();
     if (!user) {
       return { success: false, error: 'User not authenticated' };
     }
@@ -201,15 +201,15 @@ export async function getProjects(
   projects?: ProjectWithUser[];
   error?: string;
 }> {
-  const { userId } = await auth();
-  if (!userId) {
+  const { user } = await getUserInfo();
+  if (!user) {
     return { error: 'User not found' };
   }
 
   try {
     const projects = await db.project.findMany({
       where: {
-        ...(limitToUser ? { userId } : {}),
+        ...(limitToUser ? { userId: user?.clerkUserId } : {}),
       },
       include: {
         user: true, // Include user details if needed
@@ -230,23 +230,28 @@ export async function deleteProject(projectId: number): Promise<{
   message?: string;
   error?: string;
 }> {
-  const { userId } = await auth();
-  if (!userId) {
+  const {
+    user,
+    permissions: { canEdit, isAdmin },
+  } = await getUserInfo(projectId);
+  if (!user) {
     return { error: 'User not found' };
   }
-  logger.verbose(`deletion request on project ${projectId} by ${userId}`);
-  const isEditor = await canEdit(projectId);
-  const userIsAdmin = await isAdmin();
+  logger.verbose(
+    `deletion request on project ${projectId} by ${user.clerkUserId}`
+  );
 
-  if (!isEditor) {
-    logger.verbose(`deletion permission denied on ${projectId} by ${userId}`);
+  if (!canEdit) {
+    logger.verbose(
+      `deletion permission denied on ${projectId} by ${user.clerkUserId}`
+    );
     // unauthorized();
     return { error: 'Delete permission denied' };
   }
 
   // if admin, don't limit them to deleting own project
   try {
-    if (userIsAdmin) {
+    if (isAdmin) {
       await db.project.delete({
         where: {
           id: projectId,
@@ -257,7 +262,7 @@ export async function deleteProject(projectId: number): Promise<{
       await db.project.delete({
         where: {
           id: projectId,
-          userId,
+          userId: user.clerkUserId,
         },
       });
       return { message: 'Deleted project' };
@@ -269,14 +274,15 @@ export async function deleteProject(projectId: number): Promise<{
 }
 
 export async function duplicateProject(projectId: string) {
-  const { userId } = await auth();
-  if (!userId) {
+  const {
+    user,
+    permissions: { canEdit },
+  } = await getUserInfo(projectId);
+  if (!user) {
     return { error: 'User not found' };
   }
 
-  const isEditor = await canEdit(projectId);
-
-  if (!isEditor) {
+  if (!canEdit) {
     return { error: 'Not authorized' };
   }
 
@@ -294,7 +300,7 @@ export async function duplicateProject(projectId: string) {
       data: {
         title: `Copy of ${project.title}`,
         notes: `Copied from ${project.user.name} with notes: ${project.notes}`,
-        userId: userId,
+        userId: user.clerkUserId,
       },
     });
 
