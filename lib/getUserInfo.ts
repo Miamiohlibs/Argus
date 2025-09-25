@@ -3,10 +3,24 @@ import { getProject } from '@/app/actions/projectActions';
 import { auth } from '@clerk/nextjs/server';
 import { getCurrentUser } from '@/app/actions/getUser';
 import type { ArgusPermissions } from '@/types/ArgusPermissions';
-
-export default async function getPermissions(
+import type { ArgusUserInfo } from '@/types/ArgusUserInfo';
+import type { User } from '@prisma/client';
+import type { User as ClerkUser } from '@clerk/nextjs/server';
+export default async function getUserInfo(
   projectId?: number | string
-): Promise<ArgusPermissions> {
+): Promise<ArgusUserInfo> {
+  const { user, error: userFetchError } = await getCurrentUser();
+  const permissions = await getPermissions({ projectId, user });
+  return { permissions, user };
+}
+
+export async function getPermissions({
+  projectId,
+  user,
+}: {
+  projectId?: number | string;
+  user?: User;
+}): Promise<ArgusPermissions> {
   const perms = {
     isBasicUser: false,
     isEditorOrAbove: false,
@@ -17,10 +31,6 @@ export default async function getPermissions(
     isOwner: false, // requires projectId
     nonOwnerEditor: false, // requires projectId
   };
-
-  // getUser
-  const { user, error: userFetchError } = await getCurrentUser();
-  const { userId: clerkUserId } = await auth();
 
   if (user) {
     // isBasicUser
@@ -54,10 +64,6 @@ export default async function getPermissions(
         // nonOwnerEditor - requires projectId
         perms.nonOwnerEditor = perms.canEdit && !perms.isOwner;
       }
-    }
-  } else {
-    if (userFetchError) {
-      logger.error('Error getting user permissions: ' + userFetchError);
     }
   }
   return perms;
