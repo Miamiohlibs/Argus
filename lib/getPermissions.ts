@@ -1,25 +1,26 @@
 import logger from '@/lib/logger';
-import checkAccess from './checkAccess';
 import { getProject } from '@/app/actions/projectActions';
-import { currentUser } from '@clerk/nextjs/server';
+import { auth } from '@clerk/nextjs/server';
 import { getCurrentUser } from '@/app/actions/getUser';
-import type { ProjectWithUserAndBib } from '@/types/ProjectWithUserAndBib';
 import type { ArgusPermissions } from '@/types/ArgusPermissions';
 
-export default async function getPermissions(): Promise<ArgusPermissions> {
+export default async function getPermissions(
+  projectId?: number | string
+): Promise<ArgusPermissions> {
   const perms = {
     isBasicUser: false,
     isEditorOrAbove: false,
     isAdmin: false,
     isSuperAdmin: false,
-    canEdit: false,
-    canPrint: false, // requires projectId
+    canPrint: false,
+    canEdit: false, // requires projectId
     isOwner: false, // requires projectId
     nonOwnerEditor: false, // requires projectId
   };
 
   // getUser
-  const { user, error } = await getCurrentUser();
+  const { user, error: userFetchError } = await getCurrentUser();
+  const { userId: clerkUserId } = await auth();
 
   if (user) {
     // isBasicUser
@@ -39,12 +40,24 @@ export default async function getPermissions(): Promise<ArgusPermissions> {
     // canPrint: false
     perms.canPrint = user.printSlips;
 
-    // canEdit - requires projectId
-    // isOwner - requires projectId
-    // nonOwnerEditor - requires projectId
+    if (projectId) {
+      const { project, error: projectFetchError } = await getProject({
+        id: projectId?.toString(),
+      });
+      if (project) {
+        // isOwner - requires projectId
+        perms.isOwner = project.user.clerkUserId == user.clerkUserId;
+
+        // canEdit - requires projectId
+        perms.canEdit = perms.isAdmin || perms.isOwner;
+
+        // nonOwnerEditor - requires projectId
+        perms.nonOwnerEditor = perms.canEdit && !perms.isOwner;
+      }
+    }
   } else {
-    if (error) {
-      logger.error('Error getting user permissions: ' + error);
+    if (userFetchError) {
+      logger.error('Error getting user permissions: ' + userFetchError);
     }
   }
   return perms;
