@@ -2,8 +2,7 @@ import ProjectForm from '@/components/ProjectForm';
 import { checkUser } from '@/lib/checkUser';
 import { updateProject } from '@/app/actions/projectActions';
 import { getProject } from '@/app/actions/projectActions';
-// import { Project } from '@prisma/client';
-import canEdit, { nonOwnerEditor } from '@/lib/canEdit';
+import getUserInfo from '@/lib/getUserInfo';
 import { redirect } from 'next/navigation';
 import { unauthorized } from 'next/navigation';
 import logger from '@/lib/logger';
@@ -19,10 +18,11 @@ export default async function EditProjectPage({
   const { id } = await params;
   const response = await getProject({ id });
   const project = response.project;
-  const isEditor = await canEdit(id);
-  const { nonOwnerAlert } = await nonOwnerEditor(parseInt(id, 10));
+  const {
+    permissions: { canEdit, nonOwnerEditor },
+  } = await getUserInfo(id);
 
-  if (!isEditor) {
+  if (!canEdit) {
     redirect(`/project/${id}`); // go to non-edit version of project page
   }
 
@@ -31,7 +31,7 @@ export default async function EditProjectPage({
   if (currentUser != undefined) {
     return (
       <>
-        {nonOwnerAlert && <NonOwnerAlert />}
+        {nonOwnerEditor && <NonOwnerAlert />}
         <ProjectForm
           user={currentUser}
           action={updateProject}
