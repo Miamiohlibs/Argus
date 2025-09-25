@@ -6,6 +6,7 @@ import type { ArgusPermissions } from '@/types/ArgusPermissions';
 import type { ArgusUserInfo } from '@/types/ArgusUserInfo';
 import type { User } from '@prisma/client';
 import type { User as ClerkUser } from '@clerk/nextjs/server';
+
 export default async function getUserInfo(
   projectId?: number | string
 ): Promise<ArgusUserInfo> {
@@ -48,7 +49,7 @@ export async function getPermissions({
     perms.isSuperAdmin = user.role === 'superadmin';
 
     // canPrint: false
-    perms.canPrint = user.printSlips;
+    perms.canPrint = user.printSlips || perms.isAdmin;
 
     if (projectId) {
       const { project, error: projectFetchError } = await getProject({
