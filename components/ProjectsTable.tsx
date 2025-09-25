@@ -9,7 +9,7 @@ import { Button } from 'react-bootstrap';
 import { getProjects } from '@/app/actions/projectActions';
 import DeleteProjectButton from './DeleteProjectButton';
 import { User } from '@prisma/client';
-// import canEdit from '@/lib/canEdit';
+import { canPrint } from '@/lib/canEdit';
 
 // Use Prisma's generated type that includes the user relation
 type ProjectWithUser = Prisma.ProjectGetPayload<{
@@ -20,11 +20,13 @@ type ProjectWithUser = Prisma.ProjectGetPayload<{
 interface ProjectsTableProps {
   limitToUser?: boolean;
   user?: User | null;
+  canPrintBool?: boolean;
 }
 
 export default function ProjectsTable({
   limitToUser = true,
   user = null,
+  canPrintBool = false,
 }: ProjectsTableProps) {
   const [projects, setProjects] = useState<ProjectWithUser[]>([]);
   const [filteredProjects, setFilteredProjects] = useState<ProjectWithUser[]>(
@@ -100,48 +102,31 @@ export default function ProjectsTable({
           (user?.role === 'admin' ||
             user?.role === 'superadmin' ||
             row.user.clerkUserId === user?.clerkUserId);
-        // logger.verbose(
-        //   'Row User:',
-        //   row.user?.clerkUserId,
-        //   'Current User:',
-        //   user?.clerkUserId,
-        //   'Can edit:',
-        //   canEditBool,
-        //   'for project:',
-        //   row.title
-        // );
-
-        if (!canEditBool) {
-          return (
-            <>
-              <Link
-                href={`/slips/${row.id}`}
-                className="btn btn-sm btn-outline-primary"
-              >
-                Print
-              </Link>
-            </>
-          );
-        }
 
         return (
           <>
-            <Link
-              href={`/editProject/${row.id}`}
-              className="me-1 btn btn-outline-primary btn-sm"
-            >
-              Edit
-            </Link>
-            <Link
-              href={`/slips/${row.id}`}
-              className="me-1 btn btn-outline-primary btn-sm"
-            >
-              Print
-            </Link>
-            <DeleteProjectButton
-              project={row}
-              onDeleted={() => handleDelete(row.id)}
-            />
+            {canEditBool && (
+              <Link
+                href={`/editProject/${row.id}`}
+                className="me-1 btn btn-outline-primary btn-sm"
+              >
+                Edit
+              </Link>
+            )}
+            {canPrintBool && (
+              <Link
+                href={`/slips/${row.id}`}
+                className="me-1 btn btn-outline-primary btn-sm"
+              >
+                Print
+              </Link>
+            )}
+            {canEditBool && (
+              <DeleteProjectButton
+                project={row}
+                onDeleted={() => handleDelete(row.id)}
+              />
+            )}
           </>
         );
       },

@@ -9,6 +9,7 @@ import { ProjectWithUserAndBib } from '@/types/ProjectWithUserAndBib';
 interface ClientSearchBibsPageProps {
   projectId?: number;
   userCanEditPage: boolean;
+  userCanPrint: boolean;
   nonOwnerAlert: boolean;
   project: ProjectWithUserAndBib;
 }
@@ -16,6 +17,7 @@ interface ClientSearchBibsPageProps {
 const ClientSearchBibsPage = ({
   projectId,
   userCanEditPage,
+  userCanPrint = false,
   nonOwnerAlert,
   project,
 }: ClientSearchBibsPageProps) => {
@@ -44,6 +46,7 @@ const ClientSearchBibsPage = ({
         projectId={clientProjectId}
         onPage="searchBibs"
         canEdit={userCanEditPage}
+        canPrint={userCanPrint}
         divClass={'mb-3'}
       />
       <ProjectMetadata project={project} />

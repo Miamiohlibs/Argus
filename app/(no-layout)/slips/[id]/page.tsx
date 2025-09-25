@@ -1,15 +1,17 @@
-'use client';
-import { useParams } from 'next/navigation';
+'use server';
+// import { useParams } from 'next/navigation';
+import MultiPagePdf from './ClientMultipagePdf';
+import { unauthorized } from 'next/navigation';
+import { canPrint } from '@/lib/canEdit';
 
-export default function MultiPagePdf() {
-  const { id } = useParams();
+export default async function PdfWrapper() {
+  const canPrintBool = (await canPrint()) ?? false;
+  if (!canPrintBool) {
+    unauthorized();
+  }
   return (
-    <div style={{ height: '100vh' }}>
-      <iframe
-        src={`${process.env.NEXT_PUBLIC_APP_BASEPATH ?? ''}/api/slipsPdf/${id}`}
-        title="Printing Slips"
-        style={{ width: '100%', height: '100%', border: 'none' }}
-      />
-    </div>
+    <>
+      <MultiPagePdf />
+    </>
   );
 }

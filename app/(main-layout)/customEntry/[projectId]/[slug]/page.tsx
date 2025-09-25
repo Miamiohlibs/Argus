@@ -1,7 +1,7 @@
 import CustomEntryForm from '@/components/CustomEntryForm';
 import getEntryById from '@/app/actions/getEntryById';
 import { EntryWithItems } from '@/types/EntryWithItems';
-import canEdit, { nonOwnerEditor } from '@/lib/canEdit';
+import canEdit, { nonOwnerEditor, canPrint } from '@/lib/canEdit';
 import NonOwnerAlert from '@/components/NonOwnerAlert';
 import ProjectMetadata from '@/components/ProjectMetadata';
 import ProjectButtons from '@/components/ProjectButtons';
@@ -28,6 +28,7 @@ export default async function CustomEntryPage({
   // `loading custom page with projectId: ${projectId} and existing: ${existingEntryId}`;
   // );
   const { canEditBool, nonOwnerAlert } = await nonOwnerEditor(projectId);
+  const canPrintBool = (await canPrint()) ?? false;
 
   if (existingEntryId !== 'new') {
     // Load existing entry data
@@ -53,6 +54,7 @@ export default async function CustomEntryPage({
               projectId={projectId}
               onPage="customEntry"
               canEdit={canEditBool}
+              canPrint={canPrintBool}
               divClass="mb-3"
             />
           )}
@@ -77,6 +79,7 @@ export default async function CustomEntryPage({
             projectId={projectId}
             onPage="customEntry"
             canEdit={canEditBool}
+            canPrint={canPrintBool}
             divClass="mb-3"
           />
         )}
