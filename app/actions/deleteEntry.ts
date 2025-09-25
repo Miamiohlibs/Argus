@@ -1,27 +1,30 @@
 'use server';
 import logger from '@/lib/logger';
 import { db } from '@/lib/db';
-import { auth } from '@clerk/nextjs/server';
-import { isAdmin } from '@/lib/canEdit';
+import getUserInfo from '@/lib/getUserInfo';
 import { updateProjectLastUpdated } from './projectActions';
 
 async function deleteEntry(entryId: string): Promise<{
   message?: string;
   error?: string;
 }> {
-  const { userId } = await auth();
-  if (!userId) {
+  const {
+    user,
+    permissions: { isAdmin },
+  } = await getUserInfo();
+  if (!user) {
     return { error: 'User not found' };
   }
 
-  const userIsAdmin = await isAdmin();
   logger.verbose(
-    `deletion request on ${entryId} by ${userId}; isAdmin: ${userIsAdmin.toString()}`
+    `deletion request on ${entryId} by ${
+      user.id
+    }; isAdmin: ${isAdmin.toString()}`
   );
 
   // if admin, allow delete regardless of ownership
   try {
-    if (userIsAdmin) {
+    if (isAdmin) {
       const deleteResponse = await db.bibEntry.delete({
         where: {
           id: entryId,
@@ -36,7 +39,7 @@ async function deleteEntry(entryId: string): Promise<{
         where: {
           id: entryId,
           project: {
-            userId: userId, // ensure project belongs to this user
+            userId: user.clerkUserId, // ensure project belongs to this user
           },
         },
       });
