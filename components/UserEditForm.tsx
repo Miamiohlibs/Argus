@@ -90,11 +90,7 @@ export default function UserEditForm({ user, actorIsSuperAdmin }: pageProps) {
       None
     </option>
   );
-  // statusPulldown.unshift(
-  //   <option key="none" value="">
-  //     None
-  //   </option>
-  // );
+
   return (
     <Form onSubmit={handleSubmit}>
       <InputGroup>
