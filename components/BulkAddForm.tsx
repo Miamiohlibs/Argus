@@ -61,7 +61,7 @@ const BulkAddForm = ({ projectId }: { projectId: string }) => {
           Submitting {totalSubmissions} entries...
         </Alert>
       )}
-      <BulkAddResults entries={results} />
+      <BulkAddResults entries={results} totalExpected={totalSubmissions} />
 
       {totalSubmissions > 0 && finalNotice !== null && (
         <Alert variant="info" className="mt-3">
