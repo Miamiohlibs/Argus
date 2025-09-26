@@ -22,7 +22,7 @@ const Home = async () => {
     <>
       <h1 className="h2">{clerkUserInfo.firstName}&apos;s Projects</h1>
       <div className="mb-3">{isEditorOrAbove && <CreateProjectButton />}</div>
-      <ProjectsTable limitToUser={true} user={user} canPrintBool={canPrint} />
+      <ProjectsTable limitToUser={true} user={user} canPrint={canPrint} />
     </>
   );
 };

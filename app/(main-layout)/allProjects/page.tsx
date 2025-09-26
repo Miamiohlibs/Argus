@@ -12,7 +12,7 @@ const AllProjectsPage = async () => {
     <>
       <h1 className="h2">All Projects</h1>
       {isEditorOrAbove && <CreateProjectButton />}
-      <ProjectsTable limitToUser={false} user={user} canPrintBool={canPrint} />
+      <ProjectsTable limitToUser={false} user={user} canPrint={canPrint} />
     </>
   );
 };
