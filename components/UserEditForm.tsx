@@ -1,4 +1,5 @@
 'use client';
+import React from 'react';
 import { useEffect, useState } from 'react';
 import updateUser from '@/app/actions/updateUser';
 import { toast } from 'react-toastify';
@@ -30,8 +31,8 @@ export default function UserEditForm({ user, actorIsSuperAdmin }: pageProps) {
   const [printSlips, setPrintSlips] = useState(user.printSlips);
   // type Role = (typeof validRoles)[number];
 
-  const handleNameChange = (event) => {
-    setName(event.target.value);
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setName(e.target.value);
   };
 
   const handleChange =
@@ -102,7 +103,9 @@ export default function UserEditForm({ user, actorIsSuperAdmin }: pageProps) {
           type="text"
           id="name"
           defaultValue={name}
-          onChange={(e) => handleNameChange(e)}
+          onChange={(e) =>
+            handleNameChange(e as React.ChangeEvent<HTMLInputElement>)
+          }
         />
       </InputGroup>
       <InputGroup>
