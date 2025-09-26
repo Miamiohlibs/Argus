@@ -22,7 +22,7 @@ export default async function BulkAddPage({
     permissions: { canEdit, canPrint, nonOwnerEditor },
   } = await getUserInfo(id);
 
-  if (canEdit) {
+  if (!canEdit) {
     return unauthorized();
   }
   if (project) {
