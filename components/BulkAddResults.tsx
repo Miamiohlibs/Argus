@@ -16,12 +16,13 @@ const BulkAddResults = ({
   const busyStatus =
     totalExpected == 0 || totalExpected == entries.length ? false : true;
   return (
-    <div aria-busy={busyStatus}>
+    <div aria-busy={busyStatus} aria-live="polite">
       <div>
         {entries.map((entry, index) => (
           <Alert
             key={index}
             variant={entry.status === 'success' ? 'success' : 'danger'}
+            aria-atomic={true}
           >
             {entry.status === 'success' ? (
               <CheckCircle className="ml-2" />
