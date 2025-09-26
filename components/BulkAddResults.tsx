@@ -1,4 +1,11 @@
-import { Alert } from 'react-bootstrap';
+import {
+  Alert,
+  Toast,
+  ToastHeader,
+  ToastBody,
+  Card,
+  CardBody,
+} from 'react-bootstrap';
 import { XCircle, CheckCircle } from 'react-bootstrap-icons';
 interface BulkAddResponse {
   query: string;
@@ -19,18 +26,25 @@ const BulkAddResults = ({
     <div aria-busy={busyStatus} aria-live="polite">
       <div>
         {entries.map((entry, index) => (
-          <Alert
+          <Card
             key={index}
-            variant={entry.status === 'success' ? 'success' : 'danger'}
             aria-atomic={true}
+            className="w-100 mb-2"
+            style={{
+              backgroundColor: `rgba(var(--bs-${
+                entry.status === 'success' ? 'success' : 'danger'
+              }-rgb), 0.2)`,
+            }}
           >
-            {entry.status === 'success' ? (
-              <CheckCircle className="ml-2" />
-            ) : (
-              <XCircle className="ml-2" />
-            )}{' '}
-            {entry.query} - {entry.message}
-          </Alert>
+            <CardBody>
+              {entry.status === 'success' ? (
+                <CheckCircle className="ml-2" aria-hidden="true" />
+              ) : (
+                <XCircle className="ml-2" aria-hidden="true" />
+              )}{' '}
+              {entry.query} - {entry.message}
+            </CardBody>
+          </Card>
         ))}
       </div>
     </div>
