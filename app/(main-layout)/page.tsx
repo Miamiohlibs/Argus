@@ -11,7 +11,19 @@ const Home = async () => {
     permissions: { isEditorOrAbove, canPrint },
   } = await getUserInfo();
   const clerkUserInfo = (await currentUser()) ?? { firstName: 'Guest' };
-
+  let displayName = clerkUserInfo.firstName;
+  if (
+    clerkUserInfo == null ||
+    clerkUserInfo.firstName == 'null' ||
+    clerkUserInfo.firstName == '[null]' ||
+    clerkUserInfo.firstName == ''
+  ) {
+    if (user && user.name && user.name != 'null' && user.name != '[null]') {
+      displayName = user.name;
+    } else if (user && user.email) {
+      displayName = user.email;
+    }
+  }
   if (!user) {
     return <Guest />;
   }
@@ -20,7 +32,7 @@ const Home = async () => {
   }
   return (
     <>
-      <h1 className="h2">{clerkUserInfo.firstName}&apos;s Projects</h1>
+      <h1 className="h2">{displayName}&apos;s Projects</h1>
       <div className="mb-3">{isEditorOrAbove && <CreateProjectButton />}</div>
       <ProjectsTable limitToUser={true} user={user} canPrint={canPrint} />
     </>
