@@ -8,13 +8,10 @@ import {
   Form,
   FormLabel,
   FormSelect,
-  FormText,
   Button,
   InputGroup,
 } from 'react-bootstrap';
 
-// import { User } from '@/types/User';
-// import { revalidatePath } from 'next/cache';
 interface pageProps {
   user: User;
   actorIsSuperAdmin: boolean;
@@ -93,8 +90,10 @@ export default function UserEditForm({ user, actorIsSuperAdmin }: pageProps) {
 
   return (
     <Form onSubmit={handleSubmit}>
-      <InputGroup>
-        <FormLabel htmlFor="name">Name</FormLabel>
+      <InputGroup className="mb-2 d-flex align-items-center">
+        <FormLabel htmlFor="name" className="me-2">
+          Name
+        </FormLabel>
         <Form.Control
           type="text"
           id="name"
@@ -104,8 +103,10 @@ export default function UserEditForm({ user, actorIsSuperAdmin }: pageProps) {
           }
         />
       </InputGroup>
-      <InputGroup>
-        <FormLabel htmlFor="role">Role</FormLabel>
+      <InputGroup className="mb-2 d-flex align-items-center">
+        <FormLabel htmlFor="role" className="me-2">
+          Role
+        </FormLabel>
         <FormSelect
           id="role"
           value={role ?? ''}
@@ -121,8 +122,10 @@ export default function UserEditForm({ user, actorIsSuperAdmin }: pageProps) {
           )}
         </FormSelect>
       </InputGroup>
-      <InputGroup>
-        <FormLabel htmlFor="affiliation">Affiliation</FormLabel>
+      <InputGroup className="mb-2 d-flex align-items-center">
+        <FormLabel htmlFor="affiliation" className="me-2">
+          Affiliation
+        </FormLabel>
         <FormSelect
           id="affiliation"
           value={affiliation ?? ''}
@@ -132,8 +135,10 @@ export default function UserEditForm({ user, actorIsSuperAdmin }: pageProps) {
             affiliationPulldown}
         </FormSelect>
       </InputGroup>
-      <InputGroup>
-        <FormLabel htmlFor="status">Status</FormLabel>
+      <InputGroup className="mb-2 d-flex align-items-center">
+        <FormLabel htmlFor="status" className="me-2">
+          Status
+        </FormLabel>
         <FormSelect
           id="status"
           value={status ?? ''}
@@ -142,8 +147,10 @@ export default function UserEditForm({ user, actorIsSuperAdmin }: pageProps) {
           {statusPulldown.unshift(blankPullDownOption) && statusPulldown}
         </FormSelect>
       </InputGroup>
-      <InputGroup>
-        <FormLabel htmlFor="printSlips">Print Slips permissions</FormLabel>
+      <InputGroup className="mb-2 d-flex align-items-center">
+        <FormLabel htmlFor="printSlips" className="me-2">
+          Print Slips permissions
+        </FormLabel>
         <FormSelect
           id="printSlips"
           value={printSlips.toString() ?? 'false'}
@@ -153,7 +160,7 @@ export default function UserEditForm({ user, actorIsSuperAdmin }: pageProps) {
           <option value="true">True</option>
         </FormSelect>
       </InputGroup>
-      <Button className="btn btn-primary" type="submit">
+      <Button className="btn btn-primary mt-4" type="submit">
         Save Changes
       </Button>
     </Form>
