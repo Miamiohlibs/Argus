@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import updateUser from '@/app/actions/updateUser';
 import { toast } from 'react-toastify';
 import { User, Role, UserAffiliation, UserStatus } from '@prisma/client';
@@ -7,6 +7,7 @@ import {
   Form,
   FormLabel,
   FormSelect,
+  FormText,
   Button,
   InputGroup,
 } from 'react-bootstrap';
@@ -18,6 +19,7 @@ interface pageProps {
   actorIsSuperAdmin: boolean;
 }
 export default function UserEditForm({ user, actorIsSuperAdmin }: pageProps) {
+  const [name, setName] = useState(user.name);
   const [role, setRole] = useState(user.role);
   const validRoles = Object.values(Role);
   // type Role = (typeof validRoles)[number];
@@ -27,6 +29,10 @@ export default function UserEditForm({ user, actorIsSuperAdmin }: pageProps) {
   const validAffiliations = Object.values(UserAffiliation);
   const [printSlips, setPrintSlips] = useState(user.printSlips);
   // type Role = (typeof validRoles)[number];
+
+  const handleNameChange = (event) => {
+    setName(event.target.value);
+  };
 
   const handleChange =
     (targetField: 'role' | 'status' | 'affiliation' | 'printSlips') =>
@@ -53,6 +59,7 @@ export default function UserEditForm({ user, actorIsSuperAdmin }: pageProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const updatedUser = await updateUser(user.id, {
+      name: name,
       role: role as Role,
       status: status as UserStatus,
       affiliation: affiliation as UserAffiliation,
@@ -64,7 +71,7 @@ export default function UserEditForm({ user, actorIsSuperAdmin }: pageProps) {
       console.error('Error updating user:', updatedUser.error);
       return;
     }
-    toast.success('User role updated successfully');
+    toast.success('User updated successfully');
   };
 
   const statusPulldown = validStatuses.map((r) => (
@@ -89,6 +96,15 @@ export default function UserEditForm({ user, actorIsSuperAdmin }: pageProps) {
   // );
   return (
     <Form onSubmit={handleSubmit}>
+      <InputGroup>
+        <FormLabel htmlFor="name">Name</FormLabel>
+        <Form.Control
+          type="text"
+          id="name"
+          defaultValue={name}
+          onChange={(e) => handleNameChange(e)}
+        />
+      </InputGroup>
       <InputGroup>
         <FormLabel htmlFor="role">Role</FormLabel>
         <FormSelect
