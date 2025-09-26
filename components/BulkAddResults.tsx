@@ -5,14 +5,24 @@ interface BulkAddResponse {
   message: string;
   status: 'success' | 'error';
 }
-const BulkAddResults = ({ entries }: { entries: BulkAddResponse[] }) => {
+const BulkAddResults = ({
+  entries,
+  totalExpected,
+}: {
+  entries: BulkAddResponse[];
+  totalExpected: number;
+}) => {
+  // set aria-busy to true if expecting results that haven't arrived yet
+  const busyStatus =
+    totalExpected == 0 || totalExpected == entries.length ? false : true;
   return (
-    <div>
+    <div aria-busy={busyStatus} aria-live="polite">
       <div>
         {entries.map((entry, index) => (
           <Alert
             key={index}
             variant={entry.status === 'success' ? 'success' : 'danger'}
+            aria-atomic={true}
           >
             {entry.status === 'success' ? (
               <CheckCircle className="ml-2" />
