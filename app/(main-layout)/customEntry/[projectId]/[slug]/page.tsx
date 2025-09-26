@@ -1,7 +1,7 @@
 import CustomEntryForm from '@/components/CustomEntryForm';
 import getEntryById from '@/app/actions/getEntryById';
 import { EntryWithItems } from '@/types/EntryWithItems';
-import canEdit, { nonOwnerEditor, canPrint } from '@/lib/canEdit';
+import getUserInfo from '@/lib/getUserInfo';
 import NonOwnerAlert from '@/components/NonOwnerAlert';
 import ProjectMetadata from '@/components/ProjectMetadata';
 import ProjectButtons from '@/components/ProjectButtons';
@@ -27,8 +27,9 @@ export default async function CustomEntryPage({
   // console.log(
   // `loading custom page with projectId: ${projectId} and existing: ${existingEntryId}`;
   // );
-  const { canEditBool, nonOwnerAlert } = await nonOwnerEditor(projectId);
-  const canPrintBool = (await canPrint()) ?? false;
+  const {
+    permissions: { canEdit, canPrint, nonOwnerEditor },
+  } = await getUserInfo(projectId);
 
   if (existingEntryId !== 'new') {
     // Load existing entry data
@@ -48,13 +49,13 @@ export default async function CustomEntryPage({
     ) {
       return (
         <>
-          {nonOwnerAlert && <NonOwnerAlert />}
+          {nonOwnerEditor && <NonOwnerAlert />}
           {projectId && (
             <ProjectButtons
               projectId={projectId}
               onPage="customEntry"
-              canEdit={canEditBool}
-              canPrint={canPrintBool}
+              canEdit={canEdit}
+              canPrint={canPrint}
               divClass="mb-3"
             />
           )}
@@ -62,7 +63,7 @@ export default async function CustomEntryPage({
           <CustomEntryForm
             projectId={projectId}
             existingEntry={existingEntry}
-            editable={canEditBool}
+            editable={canEdit}
           />
         </>
       );
@@ -73,18 +74,18 @@ export default async function CustomEntryPage({
     return (
       <>
         {' '}
-        {nonOwnerAlert && <NonOwnerAlert />}
+        {nonOwnerEditor && <NonOwnerAlert />}
         {projectId && (
           <ProjectButtons
             projectId={projectId}
             onPage="customEntry"
-            canEdit={canEditBool}
-            canPrint={canPrintBool}
+            canEdit={canEdit}
+            canPrint={canPrint}
             divClass="mb-3"
           />
         )}
         {project && <ProjectMetadata project={project} />}
-        <CustomEntryForm projectId={projectId} editable={canEditBool} />
+        <CustomEntryForm projectId={projectId} editable={canEdit} />
       </>
     );
   }

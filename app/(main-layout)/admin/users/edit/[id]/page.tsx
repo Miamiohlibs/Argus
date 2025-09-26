@@ -2,7 +2,7 @@ import getUser from '@/app/actions/getUser';
 import UserEditForm from '@/components/UserEditForm';
 import Link from 'next/link';
 import checkAccess from '@/lib/checkAccess';
-import { isSuperAdmin } from '@/lib/canEdit';
+import getUserInfo from '@/lib/getUserInfo';
 
 export default async function UserEditPage({
   params,
@@ -12,9 +12,10 @@ export default async function UserEditPage({
   await checkAccess({ permittedRoles: ['admin', 'superadmin'] });
 
   const { id } = await params;
-  const { user } = await getUser(id);
-  if (!user) return <p>User not found</p>;
-  const actorIsSuperAdmin = await isSuperAdmin();
+  const { user: userToEdit } = await getUser(id);
+  if (!userToEdit) return <p>User not found</p>;
+  const { permissions } = await getUserInfo();
+  const actorIsSuperAdmin = permissions.isSuperAdmin;
 
   return (
     <>
@@ -23,9 +24,9 @@ export default async function UserEditPage({
       </Link>
       <h1 className="h2">Edit User Permissions</h1>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-        <h2 className="h3">{user.name}</h2>
-        <p>Email: {user.email}</p>
-        <UserEditForm user={user} actorIsSuperAdmin={actorIsSuperAdmin} />
+        <h2 className="h3">{userToEdit.name}</h2>
+        <p>Email: {userToEdit.email}</p>
+        <UserEditForm user={userToEdit} actorIsSuperAdmin={actorIsSuperAdmin} />
       </div>
     </>
   );

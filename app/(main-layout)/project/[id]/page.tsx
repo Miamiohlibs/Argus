@@ -1,8 +1,7 @@
 import { getProject } from '@/app/actions/projectActions';
-import { checkUser } from '@/lib/checkUser';
 import getEntries from '@/app/actions/getEntries';
 import EntriesTable from '@/components/EntriesTable';
-import canEdit, { canPrint } from '@/lib/canEdit';
+import getUserInfo from '@/lib/getUserInfo';
 import ProjectButtons from '@/components/ProjectButtons';
 
 export default async function ProjectPage({
@@ -10,7 +9,6 @@ export default async function ProjectPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const user = await checkUser();
   const { id } = await params;
   const bibEntries = await getEntries(id);
   const { project, error } = await getProject({ id });
@@ -18,25 +16,20 @@ export default async function ProjectPage({
   if (error) {
     return <div>Error: {error}</div>;
   }
-  // const isBasicUserBool = await isBasicUser();
-  // const isOwnerBool = await isOwner(id);
-  // const isAdminBool = await isAdmin();
-  const canEditBool = await canEdit(id);
-  const canPrintBool = (await canPrint()) ?? false;
+  const {
+    user,
+    permissions: { canEdit, canPrint },
+  } = await getUserInfo(id);
 
   return (
     <>
       <h1 className="h2">{project?.title}</h1>
       <p>Owner: {project?.user.name}</p>
-      {/* <p>Is Basic(lib): {isBasicUserBool.toString()}</p>
-      <p>Is Admin(lib): {isOwnerBool.toString()}</p>
-      <p>Is Owner(lib): {isAdminBool.toString()}</p>
-      <p>Can Edit(lib): {canEditBool.toString()}</p> */}
       <div className={'mb-3'} id={'project tools'}>
         <ProjectButtons
           projectId={parseInt(id)}
-          canEdit={canEditBool}
-          canPrint={canPrintBool}
+          canEdit={canEdit}
+          canPrint={canPrint}
           onPage="project"
         />
       </div>

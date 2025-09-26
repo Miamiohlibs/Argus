@@ -1,12 +1,13 @@
 'use server';
-// import { useParams } from 'next/navigation';
 import MultiPagePdf from './ClientMultipagePdf';
 import { unauthorized } from 'next/navigation';
-import { canPrint } from '@/lib/canEdit';
+import getUserInfo from '@/lib/getUserInfo';
 
 export default async function PdfWrapper() {
-  const canPrintBool = (await canPrint()) ?? false;
-  if (!canPrintBool) {
+  const {
+    permissions: { canPrint },
+  } = await getUserInfo();
+  if (!canPrint) {
     unauthorized();
   }
   return (

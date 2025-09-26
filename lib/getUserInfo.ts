@@ -1,0 +1,71 @@
+import logger from '@/lib/logger';
+import { getProject } from '@/app/actions/projectActions';
+import { auth } from '@clerk/nextjs/server';
+import { getCurrentUser } from '@/app/actions/getUser';
+import type { ArgusPermissions } from '@/types/ArgusPermissions';
+import type { ArgusUserInfo } from '@/types/ArgusUserInfo';
+import type { User } from '@prisma/client';
+import type { User as ClerkUser } from '@clerk/nextjs/server';
+
+export default async function getUserInfo(
+  projectId?: number | string
+): Promise<ArgusUserInfo> {
+  const { user, error: userFetchError } = await getCurrentUser();
+  const permissions = await getPermissions({ projectId, user });
+  return { permissions, user };
+}
+
+export async function getPermissions({
+  projectId,
+  user,
+}: {
+  projectId?: number | string;
+  user?: User;
+}): Promise<ArgusPermissions> {
+  const perms = {
+    isBasicUser: false,
+    isEditorOrAbove: false,
+    isAdmin: false,
+    isSuperAdmin: false,
+    canPrint: false,
+    canEdit: false, // requires projectId
+    isOwner: false, // requires projectId
+    nonOwnerEditor: false, // requires projectId
+  };
+
+  if (user) {
+    // isBasicUser
+    perms.isBasicUser = user.role == 'user';
+
+    // isEditorOrAbove
+    perms.isEditorOrAbove = ['editor', 'admin', 'superadmin'].includes(
+      user.role
+    );
+
+    // isAdmin
+    perms.isAdmin = ['admin', 'superadmin'].includes(user.role);
+
+    // isSuperAdmin
+    perms.isSuperAdmin = user.role === 'superadmin';
+
+    // canPrint: false
+    perms.canPrint = user.printSlips || perms.isAdmin;
+
+    if (projectId) {
+      const { project, error: projectFetchError } = await getProject({
+        id: projectId?.toString(),
+      });
+      if (project) {
+        // isOwner - requires projectId
+        perms.isOwner = project.user.clerkUserId == user.clerkUserId;
+
+        // canEdit - requires projectId
+        perms.canEdit = perms.isAdmin || perms.isOwner;
+
+        // nonOwnerEditor - requires projectId
+        perms.nonOwnerEditor = perms.canEdit && !perms.isOwner;
+      }
+    }
+  }
+  return perms;
+}
