@@ -1,0 +1,16 @@
+const locations = [
+  { code: 'arcli', name: 'Archives' },
+  { code: 'mss', name: 'Manuscript Collection', unofficial: true },
+  { code: 'spcfo', name: 'Folios' },
+  { code: 'spec', name: 'Special Collections' },
+  { code: 'specp', name: 'Periodicals' },
+  { code: 'specv', name: 'Closed Stacks' },
+  { code: 'spefm', name: 'Microfilm' },
+  { code: 'spemy', name: 'Myaamia Collection' },
+  { code: 'spevf', name: 'Closed Stacks Folios' },
+  { code: 'spflc', name: 'Flat Cases' },
+  { code: 'spkuc', name: 'Kuchler Map Cases' },
+  { code: 'spkur', name: 'Kuchler Collection Oversize' },
+  { code: 'swspec', name: 'Special Collections (held in SWORD)' },
+  { code: 'wesar', name: 'Western College Archives' },
+];
