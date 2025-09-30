@@ -72,7 +72,7 @@ const CustomEntryForm = ({
   ));
   const blankPullDownOption = (
     <option key="none" value="">
-      === Please select a location ===
+      --- Please select a location ---
     </option>
   );
   locationSelectOptions.unshift(blankPullDownOption);
