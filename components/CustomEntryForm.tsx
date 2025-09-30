@@ -70,6 +70,12 @@ const CustomEntryForm = ({
       {loc.name}
     </option>
   ));
+  const blankPullDownOption = (
+    <option key="none" value="">
+      None
+    </option>
+  );
+  locationSelectOptions.unshift(blankPullDownOption);
 
   const handleSubmit = async (event: React.SyntheticEvent<HTMLFormElement>) => {
     console.log('starting handleSubmit');
@@ -232,7 +238,7 @@ const CustomEntryForm = ({
               name="itemLocation"
               aria-describedby="location-note"
               disabled={!editable}
-              defaultValue={existingEntry?.location ?? ''}
+              value={selectedLocation?.code || ''}
               onChange={handleLocationChange}
             >
               {locationSelectOptions}
