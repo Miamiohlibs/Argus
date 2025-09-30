@@ -72,7 +72,7 @@ const CustomEntryForm = ({
   ));
   const blankPullDownOption = (
     <option key="none" value="">
-      None
+      === Please select a location ===
     </option>
   );
   locationSelectOptions.unshift(blankPullDownOption);
@@ -204,6 +204,7 @@ const CustomEntryForm = ({
               placeholder={editable ? 'Title (required)' : ''}
               disabled={!editable}
               defaultValue={existingEntry?.itemTitle ?? ''}
+              required={true}
             />
           </InputGroup>
         </Form.Group>
@@ -221,6 +222,7 @@ const CustomEntryForm = ({
               placeholder={editable ? 'Author' : ''}
               disabled={!editable}
               defaultValue={existingEntry?.author ?? ''}
+              required={true}
             />
           </InputGroup>
         </Form.Group>
@@ -240,6 +242,7 @@ const CustomEntryForm = ({
               disabled={!editable}
               value={selectedLocation?.code || ''}
               onChange={handleLocationChange}
+              required={true}
             >
               {locationSelectOptions}
             </FormSelect>
