@@ -57,9 +57,10 @@ const CustomEntryForm = ({
       locations.find((loc) => loc.code === e.target.value) || null;
     setSelectedLocation(selected);
   };
-  if (existingEntry?.location && !selectedLocation) {
+  if (existingEntry?.location_codes && !selectedLocation) {
     const loc =
-      locations.find((loc) => loc.code === existingEntry.location) || null;
+      locations.find((loc) => loc.code === existingEntry.location_codes) ||
+      null;
     if (loc) {
       setSelectedLocation(loc);
     }
@@ -161,7 +162,6 @@ const CustomEntryForm = ({
         formRef.current?.reset();
       }
       // For edit, don't reload - let the user see the updated state
-      // window.location.reload(); // Remove this for better UX
     }
   };
 
@@ -246,31 +246,8 @@ const CustomEntryForm = ({
             >
               {locationSelectOptions}
             </FormSelect>
-            {/* <Form.Control
-              type="text"
-              id="itemLocation"
-              name="itemLocation"
-              aria-describedby="location-note"
-              placeholder={editable ? 'Location' : ''}
-              disabled={!editable}
-              defaultValue={existingEntry?.location ?? ''}
-            /> */}
           </InputGroup>
         </Form.Group>
-
-        {/* <Form.Group className="mb-2">
-          <InputGroup>
-            <InputGroup.Text id="publisher-note">Publisher</InputGroup.Text>
-            <Form.Control
-              type="text"
-              id="publisher"
-              name="publisher"
-              aria-describedby="publisher-note"
-              placeholder="Publisher"
-              defaultValue={existingEntry?.publisher ?? ''}
-            />
-          </InputGroup>
-        </Form.Group> */}
 
         <Form.Group className="mb-2">
           <InputGroup>
