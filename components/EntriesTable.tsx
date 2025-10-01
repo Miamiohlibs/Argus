@@ -94,7 +94,7 @@ export default function EntriesTable({
     },
     {
       name: 'Location',
-      selector: (row: EntryWithItems) => row.location ?? 'Unknown',
+      selector: (row: EntryWithItems) => row.location_codes ?? 'Unknown',
       sortable: true,
     },
     {
