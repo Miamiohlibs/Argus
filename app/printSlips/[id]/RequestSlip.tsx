@@ -116,7 +116,7 @@ export default function RequestSlip({
           <h6 className="text-center">CALL NUMBER</h6>
           <p>Volume(s):</p>
           <div className="p-2">
-            {entry.location}
+            {entry.location_codes}
             <br />
             {entry.callNumber}
             {entry.items && entry.items.length > 0 && (
