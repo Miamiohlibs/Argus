@@ -79,7 +79,7 @@ model ItemEntry {
   box           String?
   folder        String?
   ms            String?
-  BibEntry      BibEntry? @relation(fields: [bibEntryId], references: [id])
+  BibEntry      BibEntry? @relation(fields: [bibEntryId], references: [id], onDelete: Cascade)
   bibEntryId    String?
 }
 
