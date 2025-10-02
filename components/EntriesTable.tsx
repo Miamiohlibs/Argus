@@ -94,7 +94,29 @@ export default function EntriesTable({
     },
     {
       name: 'Location',
-      selector: (row: EntryWithItems) => row.location ?? 'Unknown',
+      selector: (row: EntryWithItems) => {
+        if (row.location_codes || row.location_display) {
+          return `${row.location_display} ${row.location_codes}`.trim();
+        } else {
+          return `Unknown`;
+        }
+      },
+      cell: (row: EntryWithItems) => {
+        if (row.location_codes || row.location_display) {
+          return (
+            <>
+              {row.location_display && <>{row.location_display}</>}
+              {row.location_codes && (
+                <>
+                  <br />({row.location_codes})
+                </>
+              )}
+            </>
+          );
+        } else {
+          return <>Unknown</>;
+        }
+      },
       sortable: true,
     },
     {

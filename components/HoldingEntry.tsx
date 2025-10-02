@@ -5,13 +5,7 @@ import { useRef } from 'react';
 import { toast } from 'react-toastify';
 import entryAction from '@/app/actions/addEntry';
 import { EntryWithItems } from '@/types/EntryWithItems';
-// import {
-//   AlmaItemHoldingHoldingData,
-//   AlmaItemHoldingItemData,
-//   AlmaItemHoldingBibData,
-// } from '@/types/AlmaItem';
 import type {
-  // CondensedBibHoldings,
   AlmaItemDataPlusHoldingDetails,
   AlmaItemHoldingBibDataPlusCallAndLocation,
 } from '@/types/CondensedBibHoldings';
@@ -21,7 +15,6 @@ interface miniItemData {
   pid: string;
   barcode: string;
   description?: string;
-  location: string;
   location_code?: string;
   location_name?: string;
   call_number?: string;
@@ -69,7 +62,7 @@ const HoldingEntry = ({
         const matchingItem = items.find(
           (item) =>
             item.description == existingItem.description &&
-            item.location.value == existingItem.location &&
+            item.location.value == existingItem.location_code &&
             item.call_number == existingItem.call_number &&
             item.barcode == existingItem.barcode &&
             item.copy_id == existingItem.copy_id
@@ -80,7 +73,7 @@ const HoldingEntry = ({
             pid: matchingItem.pid || '',
             barcode: matchingItem.barcode || '',
             description: matchingItem.description || '',
-            location: matchingItem.location.value,
+            location_code: matchingItem.location.value,
             location_name: matchingItem.location.desc || '',
             call_number: matchingItem.call_number || '',
             copy_id: matchingItem.copy_id || '',
@@ -129,7 +122,6 @@ const HoldingEntry = ({
       return {
         description: item.description || '',
         id: 'unknown',
-        location: item.location || 'unknown',
         location_name: item.location_name || '',
         location_code: item.location_code || '',
         call_number: item.call_number || null,
@@ -284,14 +276,6 @@ const HoldingEntry = ({
           </InputGroup>
         </Form.Group>
 
-        {/* <p>
-          <strong>{library_desc || 'Unknown Library'}</strong> &mdash;{' '}
-          {location_desc || 'Unknown Location'} ({location_value || 'N/A'})
-        </p> */}
-        <p>
-          {/* Call Number: <strong>{holdings.call_number || 'N/A'}</strong> */}
-        </p>
-
         {/* Item Selection */}
         <ul style={{ listStyleType: 'none', paddingLeft: 0 }}>
           {items ? (
@@ -309,7 +293,6 @@ const HoldingEntry = ({
                 pid: item.pid || '',
                 barcode: item.barcode || '',
                 description: item.description || '',
-                location: item.location.value,
                 location_code: item.location.value,
                 location_name: item.location.desc,
                 call_number: item.call_number || '',
