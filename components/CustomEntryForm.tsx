@@ -94,7 +94,7 @@ const CustomEntryForm = ({
       author: formData.get('author') as string,
       almaId: 'unknown',
       almaIdType: 'unknown',
-      location: selectedLocation ? selectedLocation.code : '',
+      // location: selectedLocation ? selectedLocation.code : '',
       location_codes: selectedLocation ? selectedLocation.code : '',
       location_display: selectedLocation ? selectedLocation.name : '',
       pub_date: formData.get('pub_date') as string,
@@ -116,7 +116,7 @@ const CustomEntryForm = ({
     const safeItemData: {
       description: string | null;
       id: string;
-      location: string | null;
+      // location: string | null;
       location_name: string | null;
       location_code: string | null;
       call_number: string | null;
@@ -130,7 +130,7 @@ const CustomEntryForm = ({
     } = {
       description: (formData.get('itemDescription') as string) ?? null,
       id: 'unknown',
-      location: selectedLocation?.code ?? null,
+      // location: selectedLocation?.code ?? null,
       location_name: selectedLocation?.name ?? null,
       location_code: selectedLocation?.code ?? null,
       call_number: (formData.get('itemCallNumber') as string) ?? null,
