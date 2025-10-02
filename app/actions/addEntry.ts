@@ -38,7 +38,6 @@ const entryAction = async ({
 
     const itemDescriptions = itemData.map((item) => ({
       description: item.description,
-      location: item.location_code,
       location_code: item.location_code,
       location_name: item.location_name,
       call_number: item.call_number,
@@ -80,7 +79,6 @@ const entryAction = async ({
     const entryData = {
       itemTitle: bibData.title as string,
       author: bibData.author as string,
-      location: selectedLocationCodes as string,
       location_codes: selectedLocationCodes as string,
       location_display: selectedLocationNames as string,
       pub_date:
