@@ -56,7 +56,7 @@ model BibEntry {
   pub_date         String?
   publisher        String?
   callNumber       String?
-  location         String
+  // location         String
   location_codes   String?
   location_display String?
   notes            String?
@@ -70,7 +70,7 @@ model BibEntry {
 model ItemEntry {
   id            String    @id @default(uuid())
   description   String?
-  location      String?
+  // location      String?
   location_code String?
   location_name String?
   call_number   String?
