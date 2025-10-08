@@ -71,14 +71,16 @@ export default function ProjectsTable({
     },
     {
       name: 'Created',
-      selector: (row: ProjectWithUser) =>
+      selector: (row: ProjectWithUser) => new Date(row.createdAt).getTime(),
+      cell: (row: ProjectWithUser) =>
         new Date(row.createdAt).toLocaleDateString(),
       sortable: true,
       width: '10em',
     },
     {
       name: 'Updated',
-      selector: (row: ProjectWithUser) =>
+      selector: (row: ProjectWithUser) => new Date(row.updatedAt).getTime(),
+      cell: (row: ProjectWithUser) =>
         new Date(row.updatedAt).toLocaleDateString(),
       sortable: true,
       width: '10em',
