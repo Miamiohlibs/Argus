@@ -106,4 +106,6 @@ footer {
 /* .sc-lgpSej {} */
 /*up and down sorting arrows in react-data-table */
 
-
+.btn { 
+  text-wrap: nowrap !important; 
+}
