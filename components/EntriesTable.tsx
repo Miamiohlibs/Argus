@@ -202,26 +202,28 @@ export default function EntriesTable({
   ];
 
   return (
-    <DataTable
-      columns={columns}
-      data={filteredEntries}
-      progressPending={loading}
-      pagination
-      paginationPerPage={25}
-      paginationRowsPerPageOptions={[10, 25, 50, 100]}
-      highlightOnHover
-      striped
-      subHeader
-      subHeaderComponent={
-        <input
-          type="text"
-          placeholder="Search entries..."
-          aria-label="Search entries"
-          value={filterText}
-          onChange={(e) => setFilterText(e.target.value)}
-          className="p-2 border rounded w-full md:w-1/3"
-        />
-      }
-    />
+    <div className="react-data-table" id="entries-table">
+      <DataTable
+        columns={columns}
+        data={filteredEntries}
+        progressPending={loading}
+        pagination
+        paginationPerPage={25}
+        paginationRowsPerPageOptions={[10, 25, 50, 100]}
+        highlightOnHover
+        striped
+        subHeader
+        subHeaderComponent={
+          <input
+            type="text"
+            placeholder="Search entries..."
+            aria-label="Search entries"
+            value={filterText}
+            onChange={(e) => setFilterText(e.target.value)}
+            className="p-2 border rounded w-full md:w-1/3"
+          />
+        }
+      />
+    </div>
   );
 }
