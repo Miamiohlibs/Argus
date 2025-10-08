@@ -109,3 +109,17 @@ footer {
 .btn { 
   text-wrap: nowrap !important; 
 }
+
+@media print {
+  .no-print, .navbar-nav, .btn {
+    display: none;
+  }
+  /* hide tools columns */
+  .react-data-table input,
+  #entries-table div[data-column-id="7"],
+  #projects-table div[data-column-id="6"],
+  #users-table div[data-column-id="6"]
+   {
+    display: none;
+  }
+}
