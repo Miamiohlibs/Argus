@@ -25,7 +25,7 @@ export default async function ProjectPage({
     <>
       <h1 className="h2">{project?.title}</h1>
       <p>Owner: {project?.user.name}</p>
-      <div className={'mb-3'} id={'project tools'}>
+      <div className={'mb-3'} id={'project-tools'}>
         <ProjectButtons
           projectId={parseInt(id)}
           canEdit={canEdit}

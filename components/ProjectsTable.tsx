@@ -155,7 +155,7 @@ export default function ProjectsTable({
   }, [filterText, projects]);
 
   return (
-    <>
+    <div className="react-data-table" id="projects-table">
       <DataTable
         columns={columns}
         data={filteredProjects}
@@ -177,6 +177,6 @@ export default function ProjectsTable({
           />
         }
       />
-    </>
+    </div>
   );
 }
