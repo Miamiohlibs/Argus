@@ -2,31 +2,15 @@
 import { TableColumn } from 'react-data-table-component';
 import { useEffect, useState } from 'react';
 import DataTable from 'react-data-table-component';
-// import { User } from '@/types/User';
 import { User } from '@prisma/client';
-import getUsers from '@/app/actions/getUsers';
-import Link from 'next/link';
-import { Button } from 'react-bootstrap';
-import { toast } from 'react-toastify';
-import createUtilityClassName from 'react-bootstrap/esm/createUtilityClasses';
 import { getPossibleCoEditors, addCoEditor } from '@/app/actions/coEditors';
 import AddCoEditorButton from './AddCoEditorButton';
 
-export default function CoEditorTable({
-  //   user,
-  projectId,
-}: {
-  //   user: User;
-  projectId: string;
-}) {
+export default function CoEditorTable({ projectId }: { projectId: string }) {
   const [users, setUsers] = useState<User[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [filterText, setFilterText] = useState('');
-
-  // const handleAddCoEditor = async (userId: string) => {
-  //   const data = await addCoEditor(userId, projectId);
-  // };
 
   useEffect(() => {
     // Fetch users from an API or other source
