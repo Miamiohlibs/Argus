@@ -30,6 +30,7 @@ export async function getPermissions({
     canPrint: false,
     canEdit: false, // requires projectId
     isOwner: false, // requires projectId
+    isCoEditor: false, // requires projectId
     nonOwnerEditor: false, // requires projectId
   };
 
@@ -59,11 +60,17 @@ export async function getPermissions({
         // isOwner - requires projectId
         perms.isOwner = project.user.clerkUserId == user.clerkUserId;
 
+        perms.isCoEditor = project.coEditors
+          .map((ed) => ed.clerkUserId)
+          .includes(user.clerkUserId);
+
         // canEdit - requires projectId
-        perms.canEdit = perms.isAdmin || perms.isOwner;
+        perms.canEdit = perms.isAdmin || perms.isOwner || perms.isCoEditor;
 
         // nonOwnerEditor - requires projectId
-        perms.nonOwnerEditor = perms.canEdit && !perms.isOwner;
+        // weirdly, co-editors are *not* nonOwnerEditors for this purpose
+        perms.nonOwnerEditor =
+          perms.canEdit && !perms.isOwner && !perms.isCoEditor;
       }
     }
   }
