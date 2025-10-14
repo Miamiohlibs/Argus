@@ -39,7 +39,7 @@ const AddCoEditorButton = ({
       disabled={isAdded} // Disable button if already deleted
       style={{ opacity: isAdded ? 0.5 : 1 }}
     >
-      {isAdded ? 'Added CoEditor' : 'Add as CoEditor'}
+      {isAdded ? 'Added CoEditor' : 'Add as Co-Editor'}
     </Button>
   );
 };
