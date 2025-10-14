@@ -15,6 +15,11 @@ export async function getPossibleCoEditors(project_id: string) {
           id: project_id_int,
         },
       },
+      coEditorOn: {
+        none: {
+          id: project_id_int,
+        },
+      },
       role: {
         not: 'user',
       },
