@@ -18,7 +18,7 @@ export default async function ProjectPage({
   }
   const {
     user,
-    permissions: { canEdit, canPrint },
+    permissions: { canEdit, canPrint, isOwner, isAdmin },
   } = await getUserInfo(id);
 
   return (
@@ -30,6 +30,7 @@ export default async function ProjectPage({
           projectId={parseInt(id)}
           canEdit={canEdit}
           canPrint={canPrint}
+          canAssignCoEditors={isAdmin || isOwner}
           onPage="project"
         />
       </div>

@@ -5,12 +5,14 @@ const ProjectButtons = ({
   projectId,
   canEdit = false,
   canPrint = false,
+  canAssignCoEditors = false,
   onPage,
   divClass = '',
 }: {
   projectId: number;
   canEdit: boolean;
   canPrint: boolean;
+  canAssignCoEditors?: boolean;
   onPage: string;
   divClass?: string;
 }) => {
@@ -60,6 +62,15 @@ const ProjectButtons = ({
 
       {canEdit && onPage == 'project' && (
         <DuplicateProjectButton id={projectId.toString()} />
+      )}
+
+      {canAssignCoEditors && onPage == 'project' && (
+        <Link
+          href={`/editProject/${projectId.toString()}/coEditors`}
+          className="me-2 btn btn-outline-secondary btn-sm"
+        >
+          Add/Remove Co-Editors
+        </Link>
       )}
     </div>
   );
