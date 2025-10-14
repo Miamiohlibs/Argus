@@ -181,6 +181,7 @@ export async function getProject(params: { id: string }): Promise<{
       include: {
         user: true, // Include user details if needed
         bibEntries: true, // Include related bib entries if needed
+        coEditors: true,
       },
     });
     // logger.verbose('Fetched projects:', projects);
