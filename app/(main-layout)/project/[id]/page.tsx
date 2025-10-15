@@ -3,6 +3,7 @@ import getEntries from '@/app/actions/getEntries';
 import EntriesTable from '@/components/EntriesTable';
 import getUserInfo from '@/lib/getUserInfo';
 import ProjectButtons from '@/components/ProjectButtons';
+import ProjectMetadata from '@/components/ProjectMetadata';
 
 export default async function ProjectPage({
   params,
@@ -24,7 +25,7 @@ export default async function ProjectPage({
   return (
     <>
       <h1 className="h2">{project?.title}</h1>
-      <p>Owner: {project?.user.name}</p>
+      {/* <p>Owner: {project?.user.name}</p> */}
       <div className={'mb-3'} id={'project-tools'}>
         <ProjectButtons
           projectId={parseInt(id)}
@@ -34,7 +35,7 @@ export default async function ProjectPage({
           onPage="project"
         />
       </div>
-
+      {project && <ProjectMetadata project={project} hideTitle={true} />}
       {bibEntries && bibEntries.data?.entries && user ? (
         <EntriesTable entries={bibEntries.data?.entries} canEdit={canEdit} />
       ) : (
