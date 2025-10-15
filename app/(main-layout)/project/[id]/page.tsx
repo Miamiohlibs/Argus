@@ -18,7 +18,7 @@ export default async function ProjectPage({
   }
   const {
     user,
-    permissions: { canEdit, canPrint },
+    permissions: { canEdit, canPrint, isOwner, isAdmin },
   } = await getUserInfo(id);
 
   return (
@@ -30,16 +30,13 @@ export default async function ProjectPage({
           projectId={parseInt(id)}
           canEdit={canEdit}
           canPrint={canPrint}
+          canAssignCoEditors={isAdmin || isOwner}
           onPage="project"
         />
       </div>
 
       {bibEntries && bibEntries.data?.entries && user ? (
-        <EntriesTable
-          entries={bibEntries.data?.entries}
-          user={user}
-          ownerClerkId={project?.user.clerkUserId ?? ''}
-        />
+        <EntriesTable entries={bibEntries.data?.entries} canEdit={canEdit} />
       ) : (
         <p>No bibliography entries found.</p>
       )}

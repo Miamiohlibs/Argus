@@ -7,6 +7,7 @@ import { redirect } from 'next/navigation';
 import { unauthorized } from 'next/navigation';
 import logger from '@/lib/logger';
 import NonOwnerAlert from '@/components/NonOwnerAlert';
+import ProjectMetadata from '@/components/ProjectMetadata';
 
 interface EditProjectPageProps {
   params: Promise<{ id: string }>;
@@ -19,10 +20,10 @@ export default async function EditProjectPage({
   const response = await getProject({ id });
   const project = response.project;
   const {
-    permissions: { canEdit, nonOwnerEditor },
+    permissions: { isOwner, isOwnerish },
   } = await getUserInfo(id);
 
-  if (!canEdit) {
+  if (!isOwnerish) {
     redirect(`/project/${id}`); // go to non-edit version of project page
   }
 
@@ -31,7 +32,10 @@ export default async function EditProjectPage({
   if (currentUser != undefined) {
     return (
       <>
-        {nonOwnerEditor && <NonOwnerAlert />}
+        {/* this NonOwnerAlert has different conditions from others because the only one who should normally edit this page is the owner. */}
+        {!isOwner && <NonOwnerAlert />}
+        <h1 className="h2">Edit Project Details</h1>
+        {project && <ProjectMetadata project={project} />}
         <ProjectForm
           user={currentUser}
           action={updateProject}

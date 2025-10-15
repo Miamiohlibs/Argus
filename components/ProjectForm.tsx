@@ -59,7 +59,9 @@ export default function ProjectForm({
   return (
     <Card className="shadow-sm">
       <Card.Header>
-        <Card.Title className="mb-0">Add Project</Card.Title>
+        <Card.Title className="mb-0">
+          {project == undefined ? 'Add Project' : 'Project Details'}
+        </Card.Title>
       </Card.Header>
       <Card.Body>
         <Form action={formAction}>

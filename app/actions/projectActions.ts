@@ -9,7 +9,7 @@ import entryAction from './addEntry';
 import { ItemEntry } from '@prisma/client';
 
 type ProjectWithUser = Prisma.ProjectGetPayload<{
-  include: { user: true };
+  include: { user: true; coEditors: true };
 }>;
 
 type ProjectActionResult =
@@ -21,7 +21,7 @@ export async function createProject(
   formData: FormData
 ): Promise<ProjectActionResult> {
   try {
-    const { user, permissions } = await getUserInfo();
+    const { user } = await getUserInfo();
     // const user = await checkUser();
     if (!user) {
       return { success: false, error: 'User not authenticated' };
@@ -181,6 +181,7 @@ export async function getProject(params: { id: string }): Promise<{
       include: {
         user: true, // Include user details if needed
         bibEntries: true, // Include related bib entries if needed
+        coEditors: true,
       },
     });
     // logger.verbose('Fetched projects:', projects);
@@ -209,10 +210,22 @@ export async function getProjects(
   try {
     const projects = await db.project.findMany({
       where: {
-        ...(limitToUser ? { userId: user?.clerkUserId } : {}),
+        OR: [
+          {
+            ...(limitToUser
+              ? { userId: user?.clerkUserId } // is user's own
+              : { id: { gt: 0 } }), // if not user-only, show all
+          },
+          {
+            ...(limitToUser
+              ? { coEditors: { some: { id: user?.id } } } // is-coeditor
+              : { id: { gt: 0 } }), // if not user-only, show all
+          },
+        ],
       },
       include: {
         user: true, // Include user details if needed
+        coEditors: true,
       },
       orderBy: {
         createdAt: 'desc',
