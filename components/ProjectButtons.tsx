@@ -10,8 +10,8 @@ const ProjectButtons = ({
   divClass = '',
 }: {
   projectId: number;
-  canEdit: boolean;
-  canPrint: boolean;
+  canEdit?: boolean;
+  canPrint?: boolean;
   canAssignCoEditors?: boolean;
   onPage: string;
   divClass?: string;
@@ -64,14 +64,15 @@ const ProjectButtons = ({
         <DuplicateProjectButton id={projectId.toString()} />
       )}
 
-      {canAssignCoEditors && onPage == 'project' && (
-        <Link
-          href={`/editProject/${projectId.toString()}/coEditors`}
-          className="me-2 btn btn-outline-secondary btn-sm"
-        >
-          Add/Remove Co-Editors
-        </Link>
-      )}
+      {canAssignCoEditors &&
+        ['project', 'edit-project-details'].includes(onPage) && (
+          <Link
+            href={`/editProject/${projectId.toString()}/coEditors`}
+            className="me-2 btn btn-outline-secondary btn-sm"
+          >
+            Add/Remove Co-Editors
+          </Link>
+        )}
     </div>
   );
 };

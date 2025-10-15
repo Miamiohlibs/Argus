@@ -8,6 +8,7 @@ import { unauthorized } from 'next/navigation';
 import logger from '@/lib/logger';
 import NonOwnerAlert from '@/components/NonOwnerAlert';
 import ProjectMetadata from '@/components/ProjectMetadata';
+import ProjectButtons from '@/components/ProjectButtons';
 
 interface EditProjectPageProps {
   params: Promise<{ id: string }>;
@@ -36,6 +37,12 @@ export default async function EditProjectPage({
         {!isOwner && <NonOwnerAlert />}
         <h1 className="h2">Edit Project Details</h1>
         {project && <ProjectMetadata project={project} />}
+        <ProjectButtons
+          projectId={parseInt(id)}
+          divClass="mb-3"
+          canAssignCoEditors={isOwnerish}
+          onPage="edit-project-details"
+        />
         <ProjectForm
           user={currentUser}
           action={updateProject}
