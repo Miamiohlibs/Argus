@@ -1,3 +1,4 @@
+import { Metadata } from 'next';
 import { EntryWithItems } from '@/types/EntryWithItems';
 import { bibHoldings } from '@/app/actions/almaSearch';
 import getEntryById from '@/app/actions/getEntryById';
@@ -8,6 +9,30 @@ import NonOwnerAlert from '@/components/NonOwnerAlert';
 import ProjectButtons from '@/components/ProjectButtons';
 import ProjectMetadata from '@/components/ProjectMetadata';
 import { getProject } from '@/app/actions/projectActions';
+
+type MetadataProps = {
+  params: Promise<{ id: string }>;
+};
+
+export async function generateMetadata({
+  params,
+}: MetadataProps): Promise<Metadata> {
+  const { id } = await params;
+  const {
+    data: existingEntry,
+    error: existingEntryError,
+  }: { data?: EntryWithItems; error?: string } = await getEntryById(id);
+  if (existingEntry !== undefined) {
+    return {
+      title: `${existingEntry.itemTitle} | Argus`,
+      description: `Existing Item Page: ${existingEntry.itemTitle}`,
+    };
+  } else {
+    return {
+      title: 'Item Not Found | Argus',
+    };
+  }
+}
 
 export default async function EditEntryPage({
   params,

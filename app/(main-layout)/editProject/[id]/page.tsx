@@ -1,3 +1,4 @@
+import { Metadata } from 'next';
 import ProjectForm from '@/components/ProjectForm';
 import { checkUser } from '@/lib/checkUser';
 import { updateProject } from '@/app/actions/projectActions';
@@ -13,6 +14,14 @@ import ProjectButtons from '@/components/ProjectButtons';
 interface EditProjectPageProps {
   params: Promise<{ id: string }>;
 }
+
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: 'Edit Project Details | Argus',
+    description: 'Update project name and notes',
+  };
+}
+
 export default async function EditProjectPage({
   params,
 }: EditProjectPageProps) {

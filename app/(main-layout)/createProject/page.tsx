@@ -1,7 +1,15 @@
+import { Metadata } from 'next';
 import ProjectForm from '@/components/ProjectForm';
 import { createProject } from '@/app/actions/projectActions';
 import getUserInfo from '@/lib/getUserInfo';
 import { unauthorized } from 'next/navigation';
+
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: 'Create Project | Argus',
+    description: 'Create a new project',
+  };
+}
 
 export default async function CreateProjectPage() {
   const {

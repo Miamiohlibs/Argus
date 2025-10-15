@@ -1,9 +1,17 @@
+import { Metadata } from 'next';
 import Guest from '@/components/Guest';
 import { currentUser } from '@clerk/nextjs/server';
 import ProjectsTable from '@/components/ProjectsTable';
 import CreateProjectButton from '@/components/CreateProjectButton';
 import getUserInfo from '@/lib/getUserInfo';
 import { redirect } from 'next/navigation';
+
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: 'Main Page | Argus',
+    description: 'User &rsquo;s own projects',
+  };
+}
 
 const Home = async () => {
   const {

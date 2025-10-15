@@ -1,8 +1,14 @@
+import { Metadata } from 'next';
 import UserTableWrapper from '@/components/UserTableWrapper';
-// import getUserRole from '../../actions/getUserRole';
-// import { redirect } from 'next/navigation';
 import checkAccess from '@/lib/checkAccess';
 import { checkUser } from '@/lib/checkUser';
+
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: 'Manage Users | Argus',
+    description: 'Manage Users and Permissions',
+  };
+}
 
 export default async function UsersPage() {
   await checkAccess({ permittedRoles: ['admin', 'superadmin'] });

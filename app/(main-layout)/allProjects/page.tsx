@@ -1,6 +1,14 @@
+import { Metadata } from 'next';
 import ProjectsTable from '@/components/ProjectsTable';
 import CreateProjectButton from '@/components/CreateProjectButton';
 import getUserInfo from '@/lib/getUserInfo';
+
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: 'All Projects | Argus',
+    description: 'User &rsquo;s own projects',
+  };
+}
 
 const AllProjectsPage = async () => {
   const {
