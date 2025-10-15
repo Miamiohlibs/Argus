@@ -11,7 +11,7 @@ import { Prisma } from '@prisma/client';
 type UserWithCoEditor = Prisma.UserGetPayload<{
   include: { coEditorOn: true; projects: true };
 }> & {
-  isCoEditorOnThisProject: boolean;
+  isProjectCoEditor: boolean;
   isProjectOwner: boolean;
 };
 
@@ -91,7 +91,7 @@ export default function CoEditorTable({
               >
                 "User" role may not be co-editor
               </Button>
-            ) : row.isCoEditorOnThisProject ? (
+            ) : row.isProjectCoEditor ? (
               <Button
                 variant="outline-dark"
                 size="sm"

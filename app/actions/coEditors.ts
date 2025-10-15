@@ -2,10 +2,8 @@
 import { db } from '@/lib/db';
 
 export async function getPossibleCoEditors(project_id: string) {
-  // get users who are:
-  // _ not the owner
-  // _ not already a co-editor
-  // \* role=Editor or above
+  // add field isProjectOwner
+  // add field isProjectCoEditor
   const project_id_int = parseInt(project_id);
 
   const users = await db.user.findMany({
@@ -16,7 +14,7 @@ export async function getPossibleCoEditors(project_id: string) {
   });
   const possibleCoEditors = users.map((user) => ({
     ...user,
-    isCoEditorOnThisProject: user.coEditorOn.some(
+    isProjectCoEditor: user.coEditorOn.some(
       (project) => project.id === project_id_int
     ),
     isProjectOwner: user.projects.some(
