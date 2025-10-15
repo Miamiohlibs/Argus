@@ -3,8 +3,7 @@ import { TableColumn } from 'react-data-table-component';
 import { useEffect, useState } from 'react';
 import DataTable from 'react-data-table-component';
 import { Button } from 'react-bootstrap';
-// import { User } from '@prisma/client';
-import { getPossibleCoEditors, addCoEditor } from '@/app/actions/coEditors';
+import { getPossibleCoEditors } from '@/app/actions/coEditors';
 import AddCoEditorButton from './AddCoEditorButton';
 import { Prisma } from '@prisma/client';
 
@@ -15,13 +14,7 @@ type UserWithCoEditor = Prisma.UserGetPayload<{
   isProjectOwner: boolean;
 };
 
-export default function CoEditorTable({
-  projectId,
-  currentUserId,
-}: {
-  projectId: string;
-  currentUserId: string;
-}) {
+export default function CoEditorTable({ projectId }: { projectId: string }) {
   const [users, setUsers] = useState<UserWithCoEditor[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<UserWithCoEditor[]>([]);
   const [loading, setLoading] = useState(true);
@@ -37,7 +30,7 @@ export default function CoEditorTable({
     };
 
     fetchUsers();
-  }, []);
+  }, [projectId]);
 
   useEffect(() => {
     const filtered = users.filter((user) =>
@@ -89,7 +82,7 @@ export default function CoEditorTable({
                 className="ms-1"
                 disabled
               >
-                "User" role may not be co-editor
+                &ldquo;User&rdquo; role may not be co-editor
               </Button>
             ) : row.isProjectCoEditor ? (
               <Button

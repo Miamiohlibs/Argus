@@ -1,7 +1,6 @@
 'use client';
-import { Project } from '@prisma/client';
+// import { Project } from '@prisma/client';
 import { toast } from 'react-toastify';
-
 // import { deleteProject } from '@/app/actions/projectActions';
 import { Button } from 'react-bootstrap';
 // import { useRouter } from 'next/navigation';
@@ -24,7 +23,11 @@ const AddCoEditorButton = ({
       toast.error(error);
       return;
     }
-    toast.success('Added CoEditor');
+    if (success) {
+      toast.success('Added Co-Editor');
+    } else {
+      toast.error('Unable to add Co-Editor');
+    }
     // router.refresh(); // Refresh the page to reflect changes
     // router.push(window.location.pathname);
     setIsAdded(true); // Hide the row

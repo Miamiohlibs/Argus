@@ -21,7 +21,7 @@ export async function createProject(
   formData: FormData
 ): Promise<ProjectActionResult> {
   try {
-    const { user, permissions } = await getUserInfo();
+    const { user } = await getUserInfo();
     // const user = await checkUser();
     if (!user) {
       return { success: false, error: 'User not authenticated' };

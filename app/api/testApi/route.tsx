@@ -4,7 +4,7 @@ import entryAction from '@/app/actions/addEntry';
 import EntryActionData from '@/types/EntryActionData';
 import { NextResponse } from 'next/server';
 import { CondensedBibHoldings } from '@/types/CondensedBibHoldings';
-import { ItemEntry, BibEntry } from '@prisma/client';
+import { ItemEntry } from '@prisma/client';
 
 // const entryAction = async ({
 //   bibData,
