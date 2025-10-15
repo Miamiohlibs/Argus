@@ -13,6 +13,7 @@ interface EditProjectPageProps {
 export default async function CoEditorPage({ params }: EditProjectPageProps) {
   const { id } = await params;
   const {
+    user,
     permissions: { isOwner, isAdmin },
   } = await getUserInfo(id);
   if (!(isOwner || isAdmin)) {
@@ -51,7 +52,8 @@ export default async function CoEditorPage({ params }: EditProjectPageProps) {
           </ul>
         </>
       )}
-      <CoEditorTable projectId={id} />
+
+      {user && <CoEditorTable projectId={id} currentUserId={user.id} />}
     </>
   );
 }

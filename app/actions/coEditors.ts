@@ -8,23 +8,22 @@ export async function getPossibleCoEditors(project_id: string) {
   // \* role=Editor or above
   const project_id_int = parseInt(project_id);
 
-  const possibleCoEditors = db.user.findMany({
-    where: {
-      projects: {
-        none: {
-          id: project_id_int,
-        },
-      },
-      coEditorOn: {
-        none: {
-          id: project_id_int,
-        },
-      },
-      role: {
-        not: 'user',
-      },
+  const users = await db.user.findMany({
+    include: {
+      coEditorOn: true,
+      projects: true,
     },
   });
+  const possibleCoEditors = users.map((user) => ({
+    ...user,
+    isCoEditorOnThisProject: user.coEditorOn.some(
+      (project) => project.id === project_id_int
+    ),
+    isProjectOwner: user.projects.some(
+      (project) => project.id === project_id_int
+    ),
+  }));
+
   return possibleCoEditors;
 }
 

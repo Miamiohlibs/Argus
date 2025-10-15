@@ -2,13 +2,28 @@
 import { TableColumn } from 'react-data-table-component';
 import { useEffect, useState } from 'react';
 import DataTable from 'react-data-table-component';
-import { User } from '@prisma/client';
+import { Button } from 'react-bootstrap';
+// import { User } from '@prisma/client';
 import { getPossibleCoEditors, addCoEditor } from '@/app/actions/coEditors';
 import AddCoEditorButton from './AddCoEditorButton';
+import { Prisma } from '@prisma/client';
 
-export default function CoEditorTable({ projectId }: { projectId: string }) {
-  const [users, setUsers] = useState<User[]>([]);
-  const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
+type UserWithCoEditor = Prisma.UserGetPayload<{
+  include: { coEditorOn: true; projects: true };
+}> & {
+  isCoEditorOnThisProject: boolean;
+  isProjectOwner: boolean;
+};
+
+export default function CoEditorTable({
+  projectId,
+  currentUserId,
+}: {
+  projectId: string;
+  currentUserId: string;
+}) {
+  const [users, setUsers] = useState<UserWithCoEditor[]>([]);
+  const [filteredUsers, setFilteredUsers] = useState<UserWithCoEditor[]>([]);
   const [loading, setLoading] = useState(true);
   const [filterText, setFilterText] = useState('');
 
@@ -33,44 +48,76 @@ export default function CoEditorTable({ projectId }: { projectId: string }) {
     setFilteredUsers(filtered);
   }, [filterText, users]);
 
-  const columns: TableColumn<User>[] = [
+  const columns: TableColumn<UserWithCoEditor>[] = [
     {
       name: 'Name',
-      selector: (row: User) => row.name ?? '',
-      cell: (row: User) => {
+      selector: (row: UserWithCoEditor) => row.name ?? '',
+      cell: (row: UserWithCoEditor) => {
         return <>{row.name}</>;
       },
       sortable: true,
     },
     {
       name: 'Email',
-      selector: (row: User) => row.email ?? '',
+      selector: (row: UserWithCoEditor) => row.email ?? '',
       sortable: true,
     },
     {
       name: 'Role',
-      selector: (row: User) => row.role ?? '',
+      selector: (row: UserWithCoEditor) => row.role ?? '',
       sortable: true,
     },
     {
       name: 'Status',
-      selector: (row: User) => row.status ?? '',
+      selector: (row: UserWithCoEditor) => row.status ?? '',
       sortable: true,
     },
     {
       name: 'Affiliation',
-      selector: (row: User) => row.affiliation ?? '',
+      selector: (row: UserWithCoEditor) => row.affiliation ?? '',
       sortable: true,
     },
     {
       name: 'Tools',
-      cell: (row: User) => (
-        <>
-          <AddCoEditorButton projectId={projectId} userId={row.id} />
-        </>
-      ),
+      cell: (row: UserWithCoEditor) => {
+        return (
+          <>
+            {row.role == 'user' ? (
+              <Button
+                variant="outline-dark"
+                size="sm"
+                className="ms-1"
+                disabled
+              >
+                "User" role may not be co-editor
+              </Button>
+            ) : row.isCoEditorOnThisProject ? (
+              <Button
+                variant="outline-dark"
+                size="sm"
+                className="ms-1"
+                disabled
+              >
+                Already a co-editor
+              </Button>
+            ) : row.isProjectOwner ? (
+              <Button
+                variant="outline-dark"
+                size="sm"
+                className="ms-1"
+                disabled
+              >
+                Already project owner
+              </Button>
+            ) : (
+              <AddCoEditorButton projectId={projectId} userId={row.id} />
+            )}
+          </>
+        );
+      },
       ignoreRowClick: true,
     },
+    // (row.coEditorOn.map((proj) => proj.id)).includes(projectId)
   ];
   return (
     <div className="react-data-table" id="users-table">
