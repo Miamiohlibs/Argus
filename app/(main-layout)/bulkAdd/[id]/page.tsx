@@ -30,6 +30,8 @@ export default async function BulkAddPage({
       <>
         {nonOwnerEditor && <NonOwnerAlert />}
         <h1 className="h2">Bulk Add Items: {project?.title}</h1>
+        <ProjectMetadata project={project} />
+
         <ProjectButtons
           projectId={parseInt(id)}
           onPage="bulkAdd"
@@ -37,7 +39,6 @@ export default async function BulkAddPage({
           canPrint={canPrint}
           divClass="mb-3"
         />
-        <ProjectMetadata project={project} />
         <BulkAddForm projectId={id} />
       </>
     );
