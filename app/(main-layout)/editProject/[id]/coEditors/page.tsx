@@ -35,7 +35,7 @@ export default async function CoEditorPage({ params }: EditProjectPageProps) {
       />
       {project.coEditors.length > 0 && (
         <>
-          <h2 className="h2 mt-3">Current Co-Editors</h2>
+          <h2 className="h3 mt-3">Current Co-Editors</h2>
           <ul>
             {project.coEditors.map((ed) => {
               return (
@@ -51,7 +51,7 @@ export default async function CoEditorPage({ params }: EditProjectPageProps) {
           </ul>
         </>
       )}
-
+      <h2 className="h3 mt-5">Select Co-Editors</h2>
       <CoEditorTable projectId={id} />
     </>
   );

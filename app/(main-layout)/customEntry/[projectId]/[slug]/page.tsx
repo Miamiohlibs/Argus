@@ -50,6 +50,9 @@ export default async function CustomEntryPage({
       return (
         <>
           {nonOwnerEditor && <NonOwnerAlert />}
+          <h1 className="h2">
+            Edit Custom Entry: <i>{existingEntry.itemTitle}</i>
+          </h1>
           {projectId && (
             <ProjectButtons
               projectId={projectId}
@@ -75,6 +78,8 @@ export default async function CustomEntryPage({
       <>
         {' '}
         {nonOwnerEditor && <NonOwnerAlert />}
+        <h1 className="h2">Add Custom Entry</h1>
+        {project && <ProjectMetadata project={project} />}
         {projectId && (
           <ProjectButtons
             projectId={projectId}
@@ -84,7 +89,6 @@ export default async function CustomEntryPage({
             divClass="mb-3"
           />
         )}
-        {project && <ProjectMetadata project={project} />}
         <CustomEntryForm projectId={projectId} editable={canEdit} />
       </>
     );

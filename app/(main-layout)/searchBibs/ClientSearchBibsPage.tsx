@@ -42,6 +42,7 @@ const ClientSearchBibsPage = ({
     <>
       {nonOwnerAlert && <NonOwnerAlert />}
       <h1 className="h2">Search Alma Catalog for Item</h1>
+      <ProjectMetadata project={project} />
       <ProjectButtons
         projectId={clientProjectId}
         onPage="searchBibs"
@@ -49,7 +50,6 @@ const ClientSearchBibsPage = ({
         canPrint={userCanPrint}
         divClass={'mb-3'}
       />
-      <ProjectMetadata project={project} />
       <RecordSearchForm
         projectId={clientProjectId}
         userCanEditPage={userCanEditPage}
