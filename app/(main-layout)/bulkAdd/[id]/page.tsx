@@ -1,3 +1,4 @@
+import { Metadata } from 'next';
 import BulkAddForm from '@/components/BulkAddForm';
 import { getProject } from '@/app/actions/projectActions';
 import { ProjectWithUserAndBib } from '@/types/ProjectWithUserAndBib';
@@ -6,6 +7,13 @@ import getUserInfo from '@/lib/getUserInfo';
 import NonOwnerAlert from '@/components/NonOwnerAlert';
 import ProjectMetadata from '@/components/ProjectMetadata';
 import { unauthorized } from 'next/navigation';
+
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: 'Bulk Add Items | Argus',
+    description: 'Add multiple items to project',
+  };
+}
 
 export default async function BulkAddPage({
   params,

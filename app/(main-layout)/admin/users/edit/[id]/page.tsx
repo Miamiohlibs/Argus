@@ -1,8 +1,16 @@
+import { Metadata } from 'next';
 import getUser from '@/app/actions/getUser';
 import UserEditForm from '@/components/UserEditForm';
 import Link from 'next/link';
 import checkAccess from '@/lib/checkAccess';
 import getUserInfo from '@/lib/getUserInfo';
+
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: 'Manage User | Argus',
+    description: 'Manage individual user permissions',
+  };
+}
 
 export default async function UserEditPage({
   params,

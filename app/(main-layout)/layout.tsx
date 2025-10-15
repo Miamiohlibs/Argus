@@ -16,7 +16,7 @@ const roboto = Roboto({
 });
 
 export const metadata: Metadata = {
-  title: 'Watson Argus',
+  title: 'Argus',
   description: 'Special Collections Pull List Manager',
 };
 

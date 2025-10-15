@@ -1,3 +1,4 @@
+import { Metadata } from 'next';
 import CustomEntryForm from '@/components/CustomEntryForm';
 import getEntryById from '@/app/actions/getEntryById';
 import { EntryWithItems } from '@/types/EntryWithItems';
@@ -7,10 +8,19 @@ import ProjectMetadata from '@/components/ProjectMetadata';
 import ProjectButtons from '@/components/ProjectButtons';
 import { getProject } from '@/app/actions/projectActions';
 
-// app/(main-layout)/customEntry/[projectId]/[slug]/page.tsx
-// Type error: Type '{ params: { projectId: number; slug: string; }; }' does not satisfy the constraint 'PageProps'.
-//   Types of property 'params' are incompatible.
-//     Type '{ projectId: number; slug: string; }' is missing the following properties from type 'Promise<any>': then, catch, finally, [Symbol.toStringTag]
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ projectId: number; slug: string }>;
+}): Promise<Metadata> {
+  const { slug, projectId } = await params;
+  const title = slug ? 'Edit Custom Entry' : 'Add Custom Entry';
+
+  return {
+    title: `${title} | Argus`,
+    description: `Enter item by hand`,
+  };
+}
 
 export default async function CustomEntryPage({
   params,
@@ -21,12 +31,7 @@ export default async function CustomEntryPage({
   const slugs = await paramsUnpacked.slug;
   const projectId = await paramsUnpacked.projectId;
   const { project } = await getProject({ id: projectId.toString() });
-  // console.log(`projectId: ${projectId}`);
-  // console.log('slugs', slugs);
   const existingEntryId: string = slugs ? slugs : 'new';
-  // console.log(
-  // `loading custom page with projectId: ${projectId} and existing: ${existingEntryId}`;
-  // );
   const {
     permissions: { canEdit, canPrint, nonOwnerEditor },
   } = await getUserInfo(projectId);
