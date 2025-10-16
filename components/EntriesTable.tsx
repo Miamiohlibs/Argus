@@ -24,7 +24,13 @@ export default function EntriesTable({
   const [loading, setLoading] = useState(true);
   const [filterText, setFilterText] = useState('');
 
-  const handleDelete = async (entryId: string) => {
+  const handleDelete = async ({
+    entryId,
+    projectId,
+  }: {
+    entryId: string;
+    projectId: string;
+  }) => {
     const confirmed = window.confirm(
       'Are you sure you want to delete this entry?'
     );
@@ -32,9 +38,9 @@ export default function EntriesTable({
 
     console.log(`Delete entry with ID: ${entryId}`);
 
-    const { error } = await deleteEntry(entryId); // also gets {message}
+    const { error } = await deleteEntry({ entryId, projectId }); // also gets {message}
     if (error) {
-      toast.error('Entry deletion failed');
+      toast.error(`Entry deletion failed: ${error}`);
     } else {
       toast.success('Entry deleted successfully');
       const updatedEntries = currentEntries.filter(
@@ -173,7 +179,15 @@ export default function EntriesTable({
             >
               Edit
             </Link>
-            <DeleteButton label="" onDelete={() => handleDelete(row.id)} />
+            <DeleteButton
+              label=""
+              onDelete={() =>
+                handleDelete({
+                  entryId: row.id,
+                  projectId: row.projectId.toString(),
+                })
+              }
+            />
           </>
         );
       },
