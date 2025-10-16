@@ -30,7 +30,6 @@ async function deleteEntry({
 
   // only delete if isAdmin, isOwner, or isCoEditor
   try {
-    let deleteResponse = null;
     if (isAdmin || isCoEditor || isOwner) {
       const deleteResponse = await db.bibEntry.delete({
         where: {
