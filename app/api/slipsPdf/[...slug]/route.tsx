@@ -27,8 +27,8 @@ export async function GET(
       entry.items?.map((item) => {
         let info: string = '';
 
-        if (item.location !== entry.location) {
-          info += `${item.location_name} (${item.location}) `;
+        if (item.location_code || entry.location_codes) {
+          info += `${item.location_name} (${item.location_code}) `;
         }
         if (item.call_number !== entry.callNumber) {
           info += `${item.call_number}`;
@@ -45,10 +45,7 @@ export async function GET(
 
     if (itemInfos.length > 0) {
       // One object per item, highlighting the index
-      const locationStr =
-        entry.location == entry.location_display
-          ? entry.location_display
-          : `${entry.location_display} (${entry.location})`;
+      const locationStr = `${entry.location_display} (${entry.location_codes})`;
       return itemInfos.map((_, idx) => ({
         author: entry.author,
         title: entry.itemTitle,
@@ -77,7 +74,7 @@ export async function GET(
           callNumber: entry.callNumber ?? undefined,
           notes: entry.notes ?? undefined,
           date: entry.pub_date ?? undefined,
-          location: `${entry.location_display} (${entry.location})`,
+          location: `${entry.location_display} (${entry.location_codes})`,
           box: '',
           folder: '',
           ms: '',

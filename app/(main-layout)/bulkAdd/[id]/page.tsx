@@ -1,16 +1,24 @@
+import { Metadata } from 'next';
 import BulkAddForm from '@/components/BulkAddForm';
 import { getProject } from '@/app/actions/projectActions';
 import { ProjectWithUserAndBib } from '@/types/ProjectWithUserAndBib';
 import ProjectButtons from '@/components/ProjectButtons';
-import canEdit, { nonOwnerEditor } from '@/lib/canEdit';
+import getUserInfo from '@/lib/getUserInfo';
 import NonOwnerAlert from '@/components/NonOwnerAlert';
 import ProjectMetadata from '@/components/ProjectMetadata';
 import { unauthorized } from 'next/navigation';
+
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: 'Bulk Add Items | Argus',
+    description: 'Add multiple items to project',
+  };
+}
+
 export default async function BulkAddPage({
   params,
 }: {
   params: Promise<{ id: string }>;
-  //   params: { id: string };
 }) {
   const { id } = await params;
   const projectResponse: {
@@ -18,23 +26,27 @@ export default async function BulkAddPage({
     error?: string;
   } = await getProject({ id });
   const { project, error } = projectResponse;
-  const { canEditBool, nonOwnerAlert } = await nonOwnerEditor(parseInt(id));
+  const {
+    permissions: { canEdit, canPrint, nonOwnerEditor },
+  } = await getUserInfo(id);
 
-  if (!canEditBool) {
+  if (!canEdit) {
     return unauthorized();
   }
   if (project) {
     return (
       <>
-        {nonOwnerAlert && <NonOwnerAlert />}
+        {nonOwnerEditor && <NonOwnerAlert />}
         <h1 className="h2">Bulk Add Items: {project?.title}</h1>
+        <ProjectMetadata project={project} />
+
         <ProjectButtons
           projectId={parseInt(id)}
           onPage="bulkAdd"
-          canEdit={canEditBool}
+          canEdit={canEdit}
+          canPrint={canPrint}
           divClass="mb-3"
         />
-        <ProjectMetadata project={project} />
         <BulkAddForm projectId={id} />
       </>
     );

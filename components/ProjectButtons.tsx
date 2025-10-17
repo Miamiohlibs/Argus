@@ -4,11 +4,15 @@ import DuplicateProjectButton from './DuplicateProjectButton';
 const ProjectButtons = ({
   projectId,
   canEdit = false,
+  canPrint = false,
+  canAssignCoEditors = false,
   onPage,
   divClass = '',
 }: {
   projectId: number;
-  canEdit: boolean;
+  canEdit?: boolean;
+  canPrint?: boolean;
+  canAssignCoEditors?: boolean;
   onPage: string;
   divClass?: string;
 }) => {
@@ -47,16 +51,28 @@ const ProjectButtons = ({
           Bulk Add Items
         </Link>
       )}
-      <Link
-        href={`/slips/${projectId}`}
-        className={'me-2 btn btn-outline-primary btn-sm'}
-      >
-        Print Slips
-      </Link>
+      {canPrint && (
+        <Link
+          href={`/slips/${projectId}`}
+          className={'me-2 btn btn-outline-primary btn-sm'}
+        >
+          Print Slips
+        </Link>
+      )}
 
       {canEdit && onPage == 'project' && (
         <DuplicateProjectButton id={projectId.toString()} />
       )}
+
+      {canAssignCoEditors &&
+        ['project', 'edit-project-details'].includes(onPage) && (
+          <Link
+            href={`/editProject/${projectId.toString()}/coEditors`}
+            className="me-2 btn btn-outline-secondary btn-sm"
+          >
+            Add/Remove Co-Editors
+          </Link>
+        )}
     </div>
   );
 };

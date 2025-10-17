@@ -1,15 +1,26 @@
-'use client';
-import { useParams } from 'next/navigation';
+'use server';
+import { Metadata } from 'next';
+import MultiPagePdf from './ClientMultipagePdf';
+import { unauthorized } from 'next/navigation';
+import getUserInfo from '@/lib/getUserInfo';
 
-export default function MultiPagePdf() {
-  const { id } = useParams();
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: 'Print Slips | Argus',
+    description: 'Print PDF slips for each project item',
+  };
+}
+
+export default async function PdfWrapper() {
+  const {
+    permissions: { canPrint },
+  } = await getUserInfo();
+  if (!canPrint) {
+    unauthorized();
+  }
   return (
-    <div style={{ height: '100vh' }}>
-      <iframe
-        src={`${process.env.NEXT_PUBLIC_APP_BASEPATH ?? ''}/api/slipsPdf/${id}`}
-        title="Printing Slips"
-        style={{ width: '100%', height: '100%', border: 'none' }}
-      />
-    </div>
+    <>
+      <MultiPagePdf />
+    </>
   );
 }

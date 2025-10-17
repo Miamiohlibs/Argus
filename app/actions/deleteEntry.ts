@@ -1,56 +1,48 @@
 'use server';
 import logger from '@/lib/logger';
 import { db } from '@/lib/db';
-import { auth } from '@clerk/nextjs/server';
-import { isAdmin } from '@/lib/canEdit';
+import getUserInfo from '@/lib/getUserInfo';
 import { updateProjectLastUpdated } from './projectActions';
 
-async function deleteEntry(entryId: string): Promise<{
+async function deleteEntry({
+  entryId,
+  projectId,
+}: {
+  entryId: string;
+  projectId: string;
+}): Promise<{
   message?: string;
   error?: string;
 }> {
-  const { userId } = await auth();
-  if (!userId) {
+  const {
+    user,
+    permissions: { isAdmin, isCoEditor, isOwner },
+  } = await getUserInfo(projectId);
+  if (!user) {
     return { error: 'User not found' };
   }
 
-  const userIsAdmin = await isAdmin();
   logger.verbose(
-    `deletion request on ${entryId} by ${userId}; isAdmin: ${userIsAdmin.toString()}`
+    `deletion request on ${entryId} by ${
+      user.id
+    }; isAdmin: ${isAdmin.toString()}`
   );
 
-  // if admin, allow delete regardless of ownership
+  // only delete if isAdmin, isOwner, or isCoEditor
   try {
-    if (userIsAdmin) {
+    if (isAdmin || isCoEditor || isOwner) {
       const deleteResponse = await db.bibEntry.delete({
         where: {
           id: entryId,
-          // userId,
         },
       });
       await updateProjectLastUpdated(deleteResponse.projectId);
     } else {
-      // require user == owner
-      // find out if project has user
-      const bibEntry = await db.bibEntry.findFirst({
-        where: {
-          id: entryId,
-          project: {
-            userId: userId, // ensure project belongs to this user
-          },
-        },
-      });
+      throw new Error('Not authorized to delete');
+    }
 
-      if (!bibEntry) {
-        throw new Error('Not authorized or entry not found');
-      }
-
-      //delete entry if no exception throw (if user owns project)
-      const deleteResponse = await db.bibEntry.delete({
-        where: { id: entryId },
-      });
-
-      await updateProjectLastUpdated(deleteResponse.projectId);
+    if (!entryId) {
+      throw new Error(`Entry not found for deletion: ${entryId}`);
     }
 
     return { message: 'Deleted entry' };

@@ -12,21 +12,25 @@ import { User } from '@prisma/client';
 // Define the props interface
 interface EntriesTableProps {
   entries?: EntryWithItems[];
-  user: User;
-  ownerClerkId: string;
+  canEdit?: boolean;
 }
 
 export default function EntriesTable({
   entries = [],
-  user,
-  ownerClerkId,
+  canEdit = false,
 }: EntriesTableProps) {
   const [currentEntries, setCurrentEntries] = useState<EntryWithItems[]>([]); // Track current entries
   const [filteredEntries, setFilteredEntries] = useState<EntryWithItems[]>([]);
   const [loading, setLoading] = useState(true);
   const [filterText, setFilterText] = useState('');
 
-  const handleDelete = async (entryId: string) => {
+  const handleDelete = async ({
+    entryId,
+    projectId,
+  }: {
+    entryId: string;
+    projectId: string;
+  }) => {
     const confirmed = window.confirm(
       'Are you sure you want to delete this entry?'
     );
@@ -34,9 +38,9 @@ export default function EntriesTable({
 
     console.log(`Delete entry with ID: ${entryId}`);
 
-    const { error } = await deleteEntry(entryId); // also gets {message}
+    const { error } = await deleteEntry({ entryId, projectId }); // also gets {message}
     if (error) {
-      toast.error('Entry deletion failed');
+      toast.error(`Entry deletion failed: ${error}`);
     } else {
       toast.success('Entry deleted successfully');
       const updatedEntries = currentEntries.filter(
@@ -94,7 +98,29 @@ export default function EntriesTable({
     },
     {
       name: 'Location',
-      selector: (row: EntryWithItems) => row.location ?? 'Unknown',
+      selector: (row: EntryWithItems) => {
+        if (row.location_codes || row.location_display) {
+          return `${row.location_display} ${row.location_codes}`.trim();
+        } else {
+          return `Unknown`;
+        }
+      },
+      cell: (row: EntryWithItems) => {
+        if (row.location_codes || row.location_display) {
+          return (
+            <>
+              {row.location_display && <>{row.location_display}</>}
+              {row.location_codes && (
+                <>
+                  <br />({row.location_codes})
+                </>
+              )}
+            </>
+          );
+        } else {
+          return <>Unknown</>;
+        }
+      },
       sortable: true,
     },
     {
@@ -126,24 +152,6 @@ export default function EntriesTable({
     {
       name: 'Tools',
       cell: (row: EntryWithItems) => {
-        // Check if current user can edit this project
-        // const canEdit = true;
-        const canEdit =
-          user !== null &&
-          user !== undefined &&
-          (user?.role === 'admin' ||
-            user?.role === 'superadmin' ||
-            ownerClerkId === user?.clerkUserId);
-        // console.log(
-        //   'Row User:',
-        //   ownerClerkId,
-        //   'Current User:',
-        //   user?.clerkUserId,
-        //   'Can edit:',
-        //   canEdit,
-        //   'for project:',
-        //   row.itemTitle
-        // );
         const LinkOutUrl = row.url ?? undefined;
         const LinkOut = LinkOutUrl ? (
           <Link
@@ -171,7 +179,15 @@ export default function EntriesTable({
             >
               Edit
             </Link>
-            <DeleteButton label="" onDelete={() => handleDelete(row.id)} />
+            <DeleteButton
+              label=""
+              onDelete={() =>
+                handleDelete({
+                  entryId: row.id,
+                  projectId: row.projectId.toString(),
+                })
+              }
+            />
           </>
         );
       },
@@ -180,26 +196,28 @@ export default function EntriesTable({
   ];
 
   return (
-    <DataTable
-      columns={columns}
-      data={filteredEntries}
-      progressPending={loading}
-      pagination
-      paginationPerPage={25}
-      paginationRowsPerPageOptions={[10, 25, 50, 100]}
-      highlightOnHover
-      striped
-      subHeader
-      subHeaderComponent={
-        <input
-          type="text"
-          placeholder="Search entries..."
-          aria-label="Search entries"
-          value={filterText}
-          onChange={(e) => setFilterText(e.target.value)}
-          className="p-2 border rounded w-full md:w-1/3"
-        />
-      }
-    />
+    <div className="react-data-table" id="entries-table">
+      <DataTable
+        columns={columns}
+        data={filteredEntries}
+        progressPending={loading}
+        pagination
+        paginationPerPage={25}
+        paginationRowsPerPageOptions={[10, 25, 50, 100]}
+        highlightOnHover
+        striped
+        subHeader
+        subHeaderComponent={
+          <input
+            type="text"
+            placeholder="Search entries..."
+            aria-label="Search entries"
+            value={filterText}
+            onChange={(e) => setFilterText(e.target.value)}
+            className="p-2 border rounded w-full md:w-1/3"
+          />
+        }
+      />
+    </div>
   );
 }

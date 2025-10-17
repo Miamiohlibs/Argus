@@ -1,7 +1,5 @@
 import logger from '@/lib/logger';
-import { checkUser } from '@/lib/checkUser';
-import canEdit from '@/lib/canEdit';
-// import {getProject} from '@/app/actions/projectActions';
+import getUserInfo from '@/lib/getUserInfo';
 import { unauthorized } from 'next/navigation';
 
 interface ServerDataFetcherProps {
@@ -13,9 +11,11 @@ async function ServerDataFetcher({
   projectId,
   children,
 }: ServerDataFetcherProps) {
-  const user = await checkUser();
-  const canEditBool: boolean = await canEdit(projectId?.toString() ?? 0);
-  if (!user || !canEditBool) {
+  const {
+    user,
+    permissions: { canEdit },
+  } = await getUserInfo(projectId);
+  if (!user || !canEdit) {
     return unauthorized();
   }
 

@@ -1,7 +1,15 @@
+import { Metadata } from 'next';
 import ClientSearchBibsPage from './ClientSearchBibsPage';
 import ServerDataFetcher from './ServerDataFetcher';
-import { nonOwnerEditor } from '@/lib/canEdit';
+import getUserInfo from '@/lib/getUserInfo';
 import { getProject } from '@/app/actions/projectActions';
+
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: 'Search Catalog for Item | Argus',
+    description: 'Look up item from library catalog',
+  };
+}
 
 interface SearchBibsPageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -22,7 +30,9 @@ async function SearchBibsPage({ searchParams }: SearchBibsPageProps) {
     return <>`Invalid project ID: ${tempId}`</>;
   }
   const projectId = numericId;
-  const { canEditBool, nonOwnerAlert } = await nonOwnerEditor(projectId);
+  const {
+    permissions: { canEdit, canPrint, nonOwnerEditor },
+  } = await getUserInfo(projectId);
   const { project } = await getProject({ id: projectId.toString() });
 
   if (project) {
@@ -30,8 +40,9 @@ async function SearchBibsPage({ searchParams }: SearchBibsPageProps) {
       <ServerDataFetcher projectId={projectId.toString()}>
         <ClientSearchBibsPage
           projectId={projectId}
-          userCanEditPage={canEditBool}
-          nonOwnerAlert={nonOwnerAlert}
+          userCanEditPage={canEdit}
+          userCanPrint={canPrint}
+          nonOwnerAlert={nonOwnerEditor}
           project={project}
         />
       </ServerDataFetcher>

@@ -1,23 +1,29 @@
 'use server';
 import logger from '@/lib/logger';
 import { db } from '@/lib/db';
-import { auth } from '@clerk/nextjs/server';
-import { isAdmin, isSuperAdmin } from '@/lib/canEdit';
+import getUserInfo from '@/lib/getUserInfo';
 
 async function deleteUser(userIdToDelete: string): Promise<{
   message?: string;
   error?: string;
 }> {
-  const { userId } = await auth();
-  if (!userId) {
+  // const { userId } = await auth();
+  const {
+    user,
+    permissions: { isAdmin, isSuperAdmin },
+  } = await getUserInfo();
+
+  if (!user?.clerkUserId) {
     return { error: 'User not found' };
   }
-  logger.verbose(`deletion request for user ${userIdToDelete} by ${userId}`);
-  const canDelete = await isAdmin();
-  const canDeleteSuperAdmin = await isSuperAdmin();
+  logger.verbose(
+    `deletion request for user ${userIdToDelete} by ${user.clerkUserId}`
+  );
+  const canDelete = isAdmin;
+  const canDeleteSuperAdmin = isSuperAdmin;
   if (!canDelete) {
     logger.verbose(
-      `user deletion permission denied on ${userIdToDelete} by ${userId}`
+      `user deletion permission denied on ${userIdToDelete} by ${user.clerkUserId}`
     );
     return { error: 'Delete user permission denied' };
   }
@@ -26,7 +32,7 @@ async function deleteUser(userIdToDelete: string): Promise<{
   // Each object can include any fields from the User type.
   const deleteRequirementsArray: Array<Record<string, string | object>> = [
     { id: userIdToDelete }, // id to delete
-    { clerkUserId: { not: userId } }, // don't delete yourself
+    { clerkUserId: { not: user.clerkUserId } }, // don't delete yourself
   ];
   if (!canDeleteSuperAdmin) {
     // admin cannot delete superadmin

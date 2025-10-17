@@ -2,10 +2,8 @@
 import { Button, Form, InputGroup } from 'react-bootstrap';
 import { useRef } from 'react';
 import { toast } from 'react-toastify';
-// import { useRouter } from 'next/navigation'; // Changed from react-router-dom
-// import { bibById } from '@/app/actions/almaSearch';
 import { bibHoldingsByAny } from '@/app/actions/almaSearch';
-import { useState } from 'react';
+import { useState, useTransition } from 'react';
 import type { CondensedBibHoldings } from '@/types/CondensedBibHoldings';
 import BibResultsWrapper from './BibResultsWrapper';
 
@@ -19,25 +17,33 @@ const RecordSearchForm = ({
   userCanEditPage,
 }: RecordSearchFormProps) => {
   const formRef = useRef<HTMLFormElement>(null);
-  // const router = useRouter(); // Changed from useNavigate
-  // const [results, setresults] = useState<MmsidSearchResultOrNull>(null); // State to hold search results
-  const [results, setresults] = useState<CondensedBibHoldings | null>(null);
+  const [results, setResults] = useState<CondensedBibHoldings | null>(null);
+  const [searchFailed, setSearchFailed] = useState<boolean>(false);
+  const [isPending, startTransition] = useTransition();
 
   const handleSubmit = async (formData: FormData) => {
-    let data, error;
-    if (formData.get('searchType') == 'any') {
-      const input = formData.get('any-input')?.toString() ?? '';
-      const result = await bibHoldingsByAny(input);
-      data = result.data;
-      error = result.error;
-    }
+    setResults(null); // Clear previous results
+    let data: CondensedBibHoldings | undefined | null,
+      error: string | undefined | null;
 
-    if (error) {
-      toast.error(`Lookup failed -- ${error}`);
-    } else {
-      // toast.success('Lookup successful');
-      setresults(data || null); // Set the results state with the fetched data
-    }
+    startTransition(async () => {
+      // Determine which search type was used and call the appropriate function
+      if (formData.get('searchType') == 'any') {
+        const input = formData.get('any-input')?.toString() ?? '';
+        const result = await bibHoldingsByAny(input);
+        data = result.data;
+        error = result.error;
+      }
+
+      if (error) {
+        toast.error(`Lookup failed -- ${error}`);
+        setSearchFailed(true);
+        setResults(null); // Clear results on error
+      } else {
+        // toast.success('Lookup successful');
+        setResults(data || null); // Set the results state with the fetched data
+      }
+    });
   };
 
   return (
@@ -66,6 +72,8 @@ const RecordSearchForm = ({
           holdingsData={results ?? undefined}
           actionType={'add'}
           isEditor={userCanEditPage}
+          searchActive={isPending}
+          searchFailed={searchFailed}
         />
 
         {process.env.NEXT_PUBLIC_IS_DEV_ENV && results && (
