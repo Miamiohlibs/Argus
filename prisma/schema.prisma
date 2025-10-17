@@ -107,7 +107,7 @@ enum UserStatus {
   Other
 }
 
-// This was from the original tutorial, not used in Watson
+// This was from the original tutorial, not used in Argus
 model Transaction {
   id        String   @id @default(uuid())
   text      String
