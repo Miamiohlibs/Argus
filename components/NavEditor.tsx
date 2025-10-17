@@ -1,24 +1,24 @@
 import logger from '@/lib/logger';
 import NextLink from 'next/link';
 import { NavItem, NavLink } from 'react-bootstrap';
-// import checkAccess from '@/lib/checkAccess';
-import { isEditorOrAbove } from '@/lib/canEdit';
+import getUserInfo from '@/lib/getUserInfo';
 const NavEditor = async () => {
-  // Check if the user has access to admin features
-  const hasAccess = await isEditorOrAbove();
-  logger.verbose('NavEditor - hasAccess:', hasAccess);
-  if (!hasAccess) {
-    return null; // If no access, do not render the admin navigation
+  // Check if the user has access to editor features
+  const {
+    permissions: { isEditorOrAbove },
+  } = await getUserInfo();
+
+  logger.verbose('NavEditor - hasAccess:', isEditorOrAbove);
+  if (!isEditorOrAbove) {
+    return null; // If no access, do not render the editor navigation
   }
   return (
     <>
-      {/* <Nav className="me-3"> */}
       <NavItem>
         <NavLink as={NextLink} href="/">
           My Projects
         </NavLink>
       </NavItem>
-      {/* </Nav> */}
     </>
   );
 };

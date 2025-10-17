@@ -3,13 +3,10 @@ import { TableColumn } from 'react-data-table-component';
 import { useEffect, useState } from 'react';
 import DataTable from 'react-data-table-component';
 import { Prisma } from '@prisma/client';
-// import { User as ClerkUser } from '@clerk/nextjs';
 import Link from 'next/link';
-import { Button } from 'react-bootstrap';
 import { getProjects } from '@/app/actions/projectActions';
 import DeleteProjectButton from './DeleteProjectButton';
 import { User } from '@prisma/client';
-// import canEdit from '@/lib/canEdit';
 
 // Use Prisma's generated type that includes the user relation
 type ProjectWithUser = Prisma.ProjectGetPayload<{
@@ -20,11 +17,13 @@ type ProjectWithUser = Prisma.ProjectGetPayload<{
 interface ProjectsTableProps {
   limitToUser?: boolean;
   user?: User | null;
+  canPrint?: boolean;
 }
 
 export default function ProjectsTable({
   limitToUser = true,
   user = null,
+  canPrint = false,
 }: ProjectsTableProps) {
   const [projects, setProjects] = useState<ProjectWithUser[]>([]);
   const [filteredProjects, setFilteredProjects] = useState<ProjectWithUser[]>(
@@ -72,14 +71,16 @@ export default function ProjectsTable({
     },
     {
       name: 'Created',
-      selector: (row: ProjectWithUser) =>
+      selector: (row: ProjectWithUser) => new Date(row.createdAt).getTime(),
+      cell: (row: ProjectWithUser) =>
         new Date(row.createdAt).toLocaleDateString(),
       sortable: true,
       width: '10em',
     },
     {
       name: 'Updated',
-      selector: (row: ProjectWithUser) =>
+      selector: (row: ProjectWithUser) => new Date(row.updatedAt).getTime(),
+      cell: (row: ProjectWithUser) =>
         new Date(row.updatedAt).toLocaleDateString(),
       sortable: true,
       width: '10em',
@@ -93,55 +94,39 @@ export default function ProjectsTable({
     {
       name: 'Tools',
       cell: (row: ProjectWithUser) => {
+        // Have to determine edit permissions line by line
+        // can't use the regular getUserInfo().permissions
         // Check if current user can edit this project
-        // note: I tried using @/lib/canEdit here and and couldn't get it to work
-        const canEditBool =
+        const canEdit =
           user?.role !== 'user' &&
           (user?.role === 'admin' ||
             user?.role === 'superadmin' ||
             row.user.clerkUserId === user?.clerkUserId);
-        // logger.verbose(
-        //   'Row User:',
-        //   row.user?.clerkUserId,
-        //   'Current User:',
-        //   user?.clerkUserId,
-        //   'Can edit:',
-        //   canEditBool,
-        //   'for project:',
-        //   row.title
-        // );
-
-        if (!canEditBool) {
-          return (
-            <>
-              <Link
-                href={`/slips/${row.id}`}
-                className="btn btn-sm btn-outline-primary"
-              >
-                Print
-              </Link>
-            </>
-          );
-        }
 
         return (
           <>
-            <Link
-              href={`/editProject/${row.id}`}
-              className="me-1 btn btn-outline-primary btn-sm"
-            >
-              Edit
-            </Link>
-            <Link
-              href={`/slips/${row.id}`}
-              className="me-1 btn btn-outline-primary btn-sm"
-            >
-              Print
-            </Link>
-            <DeleteProjectButton
-              project={row}
-              onDeleted={() => handleDelete(row.id)}
-            />
+            {canEdit && (
+              <Link
+                href={`/editProject/${row.id}`}
+                className="me-1 btn btn-outline-primary btn-sm"
+              >
+                Edit
+              </Link>
+            )}
+            {canPrint && (
+              <Link
+                href={`/slips/${row.id}`}
+                className="me-1 btn btn-outline-primary btn-sm"
+              >
+                Print
+              </Link>
+            )}
+            {canEdit && (
+              <DeleteProjectButton
+                project={row}
+                onDeleted={() => handleDelete(row.id)}
+              />
+            )}
           </>
         );
       },
@@ -170,26 +155,28 @@ export default function ProjectsTable({
   }, [filterText, projects]);
 
   return (
-    <DataTable
-      columns={columns}
-      data={filteredProjects}
-      progressPending={loading}
-      pagination
-      paginationPerPage={25}
-      paginationRowsPerPageOptions={[10, 25, 50, 100]}
-      highlightOnHover
-      striped
-      subHeader
-      subHeaderComponent={
-        <input
-          type="text"
-          placeholder="Search projects..."
-          value={filterText}
-          aria-label="Search projects"
-          onChange={(e) => setFilterText(e.target.value)}
-          className="p-2 border rounded w-full md:w-1/3"
-        />
-      }
-    />
+    <div className="react-data-table" id="projects-table">
+      <DataTable
+        columns={columns}
+        data={filteredProjects}
+        progressPending={loading}
+        pagination
+        paginationPerPage={25}
+        paginationRowsPerPageOptions={[10, 25, 50, 100]}
+        highlightOnHover
+        striped
+        subHeader
+        subHeaderComponent={
+          <input
+            type="text"
+            placeholder="Search projects..."
+            value={filterText}
+            aria-label="Search projects"
+            onChange={(e) => setFilterText(e.target.value)}
+            className="p-2 border rounded w-full md:w-1/3"
+          />
+        }
+      />
+    </div>
   );
 }

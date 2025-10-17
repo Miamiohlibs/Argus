@@ -9,6 +9,7 @@ import { ProjectWithUserAndBib } from '@/types/ProjectWithUserAndBib';
 interface ClientSearchBibsPageProps {
   projectId?: number;
   userCanEditPage: boolean;
+  userCanPrint: boolean;
   nonOwnerAlert: boolean;
   project: ProjectWithUserAndBib;
 }
@@ -16,6 +17,7 @@ interface ClientSearchBibsPageProps {
 const ClientSearchBibsPage = ({
   projectId,
   userCanEditPage,
+  userCanPrint = false,
   nonOwnerAlert,
   project,
 }: ClientSearchBibsPageProps) => {
@@ -40,13 +42,14 @@ const ClientSearchBibsPage = ({
     <>
       {nonOwnerAlert && <NonOwnerAlert />}
       <h1 className="h2">Search Alma Catalog for Item</h1>
+      <ProjectMetadata project={project} />
       <ProjectButtons
         projectId={clientProjectId}
         onPage="searchBibs"
         canEdit={userCanEditPage}
+        canPrint={userCanPrint}
         divClass={'mb-3'}
       />
-      <ProjectMetadata project={project} />
       <RecordSearchForm
         projectId={clientProjectId}
         userCanEditPage={userCanEditPage}

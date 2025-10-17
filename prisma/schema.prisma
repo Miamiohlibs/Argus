@@ -14,8 +14,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider          = "postgresql"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
 model User {
@@ -26,23 +27,27 @@ model User {
   role         Role             @default(user)
   affiliation  UserAffiliation?
   status       UserStatus?
+  printSlips   Boolean          @default(false)
   imageUrl     String?
   createdAt    DateTime         @default(now())
   updatedAt    DateTime         @updatedAt
   transactions Transaction[]
-  projects     Project[]
+  projects     Project[]        @relation("ProjectOwner")
+  coEditorOn   Project[]        @relation("ProjectCoEditors")
 }
 
 model Project {
   id          Int        @id @default(autoincrement())
   title       String
-  user        User       @relation(fields: [userId], references: [clerkUserId], onDelete: Cascade)
+  user        User       @relation("ProjectOwner", fields: [userId], references: [clerkUserId], onDelete: Cascade)
+  // user        User       @relation(fields: [userId], references: [clerkUserId], onDelete: Cascade)
   userId      String
   notes       String?
   needForDate DateTime?
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
   bibEntries  BibEntry[]
+  coEditors   User[]     @relation("ProjectCoEditors")
 }
 
 model BibEntry {
@@ -54,7 +59,7 @@ model BibEntry {
   pub_date         String?
   publisher        String?
   callNumber       String?
-  location         String
+  // location         String
   location_codes   String?
   location_display String?
   notes            String?
@@ -68,7 +73,7 @@ model BibEntry {
 model ItemEntry {
   id            String    @id @default(uuid())
   description   String?
-  location      String?
+  // location      String?
   location_code String?
   location_name String?
   call_number   String?
@@ -77,7 +82,7 @@ model ItemEntry {
   box           String?
   folder        String?
   ms            String?
-  BibEntry      BibEntry? @relation(fields: [bibEntryId], references: [id])
+  BibEntry      BibEntry? @relation(fields: [bibEntryId], references: [id], onDelete: Cascade)
   bibEntryId    String?
 }
 

@@ -3,9 +3,10 @@ import { useRef } from 'react';
 import entryAction from '@/app/actions/addEntry';
 import { toast } from 'react-toastify';
 import { EntryWithItems } from '@/types/EntryWithItems';
-import { Form, InputGroup, Button } from 'react-bootstrap';
+import { Form, InputGroup, Button, FormSelect } from 'react-bootstrap';
 import { BibEntry, ItemEntry } from '@prisma/client';
-import ProjectButtons from '@/components/ProjectButtons';
+import { useState } from 'react';
+import { useEffect } from 'react';
 
 interface CustomEntryFormProps {
   projectId?: number;
@@ -13,16 +14,69 @@ interface CustomEntryFormProps {
   editable?: boolean;
 }
 
+interface LocationCode {
+  code: string;
+  name: string;
+  unofficial?: boolean;
+}
+
 const CustomEntryForm = ({
   projectId,
   existingEntry,
   editable = true,
 }: CustomEntryFormProps) => {
+  const [locations, setLocations] = useState<LocationCode[]>([]);
+  const [selectedLocation, setSelectedLocation] = useState<LocationCode | null>(
+    null
+  );
+
   const pageHeaderText = !existingEntry
     ? 'New Custom Entry'
     : editable
     ? `Edit Custom Entry: ${existingEntry.itemTitle}`
     : `Viewing Custom Entry: ${existingEntry.itemTitle}`;
+
+  // Load locations only once on mount
+
+  useEffect(() => {
+    if (typeof process.env.NEXT_PUBLIC_LOCATION_CODES_JSON === 'string') {
+      try {
+        const parsedLocations: LocationCode[] = JSON.parse(
+          process.env.NEXT_PUBLIC_LOCATION_CODES_JSON
+        );
+        setLocations(parsedLocations);
+      } catch (error) {
+        console.error('Failed to parse LOCATION_CODES_JSON:', error);
+      }
+    }
+  }, []);
+
+  const handleLocationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    console.log(`Selected location: ${e.target.value}`);
+    const selected =
+      locations.find((loc) => loc.code === e.target.value) || null;
+    setSelectedLocation(selected);
+  };
+  if (existingEntry?.location_codes && !selectedLocation) {
+    const loc =
+      locations.find((loc) => loc.code === existingEntry.location_codes) ||
+      null;
+    if (loc) {
+      setSelectedLocation(loc);
+    }
+  }
+  // Generate location select options
+  const locationSelectOptions = locations.map((loc: LocationCode) => (
+    <option key={loc.code} value={loc.code}>
+      {loc.name}
+    </option>
+  ));
+  const blankPullDownOption = (
+    <option key="none" value="">
+      --- Please select a location ---
+    </option>
+  );
+  locationSelectOptions.unshift(blankPullDownOption);
 
   const handleSubmit = async (event: React.SyntheticEvent<HTMLFormElement>) => {
     console.log('starting handleSubmit');
@@ -40,7 +94,9 @@ const CustomEntryForm = ({
       author: formData.get('author') as string,
       almaId: 'unknown',
       almaIdType: 'unknown',
-      location: formData.get('itemLocation') as string,
+      // location: selectedLocation ? selectedLocation.code : '',
+      location_codes: selectedLocation ? selectedLocation.code : '',
+      location_display: selectedLocation ? selectedLocation.name : '',
       pub_date: formData.get('pub_date') as string,
       notes: (formData.get('itemNotes') as string) || '',
       projectId: projectId,
@@ -60,7 +116,7 @@ const CustomEntryForm = ({
     const safeItemData: {
       description: string | null;
       id: string;
-      location: string | null;
+      // location: string | null;
       location_name: string | null;
       location_code: string | null;
       call_number: string | null;
@@ -74,9 +130,9 @@ const CustomEntryForm = ({
     } = {
       description: (formData.get('itemDescription') as string) ?? null,
       id: 'unknown',
-      location: (formData.get('itemLocation') as string) ?? null,
-      location_name: (formData.get('itemLocation') as string) ?? null,
-      location_code: '',
+      // location: selectedLocation?.code ?? null,
+      location_name: selectedLocation?.name ?? null,
+      location_code: selectedLocation?.code ?? null,
       call_number: (formData.get('itemCallNumber') as string) ?? null,
       copy_id: (formData.get('itemCopy') as string) ?? null,
       bibEntryId: 'unknown',
@@ -106,7 +162,6 @@ const CustomEntryForm = ({
         formRef.current?.reset();
       }
       // For edit, don't reload - let the user see the updated state
-      // window.location.reload(); // Remove this for better UX
     }
   };
 
@@ -149,6 +204,7 @@ const CustomEntryForm = ({
               placeholder={editable ? 'Title (required)' : ''}
               disabled={!editable}
               defaultValue={existingEntry?.itemTitle ?? ''}
+              required={true}
             />
           </InputGroup>
         </Form.Group>
@@ -166,6 +222,7 @@ const CustomEntryForm = ({
               placeholder={editable ? 'Author' : ''}
               disabled={!editable}
               defaultValue={existingEntry?.author ?? ''}
+              required={true}
             />
           </InputGroup>
         </Form.Group>
@@ -178,31 +235,19 @@ const CustomEntryForm = ({
               <Form.Label htmlFor="itemLocation">Location</Form.Label>{' '}
               <sup>*</sup>
             </InputGroup.Text>
-            <Form.Control
-              type="text"
+            <FormSelect
               id="itemLocation"
               name="itemLocation"
               aria-describedby="location-note"
-              placeholder={editable ? 'Location' : ''}
               disabled={!editable}
-              defaultValue={existingEntry?.location ?? ''}
-            />
+              value={selectedLocation?.code || ''}
+              onChange={handleLocationChange}
+              required={true}
+            >
+              {locationSelectOptions}
+            </FormSelect>
           </InputGroup>
         </Form.Group>
-
-        {/* <Form.Group className="mb-2">
-          <InputGroup>
-            <InputGroup.Text id="publisher-note">Publisher</InputGroup.Text>
-            <Form.Control
-              type="text"
-              id="publisher"
-              name="publisher"
-              aria-describedby="publisher-note"
-              placeholder="Publisher"
-              defaultValue={existingEntry?.publisher ?? ''}
-            />
-          </InputGroup>
-        </Form.Group> */}
 
         <Form.Group className="mb-2">
           <InputGroup>

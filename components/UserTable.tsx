@@ -129,27 +129,29 @@ export default function UserTable({
     },
   ];
   return (
-    <DataTable
-      // title="User List"
-      columns={columns}
-      data={filteredUsers}
-      progressPending={loading}
-      pagination
-      paginationPerPage={25}
-      paginationRowsPerPageOptions={[10, 25, 50, 100]}
-      highlightOnHover
-      striped
-      subHeader
-      subHeaderComponent={
-        <input
-          type="text"
-          placeholder="Search by name, email, or role"
-          aria-label="Search users by name, email, or role"
-          value={filterText}
-          onChange={(e) => setFilterText(e.target.value)}
-          className="p-2 border rounded w-full md:w-1/3"
-        />
-      }
-    />
+    <div className="react-data-table" id="users-table">
+      <DataTable
+        // title="User List"
+        columns={columns}
+        data={filteredUsers}
+        progressPending={loading}
+        pagination
+        paginationPerPage={25}
+        paginationRowsPerPageOptions={[10, 25, 50, 100]}
+        highlightOnHover
+        striped
+        subHeader
+        subHeaderComponent={
+          <input
+            type="text"
+            placeholder="Search by name, email, or role"
+            aria-label="Search users by name, email, or role"
+            value={filterText}
+            onChange={(e) => setFilterText(e.target.value)}
+            className="p-2 border rounded w-full md:w-1/3"
+          />
+        }
+      />
+    </div>
   );
 }

@@ -1,16 +1,38 @@
+import { Metadata } from 'next';
 import { getProject } from '@/app/actions/projectActions';
-import { checkUser } from '@/lib/checkUser';
 import getEntries from '@/app/actions/getEntries';
 import EntriesTable from '@/components/EntriesTable';
-import canEdit from '@/lib/canEdit';
+import getUserInfo from '@/lib/getUserInfo';
 import ProjectButtons from '@/components/ProjectButtons';
+import ProjectMetadata from '@/components/ProjectMetadata';
+
+type MetadataProps = {
+  params: Promise<{ id: string }>;
+};
+
+export async function generateMetadata({
+  params,
+}: MetadataProps): Promise<Metadata> {
+  const { id } = await params;
+  const bibEntries = await getEntries(id);
+  const { project, error } = await getProject({ id });
+  if (project !== undefined) {
+    return {
+      title: `${project.title} | Argus`,
+      description: `Project page: ${project.title}`,
+    };
+  } else {
+    return {
+      title: 'Project Not Found | Argus',
+    };
+  }
+}
 
 export default async function ProjectPage({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const user = await checkUser();
   const { id } = await params;
   const bibEntries = await getEntries(id);
   const { project, error } = await getProject({ id });
@@ -18,33 +40,27 @@ export default async function ProjectPage({
   if (error) {
     return <div>Error: {error}</div>;
   }
-  // const isBasicUserBool = await isBasicUser();
-  // const isOwnerBool = await isOwner(id);
-  // const isAdminBool = await isAdmin();
-  const canEditBool = await canEdit(id);
+  const {
+    user,
+    permissions: { canEdit, canPrint, isOwner, isAdmin },
+  } = await getUserInfo(id);
 
   return (
     <>
       <h1 className="h2">{project?.title}</h1>
-      <p>Owner: {project?.user.name}</p>
-      {/* <p>Is Basic(lib): {isBasicUserBool.toString()}</p>
-      <p>Is Admin(lib): {isOwnerBool.toString()}</p>
-      <p>Is Owner(lib): {isAdminBool.toString()}</p>
-      <p>Can Edit(lib): {canEditBool.toString()}</p> */}
-      <div className={'mb-3'} id={'project tools'}>
+      {/* <p>Owner: {project?.user.name}</p> */}
+      {project && <ProjectMetadata project={project} hideTitle={true} />}
+      <div className={'mb-3'} id={'project-tools'}>
         <ProjectButtons
           projectId={parseInt(id)}
-          canEdit={canEditBool}
+          canEdit={canEdit}
+          canPrint={canPrint}
+          canAssignCoEditors={isAdmin || isOwner}
           onPage="project"
         />
       </div>
-
       {bibEntries && bibEntries.data?.entries && user ? (
-        <EntriesTable
-          entries={bibEntries.data?.entries}
-          user={user}
-          ownerClerkId={project?.user.clerkUserId ?? ''}
-        />
+        <EntriesTable entries={bibEntries.data?.entries} canEdit={canEdit} />
       ) : (
         <p>No bibliography entries found.</p>
       )}

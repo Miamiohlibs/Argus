@@ -1,5 +1,32 @@
 # Changelog
 
+## 0.6.0 - 2025-10-17
+
+### Fixed
+
+- Accessibility fixes:
+  - adds aria-busy, aria-live, aria-atomic attributes on bulkAdd page
+- Cascade deletion of BibEntry to also delete any associated ItemEntry in database
+- Fix sorting of dates in tables to be based on date, not on teh string format
+
+### Added
+
+- Added option of having co-editors on a project with permissions to add and remove entries
+- Show loading status of Alma lookup in RecordSearchForm
+- Added "Print Slips permissions" (true/false) for users
+- Allow Admin to change user's display name in Users page
+- In Custom Entry Form, select item location from a list instead of free-form (uses data from NEXT_PUBLIC_LOCATION_CODES_JSON in .env)
+- Added more meaningful page titles in html headers using NextJs's generateMetadata function
+- Added .env configurations:
+  - SHADOW_DATABASE_URL
+  - NEXT_PUBLIC_LOCATION_CODES_JSON
+
+### Changed
+
+- Permissions structure -- `lib/getUserInfo.ts` returns a bunch of boolean permissions (isBasicUser, isEditorOrAbove, isAdmin, isSuperAdmin, canPrint, canEdit, isOwner, isCoEditor, isOwnerish, nonOwnerEditor)
+- Improved print layout of html pages
+- Made the display of ProjectMetadata and ProjectButtons more consistent across views
+
 ## 0.5.3 - 2025-09-22
 
 ### Fixed

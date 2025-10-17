@@ -38,7 +38,6 @@ const entryAction = async ({
 
     const itemDescriptions = itemData.map((item) => ({
       description: item.description,
-      location: item.location,
       location_code: item.location_code,
       location_name: item.location_name,
       call_number: item.call_number,
@@ -49,13 +48,13 @@ const entryAction = async ({
       ms: item.ms,
     }));
 
-    const selectedLocationsArr = [
-      ...new Set(itemData.map((item) => item.location)),
+    const selectedLocationCodesArr = [
+      ...new Set(itemData.map((item) => item.location_code)),
     ];
-    const selectedLocations =
-      selectedLocationsArr.length > 0
-        ? selectedLocationsArr.join(',')
-        : bibData.location;
+    const selectedLocationCodes =
+      selectedLocationCodesArr.length > 0
+        ? selectedLocationCodesArr.join(',')
+        : bibData.location_codes;
 
     const selectedLocationNamesArr = [
       ...new Set(itemData.map((item) => item.location_name)),
@@ -80,8 +79,7 @@ const entryAction = async ({
     const entryData = {
       itemTitle: bibData.title as string,
       author: bibData.author as string,
-      location: selectedLocations as string,
-      location_codes: selectedLocations as string,
+      location_codes: selectedLocationCodes as string,
       location_display: selectedLocationNames as string,
       pub_date:
         (bibData.date_of_publication as string) ?? (bibData.pub_date as string),

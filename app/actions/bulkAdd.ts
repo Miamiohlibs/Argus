@@ -121,7 +121,6 @@ function createBibData({
     publisher: holdings.bib_data.publisher_const,
     year: holdings.bib_data.date_of_publication,
     mms_id: holdings.bib_data.mms_id,
-    location: holdings.items.map((item) => item.location.desc).join(','),
     location_codes: holdings.items.map((item) => item.location.value).join(','),
     location_names: holdings.items.map((item) => item.location.desc).join(','),
   };
@@ -131,7 +130,6 @@ function createBibData({
 function createItemData(holdings: CondensedBibHoldings): ItemEntry[] {
   return holdings.items.map((item) => ({
     call_number: item.call_number,
-    location: item.location.desc,
     location_code: item.location.value,
     location_name: item.location.desc,
     barcode: item.barcode,

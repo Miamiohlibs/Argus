@@ -20,7 +20,8 @@ Set up a `.env` file, including:
 
 ```
 NEXT_PUBLIC_APP_BASEPATH=/argus. # or whatever path you want to use; skip this to use /
-DATABASE_URL=postgresql://... #database connection string; I use Neon
+DATABASE_URL=postgresql://... # database connection string; I use Neon
+SHADOW_DATABASE_URL=postgresql://... # if hosting locally, you may need to specify a shadowdb for handling migrations
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
 CLERK_SECRET_KEY=
 ALMA_BASEURL=https://api-na.hosted.exlibrisgroup.com #or whichever server is best for you
@@ -34,6 +35,7 @@ PRIMO_API_KEY=
 NEXT_PUBLIC_NAV_COLOR=primary #suggested: primary, dark, success (bootstrap theme colors suitable for light text)
 NEXT_PUBLIC_NAV_LABEL= #This text will be appended to the Argus logo text
 NEXT_PUBLIC_IS_DEV_ENV=false #when true, will display some ugly-useful JSON data on some results pages
+NEXT_PUBLIC_LOCATION_CODES_JSON='[{"code":"arcli","name":"Archives"},{"code":"mss","name":"Manuscript Collection","unofficial":true},{"code":"spcfo","name":"Folios"}]' #this is a JSON string with an array of locations as [{code, name}] -- optionally, you can also add "unofficial:true" for entries that are not official locations in Alma; these locations are used only for Custom Entries. It does not need to be an exhaustive list of every location used in Alma, just the ones you want to be able to use for custom entries.
 PORT=3333 # or whatever port you want to use
 NODE_ENV=development #or production -- note: production required to 'npm run build'; doesn't build under developement
 ```

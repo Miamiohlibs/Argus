@@ -3,6 +3,18 @@ import logger from '@/lib/logger';
 import { db } from '@/lib/db';
 // import { User } from '@/types/User';
 import { User } from '@prisma/client';
+import { auth } from '@clerk/nextjs/server';
+
+export async function getCurrentUser(): Promise<{
+  user?: User | undefined;
+  error?: string;
+}> {
+  const currentClerkUser = await auth();
+  if (currentClerkUser.userId) {
+    return await getUserByClerkUserId(currentClerkUser.userId);
+  }
+  return { error: 'Could not find clerk user' };
+}
 
 export async function getUserByClerkUserId(clerkUserId: string): Promise<{
   user?: User | undefined;
