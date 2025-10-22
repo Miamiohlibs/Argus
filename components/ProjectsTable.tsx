@@ -147,7 +147,7 @@ export default function ProjectsTable({
 
   useEffect(() => {
     const filtered = projects.filter((project) =>
-      [project.title, project.notes].some((val) =>
+      [project.title, project.user.name, project.notes].some((val) =>
         val?.toLowerCase().includes(filterText.toLowerCase() || '')
       )
     );
