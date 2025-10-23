@@ -7,7 +7,7 @@ import DeleteButton from './DeleteButton';
 import deleteEntry from '@/app/actions/deleteEntry';
 import { toast } from 'react-toastify';
 import { EntryWithItems } from '@/types/EntryWithItems';
-import { User } from '@prisma/client';
+// import { User } from '@prisma/client';
 
 // Define the props interface
 interface EntriesTableProps {
@@ -159,7 +159,7 @@ export default function EntriesTable({
             target="_blank"
             className="btn btn-outline-info btn-sm me-1"
           >
-            Go
+            Record
           </Link>
         ) : undefined;
         if (!canEdit) {
