@@ -3,6 +3,9 @@ import { Metadata } from 'next';
 import MultiPagePdf from './ClientMultipagePdf';
 import { unauthorized } from 'next/navigation';
 import getUserInfo from '@/lib/getUserInfo';
+import { getProject } from '@/app/actions/projectActions';
+import ProjectMetadata from '@/components/ProjectMetadata';
+import ProjectButtons from '@/components/ProjectButtons';
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -11,7 +14,13 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default async function PdfWrapper() {
+type PageProps = {
+  params: Promise<{ id: string }>;
+};
+
+export default async function PdfWrapper({ params }: PageProps) {
+  const { id } = await params;
+  const { project, error } = await getProject({ id });
   const {
     permissions: { canPrint },
   } = await getUserInfo();
@@ -20,6 +29,8 @@ export default async function PdfWrapper() {
   }
   return (
     <>
+      {project && <ProjectMetadata project={project} />}
+      <ProjectButtons projectId={parseInt(id)} onPage="slips" divClass="mb-4" />
       <MultiPagePdf />
     </>
   );
