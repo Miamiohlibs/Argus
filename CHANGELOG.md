@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.6.1 - 2025-10-27
+
+### Fixed
+
+- in ProjectsTable, projects now filterable by owner's name
+
+### Changed
+
+- on Print Slips page, PDF is now wrapped in main layout, includes project buttons
+- changed the "Go" button to "Record" in EntriesTable
+
 ## 0.6.0 - 2025-10-17
 
 ### Fixed
