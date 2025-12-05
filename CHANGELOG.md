@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.6.2 - 2025-12-05
+
+- updated next, react, react-dom packages to security patched versions
+
 ## 0.6.1 - 2025-10-27
 
 ### Fixed
