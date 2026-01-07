@@ -23,4 +23,5 @@ export type RequestSlipProps = {
     | 'Other';
   personPrinting?: string;
   projectName?: string;
+  purpose: string | undefined;
 };

@@ -3,7 +3,9 @@
 import logger from '@/lib/logger';
 import { Text, View } from '@react-pdf/renderer';
 import type { RequestSlipProps } from '@/types/RequestSlipProps';
+import { getProjectPurposes } from '@/lib/utils';
 
+const projectPurposes = getProjectPurposes();
 export const RequestSlipHalfPage = ({
   author,
   title,
@@ -23,6 +25,7 @@ export const RequestSlipHalfPage = ({
   styles,
   personPrinting,
   projectName,
+  purpose,
 }: RequestSlipProps & { styles: any }) => {
   logger.verbose('Item Info', itemInfo);
   const volumeLabel = // only show if items to show
@@ -203,38 +206,18 @@ export const RequestSlipHalfPage = ({
         </Text>
         <View style={styles.row}>
           <View style={styles.col}>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text> Conservation</Text>
-            </View>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text> Cataloguing</Text>
-            </View>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text> Exhibit</Text>
-            </View>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text> Digitization</Text>
-            </View>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text> Hold Shelf/Cart</Text>
-            </View>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text> Reading Room</Text>
-            </View>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text> Class</Text>
-            </View>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text> Other</Text>
-            </View>
+            {projectPurposes.map((item) => {
+              return (
+                <View style={styles.checkboxRow}>
+                  <View
+                    style={
+                      item == purpose ? styles.checkedBox : styles.checkbox
+                    }
+                  />
+                  <Text>{item}</Text>
+                </View>
+              );
+            })}
           </View>
           <View style={styles.col}>
             <Text>Slip printed by: {personPrinting}</Text>
