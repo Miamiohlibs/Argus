@@ -1,4 +1,4 @@
-// app/api/slipsPdf/[...slub]/route.tsx
+// app/api/slipsPdf/[...slug]/route.tsx
 import logger from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server';
 import { renderToStream } from '@react-pdf/renderer';
