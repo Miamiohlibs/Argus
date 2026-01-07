@@ -64,6 +64,7 @@ export async function GET(
         userStatus: project?.user.status ?? undefined,
         personPrinting: user?.name ?? 'Unknown',
         projectName: project?.title,
+        purpose: project?.purpose,
       }));
     } else {
       // Fallback: no items, return a single object
@@ -86,6 +87,7 @@ export async function GET(
           userStatus: project?.user.status ?? undefined,
           personPrinting: user?.name ?? 'Unknown',
           projectName: project?.title,
+          purpose: project?.purpose,
         },
       ];
     }
