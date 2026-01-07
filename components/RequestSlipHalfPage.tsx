@@ -208,7 +208,7 @@ export const RequestSlipHalfPage = ({
           <View style={styles.col}>
             {projectPurposes.map((item) => {
               return (
-                <View style={styles.checkboxRow}>
+                <View style={styles.checkboxRow} key={item}>
                   <View
                     style={
                       item == purpose ? styles.checkedBox : styles.checkbox
