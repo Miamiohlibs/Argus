@@ -1,4 +1,4 @@
-// app/api/slipsPdf/[...slub]/route.tsx
+// app/api/slipsPdf/[...slug]/route.tsx
 import logger from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server';
 import { renderToStream } from '@react-pdf/renderer';
@@ -27,19 +27,28 @@ export async function GET(
       entry.items?.map((item) => {
         let info: string = '';
 
-        if (item.location_code || entry.location_codes) {
-          info += `${item.location_name} (${item.location_code}) `;
+        // only add to item info if there's any item-specific info
+        if (
+          (item.copy_id && parseInt(item.copy_id) > 1) ||
+          (item.description && item.description.length > 0)
+        ) {
+          if (
+            item.location_code &&
+            entry.location_codes &&
+            entry.location_codes.length > 1
+          ) {
+            info += `${item.location_name} (${item.location_code}) `;
+          }
+          if (item.call_number !== entry.callNumber) {
+            info += `${item.call_number} `;
+          }
+          if (item.description) {
+            info += item.description;
+          }
+          if (item.copy_id && parseInt(item.copy_id) > 1) {
+            info += ` c.${item.copy_id}`;
+          }
         }
-        if (item.call_number !== entry.callNumber) {
-          info += `${item.call_number}`;
-        }
-        if (item.description) {
-          info += item.description;
-        }
-        if (item.copy_id && parseInt(item.copy_id) > 1) {
-          info += ` c.${item.copy_id}`;
-        }
-
         return info.trim();
       }) ?? [];
 
