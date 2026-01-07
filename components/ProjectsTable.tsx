@@ -70,6 +70,11 @@ export default function ProjectsTable({
       sortable: true,
     },
     {
+      name: 'Purpose',
+      selector: (row: ProjectWithUser) => row.purpose,
+      sortable: true,
+    },
+    {
       name: 'Created',
       selector: (row: ProjectWithUser) => new Date(row.createdAt).getTime(),
       cell: (row: ProjectWithUser) =>
