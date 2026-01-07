@@ -62,21 +62,30 @@ export const RequestSlipHalfPage = ({
             <Text>
               Date of item: <Text style={styles.bold}>{date}</Text>
             </Text>
-            <Text>
-              Manuscript #<Text style={styles.bold}>{ms}</Text>
-            </Text>
-            <Text>
-              Box {<Text style={styles.bold}>{box}</Text>}
-              {'      '}Folder {<Text style={styles.bold}>{folder}</Text>}
-            </Text>
-            <Text>Other information</Text>
-            <Text style={styles.paragraph}>{notes}</Text>
+
+            {notes && (
+              <>
+                <Text>Other information</Text>
+                <Text style={styles.paragraph}>{notes}</Text>
+              </>
+            )}
           </View>
 
           <View style={styles.lastCol}>
             <Text style={styles.label}>CALL NUMBER</Text>
             <Text style={styles.centerText}>{location}</Text>
             <Text style={styles.centerText}>{callNumber ?? ''}</Text>
+            {ms && (
+              <Text>
+                Manuscript #<Text style={styles.bold}>{ms}</Text>
+              </Text>
+            )}
+            {(box || folder) && (
+              <Text>
+                Box {<Text style={styles.bold}>{box}</Text>}
+                {'      '}Folder {<Text style={styles.bold}>{folder}</Text>}
+              </Text>
+            )}
             {volumeLabel}
             {itemInfo?.map((item, i) => {
               const styleTag = i == highlightedItemIndex ? styles.bold : {};
