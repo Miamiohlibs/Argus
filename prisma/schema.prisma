@@ -1,16 +1,5 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
-// after updating, run 
-// `npx prisma generate` to regenerate the Prisma Client
-// and `npx prisma migrate dev` to apply the changes to the database
-// or `npx prisma db push` to push the changes without migrations
 generator client {
   provider = "prisma-client-js"
-  // output   = "../app/generated/prisma"
 }
 
 datasource db {
@@ -24,30 +13,29 @@ model User {
   clerkUserId  String           @unique
   email        String           @unique
   name         String
+  imageUrl     String?
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
   role         Role             @default(user)
   affiliation  UserAffiliation?
   status       UserStatus?
   printSlips   Boolean          @default(false)
-  imageUrl     String?
-  createdAt    DateTime         @default(now())
-  updatedAt    DateTime         @updatedAt
-  transactions Transaction[]
   projects     Project[]        @relation("ProjectOwner")
+  transactions Transaction[]
   coEditorOn   Project[]        @relation("ProjectCoEditors")
 }
 
 model Project {
   id          Int        @id @default(autoincrement())
   title       String
-  user        User       @relation("ProjectOwner", fields: [userId], references: [clerkUserId], onDelete: Cascade)
-  // user        User       @relation(fields: [userId], references: [clerkUserId], onDelete: Cascade)
   userId      String
   notes       String?
   needForDate DateTime?
-  purpose     String     @default("Other")
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
+  purpose     String     @default("Other")
   bibEntries  BibEntry[]
+  user        User       @relation("ProjectOwner", fields: [userId], references: [clerkUserId], onDelete: Cascade)
   coEditors   User[]     @relation("ProjectCoEditors")
 }
 
@@ -57,34 +45,43 @@ model BibEntry {
   almaId           String?
   almaIdType       String?
   author           String
-  pub_date         String?
-  publisher        String?
   callNumber       String?
-  // location         String
-  location_codes   String?
-  location_display String?
   notes            String?
+  projectId        Int
   totalItems       Int?        @default(1)
   url              String?
-  items            ItemEntry[]
-  projectId        Int
+  pub_date         String?
+  publisher        String?
+  location_codes   String?
+  location_display String?
   project          Project     @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  items            ItemEntry[]
 }
 
 model ItemEntry {
   id            String    @id @default(uuid())
   description   String?
-  // location      String?
-  location_code String?
-  location_name String?
+  bibEntryId    String?
   call_number   String?
   copy_id       String?
   barcode       String?
+  location_code String?
+  location_name String?
   box           String?
   folder        String?
   ms            String?
   BibEntry      BibEntry? @relation(fields: [bibEntryId], references: [id], onDelete: Cascade)
-  bibEntryId    String?
+}
+
+model Transaction {
+  id        String   @id @default(uuid())
+  text      String
+  amount    Float
+  userId    String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [clerkUserId], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 enum Role {
@@ -106,17 +103,4 @@ enum UserStatus {
   Staff
   Alumni
   Other
-}
-
-// This was from the original tutorial, not used in Argus
-model Transaction {
-  id        String   @id @default(uuid())
-  text      String
-  amount    Float
-  //relation to user
-  userId    String
-  user      User     @relation(fields: [userId], references: [clerkUserId], onDelete: Cascade)
-  createdAt DateTime @default(now())
-
-  @@index([userId])
 }

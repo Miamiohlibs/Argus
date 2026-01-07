@@ -7,8 +7,9 @@ export function getProjectPurposes(): string[] {
   // if it includes "Other", remove "Other" from the list
   // then alphabetize the list and append Other at the end
   try {
-    if (process.env.SCHEMA_PROJECT_PURPOSES) {
-      const purposes = JSON.parse(process.env.SCHEMA_PROJECT_PURPOSES);
+    if (process.env.NEXT_PUBLIC_PROJECT_PURPOSES) {
+      console.log(process.env.NEXT_PUBLIC_PROJECT_PURPOSES);
+      const purposes = JSON.parse(process.env.NEXT_PUBLIC_PROJECT_PURPOSES);
       const otherIndex = purposes.indexOf('Other');
       if (otherIndex >= 0) {
         purposes.splice(otherIndex);
@@ -20,8 +21,8 @@ export function getProjectPurposes(): string[] {
     return ['Other'];
   } catch (err) {
     console.log(
-      `Error reading environment var SCHEMA_PROJECT_PURPOSES; invalid JSON array? Error: ${err}`
+      `Error reading environment var NEXT_PUBLIC_PROJECT_PURPOSES; invalid JSON array? Error: ${err}`
     );
-    return ['Other'];
+    return ['Bad options'];
   }
 }

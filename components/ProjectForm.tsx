@@ -2,12 +2,14 @@
 // import { useRef } from 'react';
 import type { User } from '@prisma/client';
 import { useActionState } from 'react';
-import { Form, Button, Card } from 'react-bootstrap';
+import { Form, Button, Card, FormSelect } from 'react-bootstrap';
 import { toast } from 'react-toastify';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 // import { useRouter } from 'next/navigation'; // Changed from react-router-dom
 import { Project } from '@prisma/client';
 import { ProjectData } from '@/types/ProjectData';
+import { getProjectPurposes } from '@/lib/utils';
+import { getProject } from '@/app/actions/projectActions';
 
 type ProjectActionResult =
   | { success: true; data: ProjectData; error?: never }
@@ -33,6 +35,9 @@ export default function ProjectForm({
   basePath,
 }: ProjectFormProps) {
   const [state, formAction] = useActionState(action, null);
+  const [selectedPurpose, setSelectedPurpose] = useState<string>(
+    project?.purpose ?? ''
+  );
   if (basePath === null) {
     basePath = '/';
   }
@@ -56,6 +61,25 @@ export default function ProjectForm({
     }
   }, [state, project, basePath]);
 
+  const projectPurposes = getProjectPurposes();
+
+  const purposeSelectOptions = projectPurposes.map((item: string) => (
+    <option key={item} value={item}>
+      {item}
+    </option>
+  ));
+  const blankPullDownOption = (
+    <option key="none" value="">
+      --- Please select a project purpose ---
+    </option>
+  );
+  purposeSelectOptions.unshift(blankPullDownOption);
+
+  const handlePurposeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    // console.log(`Selected purpose: ${e.target.value}`);
+    setSelectedPurpose(e.target.value);
+  };
+
   return (
     <Card className="shadow-sm">
       <Card.Header>
@@ -76,6 +100,18 @@ export default function ProjectForm({
               size="lg"
             />
           </Form.Group>
+
+          <Form.Label>Project Purpose</Form.Label>
+          <FormSelect
+            id="purpose"
+            name="purpose"
+            // disabled={!editable}
+            value={selectedPurpose}
+            onChange={handlePurposeChange}
+            required={true}
+          >
+            {purposeSelectOptions}
+          </FormSelect>
 
           <Form.Group className="mb-4" controlId="notes">
             <Form.Label>Notes</Form.Label>
