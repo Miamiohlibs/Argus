@@ -44,6 +44,7 @@ model Project {
   userId      String
   notes       String?
   needForDate DateTime?
+  purpose     String     @default("Other")
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
   bibEntries  BibEntry[]
