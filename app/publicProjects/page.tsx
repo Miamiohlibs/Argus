@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import ProjectsTable from '@/components/ProjectsTable';
 import CreateProjectButton from '@/components/CreateProjectButton';
 import getUserInfo from '@/lib/getUserInfo';
+import checkAccess from '@/lib/checkAccess';
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -15,6 +16,11 @@ const PublicProjectsPage = async () => {
     user,
     permissions: { isEditorOrAbove, canPrint },
   } = await getUserInfo();
+
+  // route to login if not logged in
+  await checkAccess({
+    permittedRoles: ['user', 'editor', 'admin', 'superadmin'],
+  });
 
   return (
     <>
