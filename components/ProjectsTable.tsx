@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { getProjects } from '@/app/actions/projectActions';
 import DeleteProjectButton from './DeleteProjectButton';
 import { User } from '@prisma/client';
-
+import { UnlockFill as Unlocked } from 'react-bootstrap-icons';
 // Use Prisma's generated type that includes the user relation
 type ProjectWithUser = Prisma.ProjectGetPayload<{
   include: { user: true };
@@ -60,9 +60,14 @@ export default function ProjectsTable({
       name: 'Title',
       selector: (row: ProjectWithUser) => row.title ?? '',
       cell: (row: ProjectWithUser) => (
-        <Link href={`/project/${row.id}`}>
-          {row.title || 'Untitled Project'}
-        </Link>
+        <p>
+          <Link href={`/project/${row.id}`}>
+            {row.title || 'Untitled Project'}
+          </Link>
+          {row.public && (
+            <Unlocked className="mx-2" aria-label="Public project" />
+          )}
+        </p>
       ),
       sortable: true,
     },
