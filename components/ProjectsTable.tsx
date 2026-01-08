@@ -82,6 +82,11 @@ export default function ProjectsTable({
       sortable: true,
     },
     {
+      name: 'Subject',
+      selector: (row: ProjectWithUser) => row.subject ?? '',
+      sortable: true,
+    },
+    {
       name: 'Created',
       selector: (row: ProjectWithUser) => new Date(row.createdAt).getTime(),
       cell: (row: ProjectWithUser) =>
@@ -162,8 +167,14 @@ export default function ProjectsTable({
 
   useEffect(() => {
     const filtered = projects.filter((project) =>
-      [project.title, project.user.name, project.notes, project.purpose].some(
-        (val) => val?.toLowerCase().includes(filterText.toLowerCase() || '')
+      [
+        project.title,
+        project.user.name,
+        project.notes,
+        project.purpose,
+        project.subject,
+      ].some((val) =>
+        val?.toLowerCase().includes(filterText.toLowerCase() || '')
       )
     );
     setFilteredProjects(filtered);
