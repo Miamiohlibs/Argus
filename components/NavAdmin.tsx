@@ -16,6 +16,12 @@ const NavAdmin = async () => {
   return (
     <>
       {/* <Nav className="me-3"> */}
+
+      <NavItem>
+        <NavLink as={NextLink} href="/allProjects">
+          All Projects
+        </NavLink>
+      </NavItem>
       <NavItem>
         <NavLink as={NextLink} href="/admin/users">
           Users

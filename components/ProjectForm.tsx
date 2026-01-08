@@ -38,6 +38,10 @@ export default function ProjectForm({
   const [selectedPurpose, setSelectedPurpose] = useState<string>(
     project?.purpose ?? ''
   );
+  const [selectedPublic, setSelectedPublic] = useState<boolean>(
+    project?.public ?? false
+  );
+
   if (basePath === null) {
     basePath = '/';
   }
@@ -68,6 +72,7 @@ export default function ProjectForm({
       {item}
     </option>
   ));
+
   const blankPullDownOption = (
     <option key="none" value="">
       --- Please select a project purpose ---
@@ -78,6 +83,11 @@ export default function ProjectForm({
   const handlePurposeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     // console.log(`Selected purpose: ${e.target.value}`);
     setSelectedPurpose(e.target.value);
+  };
+
+  const handlePublicChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(`Selected public: ${e.target.checked}`);
+    setSelectedPublic(e.target.checked);
   };
 
   return (
@@ -112,6 +122,17 @@ export default function ProjectForm({
           >
             {purposeSelectOptions}
           </FormSelect>
+
+          <Form.Group className="my-4" controlId="public-switch">
+            <Form.Check
+              type="switch"
+              id="public-switch"
+              name="public"
+              label="Make this project public"
+              defaultChecked={project?.public}
+              onChange={handlePublicChange}
+            />
+          </Form.Group>
 
           <Form.Group className="mb-4" controlId="notes">
             <Form.Label>Notes</Form.Label>

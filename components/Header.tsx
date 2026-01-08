@@ -42,11 +42,13 @@ const Header = async () => {
       </NavbarBrand>
       <Nav className="ms-auto me-3 text-light">
         <NavEditor />
-        <NavItem>
-          <NavLink as={NextLink} href="/allProjects">
-            All Projects
-          </NavLink>
-        </NavItem>
+        <SignedIn>
+          <NavItem>
+            <NavLink as={NextLink} href="/publicProjects">
+              Public Projects
+            </NavLink>
+          </NavItem>
+        </SignedIn>
         <NavAdmin />
         <SignedOut>
           <NavItem>

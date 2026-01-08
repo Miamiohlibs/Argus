@@ -16,12 +16,14 @@ type ProjectWithUser = Prisma.ProjectGetPayload<{
 // Define the props interface
 interface ProjectsTableProps {
   limitToUser?: boolean;
+  limitToPublic?: boolean;
   user?: User | null;
   canPrint?: boolean;
 }
 
 export default function ProjectsTable({
   limitToUser = true,
+  limitToPublic = false,
   user = null,
   canPrint = false,
 }: ProjectsTableProps) {
@@ -141,7 +143,10 @@ export default function ProjectsTable({
 
   useEffect(() => {
     const fetchProjects = async () => {
-      const data = await getProjects({ limitToUser: normalizedLimitToUser });
+      const data = await getProjects({
+        limitToUser: normalizedLimitToUser,
+        limitToPublic,
+      });
       setProjects(data.projects ?? []);
       setFilteredProjects(data.projects ?? []);
       setLoading(false);
