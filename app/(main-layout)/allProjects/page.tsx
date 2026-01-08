@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import ProjectsTable from '@/components/ProjectsTable';
 import CreateProjectButton from '@/components/CreateProjectButton';
 import getUserInfo from '@/lib/getUserInfo';
+import { redirect, RedirectType } from 'next/navigation';
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -13,9 +14,13 @@ export async function generateMetadata(): Promise<Metadata> {
 const AllProjectsPage = async () => {
   const {
     user,
-    permissions: { isEditorOrAbove, canPrint },
+    permissions: { isEditorOrAbove, isAdmin, canPrint },
   } = await getUserInfo();
 
+  if (!isAdmin) {
+    // route to publicProjects
+    redirect('/publicProjects', RedirectType.replace);
+  }
   return (
     <>
       <h1 className="h2">All Projects</h1>
