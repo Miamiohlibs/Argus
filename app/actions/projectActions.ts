@@ -208,9 +208,11 @@ export async function getProject(params: { id: string }): Promise<{
 export async function getProjects(
   {
     limitToUser,
+    limitToPublic,
   }: {
     limitToUser?: boolean;
-  } = { limitToUser: true }
+    limitToPublic?: boolean;
+  } = { limitToUser: true, limitToPublic: false }
 ): Promise<{
   projects?: ProjectWithUser[];
   error?: string;
@@ -221,29 +223,44 @@ export async function getProjects(
   }
 
   try {
-    const projects = await db.project.findMany({
-      where: {
-        OR: [
-          {
-            ...(limitToUser
-              ? { userId: user?.clerkUserId } // is user's own
-              : { id: { gt: 0 } }), // if not user-only, show all
-          },
-          {
-            ...(limitToUser
-              ? { coEditors: { some: { id: user?.id } } } // is-coeditor
-              : { id: { gt: 0 } }), // if not user-only, show all
-          },
-        ],
-      },
-      include: {
-        user: true, // Include user details if needed
-        coEditors: true,
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
-    });
+    console.log(`Getting projects; limit to public? ${limitToPublic}`);
+    let projects;
+    if (limitToPublic) {
+      projects = await db.project.findMany({
+        where: { public: true },
+        include: {
+          user: true, // Include user details if needed
+          coEditors: true,
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+      });
+    } else {
+      projects = await db.project.findMany({
+        where: {
+          OR: [
+            {
+              ...(limitToUser
+                ? { userId: user?.clerkUserId } // is user's own
+                : { id: { gt: 0 } }), // if not user-only, show all
+            },
+            {
+              ...(limitToUser
+                ? { coEditors: { some: { id: user?.id } } } // is-coeditor
+                : { id: { gt: 0 } }), // if not user-only, show all
+            },
+          ],
+        },
+        include: {
+          user: true, // Include user details if needed
+          coEditors: true,
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+      });
+    }
     // logger.verbose('Fetched projects:', projects);
     return { projects };
   } catch (error) {
