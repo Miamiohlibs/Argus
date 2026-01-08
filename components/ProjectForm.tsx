@@ -125,7 +125,7 @@ export default function ProjectForm({
 
           <Form.Group className="my-4" controlId="public-switch">
             <Form.Check
-              type="checkbox"
+              type="switch"
               id="public-switch"
               name="public"
               label="Make this project public"
