@@ -92,7 +92,7 @@ export default function ProjectForm({
 
   const blankSubjectPullDownOption = (
     <option key="none" value="None">
-      None
+      No Subject Selected
     </option>
   );
   projectSubjectOptions.unshift(blankSubjectPullDownOption);
@@ -132,7 +132,7 @@ export default function ProjectForm({
             />
           </Form.Group>
           <Form.Group className="mb-3">
-            <Form.Label>Project Purpose</Form.Label>
+            <Form.Label>Project Purpose *</Form.Label>
             <FormSelect
               id="purpose"
               name="purpose"
@@ -150,7 +150,7 @@ export default function ProjectForm({
             id="subject"
             name="subject"
             // disabled={!editable}
-            value={selectedSubject || 'None'}
+            value={selectedSubject || ''}
             onChange={handleSubjectChange}
             required={true}
           >
