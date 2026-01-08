@@ -1,5 +1,14 @@
 import { ProjectWithUserAndBib } from '@/types/ProjectWithUserAndBib';
 import { Badge } from 'react-bootstrap';
+import {
+  UnlockFill as Unlocked,
+  LockFill as Locked,
+} from 'react-bootstrap-icons';
+
+const iconMap = {
+  public: Unlocked,
+  private: Locked,
+};
 
 const ProjectMetadata = ({
   project,
@@ -8,6 +17,13 @@ const ProjectMetadata = ({
   project: ProjectWithUserAndBib;
   hideTitle?: boolean;
 }) => {
+  let IconComponent = iconMap['private'];
+  let publicStatus = 'PRIVATE';
+
+  if (project.public) {
+    IconComponent = iconMap['public'];
+    publicStatus = 'PUBLIC';
+  }
   return (
     <>
       <div className="mb-3 text-muted small">
@@ -21,6 +37,11 @@ const ProjectMetadata = ({
               Co-Editor: {ed.name}
             </Badge>
           ))}
+
+        <Badge bg="light" className="ms-2 text-dark">
+          <IconComponent className="mx-2" />
+          Project is {publicStatus}
+        </Badge>
       </div>
     </>
   );
