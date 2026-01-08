@@ -31,6 +31,7 @@ export async function createProject(
     //   const ownerValue = formData.get('userId');
     const notesValue = formData.get('notes') ?? '';
     const purposeValue = formData.get('purpose') ?? 'Other';
+    const publicValue = formData.get('public') !== null;
 
     // check for input values
     if (!titleValue || titleValue === '') {
@@ -84,6 +85,7 @@ export async function createProject(
           title,
           notes,
           purpose,
+          public: publicValue,
           userId: user.clerkUserId,
         },
         include: {
@@ -141,9 +143,10 @@ export async function updateProject(
     const title = formData.get('title') as string;
     const notes = formData.get('notes') as string;
     const purpose = formData.get('purpose') as string;
+    const publicValue = formData.get('public') !== null;
 
     console.log(
-      `Data as submitted: projId: ${projectId}, title: ${title}, notes: ${notes}, purpose: ${purpose}`
+      `Data as submitted: projId: ${projectId}, title: ${title}, notes: ${notes}, purpose: ${purpose}, public: ${publicValue}`
     );
     // Check if user owns the project
     const existingProject = await db.project.findUnique({
@@ -168,6 +171,7 @@ export async function updateProject(
         title,
         notes: notes || null,
         purpose,
+        public: publicValue,
       },
     });
     logger.verbose('returning updated project');
