@@ -68,6 +68,7 @@ const ArchiveDeleteProjectButton = ({
     // router.refresh(); // Refresh the page to reflect changes
     // router.push(window.location.pathname);
     setIsArchived(true); // Hide the row
+    setIsUnarchived(false);
     onArchived?.(); // Call the optional callback if provided
   };
 
@@ -88,6 +89,7 @@ const ArchiveDeleteProjectButton = ({
     // router.refresh(); // Refresh the page to reflect changes
     // router.push(window.location.pathname);
     setIsUnarchived(true); // Hide the row
+    setIsArchived(false);
     onUnarchived?.(); // Call the optional callback if provided
   };
 
