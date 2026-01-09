@@ -66,7 +66,16 @@ const ArchiveDeleteProjectButton = ({
     onArchived?.(); // Call the optional callback if provided
   };
 
-  return (
+  return isArchived || isDeleted ? (
+    <Button
+      disabled
+      size="sm"
+      variant="outline-danger"
+      style={{ opacity: 0.5 }}
+    >
+      {isArchived ? 'Archived' : 'Deleted'}
+    </Button>
+  ) : (
     <ButtonGroup className="flex-nowrap">
       <Button
         variant="outline-danger"
