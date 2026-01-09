@@ -243,7 +243,6 @@ export async function getProjects(
   }: {
     limitToUser?: boolean;
     limitToPublic?: boolean;
-
     limitToArchived?: boolean;
   } = { limitToUser: true, limitToPublic: false, limitToArchived: false }
 ): Promise<{

@@ -8,6 +8,7 @@ import { getProjects } from '@/app/actions/projectActions';
 import DeleteProjectButton from './DeleteProjectButton';
 import ArchiveProjectButton from './ArchiveProjectButton';
 import { User } from '@prisma/client';
+import { Button } from 'react-bootstrap';
 import { UnlockFill as Unlocked } from 'react-bootstrap-icons';
 // Use Prisma's generated type that includes the user relation
 type ProjectWithUser = Prisma.ProjectGetPayload<{
@@ -18,6 +19,7 @@ type ProjectWithUser = Prisma.ProjectGetPayload<{
 interface ProjectsTableProps {
   limitToUser?: boolean;
   limitToPublic?: boolean;
+  limitToArchived?: boolean;
   user?: User | null;
   canPrint?: boolean;
 }
@@ -34,12 +36,17 @@ export default function ProjectsTable({
   );
   const [loading, setLoading] = useState(true);
   const [filterText, setFilterText] = useState('');
+  const [archiveView, setArchiveView] = useState<Boolean>(false);
 
   // const username = await
   // console.log(`Current user: ${user}`);
   // Normalize the limitToUser prop to ensure consistency
   const normalizedLimitToUser = Boolean(limitToUser);
 
+  const handleArchiveView = () => {
+    const newVal = !archiveView;
+    setArchiveView(newVal);
+  };
   const handleDelete = (projectId: number) => (event: React.MouseEvent) => {
     const confirmed = window.confirm(
       'Are you sure you want to delete this project?'
@@ -178,6 +185,7 @@ export default function ProjectsTable({
       const data = await getProjects({
         limitToUser: normalizedLimitToUser,
         limitToPublic,
+        limitToArchived: archiveView == true,
       });
       setProjects(data.projects ?? []);
       setFilteredProjects(data.projects ?? []);
@@ -185,7 +193,7 @@ export default function ProjectsTable({
     };
 
     fetchProjects();
-  }, [normalizedLimitToUser]); // Use normalized value for consistent dependency
+  }, [normalizedLimitToUser, archiveView]); // Use normalized value for consistent dependency
 
   useEffect(() => {
     const filtered = projects.filter((project) =>
@@ -204,6 +212,9 @@ export default function ProjectsTable({
 
   return (
     <div className="react-data-table" id="projects-table">
+      <Button onClick={handleArchiveView} variant="outline-secondary" size="sm">
+        Switch to {archiveView ? 'un' : ''}archived projects
+      </Button>
       <DataTable
         columns={columns}
         data={filteredProjects}
