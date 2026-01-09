@@ -6,6 +6,7 @@ import { Prisma } from '@prisma/client';
 import Link from 'next/link';
 import { getProjects } from '@/app/actions/projectActions';
 import DeleteProjectButton from './DeleteProjectButton';
+import ArchiveProjectButton from './ArchiveProjectButton';
 import { User } from '@prisma/client';
 import { UnlockFill as Unlocked } from 'react-bootstrap-icons';
 // Use Prisma's generated type that includes the user relation
@@ -47,6 +48,21 @@ export default function ProjectsTable({
     if (!confirmed) return;
 
     console.log(`Delete project with ID: ${projectId}`);
+    const updatedProjects = projects.filter(
+      (project) => project.id !== projectId
+    );
+    setProjects(updatedProjects);
+    setFilteredProjects(updatedProjects);
+  };
+
+  const handleArchive = (projectId: number) => (event: React.MouseEvent) => {
+    const confirmed = window.confirm(
+      'Are you sure you want to archive this project?'
+    );
+    event.stopPropagation(); // prevents script from firing twice
+    if (!confirmed) return;
+
+    console.log(`Archive project with ID: ${projectId}`);
     const updatedProjects = projects.filter(
       (project) => project.id !== projectId
     );
@@ -142,6 +158,12 @@ export default function ProjectsTable({
               <DeleteProjectButton
                 project={row}
                 onDeleted={() => handleDelete(row.id)}
+              />
+            )}
+            {canEdit && (
+              <ArchiveProjectButton
+                project={row}
+                onArchived={() => handleArchive(row.id)}
               />
             )}
           </>
