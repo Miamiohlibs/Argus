@@ -32,6 +32,8 @@ export async function createProject(
     const notesValue = formData.get('notes') ?? '';
     const purposeValue = formData.get('purpose') ?? 'Other';
     const publicValue = formData.get('public') !== null;
+    let subjectValue = formData.get('subject') as string;
+    subjectValue = subjectValue == 'None' ? '' : subjectValue;
 
     // check for input values
     if (!titleValue || titleValue === '') {
@@ -86,6 +88,7 @@ export async function createProject(
           notes,
           purpose,
           public: publicValue,
+          subject: subjectValue,
           userId: user.clerkUserId,
         },
         include: {
@@ -144,6 +147,8 @@ export async function updateProject(
     const notes = formData.get('notes') as string;
     const purpose = formData.get('purpose') as string;
     const publicValue = formData.get('public') !== null;
+    let subjectValue = formData.get('subject') as string;
+    subjectValue = subjectValue == 'None' ? '' : subjectValue;
 
     console.log(
       `Data as submitted: projId: ${projectId}, title: ${title}, notes: ${notes}, purpose: ${purpose}, public: ${publicValue}`
@@ -172,6 +177,7 @@ export async function updateProject(
         notes: notes || null,
         purpose,
         public: publicValue,
+        subject: subjectValue,
       },
     });
     logger.verbose('returning updated project');

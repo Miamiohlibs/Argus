@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 // import { useRouter } from 'next/navigation'; // Changed from react-router-dom
 import { Project } from '@prisma/client';
 import { ProjectData } from '@/types/ProjectData';
-import { getProjectPurposes } from '@/lib/utils';
+import { getProjectPurposes, getSubjects } from '@/lib/utils';
 import { getProject } from '@/app/actions/projectActions';
 
 type ProjectActionResult =
@@ -41,6 +41,9 @@ export default function ProjectForm({
   const [selectedPublic, setSelectedPublic] = useState<boolean>(
     project?.public ?? false
   );
+  const [selectedSubject, setSelectedSubject] = useState<string>(
+    project?.subject ?? 'None'
+  );
 
   if (basePath === null) {
     basePath = '/';
@@ -66,8 +69,15 @@ export default function ProjectForm({
   }, [state, project, basePath]);
 
   const projectPurposes = getProjectPurposes();
+  const projectSubjects = getSubjects();
 
   const purposeSelectOptions = projectPurposes.map((item: string) => (
+    <option key={item} value={item}>
+      {item}
+    </option>
+  ));
+
+  const projectSubjectOptions = projectSubjects.map((item: string) => (
     <option key={item} value={item}>
       {item}
     </option>
@@ -80,6 +90,13 @@ export default function ProjectForm({
   );
   purposeSelectOptions.unshift(blankPullDownOption);
 
+  const blankSubjectPullDownOption = (
+    <option key="none" value="None">
+      No Subject Selected
+    </option>
+  );
+  projectSubjectOptions.unshift(blankSubjectPullDownOption);
+
   const handlePurposeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     // console.log(`Selected purpose: ${e.target.value}`);
     setSelectedPurpose(e.target.value);
@@ -88,6 +105,10 @@ export default function ProjectForm({
   const handlePublicChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     console.log(`Selected public: ${e.target.checked}`);
     setSelectedPublic(e.target.checked);
+  };
+  const handleSubjectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    // console.log(`Selected purpose: ${e.target.value}`);
+    setSelectedSubject(e.target.value);
   };
 
   return (
@@ -110,17 +131,30 @@ export default function ProjectForm({
               size="lg"
             />
           </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label>Project Purpose *</Form.Label>
+            <FormSelect
+              id="purpose"
+              name="purpose"
+              // disabled={!editable}
+              value={selectedPurpose}
+              onChange={handlePurposeChange}
+              required={true}
+            >
+              {purposeSelectOptions}
+            </FormSelect>
+          </Form.Group>
 
-          <Form.Label>Project Purpose</Form.Label>
+          <Form.Label>Project Subject</Form.Label>
           <FormSelect
-            id="purpose"
-            name="purpose"
+            id="subject"
+            name="subject"
             // disabled={!editable}
-            value={selectedPurpose}
-            onChange={handlePurposeChange}
+            value={selectedSubject || ''}
+            onChange={handleSubjectChange}
             required={true}
           >
-            {purposeSelectOptions}
+            {projectSubjectOptions}
           </FormSelect>
 
           <Form.Group className="my-4" controlId="public-switch">

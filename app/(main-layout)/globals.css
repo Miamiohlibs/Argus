@@ -79,7 +79,10 @@ footer {
 }
 
 .rdt_TableCol, .rdt_TableCell {
-  font-size: 14px
+  font-size: 14px;
+    padding-left: 5px !important;
+    padding-right: 5px !important;
+
 }
 
 .rdt_TableCol:focus-visible {
