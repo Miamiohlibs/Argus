@@ -38,10 +38,17 @@ const ProjectMetadata = ({
             </Badge>
           ))}
 
-        <Badge bg="light" className="ms-2 text-dark">
-          <IconComponent className="mx-2" />
-          Project is {publicStatus}
-        </Badge>
+        <div className="float-end">
+          {project.subject && project.subject.length > 0 && (
+            <Badge bg="light" className="ms-2 text-dark">
+              Subject: {project.subject}
+            </Badge>
+          )}
+          <Badge bg="light" className="ms-2 text-dark">
+            <IconComponent className="mx-2" />
+            Project is {publicStatus}
+          </Badge>
+        </div>
       </div>
     </>
   );
