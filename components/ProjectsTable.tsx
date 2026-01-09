@@ -27,6 +27,7 @@ interface ProjectsTableProps {
 export default function ProjectsTable({
   limitToUser = true,
   limitToPublic = false,
+  limitToArchived = false,
   user = null,
   canPrint = false,
 }: ProjectsTableProps) {
@@ -36,7 +37,7 @@ export default function ProjectsTable({
   );
   const [loading, setLoading] = useState(true);
   const [filterText, setFilterText] = useState('');
-  const [archiveView, setArchiveView] = useState<Boolean>(false);
+  const [archiveView, setArchiveView] = useState<Boolean>(limitToArchived);
 
   // const username = await
   // console.log(`Current user: ${user}`);

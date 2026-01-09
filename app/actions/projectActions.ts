@@ -259,11 +259,13 @@ export async function getProjects(
     : { OR: [{ status: { not: 'archived' } }, { status: null }] };
 
   try {
-    console.log(`Getting projects; limit to public? ${limitToPublic}`);
+    console.log(
+      `Getting projects; limit to public? ${limitToPublic}; limit to archived: ${limitToArchived}`
+    );
     let projects;
     if (limitToPublic) {
       projects = await db.project.findMany({
-        where: { public: true },
+        where: { AND: [statusFilter, { public: true }] },
         include: {
           user: true, // Include user details if needed
           coEditors: true,
