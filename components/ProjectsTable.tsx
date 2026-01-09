@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { getProjects } from '@/app/actions/projectActions';
 import DeleteProjectButton from './DeleteProjectButton';
 import ArchiveProjectButton from './ArchiveProjectButton';
+import ArchiveDeleteProjectButton from './ArchiveDeleteProjectButton';
 import { User } from '@prisma/client';
 import { Button } from 'react-bootstrap';
 import { UnlockFill as Unlocked } from 'react-bootstrap-icons';
@@ -162,16 +163,12 @@ export default function ProjectsTable({
                 Print
               </Link>
             )}
+
             {canEdit && (
-              <DeleteProjectButton
-                project={row}
-                onDeleted={() => handleDelete(row.id)}
-              />
-            )}
-            {canEdit && (
-              <ArchiveProjectButton
+              <ArchiveDeleteProjectButton
                 project={row}
                 onArchived={() => handleArchive(row.id)}
+                onDeleted={() => handleDelete(row.id)}
               />
             )}
           </>
