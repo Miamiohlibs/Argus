@@ -100,15 +100,17 @@ const ArchiveDeleteProjectButton = ({
     firstButtonVerb = 'Unarchive';
     firstButtonAction = handleUnarchiveProject;
   }
-  return isArchived || isDeleted || isUnarchived ? (
+  return (isArchived && !showingArchive) ||
+    isDeleted ||
+    (isUnarchived && showingArchive) ? (
     <Button
       disabled
       size="sm"
       variant="outline-danger"
       style={{ opacity: 0.5 }}
     >
-      {isArchived && 'Archived'}
-      {isUnarchived && 'Unarchived'}
+      {isArchived && !showingArchive && 'Archived'}
+      {isUnarchived && showingArchive && 'Unarchived'}
       {isDeleted && 'Deleted'}
     </Button>
   ) : (
