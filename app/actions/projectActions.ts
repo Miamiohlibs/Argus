@@ -131,6 +131,30 @@ export async function updateProjectLastUpdated(projectId: number) {
   });
 }
 
+export async function updateProjectStatus(params: {
+  projectId: number;
+  status: string;
+}): Promise<{
+  // project?: ProjectWithUserAndBib;
+  success: boolean;
+  error?: string;
+}> {
+  logger.verbose(`Updating project status ${JSON.stringify(params)}`);
+  try {
+    const updatedProject = await db.project.update({
+      where: { id: params.projectId },
+      data: {
+        status: params.status,
+      },
+    });
+    logger.verbose(`Success updating project status ${JSON.stringify(params)}`);
+    return { success: true };
+  } catch (error) {
+    logger.error('Error in updateProjectStatus:', error);
+    return { success: false, error: 'Failed to update project' };
+  }
+}
+
 export async function updateProject(
   prevState: unknown,
   formData: FormData
