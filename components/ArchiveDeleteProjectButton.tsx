@@ -36,7 +36,7 @@ const ArchiveDeleteProjectButton = ({
   const [isDeleted, setIsDeleted] = useState(false);
   const handleDeleteProject = async (projectId: number) => {
     const confirmed = window.confirm(
-      'Are you sure you want to delete this project?'
+      'Are you sure you want to delete this project FOREVER?'
     );
     if (!confirmed) return;
     const { message, error } = await deleteProject(projectId);
