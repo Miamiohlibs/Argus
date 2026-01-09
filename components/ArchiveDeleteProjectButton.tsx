@@ -29,7 +29,7 @@ const ArchiveDeleteProjectButton = ({
   onArchived?: () => void;
   onUnarchived?: () => void;
   onDeleted?: () => void;
-  showingArchive: Boolean;
+  showingArchive: boolean;
 }) => {
   const [isArchived, setIsArchived] = useState(false);
   const [isUnarchived, setIsUnarchived] = useState(false);

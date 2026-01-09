@@ -38,7 +38,7 @@ export default function ProjectsTable({
   );
   const [loading, setLoading] = useState(true);
   const [filterText, setFilterText] = useState('');
-  const [archiveView, setArchiveView] = useState<Boolean>(limitToArchived);
+  const [archiveView, setArchiveView] = useState<boolean>(limitToArchived);
 
   // const username = await
   // console.log(`Current user: ${user}`);
