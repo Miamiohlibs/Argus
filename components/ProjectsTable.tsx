@@ -169,6 +169,7 @@ export default function ProjectsTable({
                 project={row}
                 onArchived={() => handleArchive(row.id)}
                 onDeleted={() => handleDelete(row.id)}
+                showingArchive={archiveView}
               />
             )}
           </>

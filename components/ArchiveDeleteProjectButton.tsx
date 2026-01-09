@@ -22,10 +22,12 @@ const ArchiveDeleteProjectButton = ({
   project,
   onArchived,
   onDeleted,
+  showingArchive,
 }: {
   project: Project; // Changed semicolon to comma
   onArchived?: () => void;
   onDeleted?: () => void;
+  showingArchive: Boolean;
 }) => {
   const [isArchived, setIsArchived] = useState(false);
   const [isDeleted, setIsDeleted] = useState(false);
@@ -66,6 +68,14 @@ const ArchiveDeleteProjectButton = ({
     onArchived?.(); // Call the optional callback if provided
   };
 
+  let firstButtonColor = 'danger',
+    firstButtonVerb = 'Archive',
+    firstButtonAction = handleArchiveProject;
+
+  if (showingArchive) {
+    firstButtonColor = 'success';
+    firstButtonVerb = 'Unarchive';
+  }
   return isArchived || isDeleted ? (
     <Button
       disabled
@@ -78,14 +88,13 @@ const ArchiveDeleteProjectButton = ({
   ) : (
     <ButtonGroup className="flex-nowrap">
       <Button
-        variant="outline-danger"
+        variant={'outline-' + firstButtonColor}
         size="sm"
         className="ms-1"
-        onClick={() => handleArchiveProject(project.id)}
+        onClick={() => firstButtonAction(project.id)}
       >
-        Archive
+        {firstButtonVerb}
       </Button>
-
       <Dropdown as={ButtonGroup}>
         <Dropdown.Toggle
           variant="outline-danger"
