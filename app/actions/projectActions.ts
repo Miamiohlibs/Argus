@@ -239,10 +239,13 @@ export async function getProjects(
   {
     limitToUser,
     limitToPublic,
+    limitToArchived,
   }: {
     limitToUser?: boolean;
     limitToPublic?: boolean;
-  } = { limitToUser: true, limitToPublic: false }
+
+    limitToArchived?: boolean;
+  } = { limitToUser: true, limitToPublic: false, limitToArchived: false }
 ): Promise<{
   projects?: ProjectWithUser[];
   error?: string;
@@ -251,6 +254,10 @@ export async function getProjects(
   if (!user) {
     return { error: 'User not found' };
   }
+
+  const statusFilter = limitToArchived
+    ? { status: 'archived' }
+    : { OR: [{ status: { not: 'archived' } }, { status: null }] };
 
   try {
     console.log(`Getting projects; limit to public? ${limitToPublic}`);
@@ -269,16 +276,22 @@ export async function getProjects(
     } else {
       projects = await db.project.findMany({
         where: {
-          OR: [
+          AND: [
+            statusFilter,
             {
-              ...(limitToUser
-                ? { userId: user?.clerkUserId } // is user's own
-                : { id: { gt: 0 } }), // if not user-only, show all
-            },
-            {
-              ...(limitToUser
-                ? { coEditors: { some: { id: user?.id } } } // is-coeditor
-                : { id: { gt: 0 } }), // if not user-only, show all
+              OR: [
+                // find all projects with user as owner or as coeditor
+                {
+                  ...(limitToUser
+                    ? { userId: user?.clerkUserId } // is user's own
+                    : { id: { gt: 0 } }), // if not user-only, show all
+                },
+                {
+                  ...(limitToUser
+                    ? { coEditors: { some: { id: user?.id } } } // is-coeditor
+                    : { id: { gt: 0 } }), // if not user-only, show all
+                },
+              ],
             },
           ],
         },
@@ -291,7 +304,7 @@ export async function getProjects(
         },
       });
     }
-    // logger.verbose('Fetched projects:', projects);
+    logger.verbose('Fetched projects:', projects);
     return { projects };
   } catch (error) {
     logger.error('DB error:', error);
