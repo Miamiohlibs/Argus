@@ -21,15 +21,18 @@ import { useState } from 'react';
 const ArchiveDeleteProjectButton = ({
   project,
   onArchived,
+  onUnarchived,
   onDeleted,
   showingArchive,
 }: {
   project: Project; // Changed semicolon to comma
   onArchived?: () => void;
+  onUnarchived?: () => void;
   onDeleted?: () => void;
   showingArchive: Boolean;
 }) => {
   const [isArchived, setIsArchived] = useState(false);
+  const [isUnarchived, setIsUnarchived] = useState(false);
   const [isDeleted, setIsDeleted] = useState(false);
   const handleDeleteProject = async (projectId: number) => {
     const confirmed = window.confirm(
@@ -68,6 +71,26 @@ const ArchiveDeleteProjectButton = ({
     onArchived?.(); // Call the optional callback if provided
   };
 
+  const handleUnarchiveProject = async (projectId: number) => {
+    const confirmed = window.confirm(
+      'Are you sure you want to Unarchive this project?'
+    );
+    if (!confirmed) return;
+    const { success, error } = await updateProjectStatus({
+      projectId,
+      status: '',
+    });
+    if (error) {
+      toast.error(error);
+      return;
+    }
+    toast.success('Unarchived project');
+    // router.refresh(); // Refresh the page to reflect changes
+    // router.push(window.location.pathname);
+    setIsUnarchived(true); // Hide the row
+    onUnarchived?.(); // Call the optional callback if provided
+  };
+
   let firstButtonColor = 'danger',
     firstButtonVerb = 'Archive',
     firstButtonAction = handleArchiveProject;
@@ -75,15 +98,18 @@ const ArchiveDeleteProjectButton = ({
   if (showingArchive) {
     firstButtonColor = 'success';
     firstButtonVerb = 'Unarchive';
+    firstButtonAction = handleUnarchiveProject;
   }
-  return isArchived || isDeleted ? (
+  return isArchived || isDeleted || isUnarchived ? (
     <Button
       disabled
       size="sm"
       variant="outline-danger"
       style={{ opacity: 0.5 }}
     >
-      {isArchived ? 'Archived' : 'Deleted'}
+      {isArchived && 'Archived'}
+      {isUnarchived && 'Unarchived'}
+      {isDeleted && 'Deleted'}
     </Button>
   ) : (
     <ButtonGroup className="flex-nowrap">
