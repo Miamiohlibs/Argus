@@ -133,13 +133,15 @@ export async function updateProjectLastUpdated(projectId: number) {
 
 export async function updateProjectStatus(params: {
   projectId: number;
-  status: string;
+  status: string | null;
 }): Promise<{
   // project?: ProjectWithUserAndBib;
   success: boolean;
   error?: string;
 }> {
   logger.verbose(`Updating project status ${JSON.stringify(params)}`);
+  // set status to null if empty string
+  params.status = params.status == '' ? null : params.status;
   try {
     const updatedProject = await db.project.update({
       where: { id: params.projectId },
