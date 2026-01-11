@@ -6,7 +6,10 @@ import { Prisma } from '@prisma/client';
 import Link from 'next/link';
 import { getProjects } from '@/app/actions/projectActions';
 import DeleteProjectButton from './DeleteProjectButton';
+import ArchiveProjectButton from './ArchiveProjectButton';
+import ArchiveDeleteProjectButton from './ArchiveDeleteProjectButton';
 import { User } from '@prisma/client';
+import { Button } from 'react-bootstrap';
 import { UnlockFill as Unlocked } from 'react-bootstrap-icons';
 // Use Prisma's generated type that includes the user relation
 type ProjectWithUser = Prisma.ProjectGetPayload<{
@@ -17,6 +20,7 @@ type ProjectWithUser = Prisma.ProjectGetPayload<{
 interface ProjectsTableProps {
   limitToUser?: boolean;
   limitToPublic?: boolean;
+  limitToArchived?: boolean;
   user?: User | null;
   canPrint?: boolean;
 }
@@ -24,6 +28,7 @@ interface ProjectsTableProps {
 export default function ProjectsTable({
   limitToUser = true,
   limitToPublic = false,
+  limitToArchived = false,
   user = null,
   canPrint = false,
 }: ProjectsTableProps) {
@@ -33,12 +38,17 @@ export default function ProjectsTable({
   );
   const [loading, setLoading] = useState(true);
   const [filterText, setFilterText] = useState('');
+  const [archiveView, setArchiveView] = useState<boolean>(limitToArchived);
 
   // const username = await
   // console.log(`Current user: ${user}`);
   // Normalize the limitToUser prop to ensure consistency
   const normalizedLimitToUser = Boolean(limitToUser);
 
+  const handleArchiveView = () => {
+    const newVal = !archiveView;
+    setArchiveView(newVal);
+  };
   const handleDelete = (projectId: number) => (event: React.MouseEvent) => {
     const confirmed = window.confirm(
       'Are you sure you want to delete this project?'
@@ -47,6 +57,21 @@ export default function ProjectsTable({
     if (!confirmed) return;
 
     console.log(`Delete project with ID: ${projectId}`);
+    const updatedProjects = projects.filter(
+      (project) => project.id !== projectId
+    );
+    setProjects(updatedProjects);
+    setFilteredProjects(updatedProjects);
+  };
+
+  const handleArchive = (projectId: number) => (event: React.MouseEvent) => {
+    const confirmed = window.confirm(
+      'Are you sure you want to archive this project?'
+    );
+    event.stopPropagation(); // prevents script from firing twice
+    if (!confirmed) return;
+
+    console.log(`Archive project with ID: ${projectId}`);
     const updatedProjects = projects.filter(
       (project) => project.id !== projectId
     );
@@ -75,16 +100,19 @@ export default function ProjectsTable({
       name: 'Owner',
       selector: (row: ProjectWithUser) => row.user.name ?? 'Unknown',
       sortable: true,
+      width: '12em',
     },
     {
       name: 'Purpose',
       selector: (row: ProjectWithUser) => row.purpose,
       sortable: true,
+      width: '9em',
     },
     {
       name: 'Subject',
       selector: (row: ProjectWithUser) => row.subject ?? '',
       sortable: true,
+      width: '12em',
     },
     {
       name: 'Created',
@@ -92,7 +120,7 @@ export default function ProjectsTable({
       cell: (row: ProjectWithUser) =>
         new Date(row.createdAt).toLocaleDateString(),
       sortable: true,
-      width: '10em',
+      width: '9em',
     },
     {
       name: 'Updated',
@@ -100,7 +128,7 @@ export default function ProjectsTable({
       cell: (row: ProjectWithUser) =>
         new Date(row.updatedAt).toLocaleDateString(),
       sortable: true,
-      width: '10em',
+      width: '9em',
     },
     {
       name: 'Notes',
@@ -138,10 +166,13 @@ export default function ProjectsTable({
                 Print
               </Link>
             )}
+
             {canEdit && (
-              <DeleteProjectButton
+              <ArchiveDeleteProjectButton
                 project={row}
+                onArchived={() => handleArchive(row.id)}
                 onDeleted={() => handleDelete(row.id)}
+                showingArchive={archiveView}
               />
             )}
           </>
@@ -156,6 +187,7 @@ export default function ProjectsTable({
       const data = await getProjects({
         limitToUser: normalizedLimitToUser,
         limitToPublic,
+        limitToArchived: archiveView == true,
       });
       setProjects(data.projects ?? []);
       setFilteredProjects(data.projects ?? []);
@@ -163,7 +195,7 @@ export default function ProjectsTable({
     };
 
     fetchProjects();
-  }, [normalizedLimitToUser]); // Use normalized value for consistent dependency
+  }, [normalizedLimitToUser, archiveView]); // Use normalized value for consistent dependency
 
   useEffect(() => {
     const filtered = projects.filter((project) =>
@@ -182,6 +214,9 @@ export default function ProjectsTable({
 
   return (
     <div className="react-data-table" id="projects-table">
+      <Button onClick={handleArchiveView} variant="outline-secondary" size="sm">
+        Switch to {archiveView ? 'active' : 'archived'} projects
+      </Button>
       <DataTable
         columns={columns}
         data={filteredProjects}

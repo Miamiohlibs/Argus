@@ -131,6 +131,32 @@ export async function updateProjectLastUpdated(projectId: number) {
   });
 }
 
+export async function updateProjectStatus(params: {
+  projectId: number;
+  status: string | null;
+}): Promise<{
+  // project?: ProjectWithUserAndBib;
+  success: boolean;
+  error?: string;
+}> {
+  logger.verbose(`Updating project status ${JSON.stringify(params)}`);
+  // set status to null if empty string
+  params.status = params.status == '' ? null : params.status;
+  try {
+    const updatedProject = await db.project.update({
+      where: { id: params.projectId },
+      data: {
+        status: params.status,
+      },
+    });
+    logger.verbose(`Success updating project status ${JSON.stringify(params)}`);
+    return { success: true };
+  } catch (error) {
+    logger.error('Error in updateProjectStatus:', error);
+    return { success: false, error: 'Failed to update project' };
+  }
+}
+
 export async function updateProject(
   prevState: unknown,
   formData: FormData
@@ -215,10 +241,12 @@ export async function getProjects(
   {
     limitToUser,
     limitToPublic,
+    limitToArchived,
   }: {
     limitToUser?: boolean;
     limitToPublic?: boolean;
-  } = { limitToUser: true, limitToPublic: false }
+    limitToArchived?: boolean;
+  } = { limitToUser: true, limitToPublic: false, limitToArchived: false }
 ): Promise<{
   projects?: ProjectWithUser[];
   error?: string;
@@ -228,12 +256,18 @@ export async function getProjects(
     return { error: 'User not found' };
   }
 
+  const statusFilter = limitToArchived
+    ? { status: 'archived' }
+    : { OR: [{ status: { not: 'archived' } }, { status: null }] };
+
   try {
-    console.log(`Getting projects; limit to public? ${limitToPublic}`);
+    console.log(
+      `Getting projects; limit to public? ${limitToPublic}; limit to archived: ${limitToArchived}`
+    );
     let projects;
     if (limitToPublic) {
       projects = await db.project.findMany({
-        where: { public: true },
+        where: { AND: [statusFilter, { public: true }] },
         include: {
           user: true, // Include user details if needed
           coEditors: true,
@@ -245,16 +279,22 @@ export async function getProjects(
     } else {
       projects = await db.project.findMany({
         where: {
-          OR: [
+          AND: [
+            statusFilter,
             {
-              ...(limitToUser
-                ? { userId: user?.clerkUserId } // is user's own
-                : { id: { gt: 0 } }), // if not user-only, show all
-            },
-            {
-              ...(limitToUser
-                ? { coEditors: { some: { id: user?.id } } } // is-coeditor
-                : { id: { gt: 0 } }), // if not user-only, show all
+              OR: [
+                // find all projects with user as owner or as coeditor
+                {
+                  ...(limitToUser
+                    ? { userId: user?.clerkUserId } // is user's own
+                    : { id: { gt: 0 } }), // if not user-only, show all
+                },
+                {
+                  ...(limitToUser
+                    ? { coEditors: { some: { id: user?.id } } } // is-coeditor
+                    : { id: { gt: 0 } }), // if not user-only, show all
+                },
+              ],
             },
           ],
         },
@@ -267,7 +307,7 @@ export async function getProjects(
         },
       });
     }
-    // logger.verbose('Fetched projects:', projects);
+    logger.verbose('Fetched projects:', projects);
     return { projects };
   } catch (error) {
     logger.error('DB error:', error);

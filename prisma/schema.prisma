@@ -36,6 +36,7 @@ model Project {
   purpose     String     @default("Other")
   public      Boolean    @default(false)
   subject     String?
+  status      String?
   bibEntries  BibEntry[]
   user        User       @relation("ProjectOwner", fields: [userId], references: [clerkUserId], onDelete: Cascade)
   coEditors   User[]     @relation("ProjectCoEditors")
