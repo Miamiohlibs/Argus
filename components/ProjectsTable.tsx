@@ -215,7 +215,7 @@ export default function ProjectsTable({
   return (
     <div className="react-data-table" id="projects-table">
       <Button onClick={handleArchiveView} variant="outline-secondary" size="sm">
-        Switch to {archiveView ? 'un' : ''}archived projects
+        Switch to {archiveView ? 'active' : 'archived'} projects
       </Button>
       <DataTable
         columns={columns}
