@@ -100,16 +100,19 @@ export default function ProjectsTable({
       name: 'Owner',
       selector: (row: ProjectWithUser) => row.user.name ?? 'Unknown',
       sortable: true,
+      width: '12em',
     },
     {
       name: 'Purpose',
       selector: (row: ProjectWithUser) => row.purpose,
       sortable: true,
+      width: '9em',
     },
     {
       name: 'Subject',
       selector: (row: ProjectWithUser) => row.subject ?? '',
       sortable: true,
+      width: '12em',
     },
     {
       name: 'Created',
@@ -117,7 +120,7 @@ export default function ProjectsTable({
       cell: (row: ProjectWithUser) =>
         new Date(row.createdAt).toLocaleDateString(),
       sortable: true,
-      width: '10em',
+      width: '9em',
     },
     {
       name: 'Updated',
@@ -125,7 +128,7 @@ export default function ProjectsTable({
       cell: (row: ProjectWithUser) =>
         new Date(row.updatedAt).toLocaleDateString(),
       sortable: true,
-      width: '10em',
+      width: '9em',
     },
     {
       name: 'Notes',
