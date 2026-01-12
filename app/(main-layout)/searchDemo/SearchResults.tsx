@@ -12,7 +12,7 @@ export default function SearchResults({
   return (
     <ul>
       {results.map((r) => (
-        <li key={r.id}>{r.title}</li>
+        <li key={r.id}>{JSON.stringify(r)}</li>
       ))}
     </ul>
   );
