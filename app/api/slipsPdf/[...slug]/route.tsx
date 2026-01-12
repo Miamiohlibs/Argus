@@ -14,8 +14,9 @@ export async function GET(
   { params }: { params: Promise<{ slug: string[] }> }
 ) {
   const { slug } = await params;
-  const id = slug[0]; // why this two-step? idk but it seemed necessary to build
-  const { data } = await getEntries(id);
+  const [id, specificBibEntry] = slug[0].split('--');
+  // note: specificBibEntry is optional and is ignored if absent
+  const { data } = await getEntries(id, specificBibEntry);
   const { project } = await getProject({ id });
   const user = await checkUser();
 

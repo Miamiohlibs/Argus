@@ -13,11 +13,13 @@ import { EntryWithItems } from '@/types/EntryWithItems';
 interface EntriesTableProps {
   entries?: EntryWithItems[];
   canEdit?: boolean;
+  canPrint?: boolean;
 }
 
 export default function EntriesTable({
   entries = [],
   canEdit = false,
+  canPrint = false,
 }: EntriesTableProps) {
   const [currentEntries, setCurrentEntries] = useState<EntryWithItems[]>([]); // Track current entries
   const [filteredEntries, setFilteredEntries] = useState<EntryWithItems[]>([]);
@@ -179,6 +181,14 @@ export default function EntriesTable({
             >
               Edit
             </Link>
+            {canPrint && (
+              <Link
+                href={`/slips/${row.projectId}--${row.id}`}
+                className="me-1 btn btn-outline-primary btn-sm"
+              >
+                Print
+              </Link>
+            )}
             <DeleteButton
               label=""
               onDelete={() =>
