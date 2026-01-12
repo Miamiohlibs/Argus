@@ -1,3 +1,12 @@
+/*
+ *
+ *
+ * Important note: this is not in use! Using this instead:
+ * /app/(main-layout)/searchEntries/actions.ts
+ *
+ *
+ */
+
 'use server';
 import logger from '@/lib/logger';
 import { db } from '@/lib/db';
