@@ -60,7 +60,11 @@ export default async function ProjectPage({
         />
       </div>
       {bibEntries && bibEntries.data?.entries && user ? (
-        <EntriesTable entries={bibEntries.data?.entries} canEdit={canEdit} />
+        <EntriesTable
+          entries={bibEntries.data?.entries}
+          canEdit={canEdit}
+          canPrint={canPrint}
+        />
       ) : (
         <p>No bibliography entries found.</p>
       )}

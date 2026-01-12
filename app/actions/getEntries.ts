@@ -2,13 +2,17 @@
 import logger from '@/lib/logger';
 import { db } from '@/lib/db';
 import { EntryWithItems } from '@/types/EntryWithItems';
+import { Prisma } from '@prisma/client';
 
 type EntriesResult = {
   entries: EntryWithItems[];
   totalCount: number;
 };
 
-async function getEntries(projectId: string): Promise<{
+async function getEntries(
+  projectId: string,
+  specificBibEntry?: string
+): Promise<{
   data?: EntriesResult;
   error?: string;
 }> {
@@ -17,6 +21,8 @@ async function getEntries(projectId: string): Promise<{
     const entries = await db.bibEntry.findMany({
       where: {
         projectId: parseInt(projectId, 10),
+        // limit to one bib entry if called for:
+        ...(specificBibEntry ? { id: specificBibEntry } : {}),
       },
       include: {
         items: true, // Include related items
