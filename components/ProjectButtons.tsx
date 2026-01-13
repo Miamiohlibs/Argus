@@ -17,7 +17,7 @@ const ProjectButtons = ({
   canAssignCoEditors?: boolean;
   onPage: string;
   divClass?: string;
-  showUnarchive: boolean;
+  showUnarchive?: boolean;
 }) => {
   const classNames = 'me-2';
   return (
