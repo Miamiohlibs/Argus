@@ -41,6 +41,12 @@ export async function searchAction(
           { itemTitle: { contains: query, mode: 'insensitive' } },
           { author: { contains: query, mode: 'insensitive' } },
         ],
+        project: {
+          OR: [
+            { user: { id: userId } },
+            { coEditors: { some: { id: userId } } },
+          ],
+        },
       },
       include: {
         project: {
