@@ -1,7 +1,7 @@
 'use server';
 import logger from '@/lib/logger';
 import { db } from '@/lib/db';
-import { Prisma } from '@prisma/client';
+import { isUserAdmin } from '@/lib/getUserInfo';
 
 export interface SearchResult {
   id: string;
@@ -22,6 +22,9 @@ export async function searchAction(
 ): Promise<SearchState> {
   const query = formData.get('q')?.toString().trim();
   const userId = formData.get('userId')?.toString().trim();
+  const isAdmin = userId && (await isUserAdmin(userId));
+
+  console.log(`User is admin: ${isAdmin}`);
 
   if (!query) {
     return {
