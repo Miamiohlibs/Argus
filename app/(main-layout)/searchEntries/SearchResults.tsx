@@ -45,6 +45,12 @@ export default function SearchResults({
       sortable: true,
     },
     {
+      name: 'Author',
+      selector: (row: SearchResult) => row.author ?? '',
+      cell: (row: SearchResult) => row.author,
+      sortable: true,
+    },
+    {
       name: 'Project',
       selector: (row: SearchResult) => row.projectId ?? '',
       cell: (row: SearchResult) => (

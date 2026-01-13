@@ -6,6 +6,7 @@ import { isUserAdmin } from '@/lib/getUserInfo';
 export interface SearchResult {
   id: string;
   title: string;
+  author: string;
   projectId: number;
   projectName: string;
   user: string;
@@ -72,6 +73,7 @@ export async function searchAction(
       return {
         id: i.id,
         title: i.itemTitle,
+        author: i.author,
         projectId: i.project.id,
         projectName: i.project.title,
         user: i.project.user.name,
