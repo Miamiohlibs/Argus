@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import DuplicateProjectButton from './DuplicateProjectButton';
+import UnarchiveProjectButton from './UnarchiveProjectButton';
 
 const ProjectButtons = ({
   projectId,
@@ -8,6 +9,7 @@ const ProjectButtons = ({
   canAssignCoEditors = false,
   onPage,
   divClass = '',
+  showUnarchive = false,
 }: {
   projectId: number;
   canEdit?: boolean;
@@ -15,6 +17,7 @@ const ProjectButtons = ({
   canAssignCoEditors?: boolean;
   onPage: string;
   divClass?: string;
+  showUnarchive?: boolean;
 }) => {
   const classNames = 'me-2';
   return (
@@ -73,6 +76,7 @@ const ProjectButtons = ({
             Add/Remove Co-Editors
           </Link>
         )}
+      {showUnarchive && <UnarchiveProjectButton projectId={projectId} />}
     </div>
   );
 };
