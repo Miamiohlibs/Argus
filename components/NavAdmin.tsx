@@ -16,7 +16,9 @@ const NavAdmin = async () => {
   return (
     <>
       {/* <Nav className="me-3"> */}
-
+      <NavLink disabled aria-hidden="true">
+        |
+      </NavLink>
       <NavItem>
         <NavLink as={NextLink} href="/allProjects">
           All Projects
