@@ -5,6 +5,8 @@ import EntriesTable from '@/components/EntriesTable';
 import getUserInfo from '@/lib/getUserInfo';
 import ProjectButtons from '@/components/ProjectButtons';
 import ProjectMetadata from '@/components/ProjectMetadata';
+import { toast } from 'react-toastify';
+import { updateProjectStatus } from '@/app/actions/projectActions';
 
 type MetadataProps = {
   params: Promise<{ id: string }>;
@@ -47,7 +49,11 @@ export default async function ProjectPage({
 
   return (
     <>
-      <h1 className="h2">{project?.title}</h1>
+      <h1 className="h2">
+        {project?.title}
+        {project && project.status == 'archived' && ' (Archived)'}
+      </h1>
+
       {/* <p>Owner: {project?.user.name}</p> */}
       {project && <ProjectMetadata project={project} hideTitle={true} />}
       <div className={'mb-3'} id={'project-tools'}>
@@ -57,6 +63,7 @@ export default async function ProjectPage({
           canPrint={canPrint}
           canAssignCoEditors={isAdmin || isOwner}
           onPage="project"
+          showUnarchive={project != undefined && project?.status == 'archived'}
         />
       </div>
       {bibEntries && bibEntries.data?.entries && user ? (
