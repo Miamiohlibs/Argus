@@ -25,8 +25,6 @@ export async function searchAction(
   const userId = formData.get('userId')?.toString().trim();
   const isAdmin = userId && (await isUserAdmin(userId));
 
-  console.log(`User is admin: ${isAdmin}`);
-
   if (!query) {
     return {
       results: [],
@@ -47,7 +45,6 @@ export async function searchAction(
       };
 
   try {
-    console.log(query, userId);
     const entries = await db.bibEntry.findMany({
       where: {
         OR: [
@@ -63,7 +60,6 @@ export async function searchAction(
       },
     });
     logger.verbose('Fetched entries:', entries);
-    console.log('Fetched entries:', entries);
 
     if (!entries) {
       return { results: [], error: 'BibEntry search failed' };
