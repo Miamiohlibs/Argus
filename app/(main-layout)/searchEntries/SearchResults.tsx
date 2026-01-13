@@ -77,8 +77,8 @@ export default function SearchResults({
         subHeaderComponent={
           <input
             type="text"
-            placeholder="Search entries..."
-            aria-label="Search entries"
+            placeholder="Filter search results..."
+            aria-label="Filter search results..."
             value={filterText}
             onChange={(e) => setFilterText(e.target.value)}
             className="p-2 border rounded w-full md:w-1/3"

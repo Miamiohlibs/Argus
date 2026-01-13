@@ -13,7 +13,9 @@ export default async function SearchPage() {
 
   return (
     <main>
-      <h1>Search</h1>
+      <h1>
+        Search items across {isAdmin ? 'all projects' : 'all of your projects'}
+      </h1>
       <SearchClient userId={user.id} />
     </main>
   );
