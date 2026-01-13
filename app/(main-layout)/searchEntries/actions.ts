@@ -33,6 +33,17 @@ export async function searchAction(
     };
   }
 
+  const limitToUser = isAdmin
+    ? {}
+    : {
+        project: {
+          OR: [
+            { user: { id: userId } },
+            { coEditors: { some: { id: userId } } },
+          ],
+        },
+      };
+
   try {
     console.log(query, userId);
     const entries = await db.bibEntry.findMany({
@@ -41,12 +52,7 @@ export async function searchAction(
           { itemTitle: { contains: query, mode: 'insensitive' } },
           { author: { contains: query, mode: 'insensitive' } },
         ],
-        project: {
-          OR: [
-            { user: { id: userId } },
-            { coEditors: { some: { id: userId } } },
-          ],
-        },
+        ...limitToUser,
       },
       include: {
         project: {
