@@ -40,6 +40,7 @@ export async function searchAction(
           OR: [
             { user: { id: userId } },
             { coEditors: { some: { id: userId } } },
+            { public: true },
           ],
         },
       };
