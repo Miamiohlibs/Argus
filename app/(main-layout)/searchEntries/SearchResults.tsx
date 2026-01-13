@@ -3,9 +3,6 @@ import { TableColumn } from 'react-data-table-component';
 import { useEffect, useState } from 'react';
 import DataTable from 'react-data-table-component';
 import Link from 'next/link';
-import deleteEntry from '@/app/actions/deleteEntry';
-import { toast } from 'react-toastify';
-// import { SearchResult } from '@/types/SearchResult';
 
 import type { SearchResult } from './actions';
 
@@ -66,7 +63,8 @@ export default function SearchResults({
     },
   ];
 
-  if (!results.length) return null;
+  if (!results.length)
+    return <div className="text-center">No results found.</div>;
 
   return (
     <div className="react-data-table" id="entries-table">
@@ -93,11 +91,4 @@ export default function SearchResults({
       />
     </div>
   );
-  //   return (
-  //     <ul>
-  //       {results.map((r) => (
-  //         <li key={r.id}>{JSON.stringify(r)}</li>
-  //       ))}
-  //     </ul>
-  //   );
 }
