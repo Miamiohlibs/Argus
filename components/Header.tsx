@@ -18,6 +18,7 @@ import {
 import { checkUser } from '@/lib/checkUser';
 import NavEditor from './NavEditor';
 import NavAdmin from './NavAdmin';
+import { Next } from 'react-bootstrap/esm/PageItem';
 
 const Header = async () => {
   const user = await checkUser();
@@ -50,6 +51,11 @@ const Header = async () => {
           </NavItem>
         </SignedIn>
         <NavAdmin />
+        <NavItem>
+          <NavLink as={NextLink} href="/searchEntries">
+            Search
+          </NavLink>
+        </NavItem>
         <SignedOut>
           <NavItem>
             <SignInButton />
