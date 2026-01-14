@@ -16,7 +16,7 @@ const NavAdmin = async () => {
   return (
     <>
       {/* <Nav className="me-3"> */}
-      <NavLink disabled aria-hidden="true">
+      <NavLink disabled aria-hidden="true" className="d-none d-md-block">
         |
       </NavLink>
       <NavItem>
