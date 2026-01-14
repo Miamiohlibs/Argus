@@ -7,6 +7,7 @@ const ProjectButtons = ({
   canEdit = false,
   canPrint = false,
   canAssignCoEditors = false,
+  isAdmin = false,
   onPage,
   divClass = '',
   showUnarchive = false,
@@ -15,6 +16,7 @@ const ProjectButtons = ({
   canEdit?: boolean;
   canPrint?: boolean;
   canAssignCoEditors?: boolean;
+  isAdmin?: boolean;
   onPage: string;
   divClass?: string;
   showUnarchive?: boolean;
@@ -77,6 +79,14 @@ const ProjectButtons = ({
           </Link>
         )}
       {showUnarchive && <UnarchiveProjectButton projectId={projectId} />}
+      {isAdmin && (
+        <Link
+          href={`/admin/reassignProject/${projectId.toString()}`}
+          className="me-2 btn btn-outline-secondary btn-sm"
+        >
+          Reassign Ownership
+        </Link>
+      )}
     </div>
   );
 };
