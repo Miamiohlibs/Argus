@@ -69,19 +69,6 @@ export async function createProject(
         };
       }
 
-      // logger.verbose({
-      //   data: {
-      //     title,
-      //     notes,
-      //     userId,
-      //   },
-      //   existingUser: {
-      //     id: existingUser.id,
-      //     clerkUserId: existingUser.clerkUserId,
-      //     email: existingUser.email,
-      //   },
-      // });
-
       const created = await db.project.create({
         data: {
           title,
@@ -150,6 +137,70 @@ export async function updateProjectStatus(params: {
       },
     });
     logger.verbose(`Success updating project status ${JSON.stringify(params)}`);
+    return { success: true };
+  } catch (error) {
+    logger.error('Error in updateProjectStatus:', error);
+    return { success: false, error: 'Failed to update project' };
+  }
+}
+
+export type UpdateProjectOwnerResult =
+  | { success: true; error?: never }
+  | { success: false; error: string };
+
+export async function updateProjectOwner(
+  prevState: UpdateProjectOwnerResult | null,
+  formData: FormData
+): Promise<UpdateProjectOwnerResult> {
+  // this is used in admin/reassignProject
+  console.log('ACTION HIT');
+  const projectId = formData.get('projectId') as string;
+  const newOwnerId = formData.get('newOwnerId') as string;
+  const adminId = formData.get('thisUserId') as string;
+
+  // logger.verbose(`Updating project owner ${JSON.stringify(formData)}`);
+
+  if (newOwnerId == null)
+    return { success: false, error: 'missing newOwnerId' };
+
+  let newOwnerUser;
+  try {
+    newOwnerUser = await db.user.findUniqueOrThrow({
+      where: { id: newOwnerId },
+    });
+  } catch (error) {
+    return {
+      success: false,
+      error: `Could not find user with id ${newOwnerId}`,
+    };
+  }
+
+  let adminUser;
+  try {
+    adminUser = await db.user.findUniqueOrThrow({
+      where: { id: adminId, OR: [{ role: 'admin' }, { role: 'superadmin' }] },
+    });
+  } catch (error) {
+    return {
+      success: false,
+      error: `You are not authorized to reassign a projet.`,
+    };
+  }
+
+  try {
+    const updatedProject = await db.project.update({
+      where: { id: parseInt(projectId) },
+      data: {
+        user: {
+          connect: {
+            id: newOwnerId,
+          },
+        },
+      },
+    });
+    logger.verbose(
+      `Success updating project owner ${JSON.stringify(formData)}`
+    );
     return { success: true };
   } catch (error) {
     logger.error('Error in updateProjectStatus:', error);
