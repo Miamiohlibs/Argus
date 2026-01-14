@@ -7,6 +7,7 @@ import { ProjectData } from '@/types/ProjectData';
 import type { ProjectWithUserAndBib } from '@/types/ProjectWithUserAndBib';
 import entryAction from './addEntry';
 import { ItemEntry } from '@prisma/client';
+import { redirect } from 'next/navigation';
 
 type ProjectWithUser = Prisma.ProjectGetPayload<{
   include: { user: true; coEditors: true };
@@ -201,11 +202,12 @@ export async function updateProjectOwner(
     logger.verbose(
       `Success updating project owner ${JSON.stringify(formData)}`
     );
-    return { success: true };
+    // return { success: true };
   } catch (error) {
     logger.error('Error in updateProjectStatus:', error);
     return { success: false, error: 'Failed to update project' };
   }
+  redirect(`/project/${projectId}`);
 }
 
 export async function updateProject(
