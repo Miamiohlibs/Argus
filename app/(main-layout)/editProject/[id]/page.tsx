@@ -30,7 +30,7 @@ export default async function EditProjectPage({
   const response = await getProject({ id });
   const project = response.project;
   const {
-    permissions: { isOwner, isOwnerish },
+    permissions: { isOwner, isOwnerish, isAdmin },
   } = await getUserInfo(id);
 
   if (!isOwnerish) {
@@ -50,6 +50,7 @@ export default async function EditProjectPage({
           projectId={parseInt(id)}
           divClass="mb-3"
           canAssignCoEditors={isOwnerish}
+          isAdmin={isAdmin}
           onPage="edit-project-details"
         />
         <ProjectForm

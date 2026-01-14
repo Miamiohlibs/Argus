@@ -62,6 +62,7 @@ export default async function ProjectPage({
           canEdit={canEdit}
           canPrint={canPrint}
           canAssignCoEditors={isAdmin || isOwner}
+          isAdmin={isAdmin}
           onPage="project"
           showUnarchive={project != undefined && project?.status == 'archived'}
         />
