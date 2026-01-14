@@ -3,6 +3,7 @@ import { updateProjectOwner } from '@/app/actions/projectActions';
 import ReassignmentForm from './ReassignmentForm';
 import getUsers from '@/app/actions/getUsers';
 import getUserInfo from '@/lib/getUserInfo';
+import checkAccess from '@/lib/checkAccess';
 
 export default async function ReassignProjectPage({
   params,
@@ -14,6 +15,7 @@ export default async function ReassignProjectPage({
     user,
     permissions: { isAdmin },
   } = await getUserInfo(id);
+  await checkAccess({ permittedRoles: ['admin', 'superadmin'] });
   const { project, error: projectError } = await getProject({ id });
   const { users, error: userError } = await getUsers([
     'editor',
