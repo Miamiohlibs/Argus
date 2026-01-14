@@ -49,8 +49,21 @@ const HoldingEntry = ({
   const [selectedItems, setSelectedItems] = useState<miniItemData[]>([]);
   const [isInitialized, setIsInitialized] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
-  console.log('Existing Entry:', existingEntry);
+  // console.log('Existing Entry:', existingEntry);
+  // console.log('Items', items);
 
+  const matchStringIfPresent = (
+    str1: string | null | undefined,
+    str2: string | null | undefined
+  ) => {
+    if (typeof str1 == 'undefined' || str1 == null) {
+      str1 = '';
+    }
+    if (typeof str2 == 'undefined' || str2 == null) {
+      str2 = '';
+    }
+    return str1 == str2;
+  };
   // Initialize selectedItems with existing entry items
   useEffect(() => {
     if (existingEntry && !isInitialized) {
@@ -61,11 +74,14 @@ const HoldingEntry = ({
         // Find the matching item from the items array
         const matchingItem = items.find(
           (item) =>
-            item.description == existingItem.description &&
-            item.location.value == existingItem.location_code &&
-            item.call_number == existingItem.call_number &&
-            item.barcode == existingItem.barcode &&
-            item.copy_id == existingItem.copy_id
+            matchStringIfPresent(item.description, existingItem.description) &&
+            matchStringIfPresent(
+              item.location.value,
+              existingItem.location_code
+            ) &&
+            matchStringIfPresent(item.call_number, existingItem.call_number) &&
+            matchStringIfPresent(item.barcode, existingItem.barcode) &&
+            matchStringIfPresent(item.copy_id, existingItem.copy_id)
         );
 
         if (matchingItem) {
