@@ -8,6 +8,7 @@ interface pageProps {
 export default function SelectUserFormElement({ users }: pageProps) {
   return (
     <Form.Select name="newOwnerId">
+      <option value="">---Select a user---</option>
       {users &&
         users.map((u) => (
           <option key={u.id} value={u.id}>
