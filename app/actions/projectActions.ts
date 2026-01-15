@@ -76,7 +76,7 @@ export async function createProject(
           notes,
           purpose,
           public: publicValue,
-          subject: subjectValue,
+          subjects: [subjectValue],
           userId: user.clerkUserId,
         },
         include: {
@@ -256,7 +256,7 @@ export async function updateProject(
         notes: notes || null,
         purpose,
         public: publicValue,
-        subject: subjectValue,
+        subjects: [subjectValue],
       },
     });
     logger.verbose('returning updated project');

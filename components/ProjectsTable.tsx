@@ -110,7 +110,7 @@ export default function ProjectsTable({
     },
     {
       name: 'Subject',
-      selector: (row: ProjectWithUser) => row.subject ?? '',
+      selector: (row: ProjectWithUser) => row.subjects.join(', ') ?? '',
       sortable: true,
       width: '10em',
     },
@@ -204,7 +204,7 @@ export default function ProjectsTable({
         project.user.name,
         project.notes,
         project.purpose,
-        project.subject,
+        project.subjects.join(' '),
       ].some((val) =>
         val?.toLowerCase().includes(filterText.toLowerCase() || '')
       )
