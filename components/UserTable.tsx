@@ -116,16 +116,14 @@ export default function UserTable({
     {
       name: 'Created',
       selector: (row: User) => new Date(row.createdAt).getTime(),
-      cell: (row: ProjectWithUser) =>
-        new Date(row.createdAt).toLocaleDateString(),
+      cell: (row: User) => new Date(row.createdAt).toLocaleDateString(),
       sortable: true,
       width: '8em',
     },
     {
       name: 'Updated',
       selector: (row: User) => new Date(row.updatedAt).getTime(),
-      cell: (row: ProjectWithUser) =>
-        new Date(row.updatedAt).toLocaleDateString(),
+      cell: (row: User) => new Date(row.updatedAt).toLocaleDateString(),
       sortable: true,
       width: '8em',
     },
