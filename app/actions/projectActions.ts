@@ -33,8 +33,8 @@ export async function createProject(
     const notesValue = formData.get('notes') ?? '';
     const purposeValue = formData.get('purpose') ?? 'Other';
     const publicValue = formData.get('public') !== null;
-    let subjectValue = formData.get('subject') as string;
-    subjectValue = subjectValue == 'None' ? '' : subjectValue;
+    let subjectsJson = formData.get('subjects') as string;
+    let subjects = JSON.parse(subjectsJson) || [];
 
     // check for input values
     if (!titleValue || titleValue === '') {
@@ -76,7 +76,7 @@ export async function createProject(
           notes,
           purpose,
           public: publicValue,
-          subjects: [subjectValue],
+          subjects,
           userId: user.clerkUserId,
         },
         include: {
