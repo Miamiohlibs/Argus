@@ -111,7 +111,8 @@ export default function ProjectForm({
     const newSubjectArray = subjectArray;
     setSelectedSubject(e.target.value);
     newSubjectArray.push(e.target.value);
-    setSubjectArray(newSubjectArray);
+    const uniqueArray = [...new Set(newSubjectArray)];
+    setSubjectArray(uniqueArray);
   };
 
   return (
@@ -148,7 +149,17 @@ export default function ProjectForm({
             </FormSelect>
           </Form.Group>
 
-          <Form.Label>Project Subject</Form.Label>
+          {subjectArray.length > 0 && (
+            <>
+              <p className="mt-3">Selected Project Subjects</p>
+              <ul>
+                {subjectArray.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </>
+          )}
+          <Form.Label>Add a Project Subject</Form.Label>
           <FormSelect
             id="subject"
             name="subject"
@@ -159,16 +170,7 @@ export default function ProjectForm({
           >
             {projectSubjectOptions}
           </FormSelect>
-          {subjectArray.length > 0 && (
-            <>
-              <p className="mt-3">Selected Subjects</p>
-              <ul>
-                {subjectArray.map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
-            </>
-          )}
+
           <Form.Group className="my-4" controlId="public-switch">
             <Form.Check
               type="switch"
