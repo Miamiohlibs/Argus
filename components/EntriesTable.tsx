@@ -124,6 +124,7 @@ export default function EntriesTable({
         }
       },
       sortable: true,
+      width: '10em',
     },
     {
       name: 'Call Number',
@@ -145,11 +146,13 @@ export default function EntriesTable({
           return '';
         }
       },
+      width: '7em',
     },
     {
       name: 'Notes',
       selector: (row: EntryWithItems) => row.notes ?? '',
       sortable: false,
+      width: '12em',
     },
     {
       name: 'Tools',
