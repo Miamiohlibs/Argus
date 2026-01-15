@@ -226,11 +226,12 @@ export async function updateProject(
     const notes = formData.get('notes') as string;
     const purpose = formData.get('purpose') as string;
     const publicValue = formData.get('public') !== null;
-    let subjectValue = formData.get('subject') as string;
-    subjectValue = subjectValue == 'None' ? '' : subjectValue;
+    let subjectsJson = formData.get('subjects') as string;
+    let subjects = JSON.parse(subjectsJson) || [];
+    // subjectValue = subjectValue == 'None' ? '' : subjectValue;
 
     console.log(
-      `Data as submitted: projId: ${projectId}, title: ${title}, notes: ${notes}, purpose: ${purpose}, public: ${publicValue}`
+      `Data as submitted: projId: ${projectId}, title: ${title}, notes: ${notes}, purpose: ${purpose}, public: ${publicValue}, subjects: ${subjectsJson}`
     );
     // Check if user owns the project
     const existingProject = await db.project.findUnique({
@@ -256,7 +257,7 @@ export async function updateProject(
         notes: notes || null,
         purpose,
         public: publicValue,
-        subjects: [subjectValue],
+        subjects,
       },
     });
     logger.verbose('returning updated project');

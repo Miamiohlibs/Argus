@@ -2,7 +2,7 @@
 // import { useRef } from 'react';
 import type { User } from '@prisma/client';
 import { useActionState } from 'react';
-import { Form, Button, Card, FormSelect } from 'react-bootstrap';
+import { Form, Button, Card, FormSelect, FormControl } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import { useEffect, useState } from 'react';
 // import { useRouter } from 'next/navigation'; // Changed from react-router-dom
@@ -157,6 +157,11 @@ export default function ProjectForm({
                   <li key={item}>{item}</li>
                 ))}
               </ul>
+              <FormControl
+                type="hidden"
+                name="subjects"
+                value={JSON.stringify(subjectArray)}
+              />
             </>
           )}
           <Form.Label>Add a Project Subject</Form.Label>
