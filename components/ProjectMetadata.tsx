@@ -41,7 +41,7 @@ const ProjectMetadata = ({
         <div className="float-end">
           {project.subjects && project.subjects.length > 0 && (
             <Badge bg="light" className="ms-2 text-dark">
-              Subject: {project.subjects}
+              Subject(s): {project.subjects.join(', ')}
             </Badge>
           )}
           <Badge bg="light" className="ms-2 text-dark">
