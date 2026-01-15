@@ -7,6 +7,7 @@ import { Form, InputGroup, Button, FormSelect } from 'react-bootstrap';
 import { BibEntry, ItemEntry } from '@prisma/client';
 import { useState } from 'react';
 import { useEffect } from 'react';
+import { LocationCode, inHouseLocationCodes } from '@/lib/locationCodes';
 
 interface CustomEntryFormProps {
   projectId?: number;
@@ -14,11 +15,11 @@ interface CustomEntryFormProps {
   editable?: boolean;
 }
 
-interface LocationCode {
-  code: string;
-  name: string;
-  unofficial?: boolean;
-}
+// interface LocationCode {
+//   code: string;
+//   name: string;
+//   unofficial?: boolean;
+// }
 
 const CustomEntryForm = ({
   projectId,
@@ -39,15 +40,9 @@ const CustomEntryForm = ({
   // Load locations only once on mount
 
   useEffect(() => {
-    if (typeof process.env.NEXT_PUBLIC_LOCATION_CODES_JSON === 'string') {
-      try {
-        const parsedLocations: LocationCode[] = JSON.parse(
-          process.env.NEXT_PUBLIC_LOCATION_CODES_JSON
-        );
-        setLocations(parsedLocations);
-      } catch (error) {
-        console.error('Failed to parse LOCATION_CODES_JSON:', error);
-      }
+    const locationCodes = inHouseLocationCodes();
+    if (typeof locationCodes != 'undefined') {
+      setLocations(locationCodes);
     }
   }, []);
 
