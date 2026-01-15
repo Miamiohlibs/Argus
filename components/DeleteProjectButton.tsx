@@ -1,3 +1,7 @@
+/*
+ * NOTE: this is no longer used; instead using ArchiveDeleteProjectButton
+ *
+ */
 'use client';
 import { Project } from '@prisma/client';
 import { toast } from 'react-toastify';
