@@ -101,6 +101,7 @@ export default function ProjectsTable({
       selector: (row: ProjectWithUser) => row.user.name ?? 'Unknown',
       sortable: true,
       width: '12em',
+      wrap: true,
     },
     {
       name: 'Purpose',
@@ -113,6 +114,7 @@ export default function ProjectsTable({
       selector: (row: ProjectWithUser) => row.subjects.join(', ') ?? '',
       sortable: true,
       width: '10em',
+      wrap: true,
     },
     {
       name: 'Created',
