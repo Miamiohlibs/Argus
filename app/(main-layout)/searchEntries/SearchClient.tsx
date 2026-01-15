@@ -29,8 +29,9 @@ export default function SearchClient({ userId }: SearchClientProps) {
           {state.error}
         </p>
       )}
-
-      <SearchResults results={state.results} />
+      <div aria-live="assertive">
+        <SearchResults results={state.results} />
+      </div>
     </>
   );
 }
