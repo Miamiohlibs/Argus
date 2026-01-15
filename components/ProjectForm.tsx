@@ -113,7 +113,7 @@ export default function ProjectForm({
     const newSubjectArray = subjectArray;
     setSelectedSubject(e.target.value);
     newSubjectArray.push(e.target.value);
-    const uniqueArray = [...new Set(newSubjectArray)];
+    const uniqueArray = [...new Set(newSubjectArray)].sort();
     setSubjectArray(uniqueArray);
   };
   const handleRemoveSubject = (e: React.MouseEvent<HTMLButtonElement>) => {
