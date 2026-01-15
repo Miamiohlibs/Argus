@@ -6,7 +6,7 @@ export type LocationCode = {
   unofficial?: boolean;
 };
 
-export const inHouseLocationCodes = () => {
+export const inHouseLocationData = () => {
   if (typeof process.env.NEXT_PUBLIC_LOCATION_CODES_JSON === 'string') {
     try {
       const parsedLocations: LocationCode[] = JSON.parse(
@@ -17,4 +17,22 @@ export const inHouseLocationCodes = () => {
       console.error('Failed to parse NEXT_PUBLIC_LOCATION_CODES_JSON:', error);
     }
   }
+};
+
+export const inHouseLocationCodes = (): string[] => {
+  if (typeof process.env.NEXT_PUBLIC_LOCATION_CODES_JSON === 'string') {
+    try {
+      const parsedLocations: LocationCode[] = JSON.parse(
+        process.env.NEXT_PUBLIC_LOCATION_CODES_JSON
+      );
+      if (Array.isArray(parsedLocations)) {
+        return parsedLocations.map((item) => item.code);
+      }
+      return [];
+    } catch (error) {
+      console.error('Failed to parse NEXT_PUBLIC_LOCATION_CODES_JSON:', error);
+      return [];
+    }
+  }
+  return [];
 };
