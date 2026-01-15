@@ -39,9 +39,9 @@ const ProjectMetadata = ({
           ))}
 
         <div className="float-end">
-          {project.subject && project.subject.length > 0 && (
+          {project.subjects && project.subjects.length > 0 && (
             <Badge bg="light" className="ms-2 text-dark">
-              Subject: {project.subject}
+              Subject(s): {project.subjects.join(', ')}
             </Badge>
           )}
           <Badge bg="light" className="ms-2 text-dark">

@@ -33,8 +33,8 @@ export async function createProject(
     const notesValue = formData.get('notes') ?? '';
     const purposeValue = formData.get('purpose') ?? 'Other';
     const publicValue = formData.get('public') !== null;
-    let subjectValue = formData.get('subject') as string;
-    subjectValue = subjectValue == 'None' ? '' : subjectValue;
+    const subjectsJson = formData.get('subjects') as string;
+    const subjects = JSON.parse(subjectsJson) || [];
 
     // check for input values
     if (!titleValue || titleValue === '') {
@@ -76,7 +76,7 @@ export async function createProject(
           notes,
           purpose,
           public: publicValue,
-          subject: subjectValue,
+          subjects,
           userId: user.clerkUserId,
         },
         include: {
@@ -226,11 +226,12 @@ export async function updateProject(
     const notes = formData.get('notes') as string;
     const purpose = formData.get('purpose') as string;
     const publicValue = formData.get('public') !== null;
-    let subjectValue = formData.get('subject') as string;
-    subjectValue = subjectValue == 'None' ? '' : subjectValue;
+    const subjectsJson = formData.get('subjects') as string;
+    const subjects = JSON.parse(subjectsJson) || [];
+    // subjectValue = subjectValue == 'None' ? '' : subjectValue;
 
     console.log(
-      `Data as submitted: projId: ${projectId}, title: ${title}, notes: ${notes}, purpose: ${purpose}, public: ${publicValue}`
+      `Data as submitted: projId: ${projectId}, title: ${title}, notes: ${notes}, purpose: ${purpose}, public: ${publicValue}, subjects: ${subjectsJson}`
     );
     // Check if user owns the project
     const existingProject = await db.project.findUnique({
@@ -256,7 +257,7 @@ export async function updateProject(
         notes: notes || null,
         purpose,
         public: publicValue,
-        subject: subjectValue,
+        subjects,
       },
     });
     logger.verbose('returning updated project');
