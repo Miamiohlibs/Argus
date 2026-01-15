@@ -74,7 +74,12 @@ export default function UserTable({
         let extra;
         if (row.clerkUserId == user.clerkUserId) {
           extra = (
-            <Button variant="outline-secondary" size="sm" className="ms-3">
+            <Button
+              variant="outline-secondary"
+              size="sm"
+              className="ms-3"
+              disabled
+            >
               Self
             </Button>
           );
