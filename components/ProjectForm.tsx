@@ -10,6 +10,8 @@ import { Project } from '@prisma/client';
 import { ProjectData } from '@/types/ProjectData';
 import { getProjectPurposes, getSubjects } from '@/lib/utils';
 import { getProject } from '@/app/actions/projectActions';
+import { MouseEvent } from 'react';
+import { Trash } from 'react-bootstrap-icons';
 
 type ProjectActionResult =
   | { success: true; data: ProjectData; error?: never }
@@ -114,6 +116,14 @@ export default function ProjectForm({
     const uniqueArray = [...new Set(newSubjectArray)];
     setSubjectArray(uniqueArray);
   };
+  const handleRemoveSubject = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const subjectToRemove = e.currentTarget.value;
+    // alert(e.currentTarget.value);
+    const newSubjectArray = subjectArray.filter(
+      (item) => item != subjectToRemove
+    );
+    setSubjectArray(newSubjectArray);
+  };
 
   return (
     <Card className="shadow-sm">
@@ -154,7 +164,21 @@ export default function ProjectForm({
               <p className="mt-3">Selected Project Subjects</p>
               <ul>
                 {subjectArray.map((item) => (
-                  <li key={item}>{item}</li>
+                  <li key={item}>
+                    {item}{' '}
+                    <Button
+                      variant="outline-danger"
+                      size="sm"
+                      onClick={handleRemoveSubject}
+                      value={item}
+                    >
+                      <Trash
+                        aria-label={
+                          'Remove "' + item + '" from project subjects'
+                        }
+                      />
+                    </Button>
+                  </li>
                 ))}
               </ul>
               <FormControl
