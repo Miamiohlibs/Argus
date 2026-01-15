@@ -92,7 +92,7 @@ export default function ProjectForm({
 
   const blankSubjectPullDownOption = (
     <option key="none" value="None">
-      Add a Subject
+      Select a Subject to Add
     </option>
   );
   projectSubjectOptions.unshift(blankSubjectPullDownOption);
@@ -150,7 +150,7 @@ export default function ProjectForm({
           </Form.Group>
 
           {subjectArray.length > 0 && (
-            <>
+            <div aria-live="assertive">
               <p className="mt-3">Selected Project Subjects</p>
               <ul>
                 {subjectArray.map((item) => (
@@ -162,7 +162,7 @@ export default function ProjectForm({
                 name="subjects"
                 value={JSON.stringify(subjectArray)}
               />
-            </>
+            </div>
           )}
           <Form.Label>Add a Project Subject</Form.Label>
           <FormSelect
