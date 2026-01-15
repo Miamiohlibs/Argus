@@ -41,10 +41,10 @@ export default function ProjectForm({
   const [selectedPublic, setSelectedPublic] = useState<boolean>(
     project?.public ?? false
   );
-  const [selectedSubject, setSelectedSubject] = useState<string>(
-    project?.subject ?? 'None'
+  const [selectedSubject, setSelectedSubject] = useState<string>('');
+  const [subjectArray, setSubjectArray] = useState<string[]>(
+    project?.subjects ?? []
   );
-
   if (basePath === null) {
     basePath = '/';
   }
@@ -92,7 +92,7 @@ export default function ProjectForm({
 
   const blankSubjectPullDownOption = (
     <option key="none" value="None">
-      No Subject Selected
+      Add a Subject
     </option>
   );
   projectSubjectOptions.unshift(blankSubjectPullDownOption);
@@ -108,7 +108,10 @@ export default function ProjectForm({
   };
   const handleSubjectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     // console.log(`Selected purpose: ${e.target.value}`);
+    const newSubjectArray = subjectArray;
     setSelectedSubject(e.target.value);
+    newSubjectArray.push(e.target.value);
+    setSubjectArray(newSubjectArray);
   };
 
   return (
@@ -156,7 +159,16 @@ export default function ProjectForm({
           >
             {projectSubjectOptions}
           </FormSelect>
-
+          {subjectArray.length > 0 && (
+            <>
+              <p className="mt-3">Selected Subjects</p>
+              <ul>
+                {subjectArray.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </>
+          )}
           <Form.Group className="my-4" controlId="public-switch">
             <Form.Check
               type="switch"
