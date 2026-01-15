@@ -78,7 +78,9 @@ const ProjectButtons = ({
             Add/Remove Co-Editors
           </Link>
         )}
-      {showUnarchive && <UnarchiveProjectButton projectId={projectId} />}
+      {showUnarchive && (
+        <UnarchiveProjectButton projectId={projectId} classNames={classNames} />
+      )}
       {isAdmin && (
         <Link
           href={`/admin/reassignProject/${projectId.toString()}`}

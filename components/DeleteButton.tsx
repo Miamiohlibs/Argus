@@ -31,6 +31,7 @@ export default function DeleteButton({ label, onDelete }: DeleteButtonProps) {
         className=""
         variant="outline-danger"
         size="sm"
+        aria-live="polite"
       >
         {loading ? `Deleting...` : `Delete ${label}`}
       </Button>

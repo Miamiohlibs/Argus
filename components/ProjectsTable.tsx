@@ -112,7 +112,7 @@ export default function ProjectsTable({
       name: 'Subject',
       selector: (row: ProjectWithUser) => row.subject ?? '',
       sortable: true,
-      width: '12em',
+      width: '10em',
     },
     {
       name: 'Created',
@@ -120,7 +120,7 @@ export default function ProjectsTable({
       cell: (row: ProjectWithUser) =>
         new Date(row.createdAt).toLocaleDateString(),
       sortable: true,
-      width: '9em',
+      width: '7em',
     },
     {
       name: 'Updated',
@@ -128,7 +128,7 @@ export default function ProjectsTable({
       cell: (row: ProjectWithUser) =>
         new Date(row.updatedAt).toLocaleDateString(),
       sortable: true,
-      width: '9em',
+      width: '7em',
     },
     {
       name: 'Notes',

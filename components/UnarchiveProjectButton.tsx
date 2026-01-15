@@ -6,8 +6,10 @@ import { useRouter } from 'next/navigation';
 
 export default function UnarchiveProjectButton({
   projectId,
+  classNames,
 }: {
   projectId: number;
+  classNames: string;
 }) {
   const router = useRouter();
   const handleUnarchiveProject = async (projectId: number) => {
@@ -32,6 +34,7 @@ export default function UnarchiveProjectButton({
       onClick={() => handleUnarchiveProject(projectId)}
       size="sm"
       variant="outline-secondary"
+      className={classNames}
     >
       Unarchive
     </Button>

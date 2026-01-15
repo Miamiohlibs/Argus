@@ -122,6 +122,7 @@ const ArchiveDeleteProjectButton = ({
         size="sm"
         className="ms-1"
         onClick={() => firstButtonAction(project.id)}
+        aria-live="polite"
       >
         {firstButtonVerb}
       </Button>
@@ -131,7 +132,7 @@ const ArchiveDeleteProjectButton = ({
           size="sm"
           id="archive-dropdown"
         >
-          <Trash />
+          <Trash aria-label="Trash" />
         </Dropdown.Toggle>
 
         <Dropdown.Menu>
