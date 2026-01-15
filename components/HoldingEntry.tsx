@@ -10,6 +10,9 @@ import type {
   AlmaItemHoldingBibDataPlusCallAndLocation,
 } from '@/types/CondensedBibHoldings';
 import type { SafeStringifyInput } from '@/types/SafeStringInput';
+import type { LocationCode } from '@/lib/locationCodes';
+import { inHouseLocationCodes } from '@/lib/locationCodes';
+import { buildInversePrefetchSegmentDataRoute } from 'next/dist/server/lib/router-utils/build-prefetch-segment-data-route';
 
 interface miniItemData {
   pid: string;
@@ -201,6 +204,18 @@ const HoldingEntry = ({
         </p>
       </>
     );
+  }
+
+  if (items && inHouseLocationCodes) {
+    const inHouseCodes = inHouseLocationCodes();
+    // sort into inHouse and not-inHouse location codes, keep the rest in order
+    const inHouse = items.filter((item) =>
+      inHouseCodes.includes(item.location.value)
+    );
+    const other = items.filter(
+      (item) => !inHouseCodes.includes(item.location.value)
+    );
+    items = inHouse.concat(other);
   }
   return (
     <Form onSubmit={handleSubmit}>
