@@ -7,7 +7,7 @@ import { Form, InputGroup, Button, FormSelect } from 'react-bootstrap';
 import { BibEntry, ItemEntry } from '@prisma/client';
 import { useState } from 'react';
 import { useEffect } from 'react';
-import { LocationCode, inHouseLocationCodes } from '@/lib/locationCodes';
+import { LocationCode, inHouseLocationData } from '@/lib/locationCodes';
 
 interface CustomEntryFormProps {
   projectId?: number;
@@ -40,7 +40,7 @@ const CustomEntryForm = ({
   // Load locations only once on mount
 
   useEffect(() => {
-    const locationCodes = inHouseLocationCodes();
+    const locationCodes = inHouseLocationData();
     if (typeof locationCodes != 'undefined') {
       setLocations(locationCodes);
     }
