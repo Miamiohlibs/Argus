@@ -33,8 +33,8 @@ export async function createProject(
     const notesValue = formData.get('notes') ?? '';
     const purposeValue = formData.get('purpose') ?? 'Other';
     const publicValue = formData.get('public') !== null;
-    let subjectsJson = formData.get('subjects') as string;
-    let subjects = JSON.parse(subjectsJson) || [];
+    const subjectsJson = formData.get('subjects') as string;
+    const subjects = JSON.parse(subjectsJson) || [];
 
     // check for input values
     if (!titleValue || titleValue === '') {
@@ -226,8 +226,8 @@ export async function updateProject(
     const notes = formData.get('notes') as string;
     const purpose = formData.get('purpose') as string;
     const publicValue = formData.get('public') !== null;
-    let subjectsJson = formData.get('subjects') as string;
-    let subjects = JSON.parse(subjectsJson) || [];
+    const subjectsJson = formData.get('subjects') as string;
+    const subjects = JSON.parse(subjectsJson) || [];
     // subjectValue = subjectValue == 'None' ? '' : subjectValue;
 
     console.log(
