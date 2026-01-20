@@ -7,10 +7,9 @@ import { useState, useTransition } from 'react';
 import type { CondensedBibHoldings } from '@/types/CondensedBibHoldings';
 import BibResultsWrapper from './BibResultsWrapper';
 
-interface RecordSearchFormProps {
-  projectId: number;
-  userCanEditPage: boolean;
-}
+type RecordSearchFormProps =
+  | { quickslip: false; projectId: number; userCanEditPage: boolean }
+  | { quickslip: true; projectId: never; userCanEditPage: never };
 
 const RecordSearchForm = ({
   projectId,

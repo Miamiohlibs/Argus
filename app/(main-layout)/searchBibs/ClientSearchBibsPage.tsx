@@ -53,6 +53,7 @@ const ClientSearchBibsPage = ({
       <RecordSearchForm
         projectId={clientProjectId}
         userCanEditPage={userCanEditPage}
+        quickslip={false}
       />
     </>
   );
