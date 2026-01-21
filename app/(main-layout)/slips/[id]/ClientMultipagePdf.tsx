@@ -2,7 +2,7 @@
 import { useParams } from 'next/navigation';
 import { spec } from 'node:test/reporters';
 
-export default function MultiPagePdf() {
+export default function ClientMultiPagePdf() {
   const { id, specificBibEntry } = useParams();
   // generate different url param based on whether or not a single BibEntry is called for
   const idToPrint = specificBibEntry ? `${id}--${specificBibEntry}` : id;
