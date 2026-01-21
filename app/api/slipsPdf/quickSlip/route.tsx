@@ -59,11 +59,8 @@ export async function GET(req: NextRequest) {
   const items = [item];
 
   const stream = await renderToStream(<MultiPagePdf books={items} />);
-  const filename = 'Quick Slip';
-  //   project?.title
-  //     ? filenamify(`${project.title} - Pull Slips`)
-  //     : 'pullslips';
-  // logger.verbose('filename:', filename);
+  const filenameBasis = item.title ?? 'Quick Slip';
+  const filename = filenamify(filenameBasis);
 
   return new NextResponse(stream as any, {
     headers: {
