@@ -8,14 +8,21 @@ import type { CondensedBibHoldings } from '@/types/CondensedBibHoldings';
 import BibResultsWrapper from './BibResultsWrapper';
 
 type RecordSearchFormProps =
-  | { quickslip: false; projectId: number; userCanEditPage: boolean }
-  | { quickslip: true; projectId: never; userCanEditPage: never };
+  | { quickSlip: false; projectId: number; userCanEditPage: boolean }
+  | { quickSlip: true };
 
-const RecordSearchForm = ({
-  projectId,
-  userCanEditPage,
-}: RecordSearchFormProps) => {
+const RecordSearchForm = (props: RecordSearchFormProps) => {
   const formRef = useRef<HTMLFormElement>(null);
+  let projectId, userCanEditPage, quickSlip;
+  if (props.quickSlip) {
+    quickSlip = true;
+    userCanEditPage = true;
+    projectId = undefined;
+  } else {
+    quickSlip = false;
+    userCanEditPage = props.userCanEditPage;
+    projectId = props.projectId;
+  }
   const [results, setResults] = useState<CondensedBibHoldings | null>(null);
   const [searchFailed, setSearchFailed] = useState<boolean>(false);
   const [isPending, startTransition] = useTransition();
@@ -69,12 +76,12 @@ const RecordSearchForm = ({
         <BibResultsWrapper
           projectId={projectId}
           holdingsData={results ?? undefined}
-          actionType={'add'}
+          actionType={quickSlip ? 'quickSlip' : 'add'}
           isEditor={userCanEditPage}
           searchActive={isPending}
           searchFailed={searchFailed}
+          quickSlip={quickSlip}
         />
-
         {process.env.NEXT_PUBLIC_IS_DEV_ENV && results && (
           <pre>{JSON.stringify(results, null, 2)}</pre>
         )}

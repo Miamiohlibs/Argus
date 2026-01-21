@@ -3,6 +3,7 @@ import Guest from '@/components/Guest';
 import { currentUser } from '@clerk/nextjs/server';
 import ProjectsTable from '@/components/ProjectsTable';
 import CreateProjectButton from '@/components/CreateProjectButton';
+import QuickSlipButton from '@/components/QuickSlipButton';
 import getUserInfo from '@/lib/getUserInfo';
 import { redirect } from 'next/navigation';
 
@@ -16,7 +17,7 @@ export async function generateMetadata(): Promise<Metadata> {
 const Home = async () => {
   const {
     user,
-    permissions: { isEditorOrAbove, canPrint },
+    permissions: { isEditorOrAbove, canPrint, isAdmin },
   } = await getUserInfo();
   const clerkUserInfo = (await currentUser()) ?? { firstName: 'Guest' };
   let displayName = clerkUserInfo.firstName;
@@ -41,7 +42,10 @@ const Home = async () => {
   return (
     <>
       <h1 className="h2">{displayName}&apos;s Projects</h1>
-      <div className="mb-3">{isEditorOrAbove && <CreateProjectButton />}</div>
+      <div className="mb-3">
+        {isEditorOrAbove && <CreateProjectButton />}{' '}
+        {isAdmin && <QuickSlipButton />}
+      </div>
       <ProjectsTable limitToUser={true} user={user} canPrint={canPrint} />
     </>
   );

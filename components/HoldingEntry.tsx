@@ -34,9 +34,10 @@ interface HoldingEntryProps {
   locationCodes: string;
   locationNames: string;
   projectId: string | number;
-  actionType: 'add' | 'edit';
+  actionType: 'add' | 'edit' | 'quickSlip';
   existingEntry?: EntryWithItems;
   isEditor: boolean;
+  quickSlip: boolean;
 }
 
 const HoldingEntry = ({
@@ -153,27 +154,33 @@ const HoldingEntry = ({
       };
     });
 
-    const { data, error } = await entryAction({
-      bibData: allFormData,
-      itemData: itemsToSubmit,
-      actionType,
-      ...(existingEntry?.id && { existingEntryId: existingEntry.id }),
-    });
-
-    if (error) {
-      toast.error(`Failed to ${actionType === 'add' ? 'add' : 'update'} entry`);
+    if (actionType == 'quickSlip') {
+      // do quickSlip action
     } else {
-      toast.success(
-        `Entry ${actionType === 'add' ? 'added' : 'updated'} successfully`
-      );
-      console.log('Entry saved:', data);
+      const { data, error } = await entryAction({
+        bibData: allFormData,
+        itemData: itemsToSubmit,
+        actionType,
+        ...(existingEntry?.id && { existingEntryId: existingEntry.id }),
+      });
 
-      if (actionType === 'add') {
-        formRef.current?.reset();
-        setSelectedItems([]);
+      if (error) {
+        toast.error(
+          `Failed to ${actionType === 'add' ? 'add' : 'update'} entry`
+        );
+      } else {
+        toast.success(
+          `Entry ${actionType === 'add' ? 'added' : 'updated'} successfully`
+        );
+        console.log('Entry saved:', data);
+
+        if (actionType === 'add') {
+          formRef.current?.reset();
+          setSelectedItems([]);
+        }
+        // For edit, don't reload - let the user see the updated state
+        // window.location.reload(); // Remove this for better UX
       }
-      // For edit, don't reload - let the user see the updated state
-      // window.location.reload(); // Remove this for better UX
     }
   };
 
@@ -216,6 +223,18 @@ const HoldingEntry = ({
       (item) => !inHouseCodes.includes(item.location.value)
     );
     items = inHouse.concat(other);
+  }
+  let submitButtonText;
+
+  switch (actionType) {
+    case 'quickSlip':
+      submitButtonText = 'Print Slip';
+      break;
+    case 'edit':
+      submitButtonText = 'Save Edits to Item';
+      break;
+    default:
+      submitButtonText = 'Add Item to Project';
   }
   return (
     <Form onSubmit={handleSubmit}>
@@ -300,9 +319,10 @@ const HoldingEntry = ({
               defaultValue={existingEntry?.notes ?? ''}
             />
             <Button type="submit" variant="primary">
-              {actionType === 'add'
+              {/* {actionType === 'add'
                 ? 'Add Item to Project'
-                : 'Save Edits to Item'}
+                : 'Save Edits to Item'} */}
+              {submitButtonText}
             </Button>
           </InputGroup>
         </Form.Group>
