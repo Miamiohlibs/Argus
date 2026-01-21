@@ -12,7 +12,7 @@ import type {
 import type { SafeStringifyInput } from '@/types/SafeStringInput';
 import type { LocationCode } from '@/lib/locationCodes';
 import { inHouseLocationCodes } from '@/lib/locationCodes';
-import { buildInversePrefetchSegmentDataRoute } from 'next/dist/server/lib/router-utils/build-prefetch-segment-data-route';
+import { useRouter } from 'next/navigation';
 
 interface miniItemData {
   pid: string;
@@ -50,6 +50,7 @@ const HoldingEntry = ({
   existingEntry,
   isEditor,
 }: HoldingEntryProps) => {
+  const router = useRouter();
   const [selectedItems, setSelectedItems] = useState<miniItemData[]>([]);
   const [isInitialized, setIsInitialized] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
@@ -129,9 +130,13 @@ const HoldingEntry = ({
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const allFormData: Record<string, FormDataEntryValue> = {};
+    const urlEncodedArray = [];
     for (const [key, value] of formData.entries()) {
       allFormData[key] = value;
+      urlEncodedArray.push(key + '=' + encodeURIComponent(value.toString()));
     }
+    const urlString = urlEncodedArray.join('&');
+
     // KEN: CALL & BIB MISSING FROM allFormData
     console.log('All Form Data:', allFormData);
     console.log('Selected Items:', selectedItems);
@@ -155,7 +160,9 @@ const HoldingEntry = ({
     });
 
     if (actionType == 'quickSlip') {
-      // do quickSlip action
+      const slipsUrl = `/admin/quickSlip/handler?${urlString}`;
+      console.log(slipsUrl);
+      router.push(slipsUrl);
     } else {
       const { data, error } = await entryAction({
         bibData: allFormData,
