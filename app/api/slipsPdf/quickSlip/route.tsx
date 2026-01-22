@@ -8,7 +8,7 @@ import getEntries from '@/app/actions/getEntries';
 import { getProject } from '@/app/actions/projectActions';
 import filenamify from 'filenamify';
 import { checkUser } from '@/lib/checkUser';
-import { isAllowedUserStatus } from '@/lib/typeChecker';
+import { isAllowedUserStatus, isAllowedAffiliation } from '@/lib/typeChecker';
 
 function createItemFromReq(req: NextRequest) {
   const params = Object.fromEntries(req.nextUrl.searchParams.entries());
@@ -64,6 +64,15 @@ function createItemFromReq(req: NextRequest) {
   ) {
     item.userStatus = params.userStatus;
   }
+
+  if (
+    params.hasOwnProperty('userAffiliation') &&
+    typeof params.userAffiliation == 'string' &&
+    isAllowedAffiliation(params.userAffiliation)
+  ) {
+    item.userAffiliation = params.userAffiliation;
+  }
+
   return item;
 }
 

@@ -22,3 +22,11 @@ export function isAllowedUserStatus(
     undefined,
   ].includes(value);
 }
+
+export type AllowedAffiliation = 'Miami' | 'Other' | undefined;
+
+export function isAllowedAffiliation(
+  value: string | undefined
+): value is AllowedAffiliation {
+  return ['Miami', 'Other', undefined].includes(value);
+}

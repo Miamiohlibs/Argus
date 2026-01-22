@@ -4,8 +4,8 @@ import { UserAffiliation, UserStatus } from '@prisma/client';
 // the "none" variable on the blankPullDownOption doesn't work twice on the same page
 // needs to take a varialbe so the name is like "none-affil", "none-role", etc.
 
-const validStatuses = Object.values(UserStatus);
-const validAffiliations = Object.values(UserAffiliation);
+export const validStatuses = Object.values(UserStatus);
+export const validAffiliations = Object.values(UserAffiliation);
 // did't include the role selector here because it changes if the user is superadmin or not
 
 export const statusOptions: React.JSX.Element[] = validStatuses.map((r) => (
@@ -22,8 +22,8 @@ export const affiliationOptions: React.JSX.Element[] = validAffiliations.map(
   )
 );
 
-export const blankPullDownOption: React.JSX.Element = (
-  <option key="none" value="">
+export const blankPullDownOption = (seed: string): React.JSX.Element => (
+  <option key={`none-${seed}`} value="">
     None
   </option>
 );
