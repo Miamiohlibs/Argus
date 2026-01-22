@@ -137,7 +137,7 @@ const HoldingEntry = ({
       allFormData[key] = value;
       urlEncodedArray.push(key + '=' + encodeURIComponent(value.toString()));
     }
-    const urlString = urlEncodedArray.join('&');
+    let urlString = urlEncodedArray.join('&');
 
     // KEN: CALL & BIB MISSING FROM allFormData
     console.log('All Form Data:', allFormData);
@@ -162,6 +162,13 @@ const HoldingEntry = ({
     });
 
     if (actionType == 'quickSlip') {
+      {
+        // add selected items to query string if present
+        selectedItems &&
+          selectedItems.forEach((item) => {
+            urlString += encodeURI(`&selectedItems[]=${JSON.stringify(item)}`);
+          });
+      }
       const slipsUrl = `/admin/quickSlip/handler?${urlString}`;
       console.log(slipsUrl);
       router.push(slipsUrl);
