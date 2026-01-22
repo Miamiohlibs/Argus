@@ -17,6 +17,11 @@ function createItemFromReq(req: NextRequest) {
   const params = Object.fromEntries(req.nextUrl.searchParams.entries());
   console.log('createItemFromReq params:', params);
 
+  const selectedItems =
+    req.nextUrl.searchParams.getAll('selectedItems[]') || [];
+  const selectedItemObjects = selectedItems.map((json) => JSON.parse(json));
+
+  // create some blank/dummy objects to start, with enough data to meet the minimum expectations for a db entry
   const project: ProjectWithUserAndBib = {
     bibEntries: [],
     coEditors: [],
@@ -51,7 +56,7 @@ function createItemFromReq(req: NextRequest) {
     almaIdType: '',
     author: '',
     callNumber: '',
-    items: [],
+    items: selectedItemObjects,
     itemTitle: '',
     location_codes: '',
     location_display: '',
@@ -75,9 +80,6 @@ function createItemFromReq(req: NextRequest) {
       userId: 'none',
     },
   };
-
-  const selectedItems = req.nextUrl.searchParams.getAll('selectedItems[]');
-  const selectedItemObjects = selectedItems.map((json) => JSON.parse(json));
 
   if (params.hasOwnProperty('title') && typeof params.title == 'string') {
     bib.itemTitle = params.title;
@@ -142,10 +144,11 @@ function createItemFromReq(req: NextRequest) {
 
 export async function GET(req: NextRequest) {
   const user = await checkUser();
-
   const { bib, project } = createItemFromReq(req);
-  //   const items = [item];
+
   const items = generateRequestSlipItems([bib], project, user);
+
+  console.log('****** BibEntries:', JSON.stringify(items, null, 2));
 
   const stream = await renderToStream(<MultiPagePdf books={items} />);
   const filenameBasis = 'Quick Slip';
