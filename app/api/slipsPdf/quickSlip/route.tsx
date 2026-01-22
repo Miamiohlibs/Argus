@@ -8,6 +8,7 @@ import getEntries from '@/app/actions/getEntries';
 import { getProject } from '@/app/actions/projectActions';
 import filenamify from 'filenamify';
 import { checkUser } from '@/lib/checkUser';
+import { isAllowedUserStatus } from '@/lib/typeChecker';
 
 function createItemFromReq(req: NextRequest) {
   const params = Object.fromEntries(req.nextUrl.searchParams.entries());
@@ -50,6 +51,18 @@ function createItemFromReq(req: NextRequest) {
     typeof params.publisher_const == 'string'
   ) {
     item.publisher = params.publisher_const;
+  }
+
+  if (params.hasOwnProperty('userName') && typeof params.userName == 'string') {
+    item.userName = params.userName;
+  }
+
+  if (
+    params.hasOwnProperty('userStatus') &&
+    typeof params.userStatus == 'string' &&
+    isAllowedUserStatus(params.userStatus)
+  ) {
+    item.userStatus = params.userStatus;
   }
   return item;
 }
