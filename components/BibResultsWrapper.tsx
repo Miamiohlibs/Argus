@@ -42,6 +42,7 @@ export default function BibResultsWrapper({
     return (
       <>
         <BibEntryComponent entry={holdingsData.bib_data} />
+
         <HoldingEntry
           items={holdingsData.items}
           bibData={holdingsData.bib_data}

@@ -13,6 +13,7 @@ import type { SafeStringifyInput } from '@/types/SafeStringInput';
 import type { LocationCode } from '@/lib/locationCodes';
 import { inHouseLocationCodes } from '@/lib/locationCodes';
 import { useRouter } from 'next/navigation';
+import QuickSlipProjectInfo from './QuickSlipProjectInfo';
 
 interface miniItemData {
   pid: string;
@@ -49,6 +50,7 @@ const HoldingEntry = ({
   actionType,
   existingEntry,
   isEditor,
+  quickSlip,
 }: HoldingEntryProps) => {
   const router = useRouter();
   const [selectedItems, setSelectedItems] = useState<miniItemData[]>([]);
@@ -246,6 +248,7 @@ const HoldingEntry = ({
   return (
     <Form onSubmit={handleSubmit}>
       <div key={'holding'} className="mb-4 border p-3">
+        {quickSlip && <QuickSlipProjectInfo />}
         <Form.Control
           type="hidden"
           name="project_id"
