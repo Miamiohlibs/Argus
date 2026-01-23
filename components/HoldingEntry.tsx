@@ -10,7 +10,6 @@ import type {
   AlmaItemHoldingBibDataPlusCallAndLocation,
 } from '@/types/CondensedBibHoldings';
 import type { SafeStringifyInput } from '@/types/SafeStringInput';
-import type { LocationCode } from '@/lib/locationCodes';
 import { inHouseLocationCodes } from '@/lib/locationCodes';
 import { useRouter } from 'next/navigation';
 import QuickSlipProjectInfo from './QuickSlipProjectInfo';

@@ -5,8 +5,6 @@ import DataTable from 'react-data-table-component';
 import { Prisma } from '@prisma/client';
 import Link from 'next/link';
 import { getProjects } from '@/app/actions/projectActions';
-import DeleteProjectButton from './DeleteProjectButton';
-import ArchiveProjectButton from './ArchiveProjectButton';
 import ArchiveDeleteProjectButton from './ArchiveDeleteProjectButton';
 import { User } from '@prisma/client';
 import { Button } from 'react-bootstrap';
