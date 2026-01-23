@@ -99,6 +99,12 @@ function createItemFromReq(req: NextRequest) {
   }
 
   if (
+    params.hasOwnProperty('location_display') &&
+    typeof params.location_display == 'string'
+  ) {
+    bib.location_display = params.location_display;
+  }
+  if (
     params.hasOwnProperty('date_of_publication') &&
     typeof params.date_of_publication == 'string'
   ) {

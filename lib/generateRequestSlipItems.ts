@@ -10,13 +10,21 @@ export default function generateRequestSlipItems(
 ): RequestSlipProps[] {
   // return one slip per item (or one per bib if there are no items)
   console.log('***** number of items: ', entries[0].items.length);
+
+  // KEN:
+  // if all items sent have same location, set that location code & name as the string
+  // "location_code":"spec","location_name":"Special Collections"
+
   const items: RequestSlipProps[] = entries.flatMap((entry) => {
+    const locationArr: string[] = [];
+    let locationStr: string;
     // Build item info strings for all items
     const itemInfos =
       entry.items?.map((item) => {
         let info: string = '';
         console.log('****** item info:', JSON.stringify(item));
         console.log('****** entry loc: ', entry.location_codes);
+        locationArr.push(`${item.location_name} (${item.location_code})`);
         // only add to item info if there's any item-specific info
         if (
           (item.copy_id && parseInt(item.copy_id) > 1) ||
@@ -45,7 +53,7 @@ export default function generateRequestSlipItems(
 
     if (itemInfos.length > 0) {
       // One object per item, highlighting the index
-      const locationStr = `${entry.location_display} (${entry.location_codes})`;
+      locationStr = [...new Set(locationArr)].join(', ');
       return itemInfos.map((_, idx) => ({
         author: entry.author,
         title: entry.itemTitle,
