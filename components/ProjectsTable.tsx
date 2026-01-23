@@ -56,7 +56,7 @@ export default function ProjectsTable({
     event.stopPropagation(); // prevents script from firing twice
     if (!confirmed) return;
 
-    console.log(`Delete project with ID: ${projectId}`);
+    // console.log(`Delete project with ID: ${projectId}`);
     const updatedProjects = projects.filter(
       (project) => project.id !== projectId
     );
@@ -71,7 +71,7 @@ export default function ProjectsTable({
     event.stopPropagation(); // prevents script from firing twice
     if (!confirmed) return;
 
-    console.log(`Archive project with ID: ${projectId}`);
+    // console.log(`Archive project with ID: ${projectId}`);
     const updatedProjects = projects.filter(
       (project) => project.id !== projectId
     );
