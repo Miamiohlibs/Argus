@@ -8,11 +8,14 @@ import { BibEntry, ItemEntry } from '@prisma/client';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { LocationCode, inHouseLocationData } from '@/lib/locationCodes';
+import QuickSlipProjectInfo from './QuickSlipProjectInfo';
+import { useRouter } from 'next/navigation';
 
 interface CustomEntryFormProps {
   projectId?: number;
   existingEntry?: EntryWithItems;
   editable?: boolean;
+  quickSlip?: boolean;
 }
 
 // interface LocationCode {
@@ -25,7 +28,9 @@ const CustomEntryForm = ({
   projectId,
   existingEntry,
   editable = true,
+  quickSlip = false,
 }: CustomEntryFormProps) => {
+  const router = useRouter();
   const [locations, setLocations] = useState<LocationCode[]>([]);
   const [selectedLocation, setSelectedLocation] = useState<LocationCode | null>(
     null
@@ -78,6 +83,18 @@ const CustomEntryForm = ({
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     console.log('Form submitted with data:', formData);
+    if (quickSlip) {
+      const allFormData: Record<string, FormDataEntryValue> = {};
+      const urlEncodedArray = [];
+      for (const [key, value] of formData.entries()) {
+        allFormData[key] = value;
+        urlEncodedArray.push(key + '=' + encodeURIComponent(value.toString()));
+      }
+      const urlString = urlEncodedArray.join('&');
+      const slipsUrl = `/admin/quickSlip/handler?${urlString}`;
+      router.push(slipsUrl);
+      return true;
+    }
     // const allFormData: Record<string, FormDataEntryValue> = {};
     // for (const [key, value] of formData.entries()) {
     //   allFormData[key] = value;
@@ -362,6 +379,8 @@ const CustomEntryForm = ({
             />
           </InputGroup>
         </Form.Group>
+
+        {quickSlip && <QuickSlipProjectInfo />}
 
         {editable && (
           <Button

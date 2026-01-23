@@ -12,7 +12,8 @@ import type {
 import type { SafeStringifyInput } from '@/types/SafeStringInput';
 import type { LocationCode } from '@/lib/locationCodes';
 import { inHouseLocationCodes } from '@/lib/locationCodes';
-import { buildInversePrefetchSegmentDataRoute } from 'next/dist/server/lib/router-utils/build-prefetch-segment-data-route';
+import { useRouter } from 'next/navigation';
+import QuickSlipProjectInfo from './QuickSlipProjectInfo';
 
 interface miniItemData {
   pid: string;
@@ -34,9 +35,10 @@ interface HoldingEntryProps {
   locationCodes: string;
   locationNames: string;
   projectId: string | number;
-  actionType: 'add' | 'edit';
+  actionType: 'add' | 'edit' | 'quickSlip';
   existingEntry?: EntryWithItems;
   isEditor: boolean;
+  quickSlip: boolean;
 }
 
 const HoldingEntry = ({
@@ -48,7 +50,9 @@ const HoldingEntry = ({
   actionType,
   existingEntry,
   isEditor,
+  quickSlip,
 }: HoldingEntryProps) => {
+  const router = useRouter();
   const [selectedItems, setSelectedItems] = useState<miniItemData[]>([]);
   const [isInitialized, setIsInitialized] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
@@ -128,9 +132,13 @@ const HoldingEntry = ({
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const allFormData: Record<string, FormDataEntryValue> = {};
+    const urlEncodedArray = [];
     for (const [key, value] of formData.entries()) {
       allFormData[key] = value;
+      urlEncodedArray.push(key + '=' + encodeURIComponent(value.toString()));
     }
+    let urlString = urlEncodedArray.join('&');
+
     // KEN: CALL & BIB MISSING FROM allFormData
     console.log('All Form Data:', allFormData);
     console.log('Selected Items:', selectedItems);
@@ -153,27 +161,42 @@ const HoldingEntry = ({
       };
     });
 
-    const { data, error } = await entryAction({
-      bibData: allFormData,
-      itemData: itemsToSubmit,
-      actionType,
-      ...(existingEntry?.id && { existingEntryId: existingEntry.id }),
-    });
-
-    if (error) {
-      toast.error(`Failed to ${actionType === 'add' ? 'add' : 'update'} entry`);
-    } else {
-      toast.success(
-        `Entry ${actionType === 'add' ? 'added' : 'updated'} successfully`
-      );
-      console.log('Entry saved:', data);
-
-      if (actionType === 'add') {
-        formRef.current?.reset();
-        setSelectedItems([]);
+    if (actionType == 'quickSlip') {
+      {
+        // add selected items to query string if present
+        selectedItems &&
+          selectedItems.forEach((item) => {
+            urlString += encodeURI(`&selectedItems[]=${JSON.stringify(item)}`);
+          });
       }
-      // For edit, don't reload - let the user see the updated state
-      // window.location.reload(); // Remove this for better UX
+      const slipsUrl = `/admin/quickSlip/handler?${urlString}`;
+      console.log(slipsUrl);
+      router.push(slipsUrl);
+    } else {
+      const { data, error } = await entryAction({
+        bibData: allFormData,
+        itemData: itemsToSubmit,
+        actionType,
+        ...(existingEntry?.id && { existingEntryId: existingEntry.id }),
+      });
+
+      if (error) {
+        toast.error(
+          `Failed to ${actionType === 'add' ? 'add' : 'update'} entry`
+        );
+      } else {
+        toast.success(
+          `Entry ${actionType === 'add' ? 'added' : 'updated'} successfully`
+        );
+        console.log('Entry saved:', data);
+
+        if (actionType === 'add') {
+          formRef.current?.reset();
+          setSelectedItems([]);
+        }
+        // For edit, don't reload - let the user see the updated state
+        // window.location.reload(); // Remove this for better UX
+      }
     }
   };
 
@@ -217,9 +240,22 @@ const HoldingEntry = ({
     );
     items = inHouse.concat(other);
   }
+  let submitButtonText;
+
+  switch (actionType) {
+    case 'quickSlip':
+      submitButtonText = 'Print Slip';
+      break;
+    case 'edit':
+      submitButtonText = 'Save Edits to Item';
+      break;
+    default:
+      submitButtonText = 'Add Item to Project';
+  }
   return (
     <Form onSubmit={handleSubmit}>
       <div key={'holding'} className="mb-4 border p-3">
+        {quickSlip && <QuickSlipProjectInfo />}
         <Form.Control
           type="hidden"
           name="project_id"
@@ -300,9 +336,10 @@ const HoldingEntry = ({
               defaultValue={existingEntry?.notes ?? ''}
             />
             <Button type="submit" variant="primary">
-              {actionType === 'add'
+              {/* {actionType === 'add'
                 ? 'Add Item to Project'
-                : 'Save Edits to Item'}
+                : 'Save Edits to Item'} */}
+              {submitButtonText}
             </Button>
           </InputGroup>
         </Form.Group>

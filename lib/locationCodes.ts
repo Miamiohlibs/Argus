@@ -36,3 +36,12 @@ export const inHouseLocationCodes = (): string[] => {
   }
   return [];
 };
+
+export const getLocationNameFromCode = (code: string) => {
+  const locations = inHouseLocationData();
+  if (typeof locations == 'undefined') {
+    return '';
+  }
+  const location = locations.find((item) => item.code == code);
+  return location?.name || '';
+};

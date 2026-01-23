@@ -28,6 +28,7 @@ export const RequestSlipHalfPage = ({
   purpose,
 }: RequestSlipProps & { styles: any }) => {
   logger.verbose('Item Info', itemInfo);
+  logger.verbose(`Added fields: ${userStatus}`);
   const volumeLabel = // only show if items to show
     itemInfo && itemInfo.length > 1 ? (
       <>
