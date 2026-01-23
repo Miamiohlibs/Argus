@@ -1,5 +1,32 @@
 # Changelog
 
+## 0.7.0 - 2026-01-23
+
+### Fixed
+
+- fixed bug that lost track of which Alma items were selected on an bibEntry under some circumstances
+
+### Added
+
+- projects can be made public; by default they are private. public projects are visible to all users regardess of role or ownership.
+- search feature: search entries across all projects available to a user (for regular users, this includes public projects, their own projects, and projects for which they are a co-editor; for admin users, this includes all non-deleted projects)
+- projects may be deleted or archived; the archives are viewable
+- pull slips can be printed individually for an entry in entries list for a project
+- admin-only feature: create a pull slip for an individual bib record without creating a project for it
+- admin-only feature: reassign a project to a different user's ownership
+- new environment variable NEXT_PUBLIC_PROJECT_PURPOSES defines array of project "purpose" options displayed on pull slips -- takes a stringified JSON object from an array of type string[]
+- new environment variable NEXT_PUBLIC_SUBJECT_LIST defines array of subjects that can be applied to a project -- takes a stringified JSON object from an array of type string[]
+- adds four new project variables: purpose, subject, public (boolean), status (status allows for an "archived" project)
+
+### Changed
+
+- reorganized pull slip layout
+- added created/updated dates in Users table (admin feature)
+
+## 0.6.3 - 2026-01-12
+
+- updated next, react, react-dom packages to correct build errors
+
 ## 0.6.2 - 2025-12-05
 
 - updated next, react, react-dom packages to security patched versions
