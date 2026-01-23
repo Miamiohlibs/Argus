@@ -1,6 +1,5 @@
 'use client';
 import { useParams } from 'next/navigation';
-import { spec } from 'node:test/reporters';
 
 export default function ClientMultiPagePdf() {
   const { id, specificBibEntry } = useParams();

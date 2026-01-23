@@ -11,7 +11,6 @@
 import logger from '@/lib/logger';
 import { db } from '@/lib/db';
 import { BibEntry } from '@prisma/client';
-import { Page } from '@react-pdf/renderer';
 
 async function searchEntries(
   query: string,

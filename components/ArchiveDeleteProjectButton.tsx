@@ -6,14 +6,7 @@ import {
   deleteProject,
 } from '@/app/actions/projectActions';
 
-import {
-  Form,
-  Dropdown,
-  DropdownButton,
-  Button,
-  InputGroup,
-  ButtonGroup,
-} from 'react-bootstrap';
+import { Dropdown, Button, ButtonGroup } from 'react-bootstrap';
 import { Trash } from 'react-bootstrap-icons';
 // import { useRouter } from 'next/navigation';
 import { useState } from 'react';

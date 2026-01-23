@@ -9,8 +9,6 @@ import { useEffect, useState } from 'react';
 import { Project } from '@prisma/client';
 import { ProjectData } from '@/types/ProjectData';
 import { getProjectPurposes, getSubjects } from '@/lib/utils';
-import { getProject } from '@/app/actions/projectActions';
-import { MouseEvent } from 'react';
 import { Trash } from 'react-bootstrap-icons';
 
 type ProjectActionResult =

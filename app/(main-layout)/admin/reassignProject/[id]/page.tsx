@@ -11,10 +11,7 @@ export default async function ReassignProjectPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const {
-    user,
-    permissions: { isAdmin },
-  } = await getUserInfo(id);
+  const { user } = await getUserInfo(id);
   await checkAccess({ permittedRoles: ['admin', 'superadmin'] });
   const { project, error: projectError } = await getProject({ id });
   const { users, error: userError } = await getUsers([

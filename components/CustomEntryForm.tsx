@@ -36,14 +36,7 @@ const CustomEntryForm = ({
     null
   );
 
-  const pageHeaderText = !existingEntry
-    ? 'New Custom Entry'
-    : editable
-    ? `Edit Custom Entry: ${existingEntry.itemTitle}`
-    : `Viewing Custom Entry: ${existingEntry.itemTitle}`;
-
   // Load locations only once on mount
-
   useEffect(() => {
     const locationCodes = inHouseLocationData();
     if (typeof locationCodes != 'undefined') {
@@ -52,7 +45,7 @@ const CustomEntryForm = ({
   }, []);
 
   const handleLocationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    console.log(`Selected location: ${e.target.value}`);
+    // console.log(`Selected location: ${e.target.value}`);
     const selected =
       locations.find((loc) => loc.code === e.target.value) || null;
     setSelectedLocation(selected);
