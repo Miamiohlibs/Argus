@@ -12,6 +12,8 @@ import { isAllowedUserStatus, isAllowedAffiliation } from '@/lib/typeChecker';
 import { EntryWithItems } from '@/types/EntryWithItems';
 import { ProjectWithUserAndBib } from '@/types/ProjectWithUserAndBib';
 import generateRequestSlipItems from '@/lib/generateRequestSlipItems';
+import { ItemEntry } from '@prisma/client';
+import { getLocationNameFromCode } from '@/lib/locationCodes';
 
 function createItemFromReq(req: NextRequest) {
   const params = Object.fromEntries(req.nextUrl.searchParams.entries());
@@ -80,9 +82,27 @@ function createItemFromReq(req: NextRequest) {
       userId: 'none',
     },
   };
+  const blankItem: ItemEntry = {
+    id: 'quickSlip',
+    call_number: '',
+    barcode: '',
+    box: '',
+    copy_id: '',
+    description: '',
+    folder: '',
+    location_code: '',
+    location_name: '',
+    bibEntryId: '',
+    ms: '',
+  };
 
   if (params.hasOwnProperty('title') && typeof params.title == 'string') {
     bib.itemTitle = params.title;
+  } else if (
+    params.hasOwnProperty('itemTitle') &&
+    typeof params.itemTitle == 'string'
+  ) {
+    bib.itemTitle = params.itemTitle;
   }
 
   if (params.hasOwnProperty('author') && typeof params.author == 'string') {
@@ -112,6 +132,11 @@ function createItemFromReq(req: NextRequest) {
     typeof params.date_of_publication == 'string'
   ) {
     bib.pub_date = params.date_of_publication;
+  } else if (
+    params.hasOwnProperty('pub_date') &&
+    typeof params.pub_date == 'string'
+  ) {
+    bib.pub_date = params.pub_date;
   }
 
   if (
@@ -119,8 +144,43 @@ function createItemFromReq(req: NextRequest) {
     typeof params.call_number == 'string'
   ) {
     bib.callNumber = params.call_number;
+  } else if (
+    params.hasOwnProperty('itemCallNumber') &&
+    typeof params.itemCallNumber == 'string'
+  ) {
+    bib.callNumber = params.itemCallNumber;
   }
 
+  if (
+    params.hasOwnProperty('itemCopy') ||
+    params.hasOwnProperty('itemBox') ||
+    params.hasOwnProperty('itemFolder') ||
+    params.hasOwnProperty('itemMs') ||
+    params.hasOwnProperty('itemBox') ||
+    params.hasOwnProperty('itemLocation')
+  ) {
+    if (params.hasOwnProperty('itemCopy')) {
+      blankItem.copy_id = params.itemCopy;
+    }
+    if (params.hasOwnProperty('itemBox')) {
+      blankItem.box = params.itemBox;
+    }
+    if (params.hasOwnProperty('itemFolder')) {
+      blankItem.folder = params.itemFolder;
+    }
+    if (params.hasOwnProperty('itemMs')) {
+      blankItem.ms = params.itemMs;
+    }
+    if (params.hasOwnProperty('itemBox')) {
+      blankItem.box = params.itemBox;
+    }
+    if (params.hasOwnProperty('itemLocation')) {
+      blankItem.location_code = params.itemLocation;
+      blankItem.location_name =
+        getLocationNameFromCode(params.itemLocation) || '';
+    }
+    bib.items.push(blankItem);
+  }
   if (
     params.hasOwnProperty('publisher_const') &&
     typeof params.publisher_const == 'string'
