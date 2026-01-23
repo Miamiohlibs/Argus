@@ -18,7 +18,9 @@ const QuickSlipButton = () => {
         >
           From Alma
         </DropdownItem>
-        <DropdownItem href="#" disabled>
+        <DropdownItem
+          href={`${process.env.NEXT_PUBLIC_APP_BASEPATH}/admin/quickSlip/custom`}
+        >
           Custom Entry
         </DropdownItem>
       </DropdownMenu>
