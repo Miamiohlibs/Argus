@@ -17,7 +17,7 @@ export async function generateMetadata(): Promise<Metadata> {
 const Home = async () => {
   const {
     user,
-    permissions: { isEditorOrAbove, canPrint, isAdmin },
+    permissions: { isEditorOrAbove, canPrint },
   } = await getUserInfo();
   const clerkUserInfo = (await currentUser()) ?? { firstName: 'Guest' };
   let displayName = clerkUserInfo.firstName;
@@ -44,7 +44,7 @@ const Home = async () => {
       <h1 className="h2">{displayName}&apos;s Projects</h1>
       <div className="mb-3">
         {isEditorOrAbove && <CreateProjectButton />}{' '}
-        {isAdmin && <QuickSlipButton />}
+        {canPrint && <QuickSlipButton />}
       </div>
       <ProjectsTable limitToUser={true} user={user} canPrint={canPrint} />
     </>

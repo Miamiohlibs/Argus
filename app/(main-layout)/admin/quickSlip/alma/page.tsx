@@ -1,8 +1,14 @@
 import RecordSearchForm from '@/components/RecordSearchForm';
-import checkAccess from '@/lib/checkAccess';
+import { getCurrentUser } from '@/app/actions/getUser';
+import { getPermissions } from '@/lib/getUserInfo';
+import { redirect } from 'next/navigation';
 
 export default async function quickSlipAlmaPage() {
-  await checkAccess({ permittedRoles: ['admin', 'superadmin'] });
+  const user = await getCurrentUser();
+  const { canPrint } = await getPermissions(user);
+  if (!canPrint) {
+    redirect('/');
+  }
 
   return (
     <>

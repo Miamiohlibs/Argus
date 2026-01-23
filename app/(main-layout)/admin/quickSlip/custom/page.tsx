@@ -1,8 +1,14 @@
-import checkAccess from '@/lib/checkAccess';
 import CustomEntryForm from '@/components/CustomEntryForm';
+import { getCurrentUser } from '@/app/actions/getUser';
+import { getPermissions } from '@/lib/getUserInfo';
+import { redirect } from 'next/navigation';
 
 export default async function quickSlipCustomPage() {
-  await checkAccess({ permittedRoles: ['admin', 'superadmin'] });
+  const user = await getCurrentUser();
+  const { canPrint } = await getPermissions(user);
+  if (!canPrint) {
+    redirect('/');
+  }
 
   return (
     <>
