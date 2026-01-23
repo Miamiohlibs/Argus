@@ -145,6 +145,9 @@ function createItemFromReq(req: NextRequest) {
     project.user.affiliation = params.userAffiliation;
   }
 
+  if (params.hasOwnProperty('purpose') && typeof params.purpose == 'string') {
+    project.purpose = params.purpose;
+  }
   return { bib, project };
 }
 

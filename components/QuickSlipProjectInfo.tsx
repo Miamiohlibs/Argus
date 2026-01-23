@@ -3,6 +3,7 @@ import { Form, FormControl, FormLabel, InputGroup } from 'react-bootstrap';
 import { useState } from 'react';
 import { UserAffiliation, UserStatus } from '@prisma/client';
 import { isAllowedUserStatus, isAllowedAffiliation } from '@/lib/typeChecker';
+import { getProjectPurposes } from '@/lib/utils';
 import {
   validStatuses,
   validAffiliations,
@@ -24,9 +25,10 @@ export default function QuickSlipProjectInfo() {
   const [userAffiliation, setUserAffiliation] = useState<
     UserAffiliation | undefined
   >(undefined);
+  const [selectedPurpose, setSelectedPurpose] = useState<string>('');
 
   const handleChange =
-    (targetField: 'status' | 'affiliation') =>
+    (targetField: 'status' | 'affiliation' | 'purpose') =>
     (e: React.ChangeEvent<HTMLSelectElement>) => {
       // console.log(`changing target: ${targetField}, ${e.target.value}`);
       switch (targetField) {
@@ -35,6 +37,9 @@ export default function QuickSlipProjectInfo() {
           break;
         case 'status':
           setUserStatus(e.target.value as UserStatus);
+          break;
+        case 'purpose':
+          setSelectedPurpose(e.target.value);
           break;
       }
     };
@@ -54,6 +59,14 @@ export default function QuickSlipProjectInfo() {
       None
     </option>
   );
+
+  const projectPurposes = getProjectPurposes();
+
+  const purposeSelectOptions = projectPurposes.map((item: string) => (
+    <option key={item} value={item}>
+      {item}
+    </option>
+  ));
 
   return (
     <>
@@ -86,6 +99,18 @@ export default function QuickSlipProjectInfo() {
         >
           {affiliationPulldown.unshift(blankPullDownOption) &&
             affiliationPulldown}
+        </Form.Select>
+      </InputGroup>
+
+      <InputGroup className="mb-3">
+        <InputGroup.Text id="affil-label">Purpose</InputGroup.Text>
+        <Form.Select
+          aria-labelledby="affil-label"
+          name="purpose"
+          onChange={handleChange('purpose')}
+        >
+          {purposeSelectOptions.unshift(blankPullDownOption) &&
+            purposeSelectOptions}
         </Form.Select>
       </InputGroup>
     </>
