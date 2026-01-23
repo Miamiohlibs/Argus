@@ -104,6 +104,11 @@ export default function UserTable({
       sortable: true,
     },
     {
+      name: 'Can Print',
+      selector: (row: User) => row.printSlips && 'true',
+      sortable: true,
+    },
+    {
       name: 'Status',
       selector: (row: User) => row.status ?? '',
       sortable: true,
