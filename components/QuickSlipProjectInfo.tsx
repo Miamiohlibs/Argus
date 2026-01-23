@@ -30,7 +30,6 @@ export default function QuickSlipProjectInfo() {
   const handleChange =
     (targetField: 'status' | 'affiliation' | 'purpose') =>
     (e: React.ChangeEvent<HTMLSelectElement>) => {
-      // console.log(`changing target: ${targetField}, ${e.target.value}`);
       switch (targetField) {
         case 'affiliation':
           setUserAffiliation(e.target.value as UserAffiliation);

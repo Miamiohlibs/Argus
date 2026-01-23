@@ -30,7 +30,7 @@ export const inHouseLocationCodes = (): string[] => {
       }
       return [];
     } catch (error) {
-      console.error('Failed to parse NEXT_PUBLIC_LOCATION_CODES_JSON:', error);
+      logger.error('Failed to parse NEXT_PUBLIC_LOCATION_CODES_JSON:', error);
       return [];
     }
   }

@@ -139,12 +139,8 @@ const HoldingEntry = ({
     }
     let urlString = urlEncodedArray.join('&');
 
-    // KEN: CALL & BIB MISSING FROM allFormData
-    console.log('All Form Data:', allFormData);
-    console.log('Selected Items:', selectedItems);
-
     const itemsToSubmit = selectedItems.map((item) => {
-      console.log(`Item descripiton: ${JSON.stringify(item)}`);
+      // console.log(`Item descripiton: ${JSON.stringify(item)}`);
       // console.log(`Desc:${description} Loc:${location}`);
       return {
         description: item.description || '',
@@ -170,7 +166,6 @@ const HoldingEntry = ({
           });
       }
       const slipsUrl = `/admin/quickSlip/handler?${urlString}`;
-      console.log(slipsUrl);
       router.push(slipsUrl);
     } else {
       const { data, error } = await entryAction({
@@ -214,7 +209,7 @@ const HoldingEntry = ({
     location_desc = items[0].location?.desc;
     location_value = items[0].location?.value;
     library_desc = items[0].library?.desc;
-    console.log(`set: ${location_desc}, ${library_desc}, ${location_value}`);
+    // console.log(`set: ${location_desc}, ${library_desc}, ${location_value}`);
   }
 
   if (!isEditor) {

@@ -52,7 +52,7 @@ const CustomEntryForm = ({
   }, []);
 
   const handleLocationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    console.log(`Selected location: ${e.target.value}`);
+    // console.log(`Selected location: ${e.target.value}`);
     const selected =
       locations.find((loc) => loc.code === e.target.value) || null;
     setSelectedLocation(selected);
@@ -79,7 +79,7 @@ const CustomEntryForm = ({
   locationSelectOptions.unshift(blankPullDownOption);
 
   const handleSubmit = async (event: React.SyntheticEvent<HTMLFormElement>) => {
-    console.log('starting handleSubmit');
+    // console.log('starting handleSubmit');
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     console.log('Form submitted with data:', formData);

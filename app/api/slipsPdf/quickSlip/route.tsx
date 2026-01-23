@@ -17,7 +17,7 @@ import { getLocationNameFromCode } from '@/lib/locationCodes';
 
 function createItemFromReq(req: NextRequest) {
   const params = Object.fromEntries(req.nextUrl.searchParams.entries());
-  console.log('createItemFromReq params:', params);
+  // console.log('createItemFromReq params:', params);
 
   const selectedItems =
     req.nextUrl.searchParams.getAll('selectedItems[]') || [];
@@ -220,7 +220,7 @@ export async function GET(req: NextRequest) {
 
   const items = generateRequestSlipItems([bib], project, user);
 
-  console.log('****** BibEntries:', JSON.stringify(items, null, 2));
+  //   console.log('****** BibEntries:', JSON.stringify(items, null, 2));
 
   const stream = await renderToStream(<MultiPagePdf books={items} />);
   const filenameBasis = 'Quick Slip';
