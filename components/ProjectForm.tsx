@@ -2,14 +2,13 @@
 // import { useRef } from 'react';
 import type { User } from '@prisma/client';
 import { useActionState } from 'react';
-import { Form, Button, Card, FormSelect, FormControl } from 'react-bootstrap';
+import { Form, Button, Card, FormSelect } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import { useEffect, useState } from 'react';
 // import { useRouter } from 'next/navigation'; // Changed from react-router-dom
 import { Project } from '@prisma/client';
 import { ProjectData } from '@/types/ProjectData';
 import { getProjectPurposes, getSubjects } from '@/lib/utils';
-import { Trash } from 'react-bootstrap-icons';
 
 type ProjectActionResult =
   | { success: true; data: ProjectData; error?: never }
@@ -41,10 +40,10 @@ export default function ProjectForm({
   const [selectedPublic, setSelectedPublic] = useState<boolean>(
     project?.public ?? false
   );
-  const [selectedSubject, setSelectedSubject] = useState<string>('');
-  const [subjectArray, setSubjectArray] = useState<string[]>(
-    project?.subjects ?? []
+  const [selectedSubject, setSelectedSubject] = useState<string>(
+    project?.subjects[0] ?? 'None'
   );
+
   if (basePath === null) {
     basePath = '/';
   }
@@ -92,7 +91,7 @@ export default function ProjectForm({
 
   const blankSubjectPullDownOption = (
     <option key="none" value="None">
-      Select a Subject to Add
+      No Subject Selected
     </option>
   );
   projectSubjectOptions.unshift(blankSubjectPullDownOption);
@@ -108,19 +107,7 @@ export default function ProjectForm({
   };
   const handleSubjectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     // console.log(`Selected purpose: ${e.target.value}`);
-    const newSubjectArray = subjectArray;
     setSelectedSubject(e.target.value);
-    newSubjectArray.push(e.target.value);
-    const uniqueArray = [...new Set(newSubjectArray)].sort();
-    setSubjectArray(uniqueArray);
-  };
-  const handleRemoveSubject = (e: React.MouseEvent<HTMLButtonElement>) => {
-    const subjectToRemove = e.currentTarget.value;
-    // alert(e.currentTarget.value);
-    const newSubjectArray = subjectArray.filter(
-      (item) => item != subjectToRemove
-    );
-    setSubjectArray(newSubjectArray);
   };
 
   return (
@@ -157,39 +144,10 @@ export default function ProjectForm({
             </FormSelect>
           </Form.Group>
 
-          {subjectArray.length > 0 && (
-            <div aria-live="assertive">
-              <p className="mt-3">Selected Project Subjects</p>
-              <ul>
-                {subjectArray.map((item) => (
-                  <li key={item}>
-                    {item}{' '}
-                    <Button
-                      variant="outline-danger"
-                      size="sm"
-                      onClick={handleRemoveSubject}
-                      value={item}
-                    >
-                      <Trash
-                        aria-label={
-                          'Remove "' + item + '" from project subjects'
-                        }
-                      />
-                    </Button>
-                  </li>
-                ))}
-              </ul>
-              <FormControl
-                type="hidden"
-                name="subjects"
-                value={JSON.stringify(subjectArray)}
-              />
-            </div>
-          )}
-          <Form.Label>Add a Project Subject</Form.Label>
+          <Form.Label>Project Subject</Form.Label>
           <FormSelect
-            id="subject"
-            name="subject"
+            id="subjects"
+            name="subjects"
             // disabled={!editable}
             value={selectedSubject || ''}
             onChange={handleSubjectChange}
