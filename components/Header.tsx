@@ -55,11 +55,13 @@ const Header = async () => {
             </NavItem>
           </SignedIn>
           <NavAdmin />
-          <NavItem>
-            <NavLink as={NextLink} href="/searchEntries">
-              Search
-            </NavLink>
-          </NavItem>
+          <SignedIn>
+            <NavItem>
+              <NavLink as={NextLink} href="/searchEntries">
+                Search
+              </NavLink>
+            </NavItem>
+          </SignedIn>
           <SignedOut>
             <NavItem>
               <SignInButton />
