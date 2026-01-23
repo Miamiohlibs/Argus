@@ -20,7 +20,6 @@ import {
 import { checkUser } from '@/lib/checkUser';
 import NavEditor from './NavEditor';
 import NavAdmin from './NavAdmin';
-import { Next } from 'react-bootstrap/esm/PageItem';
 
 const Header = async () => {
   const user = await checkUser();

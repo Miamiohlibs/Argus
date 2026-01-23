@@ -2,7 +2,6 @@
 import logger from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server';
 import { renderToStream } from '@react-pdf/renderer';
-import { RequestSlipProps } from '@/types/RequestSlipProps';
 import { MultiPagePdf } from '@/components/MultipagePdf';
 import getEntries from '@/app/actions/getEntries';
 import { getProject } from '@/app/actions/projectActions';

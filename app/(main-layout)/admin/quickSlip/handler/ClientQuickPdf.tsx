@@ -1,6 +1,4 @@
 'use client';
-import { useParams } from 'next/navigation';
-import { RequestSlipProps } from '@/types/RequestSlipProps';
 
 interface ClientQuickPdfProps {
   searchParams: Record<string, string | string[] | undefined>;

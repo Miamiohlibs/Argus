@@ -1,6 +1,5 @@
 import type { RequestSlipProps } from '@/types/RequestSlipProps';
 import type { EntryWithItems } from '@/types/EntryWithItems';
-import { Project } from '@prisma/client';
 import { ProjectWithUserAndBib } from '@/types/ProjectWithUserAndBib';
 
 export default function generateRequestSlipItems(

@@ -1,5 +1,5 @@
 'use client';
-import { FormGroup, Button, InputGroup, Form } from 'react-bootstrap';
+import { Button, InputGroup, Form } from 'react-bootstrap';
 interface Props {
   action: (formData: FormData) => void;
   pending: boolean;

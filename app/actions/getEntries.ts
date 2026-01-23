@@ -2,7 +2,6 @@
 import logger from '@/lib/logger';
 import { db } from '@/lib/db';
 import { EntryWithItems } from '@/types/EntryWithItems';
-import { Prisma } from '@prisma/client';
 
 type EntriesResult = {
   entries: EntryWithItems[];
