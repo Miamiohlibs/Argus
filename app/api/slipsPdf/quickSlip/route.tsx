@@ -89,8 +89,11 @@ function createItemFromReq(req: NextRequest) {
     bib.author = params.author;
   }
 
-  if (params.hasOwnProperty('notes') && typeof params.notes == 'string') {
-    bib.notes = params.notes;
+  if (
+    params.hasOwnProperty('holdingNote') &&
+    typeof params.holdingNote == 'string'
+  ) {
+    bib.notes = params.holdingNote;
   }
 
   // Question: we pass location and location_names -- what to use?
