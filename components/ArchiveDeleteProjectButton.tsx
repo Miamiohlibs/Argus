@@ -9,7 +9,7 @@ import {
 import { Dropdown, Button, ButtonGroup } from 'react-bootstrap';
 import { Trash } from 'react-bootstrap-icons';
 // import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const ArchiveDeleteProjectButton = ({
   project,
@@ -65,6 +65,13 @@ const ArchiveDeleteProjectButton = ({
     onArchived?.(); // Call the optional callback if provided
   };
 
+  // whenever switching view between archived/unarchived, set all to not having changed state
+  // prevents hangover effects from previous button clicks
+  useEffect(() => {
+    setIsArchived(false);
+    setIsUnarchived(false);
+  }, [showingArchive]);
+
   const handleUnarchiveProject = async (projectId: number) => {
     const confirmed = window.confirm(
       'Are you sure you want to Unarchive this project?'
@@ -95,20 +102,8 @@ const ArchiveDeleteProjectButton = ({
     firstButtonVerb = 'Unarchive';
     firstButtonAction = handleUnarchiveProject;
   }
-  return (isArchived && !showingArchive) ||
-    isDeleted ||
-    (isUnarchived && showingArchive) ? (
-    <Button
-      disabled
-      size="sm"
-      variant="outline-danger"
-      style={{ opacity: 0.5 }}
-    >
-      {isArchived && !showingArchive && 'Archived'}
-      {isUnarchived && showingArchive && 'Unarchived'}
-      {isDeleted && 'Deleted'}
-    </Button>
-  ) : (
+
+  return (
     <ButtonGroup className="flex-nowrap">
       <Button
         variant={'outline-' + firstButtonColor}
@@ -116,14 +111,21 @@ const ArchiveDeleteProjectButton = ({
         className="ms-1"
         onClick={() => firstButtonAction(project.id)}
         aria-live="polite"
+        disabled={
+          (isArchived && !showingArchive) ||
+          (isUnarchived && showingArchive) ||
+          isDeleted
+        }
       >
-        {firstButtonVerb}
+        {isDeleted ? 'Deleted' : firstButtonVerb}
+        {(isArchived || isUnarchived) && !isDeleted && 'd'}
       </Button>
       <Dropdown as={ButtonGroup}>
         <Dropdown.Toggle
           variant="outline-danger"
           size="sm"
           id="archive-dropdown"
+          disabled={isArchived || isUnarchived || isDeleted}
         >
           <Trash aria-label="Trash" />
         </Dropdown.Toggle>
