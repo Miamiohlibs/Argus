@@ -2,7 +2,9 @@ import { RequestSlipProps } from '@/types/RequestSlipProps';
 import ClientQuickPdf from './ClientQuickPdf';
 
 interface PageProps {
-  searchParams: Record<string, string | string[] | undefined>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+
+  // searchParams: Record<string, string | string[] | undefined>;
 }
 
 export default async function QuickSlipHandler({ searchParams }: PageProps) {
