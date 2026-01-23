@@ -2,7 +2,6 @@
 import { Form, FormControl, FormLabel, InputGroup } from 'react-bootstrap';
 import { useState } from 'react';
 import { UserAffiliation, UserStatus } from '@prisma/client';
-import { isAllowedUserStatus, isAllowedAffiliation } from '@/lib/typeChecker';
 import { getProjectPurposes } from '@/lib/utils';
 import {
   validStatuses,
