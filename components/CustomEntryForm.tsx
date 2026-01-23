@@ -90,7 +90,7 @@ const CustomEntryForm = ({
         allFormData[key] = value;
         urlEncodedArray.push(key + '=' + encodeURIComponent(value.toString()));
       }
-      let urlString = urlEncodedArray.join('&');
+      const urlString = urlEncodedArray.join('&');
       const slipsUrl = `/admin/quickSlip/handler?${urlString}`;
       router.push(slipsUrl);
       return true;
