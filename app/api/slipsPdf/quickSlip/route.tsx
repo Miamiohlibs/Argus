@@ -220,7 +220,7 @@ export async function GET(req: NextRequest) {
 
   const items = generateRequestSlipItems([bib], project, user);
 
-  console.log('****** BibEntries:', JSON.stringify(items, null, 2));
+  // console.log('****** BibEntries:', JSON.stringify(items, null, 2));
 
   const stream = await renderToStream(<MultiPagePdf books={items} />);
   const filenameBasis = 'Quick Slip';
