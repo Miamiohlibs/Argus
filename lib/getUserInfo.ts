@@ -1,11 +1,9 @@
 import logger from '@/lib/logger';
 import { getProject } from '@/app/actions/projectActions';
-import { auth } from '@clerk/nextjs/server';
 import { getCurrentUser } from '@/app/actions/getUser';
 import type { ArgusPermissions } from '@/types/ArgusPermissions';
 import type { ArgusUserInfo } from '@/types/ArgusUserInfo';
 import type { User } from '@prisma/client';
-import type { User as ClerkUser } from '@clerk/nextjs/server';
 import { db } from './db';
 
 export default async function getUserInfo(
