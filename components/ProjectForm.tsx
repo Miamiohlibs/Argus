@@ -2,12 +2,13 @@
 // import { useRef } from 'react';
 import type { User } from '@prisma/client';
 import { useActionState } from 'react';
-import { Form, Button, Card } from 'react-bootstrap';
+import { Form, Button, Card, FormSelect } from 'react-bootstrap';
 import { toast } from 'react-toastify';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 // import { useRouter } from 'next/navigation'; // Changed from react-router-dom
 import { Project } from '@prisma/client';
 import { ProjectData } from '@/types/ProjectData';
+import { getProjectPurposes, getSubjects } from '@/lib/utils';
 
 type ProjectActionResult =
   | { success: true; data: ProjectData; error?: never }
@@ -33,6 +34,16 @@ export default function ProjectForm({
   basePath,
 }: ProjectFormProps) {
   const [state, formAction] = useActionState(action, null);
+  const [selectedPurpose, setSelectedPurpose] = useState<string>(
+    project?.purpose ?? ''
+  );
+  const [selectedPublic, setSelectedPublic] = useState<boolean>(
+    project?.public ?? false
+  );
+  const [selectedSubject, setSelectedSubject] = useState<string>(
+    project?.subjects[0] ?? 'None'
+  );
+
   if (basePath === null) {
     basePath = '/';
   }
@@ -56,6 +67,49 @@ export default function ProjectForm({
     }
   }, [state, project, basePath]);
 
+  const projectPurposes = getProjectPurposes();
+  const projectSubjects = getSubjects();
+
+  const purposeSelectOptions = projectPurposes.map((item: string) => (
+    <option key={item} value={item}>
+      {item}
+    </option>
+  ));
+
+  const projectSubjectOptions = projectSubjects.map((item: string) => (
+    <option key={item} value={item}>
+      {item}
+    </option>
+  ));
+
+  const blankPullDownOption = (
+    <option key="none" value="">
+      --- Please select a project purpose ---
+    </option>
+  );
+  purposeSelectOptions.unshift(blankPullDownOption);
+
+  const blankSubjectPullDownOption = (
+    <option key="none" value="None">
+      No Subject Selected
+    </option>
+  );
+  projectSubjectOptions.unshift(blankSubjectPullDownOption);
+
+  const handlePurposeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    // console.log(`Selected purpose: ${e.target.value}`);
+    setSelectedPurpose(e.target.value);
+  };
+
+  const handlePublicChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(`Selected public: ${e.target.checked}`);
+    setSelectedPublic(e.target.checked);
+  };
+  const handleSubjectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    // console.log(`Selected purpose: ${e.target.value}`);
+    setSelectedSubject(e.target.value);
+  };
+
   return (
     <Card className="shadow-sm">
       <Card.Header>
@@ -74,6 +128,42 @@ export default function ProjectForm({
               placeholder="Enter project title..."
               required
               size="lg"
+            />
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label>Project Purpose *</Form.Label>
+            <FormSelect
+              id="purpose"
+              name="purpose"
+              // disabled={!editable}
+              value={selectedPurpose}
+              onChange={handlePurposeChange}
+              required={true}
+            >
+              {purposeSelectOptions}
+            </FormSelect>
+          </Form.Group>
+
+          <Form.Label>Project Subject</Form.Label>
+          <FormSelect
+            id="subjects"
+            name="subjects"
+            // disabled={!editable}
+            value={selectedSubject || ''}
+            onChange={handleSubjectChange}
+            required={true}
+          >
+            {projectSubjectOptions}
+          </FormSelect>
+
+          <Form.Group className="my-4" controlId="public-switch">
+            <Form.Check
+              type="switch"
+              id="public-switch"
+              name="public"
+              label="Make this project public"
+              defaultChecked={project?.public}
+              onChange={handlePublicChange}
             />
           </Form.Group>
 

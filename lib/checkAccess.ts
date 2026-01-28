@@ -7,6 +7,7 @@ type CheckAccessProps = {
   inline?: boolean;
 };
 
+// if user doesn't have the right role, send them to the main page
 export default async function checkAccess(
   checkAccessProps: CheckAccessProps | string[]
 ): Promise<string | boolean> {

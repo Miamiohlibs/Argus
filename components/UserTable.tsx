@@ -74,7 +74,12 @@ export default function UserTable({
         let extra;
         if (row.clerkUserId == user.clerkUserId) {
           extra = (
-            <Button variant="outline-secondary" size="sm" className="ms-3">
+            <Button
+              variant="outline-secondary"
+              size="sm"
+              className="ms-3"
+              disabled
+            >
               Self
             </Button>
           );
@@ -99,6 +104,11 @@ export default function UserTable({
       sortable: true,
     },
     {
+      name: 'Can Print',
+      selector: (row: User) => row.printSlips && 'true',
+      sortable: true,
+    },
+    {
       name: 'Status',
       selector: (row: User) => row.status ?? '',
       sortable: true,
@@ -107,6 +117,20 @@ export default function UserTable({
       name: 'Affiliation',
       selector: (row: User) => row.affiliation ?? '',
       sortable: true,
+    },
+    {
+      name: 'Created',
+      selector: (row: User) => new Date(row.createdAt).getTime(),
+      cell: (row: User) => new Date(row.createdAt).toLocaleDateString(),
+      sortable: true,
+      width: '8em',
+    },
+    {
+      name: 'Updated',
+      selector: (row: User) => new Date(row.updatedAt).getTime(),
+      cell: (row: User) => new Date(row.updatedAt).toLocaleDateString(),
+      sortable: true,
+      width: '8em',
     },
     {
       name: 'Tools',

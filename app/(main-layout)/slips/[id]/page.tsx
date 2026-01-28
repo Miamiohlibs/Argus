@@ -1,6 +1,6 @@
 'use server';
 import { Metadata } from 'next';
-import MultiPagePdf from './ClientMultipagePdf';
+import ClientMultiPagePdf from './ClientMultipagePdf';
 import { unauthorized } from 'next/navigation';
 import getUserInfo from '@/lib/getUserInfo';
 import { getProject } from '@/app/actions/projectActions';
@@ -15,11 +15,11 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 type PageProps = {
-  params: Promise<{ id: string }>;
+  params: Promise<{ id: string; specificBibEntry: string }>;
 };
 
 export default async function PdfWrapper({ params }: PageProps) {
-  const { id } = await params;
+  const { id, specificBibEntry } = await params;
   const { project, error } = await getProject({ id });
   const {
     permissions: { canPrint },
@@ -31,7 +31,7 @@ export default async function PdfWrapper({ params }: PageProps) {
     <>
       {project && <ProjectMetadata project={project} />}
       <ProjectButtons projectId={parseInt(id)} onPage="slips" divClass="mb-4" />
-      <MultiPagePdf />
+      <ClientMultiPagePdf />
     </>
   );
 }

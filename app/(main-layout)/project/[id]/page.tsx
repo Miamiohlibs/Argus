@@ -14,7 +14,6 @@ export async function generateMetadata({
   params,
 }: MetadataProps): Promise<Metadata> {
   const { id } = await params;
-  const bibEntries = await getEntries(id);
   const { project, error } = await getProject({ id });
   if (project !== undefined) {
     return {
@@ -47,7 +46,11 @@ export default async function ProjectPage({
 
   return (
     <>
-      <h1 className="h2">{project?.title}</h1>
+      <h1 className="h2">
+        {project?.title}
+        {project && project.status == 'archived' && ' (Archived)'}
+      </h1>
+
       {/* <p>Owner: {project?.user.name}</p> */}
       {project && <ProjectMetadata project={project} hideTitle={true} />}
       <div className={'mb-3'} id={'project-tools'}>
@@ -56,11 +59,17 @@ export default async function ProjectPage({
           canEdit={canEdit}
           canPrint={canPrint}
           canAssignCoEditors={isAdmin || isOwner}
+          isAdmin={isAdmin}
           onPage="project"
+          showUnarchive={project != undefined && project?.status == 'archived'}
         />
       </div>
       {bibEntries && bibEntries.data?.entries && user ? (
-        <EntriesTable entries={bibEntries.data?.entries} canEdit={canEdit} />
+        <EntriesTable
+          entries={bibEntries.data?.entries}
+          canEdit={canEdit}
+          canPrint={canPrint}
+        />
       ) : (
         <p>No bibliography entries found.</p>
       )}

@@ -1,20 +1,25 @@
 import Link from 'next/link';
 import DuplicateProjectButton from './DuplicateProjectButton';
+import UnarchiveProjectButton from './UnarchiveProjectButton';
 
 const ProjectButtons = ({
   projectId,
   canEdit = false,
   canPrint = false,
   canAssignCoEditors = false,
+  isAdmin = false,
   onPage,
   divClass = '',
+  showUnarchive = false,
 }: {
   projectId: number;
   canEdit?: boolean;
   canPrint?: boolean;
   canAssignCoEditors?: boolean;
+  isAdmin?: boolean;
   onPage: string;
   divClass?: string;
+  showUnarchive?: boolean;
 }) => {
   const classNames = 'me-2';
   return (
@@ -73,6 +78,17 @@ const ProjectButtons = ({
             Add/Remove Co-Editors
           </Link>
         )}
+      {showUnarchive && (
+        <UnarchiveProjectButton projectId={projectId} classNames={classNames} />
+      )}
+      {isAdmin && (
+        <Link
+          href={`/admin/reassignProject/${projectId.toString()}`}
+          className="me-2 btn btn-outline-secondary btn-sm"
+        >
+          Reassign Ownership
+        </Link>
+      )}
     </div>
   );
 };

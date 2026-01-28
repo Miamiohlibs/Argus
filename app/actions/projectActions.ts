@@ -7,6 +7,7 @@ import { ProjectData } from '@/types/ProjectData';
 import type { ProjectWithUserAndBib } from '@/types/ProjectWithUserAndBib';
 import entryAction from './addEntry';
 import { ItemEntry } from '@prisma/client';
+import { redirect } from 'next/navigation';
 
 type ProjectWithUser = Prisma.ProjectGetPayload<{
   include: { user: true; coEditors: true };
@@ -30,6 +31,15 @@ export async function createProject(
     const titleValue = formData.get('title');
     //   const ownerValue = formData.get('userId');
     const notesValue = formData.get('notes') ?? '';
+    const purposeValue = formData.get('purpose') ?? 'Other';
+    const publicValue = formData.get('public') !== null;
+    const subjectString = formData.get('subjects') as string;
+    const subjects = [subjectString];
+    // const subjectsJson = formData.get('subjects') as string;
+    // const subjects = JSON.parse(subjectsJson) || [];
+    console.log('***** subjectString', subjectString);
+    console.log('***** subjects', JSON.stringify(subjects));
+
     // check for input values
     if (!titleValue || titleValue === '') {
       return { success: false, error: 'Title or owner is missing' };
@@ -37,6 +47,7 @@ export async function createProject(
     const title: string = titleValue.toString(); // ensure text is a string
     //   const userId: string = ownerValue.toString();
     const notes: string = notesValue.toString();
+    const purpose: string = purposeValue.toString();
 
     // get logged in user
     logger.verbose(user.clerkUserId);
@@ -63,23 +74,13 @@ export async function createProject(
         };
       }
 
-      // logger.verbose({
-      //   data: {
-      //     title,
-      //     notes,
-      //     userId,
-      //   },
-      //   existingUser: {
-      //     id: existingUser.id,
-      //     clerkUserId: existingUser.clerkUserId,
-      //     email: existingUser.email,
-      //   },
-      // });
-
       const created = await db.project.create({
         data: {
           title,
           notes,
+          purpose,
+          public: publicValue,
+          subjects,
           userId: user.clerkUserId,
         },
         include: {
@@ -122,6 +123,97 @@ export async function updateProjectLastUpdated(projectId: number) {
   });
 }
 
+export async function updateProjectStatus(params: {
+  projectId: number;
+  status: string | null;
+}): Promise<{
+  // project?: ProjectWithUserAndBib;
+  success: boolean;
+  error?: string;
+}> {
+  logger.verbose(`Updating project status ${JSON.stringify(params)}`);
+  // set status to null if empty string
+  params.status = params.status == '' ? null : params.status;
+  try {
+    const updatedProject = await db.project.update({
+      where: { id: params.projectId },
+      data: {
+        status: params.status,
+      },
+    });
+    logger.verbose(`Success updating project status ${JSON.stringify(params)}`);
+    return { success: true };
+  } catch (error) {
+    logger.error('Error in updateProjectStatus:', error);
+    return { success: false, error: 'Failed to update project' };
+  }
+}
+
+export type UpdateProjectOwnerResult =
+  | { success: true; error?: never }
+  | { success: false; error: string };
+
+export async function updateProjectOwner(
+  prevState: UpdateProjectOwnerResult | null,
+  formData: FormData
+): Promise<UpdateProjectOwnerResult> {
+  // this is used in admin/reassignProject
+  console.log('ACTION HIT');
+  const projectId = formData.get('projectId') as string;
+  const newOwnerId = formData.get('newOwnerId') as string;
+  const adminId = formData.get('thisUserId') as string;
+
+  // logger.verbose(`Updating project owner ${JSON.stringify(formData)}`);
+
+  if (newOwnerId == null)
+    return { success: false, error: 'missing newOwnerId' };
+
+  let newOwnerUser;
+  try {
+    newOwnerUser = await db.user.findUniqueOrThrow({
+      where: { id: newOwnerId },
+    });
+  } catch (error) {
+    return {
+      success: false,
+      error: `Could not find user with id ${newOwnerId}`,
+    };
+  }
+
+  let adminUser;
+  try {
+    adminUser = await db.user.findUniqueOrThrow({
+      where: { id: adminId, OR: [{ role: 'admin' }, { role: 'superadmin' }] },
+    });
+  } catch (error) {
+    return {
+      success: false,
+      error: `You are not authorized to reassign a projet.`,
+    };
+  }
+
+  try {
+    const updatedProject = await db.project.update({
+      where: { id: parseInt(projectId) },
+      data: {
+        user: {
+          connect: {
+            id: newOwnerId,
+          },
+        },
+      },
+    });
+    logger.verbose(
+      `Success updating project owner ${JSON.stringify(formData)}`
+    );
+    // return { success: true };
+  } catch (error) {
+    logger.error('Error in updateProjectStatus:', error);
+    return { success: false, error: 'Failed to update project' };
+  }
+  redirect(`/project/${projectId}`);
+}
+
 export async function updateProject(
   prevState: unknown,
   formData: FormData
@@ -136,7 +228,19 @@ export async function updateProject(
     const projectId = formData.get('projectId') as string;
     const title = formData.get('title') as string;
     const notes = formData.get('notes') as string;
+    const purpose = formData.get('purpose') as string;
+    const publicValue = formData.get('public') !== null;
+    const subjectString = formData.get('subjects') as string;
+    const subjects = [subjectString];
+    // const subjectsJson = formData.get('subjects') as string;
+    // const subjects = JSON.parse(subjectsJson) || [];
+    console.log('***** subjectString', subjectString);
+    console.log('***** subjects', JSON.stringify(subjects));
+    // subjectValue = subjectValue == 'None' ? '' : subjectValue;
 
+    console.log(
+      `Data as submitted: projId: ${projectId}, title: ${title}, notes: ${notes}, purpose: ${purpose}, public: ${publicValue}, subjects: ${subjectString}`
+    );
     // Check if user owns the project
     const existingProject = await db.project.findUnique({
       where: { id: parseInt(projectId) },
@@ -159,6 +263,9 @@ export async function updateProject(
       data: {
         title,
         notes: notes || null,
+        purpose,
+        public: publicValue,
+        subjects,
       },
     });
     logger.verbose('returning updated project');
@@ -195,9 +302,13 @@ export async function getProject(params: { id: string }): Promise<{
 export async function getProjects(
   {
     limitToUser,
+    limitToPublic,
+    limitToArchived,
   }: {
     limitToUser?: boolean;
-  } = { limitToUser: true }
+    limitToPublic?: boolean;
+    limitToArchived?: boolean;
+  } = { limitToUser: true, limitToPublic: false, limitToArchived: false }
 ): Promise<{
   projects?: ProjectWithUser[];
   error?: string;
@@ -207,31 +318,58 @@ export async function getProjects(
     return { error: 'User not found' };
   }
 
+  const statusFilter = limitToArchived
+    ? { status: 'archived' }
+    : { OR: [{ status: { not: 'archived' } }, { status: null }] };
+
   try {
-    const projects = await db.project.findMany({
-      where: {
-        OR: [
-          {
-            ...(limitToUser
-              ? { userId: user?.clerkUserId } // is user's own
-              : { id: { gt: 0 } }), // if not user-only, show all
-          },
-          {
-            ...(limitToUser
-              ? { coEditors: { some: { id: user?.id } } } // is-coeditor
-              : { id: { gt: 0 } }), // if not user-only, show all
-          },
-        ],
-      },
-      include: {
-        user: true, // Include user details if needed
-        coEditors: true,
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
-    });
-    // logger.verbose('Fetched projects:', projects);
+    console.log(
+      `Getting projects; limit to public? ${limitToPublic}; limit to archived: ${limitToArchived}`
+    );
+    let projects;
+    if (limitToPublic) {
+      projects = await db.project.findMany({
+        where: { AND: [statusFilter, { public: true }] },
+        include: {
+          user: true, // Include user details if needed
+          coEditors: true,
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+      });
+    } else {
+      projects = await db.project.findMany({
+        where: {
+          AND: [
+            statusFilter,
+            {
+              OR: [
+                // find all projects with user as owner or as coeditor
+                {
+                  ...(limitToUser
+                    ? { userId: user?.clerkUserId } // is user's own
+                    : { id: { gt: 0 } }), // if not user-only, show all
+                },
+                {
+                  ...(limitToUser
+                    ? { coEditors: { some: { id: user?.id } } } // is-coeditor
+                    : { id: { gt: 0 } }), // if not user-only, show all
+                },
+              ],
+            },
+          ],
+        },
+        include: {
+          user: true, // Include user details if needed
+          coEditors: true,
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+      });
+    }
+    logger.verbose('Fetched projects:', projects);
     return { projects };
   } catch (error) {
     logger.error('DB error:', error);
