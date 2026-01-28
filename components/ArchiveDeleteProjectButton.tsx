@@ -1,4 +1,5 @@
 'use client';
+
 import { Project } from '@prisma/client';
 import { toast } from 'react-toastify';
 import {
@@ -8,7 +9,6 @@ import {
 
 import { Dropdown, Button, ButtonGroup } from 'react-bootstrap';
 import { Trash } from 'react-bootstrap-icons';
-// import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 const ArchiveDeleteProjectButton = ({
@@ -18,30 +18,37 @@ const ArchiveDeleteProjectButton = ({
   onDeleted,
   showingArchive,
 }: {
-  project: Project; // Changed semicolon to comma
+  project: Project;
   onArchived?: () => void;
   onUnarchived?: () => void;
-  onDeleted?: () => void;
+  onDeleted?: (event?: React.MouseEvent) => void;
   showingArchive: boolean;
 }) => {
   const [isArchived, setIsArchived] = useState(false);
   const [isUnarchived, setIsUnarchived] = useState(false);
   const [isDeleted, setIsDeleted] = useState(false);
-  const handleDeleteProject = async (projectId: number) => {
+
+  const handleDeleteProject = async (
+    projectId: number,
+    event?: React.MouseEvent
+  ) => {
+    event?.preventDefault();
+    event?.stopPropagation();
+
     const confirmed = window.confirm(
       'Are you sure you want to delete this project FOREVER?'
     );
     if (!confirmed) return;
+
     const { message, error } = await deleteProject(projectId);
     if (error) {
       toast.error(error);
       return;
     }
+
     toast.success(message);
-    // router.refresh(); // Refresh the page to reflect changes
-    // router.push(window.location.pathname);
-    setIsDeleted(true); // Hide the row
-    onDeleted?.(); // Call the optional callback if provided
+    setIsDeleted(true);
+    onDeleted?.(event);
   };
 
   const handleArchiveProject = async (projectId: number) => {
@@ -49,24 +56,23 @@ const ArchiveDeleteProjectButton = ({
       'Are you sure you want to Archive this project?'
     );
     if (!confirmed) return;
-    const { success, error } = await updateProjectStatus({
+
+    const { error } = await updateProjectStatus({
       projectId,
       status: 'archived',
     });
+
     if (error) {
       toast.error(error);
       return;
     }
+
     toast.success('Archived project');
-    // router.refresh(); // Refresh the page to reflect changes
-    // router.push(window.location.pathname);
-    setIsArchived(true); // Hide the row
+    setIsArchived(true);
     setIsUnarchived(false);
-    onArchived?.(); // Call the optional callback if provided
+    onArchived?.();
   };
 
-  // whenever switching view between archived/unarchived, set all to not having changed state
-  // prevents hangover effects from previous button clicks
   useEffect(() => {
     setIsArchived(false);
     setIsUnarchived(false);
@@ -77,30 +83,29 @@ const ArchiveDeleteProjectButton = ({
       'Are you sure you want to Unarchive this project?'
     );
     if (!confirmed) return;
-    const { success, error } = await updateProjectStatus({
+
+    const { error } = await updateProjectStatus({
       projectId,
       status: '',
     });
+
     if (error) {
       toast.error(error);
       return;
     }
+
     toast.success('Unarchived project');
-    // router.refresh(); // Refresh the page to reflect changes
-    // router.push(window.location.pathname);
-    setIsUnarchived(true); // Hide the row
+    setIsUnarchived(true);
     setIsArchived(false);
-    onUnarchived?.(); // Call the optional callback if provided
+    onUnarchived?.();
   };
 
-  let firstButtonColor = 'danger',
-    firstButtonVerb = 'Archive',
-    firstButtonAction = handleArchiveProject;
+  let firstButtonColor = 'danger';
+  let firstButtonVerb = 'Archive';
+  let firstButtonAction = handleArchiveProject;
 
   if (showingArchive) {
-    if (!isDeleted) {
-      firstButtonColor = 'success';
-    }
+    firstButtonColor = 'success';
     firstButtonVerb = 'Unarchive';
     firstButtonAction = handleUnarchiveProject;
   }
@@ -108,38 +113,28 @@ const ArchiveDeleteProjectButton = ({
   return (
     <ButtonGroup className="flex-nowrap">
       <Button
-        variant={'outline-' + firstButtonColor}
+        variant={`outline-${firstButtonColor}`}
         size="sm"
         className="ms-1"
-        onClick={() => firstButtonAction(project.id)}
-        aria-live="polite"
-        disabled={
-          (isArchived && !showingArchive) ||
-          (isUnarchived && showingArchive) ||
-          isDeleted
-        }
+        onClick={(e) => firstButtonAction(project.id)}
+        disabled={isArchived || isUnarchived || isDeleted}
       >
         {isDeleted ? 'Deleted' : firstButtonVerb}
         {(isArchived || isUnarchived) && !isDeleted && 'd'}
       </Button>
+
       <Dropdown as={ButtonGroup}>
         <Dropdown.Toggle
           variant="outline-danger"
           size="sm"
-          id="archive-dropdown"
           disabled={isArchived || isUnarchived || isDeleted}
         >
-          <Trash aria-label="Trash" />
+          <Trash />
         </Dropdown.Toggle>
 
         <Dropdown.Menu>
-          <Dropdown.Item>
-            <span
-              className="text-danger"
-              onClick={() => handleDeleteProject(project.id)}
-            >
-              Permanently Delete Project
-            </span>
+          <Dropdown.Item onClick={(e) => handleDeleteProject(project.id, e)}>
+            <span className="text-danger">Permanently Delete Project</span>
           </Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown>
