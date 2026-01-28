@@ -165,7 +165,7 @@ const HoldingEntry = ({
             urlString += encodeURI(`&selectedItems[]=${JSON.stringify(item)}`);
           });
       }
-      const slipsUrl = `/admin/quickSlip/handler?${urlString}`;
+      const slipsUrl = `/quickSlip/handler?${urlString}`;
       // console.log(slipsUrl);
       router.push(slipsUrl);
     } else {
