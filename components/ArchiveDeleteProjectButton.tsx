@@ -98,7 +98,9 @@ const ArchiveDeleteProjectButton = ({
     firstButtonAction = handleArchiveProject;
 
   if (showingArchive) {
-    firstButtonColor = 'success';
+    if (!isDeleted) {
+      firstButtonColor = 'success';
+    }
     firstButtonVerb = 'Unarchive';
     firstButtonAction = handleUnarchiveProject;
   }
