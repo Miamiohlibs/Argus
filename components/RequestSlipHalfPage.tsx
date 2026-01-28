@@ -3,7 +3,9 @@
 import logger from '@/lib/logger';
 import { Text, View } from '@react-pdf/renderer';
 import type { RequestSlipProps } from '@/types/RequestSlipProps';
+import { getProjectPurposes } from '@/lib/utils';
 
+const projectPurposes = getProjectPurposes();
 export const RequestSlipHalfPage = ({
   author,
   title,
@@ -23,8 +25,10 @@ export const RequestSlipHalfPage = ({
   styles,
   personPrinting,
   projectName,
+  purpose,
 }: RequestSlipProps & { styles: any }) => {
   logger.verbose('Item Info', itemInfo);
+  logger.verbose(`Added fields: ${userStatus}`);
   const volumeLabel = // only show if items to show
     itemInfo && itemInfo.length > 1 ? (
       <>
@@ -59,21 +63,30 @@ export const RequestSlipHalfPage = ({
             <Text>
               Date of item: <Text style={styles.bold}>{date}</Text>
             </Text>
-            <Text>
-              Manuscript #<Text style={styles.bold}>{ms}</Text>
-            </Text>
-            <Text>
-              Box {<Text style={styles.bold}>{box}</Text>}
-              {'      '}Folder {<Text style={styles.bold}>{folder}</Text>}
-            </Text>
-            <Text>Other information</Text>
-            <Text style={styles.paragraph}>{notes}</Text>
+
+            {notes && (
+              <>
+                <Text>Other information</Text>
+                <Text style={styles.paragraph}>{notes}</Text>
+              </>
+            )}
           </View>
 
           <View style={styles.lastCol}>
             <Text style={styles.label}>CALL NUMBER</Text>
             <Text style={styles.centerText}>{location}</Text>
             <Text style={styles.centerText}>{callNumber ?? ''}</Text>
+            {ms && (
+              <Text>
+                Manuscript #<Text style={styles.bold}>{ms}</Text>
+              </Text>
+            )}
+            {(box || folder) && (
+              <Text>
+                Box {<Text style={styles.bold}>{box}</Text>}
+                {'      '}Folder {<Text style={styles.bold}>{folder}</Text>}
+              </Text>
+            )}
             {volumeLabel}
             {itemInfo?.map((item, i) => {
               const styleTag = i == highlightedItemIndex ? styles.bold : {};
@@ -203,38 +216,18 @@ export const RequestSlipHalfPage = ({
         </Text>
         <View style={styles.row}>
           <View style={styles.col}>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text> Conservation</Text>
-            </View>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text> Cataloguing</Text>
-            </View>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text> Exhibit</Text>
-            </View>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text> Digitization</Text>
-            </View>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text> Hold Shelf/Cart</Text>
-            </View>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text> Reading Room</Text>
-            </View>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text> Class</Text>
-            </View>
-            <View style={styles.checkboxRow}>
-              <View style={styles.checkbox} />
-              <Text> Other</Text>
-            </View>
+            {projectPurposes.map((item) => {
+              return (
+                <View style={styles.checkboxRow} key={item}>
+                  <View
+                    style={
+                      item == purpose ? styles.checkedBox : styles.checkbox
+                    }
+                  />
+                  <Text>{item}</Text>
+                </View>
+              );
+            })}
           </View>
           <View style={styles.col}>
             <Text>Slip printed by: {personPrinting}</Text>

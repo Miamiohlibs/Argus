@@ -7,52 +7,45 @@ import { Form, InputGroup, Button, FormSelect } from 'react-bootstrap';
 import { BibEntry, ItemEntry } from '@prisma/client';
 import { useState } from 'react';
 import { useEffect } from 'react';
+import { LocationCode, inHouseLocationData } from '@/lib/locationCodes';
+import QuickSlipProjectInfo from './QuickSlipProjectInfo';
+import { useRouter } from 'next/navigation';
 
 interface CustomEntryFormProps {
   projectId?: number;
   existingEntry?: EntryWithItems;
   editable?: boolean;
+  quickSlip?: boolean;
 }
 
-interface LocationCode {
-  code: string;
-  name: string;
-  unofficial?: boolean;
-}
+// interface LocationCode {
+//   code: string;
+//   name: string;
+//   unofficial?: boolean;
+// }
 
 const CustomEntryForm = ({
   projectId,
   existingEntry,
   editable = true,
+  quickSlip = false,
 }: CustomEntryFormProps) => {
+  const router = useRouter();
   const [locations, setLocations] = useState<LocationCode[]>([]);
   const [selectedLocation, setSelectedLocation] = useState<LocationCode | null>(
     null
   );
 
-  const pageHeaderText = !existingEntry
-    ? 'New Custom Entry'
-    : editable
-    ? `Edit Custom Entry: ${existingEntry.itemTitle}`
-    : `Viewing Custom Entry: ${existingEntry.itemTitle}`;
-
   // Load locations only once on mount
-
   useEffect(() => {
-    if (typeof process.env.NEXT_PUBLIC_LOCATION_CODES_JSON === 'string') {
-      try {
-        const parsedLocations: LocationCode[] = JSON.parse(
-          process.env.NEXT_PUBLIC_LOCATION_CODES_JSON
-        );
-        setLocations(parsedLocations);
-      } catch (error) {
-        console.error('Failed to parse LOCATION_CODES_JSON:', error);
-      }
+    const locationCodes = inHouseLocationData();
+    if (typeof locationCodes != 'undefined') {
+      setLocations(locationCodes);
     }
   }, []);
 
   const handleLocationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    console.log(`Selected location: ${e.target.value}`);
+    // console.log(`Selected location: ${e.target.value}`);
     const selected =
       locations.find((loc) => loc.code === e.target.value) || null;
     setSelectedLocation(selected);
@@ -83,6 +76,18 @@ const CustomEntryForm = ({
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     console.log('Form submitted with data:', formData);
+    if (quickSlip) {
+      const allFormData: Record<string, FormDataEntryValue> = {};
+      const urlEncodedArray = [];
+      for (const [key, value] of formData.entries()) {
+        allFormData[key] = value;
+        urlEncodedArray.push(key + '=' + encodeURIComponent(value.toString()));
+      }
+      const urlString = urlEncodedArray.join('&');
+      const slipsUrl = `/quickSlip/handler?${urlString}`;
+      router.push(slipsUrl);
+      return true;
+    }
     // const allFormData: Record<string, FormDataEntryValue> = {};
     // for (const [key, value] of formData.entries()) {
     //   allFormData[key] = value;
@@ -367,6 +372,8 @@ const CustomEntryForm = ({
             />
           </InputGroup>
         </Form.Group>
+
+        {quickSlip && <QuickSlipProjectInfo />}
 
         {editable && (
           <Button

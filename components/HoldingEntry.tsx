@@ -10,6 +10,9 @@ import type {
   AlmaItemHoldingBibDataPlusCallAndLocation,
 } from '@/types/CondensedBibHoldings';
 import type { SafeStringifyInput } from '@/types/SafeStringInput';
+import { inHouseLocationCodes } from '@/lib/locationCodes';
+import { useRouter } from 'next/navigation';
+import QuickSlipProjectInfo from './QuickSlipProjectInfo';
 
 interface miniItemData {
   pid: string;
@@ -31,9 +34,10 @@ interface HoldingEntryProps {
   locationCodes: string;
   locationNames: string;
   projectId: string | number;
-  actionType: 'add' | 'edit';
+  actionType: 'add' | 'edit' | 'quickSlip';
   existingEntry?: EntryWithItems;
   isEditor: boolean;
+  quickSlip: boolean;
 }
 
 const HoldingEntry = ({
@@ -45,12 +49,27 @@ const HoldingEntry = ({
   actionType,
   existingEntry,
   isEditor,
+  quickSlip,
 }: HoldingEntryProps) => {
+  const router = useRouter();
   const [selectedItems, setSelectedItems] = useState<miniItemData[]>([]);
   const [isInitialized, setIsInitialized] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
-  console.log('Existing Entry:', existingEntry);
+  // console.log('Existing Entry:', existingEntry);
+  // console.log('Items', items);
 
+  const matchStringIfPresent = (
+    str1: string | null | undefined,
+    str2: string | null | undefined
+  ) => {
+    if (typeof str1 == 'undefined' || str1 == null) {
+      str1 = '';
+    }
+    if (typeof str2 == 'undefined' || str2 == null) {
+      str2 = '';
+    }
+    return str1 == str2;
+  };
   // Initialize selectedItems with existing entry items
   useEffect(() => {
     if (existingEntry && !isInitialized) {
@@ -61,11 +80,14 @@ const HoldingEntry = ({
         // Find the matching item from the items array
         const matchingItem = items.find(
           (item) =>
-            item.description == existingItem.description &&
-            item.location.value == existingItem.location_code &&
-            item.call_number == existingItem.call_number &&
-            item.barcode == existingItem.barcode &&
-            item.copy_id == existingItem.copy_id
+            matchStringIfPresent(item.description, existingItem.description) &&
+            matchStringIfPresent(
+              item.location.value,
+              existingItem.location_code
+            ) &&
+            matchStringIfPresent(item.call_number, existingItem.call_number) &&
+            matchStringIfPresent(item.barcode, existingItem.barcode) &&
+            matchStringIfPresent(item.copy_id, existingItem.copy_id)
         );
 
         if (matchingItem) {
@@ -109,16 +131,17 @@ const HoldingEntry = ({
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const allFormData: Record<string, FormDataEntryValue> = {};
+    const urlEncodedArray = [];
     for (const [key, value] of formData.entries()) {
       allFormData[key] = value;
+      urlEncodedArray.push(key + '=' + encodeURIComponent(value.toString()));
     }
-    // KEN: CALL & BIB MISSING FROM allFormData
-    console.log('All Form Data:', allFormData);
-    console.log('Selected Items:', selectedItems);
+    let urlString = urlEncodedArray.join('&');
+
+    // console.log('All Form Data:', allFormData);
+    // console.log('Selected Items:', selectedItems);
 
     const itemsToSubmit = selectedItems.map((item) => {
-      console.log(`Item descripiton: ${JSON.stringify(item)}`);
-      // console.log(`Desc:${description} Loc:${location}`);
       return {
         description: item.description || '',
         id: 'unknown',
@@ -134,27 +157,42 @@ const HoldingEntry = ({
       };
     });
 
-    const { data, error } = await entryAction({
-      bibData: allFormData,
-      itemData: itemsToSubmit,
-      actionType,
-      ...(existingEntry?.id && { existingEntryId: existingEntry.id }),
-    });
-
-    if (error) {
-      toast.error(`Failed to ${actionType === 'add' ? 'add' : 'update'} entry`);
-    } else {
-      toast.success(
-        `Entry ${actionType === 'add' ? 'added' : 'updated'} successfully`
-      );
-      console.log('Entry saved:', data);
-
-      if (actionType === 'add') {
-        formRef.current?.reset();
-        setSelectedItems([]);
+    if (actionType == 'quickSlip') {
+      {
+        // add selected items to query string if present
+        selectedItems &&
+          selectedItems.forEach((item) => {
+            urlString += encodeURI(`&selectedItems[]=${JSON.stringify(item)}`);
+          });
       }
-      // For edit, don't reload - let the user see the updated state
-      // window.location.reload(); // Remove this for better UX
+      const slipsUrl = `/quickSlip/handler?${urlString}`;
+      // console.log(slipsUrl);
+      router.push(slipsUrl);
+    } else {
+      const { data, error } = await entryAction({
+        bibData: allFormData,
+        itemData: itemsToSubmit,
+        actionType,
+        ...(existingEntry?.id && { existingEntryId: existingEntry.id }),
+      });
+
+      if (error) {
+        toast.error(
+          `Failed to ${actionType === 'add' ? 'add' : 'update'} entry`
+        );
+      } else {
+        toast.success(
+          `Entry ${actionType === 'add' ? 'added' : 'updated'} successfully`
+        );
+        console.log('Entry saved:', data);
+
+        if (actionType === 'add') {
+          formRef.current?.reset();
+          setSelectedItems([]);
+        }
+        // For edit, don't reload - let the user see the updated state
+        // window.location.reload(); // Remove this for better UX
+      }
     }
   };
 
@@ -172,7 +210,7 @@ const HoldingEntry = ({
     location_desc = items[0].location?.desc;
     location_value = items[0].location?.value;
     library_desc = items[0].library?.desc;
-    console.log(`set: ${location_desc}, ${library_desc}, ${location_value}`);
+    // console.log(`set: ${location_desc}, ${library_desc}, ${location_value}`);
   }
 
   if (!isEditor) {
@@ -186,9 +224,34 @@ const HoldingEntry = ({
       </>
     );
   }
+
+  if (items && inHouseLocationCodes) {
+    const inHouseCodes = inHouseLocationCodes();
+    // sort into inHouse and not-inHouse location codes, keep the rest in order
+    const inHouse = items.filter((item) =>
+      inHouseCodes.includes(item.location.value)
+    );
+    const other = items.filter(
+      (item) => !inHouseCodes.includes(item.location.value)
+    );
+    items = inHouse.concat(other);
+  }
+  let submitButtonText;
+
+  switch (actionType) {
+    case 'quickSlip':
+      submitButtonText = 'Print Slip';
+      break;
+    case 'edit':
+      submitButtonText = 'Save Edits to Item';
+      break;
+    default:
+      submitButtonText = 'Add Item to Project';
+  }
   return (
     <Form onSubmit={handleSubmit}>
       <div key={'holding'} className="mb-4 border p-3">
+        {quickSlip && <QuickSlipProjectInfo />}
         <Form.Control
           type="hidden"
           name="project_id"
@@ -269,9 +332,10 @@ const HoldingEntry = ({
               defaultValue={existingEntry?.notes ?? ''}
             />
             <Button type="submit" variant="primary">
-              {actionType === 'add'
+              {/* {actionType === 'add'
                 ? 'Add Item to Project'
-                : 'Save Edits to Item'}
+                : 'Save Edits to Item'} */}
+              {submitButtonText}
             </Button>
           </InputGroup>
         </Form.Group>

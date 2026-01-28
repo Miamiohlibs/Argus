@@ -7,11 +7,12 @@ import { Spinner } from 'react-bootstrap';
 interface BibResultsWrapperProps {
   projectId: number | undefined;
   holdingsData: CondensedBibHoldings | undefined;
-  actionType: 'add' | 'edit';
+  actionType: 'add' | 'edit' | 'quickSlip';
   existingEntry?: EntryWithItems;
   isEditor: boolean;
   searchActive?: boolean;
   searchFailed?: boolean;
+  quickSlip?: boolean;
 }
 
 export default function BibResultsWrapper({
@@ -22,6 +23,7 @@ export default function BibResultsWrapper({
   isEditor,
   searchActive,
   searchFailed,
+  quickSlip,
 }: BibResultsWrapperProps) {
   if (searchActive) {
     return (
@@ -40,6 +42,7 @@ export default function BibResultsWrapper({
     return (
       <>
         <BibEntryComponent entry={holdingsData.bib_data} />
+
         <HoldingEntry
           items={holdingsData.items}
           bibData={holdingsData.bib_data}
@@ -49,6 +52,7 @@ export default function BibResultsWrapper({
           actionType={actionType}
           existingEntry={existingEntry}
           isEditor={isEditor}
+          quickSlip={quickSlip ?? false}
         />
       </>
     );

@@ -2,14 +2,23 @@
 import logger from '@/lib/logger';
 import { db } from '@/lib/db';
 import { User } from '@prisma/client';
+import { Prisma } from '@prisma/client';
+import { Role } from '@prisma/client';
 
-async function getUsers(): Promise<{
+async function getUsers(roles?: Role[]): Promise<{
   users?: User[];
   error?: string;
 }> {
   try {
-    const users = await db.user.findMany();
-    logger.verbose('Fetched users:', users);
+    const where: Prisma.UserWhereInput = {};
+
+    if (roles?.length) {
+      where.role = { in: roles };
+    }
+
+    const users = await db.user.findMany({ where });
+
+    // logger.verbose('Fetched users:', users);
     if (!users || users.length === 0) {
       return { error: 'No users found' };
     }
