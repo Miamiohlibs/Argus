@@ -41,6 +41,7 @@ const Home = async () => {
   return (
     <>
       <h1 className="h2">{displayName}&apos;s Projects</h1>
+      <h2>{process.env.NEXT_PUBLIC_BUILD_ID}</h2>
       <div className="mb-3">
         <MainButtons isEditorOrAbove={isEditorOrAbove} canPrint={canPrint} />
       </div>
