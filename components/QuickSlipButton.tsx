@@ -13,12 +13,12 @@ const QuickSlipButton = () => {
       </DropdownToggle>
       <DropdownMenu>
         <DropdownItem
-          href={`${process.env.NEXT_PUBLIC_APP_BASEPATH}/admin/quickSlip/alma`}
+          href={`${process.env.NEXT_PUBLIC_APP_BASEPATH}/quickSlip/alma`}
         >
           From Alma
         </DropdownItem>
         <DropdownItem
-          href={`${process.env.NEXT_PUBLIC_APP_BASEPATH}/admin/quickSlip/custom`}
+          href={`${process.env.NEXT_PUBLIC_APP_BASEPATH}/quickSlip/custom`}
         >
           Custom Entry
         </DropdownItem>

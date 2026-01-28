@@ -2,8 +2,7 @@ import { Metadata } from 'next';
 import Guest from '@/components/Guest';
 import { currentUser } from '@clerk/nextjs/server';
 import ProjectsTable from '@/components/ProjectsTable';
-import CreateProjectButton from '@/components/CreateProjectButton';
-import QuickSlipButton from '@/components/QuickSlipButton';
+import MainButtons from '@/components/MainButtons';
 import getUserInfo from '@/lib/getUserInfo';
 import { redirect } from 'next/navigation';
 
@@ -43,8 +42,7 @@ const Home = async () => {
     <>
       <h1 className="h2">{displayName}&apos;s Projects</h1>
       <div className="mb-3">
-        {isEditorOrAbove && <CreateProjectButton />}{' '}
-        {canPrint && <QuickSlipButton />}
+        <MainButtons isEditorOrAbove={isEditorOrAbove} canPrint={canPrint} />
       </div>
       <ProjectsTable limitToUser={true} user={user} canPrint={canPrint} />
     </>
