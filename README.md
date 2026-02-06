@@ -53,7 +53,7 @@ ALMA_PERMALINK_BASEURL= # your local alma permalink base url, e.g. https://ohiol
 NEXT_PUBLIC_BARCODE_PREFIX=12345
 NEXT_PUBLIC_INST_CODE=4321
 NEXT_PUBLIC_USE_PRIMO=true
-PRIMO_QUERYSTRING=tab=Everything&scope=MyInst_and_CI&vid=01OHIOLINK_MU:MU #use your scope and vid
+PRIMO_QUERYSTRING=tab=Everything&scope=MyInst_and_CI&vid=01OHIOLINK_MU:MU #use your tab, scope, and vid
 PRIMO_API_KEY=
 NEXT_PUBLIC_NAV_COLOR=primary #suggested: primary, dark, success (bootstrap theme colors suitable for light text)
 NEXT_PUBLIC_NAV_LABEL= #This text will be appended to the Argus logo text
@@ -71,6 +71,25 @@ Optionally include minimum level of logging:
 ```
 LOG_LEVEL=info #info is the default, choose from: error,warn,info,verbose,debug,silly
 ```
+
+### Configuration steps
+
+1. Clone the git repository and run npm install.
+2. Using the template provided in the documentation, create a `.env` configuration file (which is a text file).
+3. Create a PostGreSQL database (could be hosted locally or on a hosting service like Neon) and get the authentication url and add it to the `.env` file.
+   a. If using Neon or another commercial product, set the connection string they provide as the `DATABASE_URL`
+   b. If hosting the database locally, you may need to set up a [shadow database](https://www.prisma.io/docs/orm/prisma-migrate/understanding-prisma-migrate/shadow-database) as well to manage database migrations. Use the `SHADOW_DATABASE_URL` for that connection string.
+   c. Run `npx prisma generate` to create prisma's database structure locally.
+   d. Then run `npx prisma migrate dev` to update the remote database to match the required data format.
+4. Create a Clerk account; create a new Clerk application using Google authentication. [See video demo (timestamp: 25:47-27:17)](https://youtu.be/I6DCo5RwHBE?t=1543) save the `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` and `CLERK_SECRET_KEY` provided in the setup process in the `.env` file.
+5. Add Alma / Primo details.
+   a. Using the ExLibris Developer network, create API keys for Alma and Primo and add them to the `.env` file as `ALMA_API_KEY` and `PRIMO_API_KEY`.
+   b. Set your `ALMA_PERMALINK_BASEURL` in `.env`. To find this, identify an item in Primo that has a permalink that ends with 'alma' and a string of numbers (e.g., "https://ohiolink-mu.primo.exlibrisgroup.com/permalink/01OHIOLINK_MU/1bhrr0p/alma991013473189708518"). To get the base URL, just remove the numbers after "alma" -- this will be the consistent base URL for Alma/Primo items in your catalog.
+   c. Set your `PRIMO_QUERYSTRING` in `.env`. To find this, do a search in Primo and copy the URL. You only need the "tab", "scope", and "vid" paramters from the url, e.g. ("tab=Everything&scope=MyInst_and_CI&vid=01OHIOLINK_MU:MU"). Include these paramters and leave out any others in the URL.
+6. Host the configured project on a server (could be hosted locally or on a third-party site like Heroku)
+   a. Note: for testing things out initially, you can skip this step and host the project on a personal computer.
+7. Add local customizations to the `.env` file, including institutional location codes, subjects, and color schemes.
+8. When the site is ready to go into production (i.e., after testing), use the Google Developer Console to create a project to handle authentication. Provide the Google project configuration to Clerk to let Google handle the authentication and have Clerk manage users.
 
 ## Getting Started (Boilerplate NextJs stuff)
 
