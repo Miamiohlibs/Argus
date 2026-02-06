@@ -39,7 +39,7 @@ Connects with Ex Libris's Alma API; to allow call-number lookups, the Ex Libris 
 
 ## Configuration
 
-Set up a `.env` file, including:
+Set up a `.env` file in the root directory of the project. You can copy and paste the following template and edit it as appropriate. You can reorganize or comment out lines from the file with a hash-tag as needed.
 
 ```
 NEXT_PUBLIC_APP_BASEPATH=/argus. # or whatever path you want to use; skip this to use /
@@ -50,11 +50,11 @@ CLERK_SECRET_KEY=
 ALMA_BASEURL=https://api-na.hosted.exlibrisgroup.com #or whichever server is best for you
 ALMA_API_KEY= #your alma api key
 ALMA_PERMALINK_BASEURL= # your local alma permalink base url, e.g. https://ohiolink-mu.primo.exlibrisgroup.com/permalink/01OHIOLINK_MU/i4qs0/alma
+NEXT_PUBLIC_USE_PRIMO=true
+PRIMO_API_KEY=
+PRIMO_QUERYSTRING=tab=Everything&scope=MyInst_and_CI&vid=01OHIOLINK_MU:MU #use your tab, scope, and vid
 NEXT_PUBLIC_BARCODE_PREFIX=12345
 NEXT_PUBLIC_INST_CODE=4321
-NEXT_PUBLIC_USE_PRIMO=true
-PRIMO_QUERYSTRING=tab=Everything&scope=MyInst_and_CI&vid=01OHIOLINK_MU:MU #use your tab, scope, and vid
-PRIMO_API_KEY=
 NEXT_PUBLIC_NAV_COLOR=primary #suggested: primary, dark, success (bootstrap theme colors suitable for light text)
 NEXT_PUBLIC_NAV_LABEL= #This text will be appended to the Argus logo text
 NEXT_PUBLIC_IS_DEV_ENV=false #when true, will display some ugly-useful JSON data on some results pages
@@ -75,7 +75,9 @@ LOG_LEVEL=info #info is the default, choose from: error,warn,info,verbose,debug,
 ### Configuration steps
 
 1. Clone the git repository and run npm install.
-2. Using the template provided in the documentation, create a `.env` configuration file (which is a text file).
+2. Using the template provided above, create a `.env` configuration file (which is a text file).
+   a. copy and paste the text above.
+   b. set the `NEXT_PUBLIC_APP_BASEPATH`, which will set the URL where the app appears. The most likely values are `/` and `/argus` depending on your preferences and server configuration.
 3. Create a PostGreSQL database (could be hosted locally or on a hosting service like Neon) and get the authentication url and add it to the `.env` file.
    a. If using Neon or another commercial product, set the connection string they provide as the `DATABASE_URL`
    b. If hosting the database locally, you may need to set up a [shadow database](https://www.prisma.io/docs/orm/prisma-migrate/understanding-prisma-migrate/shadow-database) as well to manage database migrations. Use the `SHADOW_DATABASE_URL` for that connection string.
@@ -85,11 +87,20 @@ LOG_LEVEL=info #info is the default, choose from: error,warn,info,verbose,debug,
 5. Add Alma / Primo details.
    a. Using the ExLibris Developer network, create API keys for Alma and Primo and add them to the `.env` file as `ALMA_API_KEY` and `PRIMO_API_KEY`.
    b. Set your `ALMA_PERMALINK_BASEURL` in `.env`. To find this, identify an item in Primo that has a permalink that ends with 'alma' and a string of numbers (e.g., "https://ohiolink-mu.primo.exlibrisgroup.com/permalink/01OHIOLINK_MU/1bhrr0p/alma991013473189708518"). To get the base URL, just remove the numbers after "alma" -- this will be the consistent base URL for Alma/Primo items in your catalog.
-   c. Set your `PRIMO_QUERYSTRING` in `.env`. To find this, do a search in Primo and copy the URL. You only need the "tab", "scope", and "vid" paramters from the url, e.g. ("tab=Everything&scope=MyInst_and_CI&vid=01OHIOLINK_MU:MU"). Include these paramters and leave out any others in the URL.
+   c. Set your `PRIMO_QUERYSTRING` in `.env`. To find this, do a search in Primo and copy the URL. You only need the "tab", "scope", and "vid" paramters from the url, e.g. ("tab=Everything&scope=MyInst*and_CI&vid=01OHIOLINK_MU:MU"). Include these paramters and leave out any others in the URL.
+   d. Set `NEXT_PUBLIC_BARCODE_PREFIX` with the first few numbers of your local Alma barcodes.
+   c. Set `NEXT_PUBLIC_INST_CODE` -- these will be the last four digits of your institution's Alma MMS IDs. For example, if an item has an MMS ID of `991017357419708518`, the institution code is `8518`. [Learn more about the "anatomy" of Alma record numbers](https://knowledge.exlibrisgroup.com/Alma/Product_Documentation/010Alma_Online_Help*(English)/Metadata_Management/005Introduction_to_Metadata_Management/020Record_Numbers). To find an example MMS ID, find a permalink as in step 5b -- the number after the "alma..." at the end of the permalink is an MMS ID; the last four digits become are institution code.
+
 6. Host the configured project on a server (could be hosted locally or on a third-party site like Heroku)
    a. Note: for testing things out initially, you can skip this step and host the project on a personal computer.
-7. Add local customizations to the `.env` file, including institutional location codes, subjects, and color schemes.
-8. When the site is ready to go into production (i.e., after testing), use the Google Developer Console to create a project to handle authentication. Provide the Google project configuration to Clerk to let Google handle the authentication and have Clerk manage users.
+7. Add optional local customizations to the `.env` file.
+   a. Set the `NEXT_PUBLIC_LOCATION_CODES_JSON` -- this is a JSON array (as a string) listing the in-house special collections locations used in the Alma catalog. Each array entry should be an object with the location code as "code" and the location name as "name". Optionally, you can also add `"unofficial":true` for entries that are not official locations in Alma. Example: `[{"code":"arcli","name":"Archives"},{"code":"mss","name":"Manuscript Collection"},{"code":"spcfo","name":"Folios"}]`. The locations listed here will be shown as options when creating a Custom Entry, and items from these locations will be sorted above other locations when looking up an item -- so if an item exists both in Special Collections and in the Main Stacks, the Special Collections item will appear higher in the display than the Main Stacks item. Unofficial locations are listed only when creating custom enties.
+   b. Edit `NEXT_PUBLIC_PROJECT_PURPOSES`. A project has a "purpose" associated with it, such as "class", "reference", etc. You can edit the list of purposes available based on the values defined in this array.
+   c. Edit `NEXT_PUBLIC_SUBJECT_LIST`. This is an array of subject areas; you will want to adapt the list in the template to subjects used at your institution. Subjects are optional for a project.
+   d. Set the `NEXT_PUBLIC_NAV_COLOR`. This defines the color of the header. You can use any [Bootstrap color](https://getbootstrap.com/docs/5.3/utilities/background/) suitable for pairing with light-colored text. Suggested values are: "primary" (blue), "dark" (dark grey), "success" (green). If you will maintain separate instances of Argus (such as one for testing, one for production) it can be helpful to choose different colors to quickly tell the user which instance they're using.
+   e. Set the `NEXT_PUBLIC_NAV_LABEL`. This text will be appended to the Argus logo text; so if you have a test instance, you might set the value to " -- TEST", and the header text with real "Argus -- TEST".
+   f. Set `NEXT_PUBLIC_IS_DEV_ENV`. Should be `false` for production; when true, will display some ugly/useful JSON data on some results pages.
+8. When the site is ready to go into production (i.e., after testing), use the Google Developer Console to create a project to handle authentication. Provide the Google project configuration to Clerk to let Google handle the authentication and have Clerk manage users. Refer to Clerk's documentation on [Deploying to production](https://clerk.com/docs/guides/development/deployment/production) for and this [video tutorial](https://youtu.be/qKU6MQp-g7w?si=Qq6pp1VvRVp64edq) guidance.
 
 ## Getting Started (Boilerplate NextJs stuff)
 
