@@ -58,7 +58,7 @@ const Header = async () => {
           <SignedIn>
             <NavItem>
               <NavLink as={NextLink} href="/searchEntries">
-                <Search /> Search
+                <Search aria-hidden="true" /> Search
               </NavLink>
             </NavItem>
           </SignedIn>
