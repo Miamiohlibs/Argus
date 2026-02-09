@@ -225,8 +225,11 @@ export async function updateProject(
       return { success: false, error: 'User not authenticated' };
     }
     const projectId = formData.get('projectId') as string;
-    const { isOwnerish, isAdmin } = await getPermissions({ projectId, user });
-    if (!isOwnerish && !isAdmin) {
+    const { isOwner, isCoEditor, isAdmin } = await getPermissions({
+      projectId,
+      user,
+    });
+    if (!isOwner && !isCoEditor && !isAdmin) {
       return {
         success: false,
         error: 'User not authorized to perform this action',
