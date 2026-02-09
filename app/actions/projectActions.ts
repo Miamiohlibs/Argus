@@ -2,6 +2,7 @@
 import logger from '@/lib/logger';
 import { db } from '@/lib/db';
 import getUserInfo from '@/lib/getUserInfo';
+import { getPermissions } from '@/lib/getUserInfo';
 import type { Prisma } from '@prisma/client';
 import { ProjectData } from '@/types/ProjectData';
 import type { ProjectWithUserAndBib } from '@/types/ProjectWithUserAndBib';
@@ -223,8 +224,14 @@ export async function updateProject(
     if (!user) {
       return { success: false, error: 'User not authenticated' };
     }
-
     const projectId = formData.get('projectId') as string;
+    const { isOwnerish, isAdmin } = await getPermissions({ projectId, user });
+    if (!isOwnerish && !isAdmin) {
+      return {
+        success: false,
+        error: 'User not authorized to perform this action',
+      };
+    }
     const title = formData.get('title') as string;
     const notes = formData.get('notes') as string;
     const purpose = formData.get('purpose') as string;
@@ -250,11 +257,6 @@ export async function updateProject(
     if (!existingProject) {
       logger.verbose('Project not found');
       return { success: false, error: 'Project not found' };
-    }
-
-    if (existingProject?.userId !== user.clerkUserId) {
-      logger.error(`${existingProject?.userId} !== ${user.clerkUserId}`);
-      return { success: false, error: 'Not authorized' };
     }
 
     const updatedProject = await db.project.update({
