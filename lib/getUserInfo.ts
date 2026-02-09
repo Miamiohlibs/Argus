@@ -7,7 +7,7 @@ import type { User } from '@prisma/client';
 import { db } from './db';
 
 export default async function getUserInfo(
-  projectId?: number | string
+  projectId?: number | string,
 ): Promise<ArgusUserInfo> {
   const { user, error: userFetchError } = await getCurrentUser();
   const permissions = await getPermissions({ projectId, user });
@@ -40,7 +40,7 @@ export async function getPermissions({
 
     // isEditorOrAbove
     perms.isEditorOrAbove = ['editor', 'admin', 'superadmin'].includes(
-      user.role
+      user.role,
     );
 
     // isAdmin
@@ -60,9 +60,9 @@ export async function getPermissions({
         // isOwner - requires projectId
         perms.isOwner = project.user.clerkUserId == user.clerkUserId;
 
-        perms.isCoEditor = project.coEditors
-          .map((ed) => ed.clerkUserId)
-          .includes(user.clerkUserId);
+        // isCoeditor
+        const coEditorsArr = project.coEditors.map((ed) => ed.clerkUserId);
+        perms.isCoEditor = coEditorsArr.includes(user.clerkUserId);
 
         // canEdit - requires projectId
         perms.canEdit = perms.isAdmin || perms.isOwner || perms.isCoEditor;
@@ -91,7 +91,7 @@ export async function isUserAdmin(userId: string): Promise<boolean> {
     return user?.role != null && ['admin', 'superadmin'].includes(user.role);
   } catch (error) {
     logger.error(
-      `Error getting user "${userId}" in getUserInfo.isUserAdmin: ${error}`
+      `Error getting user "${userId}" in getUserInfo.isUserAdmin: ${error}`,
     );
     return false;
   }

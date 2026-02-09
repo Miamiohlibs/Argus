@@ -2,6 +2,7 @@
 import logger from '@/lib/logger';
 import { db } from '@/lib/db';
 import { isUserAdmin } from '@/lib/getUserInfo';
+import { projectUpdate } from 'next/dist/build/swc/generated-native';
 
 export interface SearchResult {
   id: string;
@@ -9,6 +10,8 @@ export interface SearchResult {
   author: string;
   projectId: number;
   projectName: string;
+  projectUpdated: Date;
+  projectCreated: Date;
   user: string;
 }
 
@@ -19,7 +22,7 @@ export interface SearchState {
 
 export async function searchAction(
   prevState: SearchState,
-  formData: FormData
+  formData: FormData,
 ): Promise<SearchState> {
   const query = formData.get('q')?.toString().trim();
   const userId = formData.get('userId')?.toString().trim();
@@ -72,6 +75,8 @@ export async function searchAction(
         author: i.author,
         projectId: i.project.id,
         projectName: i.project.title,
+        projectUpdated: i.project.updatedAt,
+        projectCreated: i.project.createdAt,
         user: i.project.user.name,
       };
     });

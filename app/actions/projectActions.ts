@@ -2,6 +2,7 @@
 import logger from '@/lib/logger';
 import { db } from '@/lib/db';
 import getUserInfo from '@/lib/getUserInfo';
+import { getPermissions } from '@/lib/getUserInfo';
 import type { Prisma } from '@prisma/client';
 import { ProjectData } from '@/types/ProjectData';
 import type { ProjectWithUserAndBib } from '@/types/ProjectWithUserAndBib';
@@ -19,7 +20,7 @@ type ProjectActionResult =
 
 export async function createProject(
   prevState: unknown,
-  formData: FormData
+  formData: FormData,
 ): Promise<ProjectActionResult> {
   try {
     const { user } = await getUserInfo();
@@ -37,8 +38,8 @@ export async function createProject(
     const subjects = [subjectString];
     // const subjectsJson = formData.get('subjects') as string;
     // const subjects = JSON.parse(subjectsJson) || [];
-    console.log('***** subjectString', subjectString);
-    console.log('***** subjects', JSON.stringify(subjects));
+    // console.log('***** subjectString', subjectString);
+    // console.log('***** subjects', JSON.stringify(subjects));
 
     // check for input values
     if (!titleValue || titleValue === '') {
@@ -65,7 +66,7 @@ export async function createProject(
 
       if (!existingUser) {
         logger.error(
-          `User with clerkUserId ${user.clerkUserId} not found in database`
+          `User with clerkUserId ${user.clerkUserId} not found in database`,
         );
         return {
           success: false,
@@ -116,7 +117,7 @@ export async function createProject(
 }
 
 export async function updateProjectLastUpdated(projectId: number) {
-  console.log('*** updating project ', projectId);
+  // console.log('*** updating project ', projectId);
   const updatedProject = await db.project.update({
     where: { id: projectId },
     data: { updatedAt: new Date() },
@@ -155,10 +156,9 @@ export type UpdateProjectOwnerResult =
 
 export async function updateProjectOwner(
   prevState: UpdateProjectOwnerResult | null,
-  formData: FormData
+  formData: FormData,
 ): Promise<UpdateProjectOwnerResult> {
   // this is used in admin/reassignProject
-  console.log('ACTION HIT');
   const projectId = formData.get('projectId') as string;
   const newOwnerId = formData.get('newOwnerId') as string;
   const adminId = formData.get('thisUserId') as string;
@@ -204,7 +204,7 @@ export async function updateProjectOwner(
       },
     });
     logger.verbose(
-      `Success updating project owner ${JSON.stringify(formData)}`
+      `Success updating project owner ${JSON.stringify(formData)}`,
     );
     // return { success: true };
   } catch (error) {
@@ -216,7 +216,7 @@ export async function updateProjectOwner(
 
 export async function updateProject(
   prevState: unknown,
-  formData: FormData
+  formData: FormData,
 ): Promise<ProjectActionResult> {
   logger.verbose('starting UpdateProject...');
   try {
@@ -224,8 +224,17 @@ export async function updateProject(
     if (!user) {
       return { success: false, error: 'User not authenticated' };
     }
-
     const projectId = formData.get('projectId') as string;
+    const { isOwner, isCoEditor, isAdmin } = await getPermissions({
+      projectId,
+      user,
+    });
+    if (!isOwner && !isCoEditor && !isAdmin) {
+      return {
+        success: false,
+        error: 'User not authorized to perform this action',
+      };
+    }
     const title = formData.get('title') as string;
     const notes = formData.get('notes') as string;
     const purpose = formData.get('purpose') as string;
@@ -234,12 +243,12 @@ export async function updateProject(
     const subjects = [subjectString];
     // const subjectsJson = formData.get('subjects') as string;
     // const subjects = JSON.parse(subjectsJson) || [];
-    console.log('***** subjectString', subjectString);
-    console.log('***** subjects', JSON.stringify(subjects));
+    // console.log('***** subjectString', subjectString);
+    // console.log('***** subjects', JSON.stringify(subjects));
     // subjectValue = subjectValue == 'None' ? '' : subjectValue;
 
-    console.log(
-      `Data as submitted: projId: ${projectId}, title: ${title}, notes: ${notes}, purpose: ${purpose}, public: ${publicValue}, subjects: ${subjectString}`
+    logger.verbose(
+      `Data as submitted: projId: ${projectId}, title: ${title}, notes: ${notes}, purpose: ${purpose}, public: ${publicValue}, subjects: ${subjectString}`,
     );
     // Check if user owns the project
     const existingProject = await db.project.findUnique({
@@ -251,11 +260,6 @@ export async function updateProject(
     if (!existingProject) {
       logger.verbose('Project not found');
       return { success: false, error: 'Project not found' };
-    }
-
-    if (existingProject?.userId !== user.clerkUserId) {
-      logger.verbose(`${existingProject?.userId} !== ${user.clerkUserId}`);
-      return { success: false, error: 'Not authorized' };
     }
 
     const updatedProject = await db.project.update({
@@ -308,7 +312,7 @@ export async function getProjects(
     limitToUser?: boolean;
     limitToPublic?: boolean;
     limitToArchived?: boolean;
-  } = { limitToUser: true, limitToPublic: false, limitToArchived: false }
+  } = { limitToUser: true, limitToPublic: false, limitToArchived: false },
 ): Promise<{
   projects?: ProjectWithUser[];
   error?: string;
@@ -323,9 +327,9 @@ export async function getProjects(
     : { OR: [{ status: { not: 'archived' } }, { status: null }] };
 
   try {
-    console.log(
-      `Getting projects; limit to public? ${limitToPublic}; limit to archived: ${limitToArchived}`
-    );
+    // console.log(
+    //   `Getting projects; limit to public? ${limitToPublic}; limit to archived: ${limitToArchived}`,
+    // );
     let projects;
     if (limitToPublic) {
       projects = await db.project.findMany({
@@ -389,12 +393,12 @@ export async function deleteProject(projectId: number): Promise<{
     return { error: 'User not found' };
   }
   logger.verbose(
-    `deletion request on project ${projectId} by ${user.clerkUserId}`
+    `deletion request on project ${projectId} by ${user.clerkUserId}`,
   );
 
   if (!canEdit) {
     logger.verbose(
-      `deletion permission denied on ${projectId} by ${user.clerkUserId}`
+      `deletion permission denied on ${projectId} by ${user.clerkUserId}`,
     );
     // unauthorized();
     return { error: 'Delete permission denied' };
