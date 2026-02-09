@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import ProjectsTable from '@/components/ProjectsTable';
-import CreateProjectButton from '@/components/CreateProjectButton';
+import MainButtons from '@/components/MainButtons';
 import getUserInfo from '@/lib/getUserInfo';
 import checkAccess from '@/lib/checkAccess';
 
@@ -25,7 +25,9 @@ const PublicProjectsPage = async () => {
   return (
     <>
       <h1 className="h2">Public Projects</h1>
-      {isEditorOrAbove && <CreateProjectButton />}
+      <div className="mb-3">
+        <MainButtons isEditorOrAbove={isEditorOrAbove} canPrint={canPrint} />
+      </div>{' '}
       <ProjectsTable
         limitToUser={false}
         limitToPublic={true}

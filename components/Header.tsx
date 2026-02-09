@@ -17,6 +17,7 @@ import {
   SignedOut,
   UserButton,
 } from '@clerk/nextjs';
+import { Search } from 'react-bootstrap-icons';
 import { checkUser } from '@/lib/checkUser';
 import NavEditor from './NavEditor';
 import NavAdmin from './NavAdmin';
@@ -57,7 +58,7 @@ const Header = async () => {
           <SignedIn>
             <NavItem>
               <NavLink as={NextLink} href="/searchEntries">
-                Search
+                <Search aria-hidden="true" /> Search
               </NavLink>
             </NavItem>
           </SignedIn>

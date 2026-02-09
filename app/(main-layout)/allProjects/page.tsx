@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import ProjectsTable from '@/components/ProjectsTable';
-import CreateProjectButton from '@/components/CreateProjectButton';
+import MainButtons from '@/components/MainButtons';
 import getUserInfo from '@/lib/getUserInfo';
 import { redirect, RedirectType } from 'next/navigation';
 
@@ -24,7 +24,9 @@ const AllProjectsPage = async () => {
   return (
     <>
       <h1 className="h2">All Projects</h1>
-      {isEditorOrAbove && <CreateProjectButton />}
+      <div className="mb-3">
+        <MainButtons isEditorOrAbove={isEditorOrAbove} canPrint={canPrint} />
+      </div>
       <ProjectsTable limitToUser={false} user={user} canPrint={canPrint} />
     </>
   );

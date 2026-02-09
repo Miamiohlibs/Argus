@@ -27,8 +27,8 @@ export default function SearchResults({
   useEffect(() => {
     const filtered = currentEntries.filter((entry) =>
       [entry.title, entry.projectName, entry.user].some((val) =>
-        val?.toLowerCase().includes(filterText.toLowerCase() || '')
-      )
+        val?.toLowerCase().includes(filterText.toLowerCase() || ''),
+      ),
     );
     setFilteredEntries(filtered);
   }, [filterText, currentEntries]); // Use currentEntries instead of entries
@@ -59,6 +59,18 @@ export default function SearchResults({
       name: 'Project Owner',
       selector: (row: SearchResult) => row.user ?? '',
       cell: (row: SearchResult) => row.user,
+      sortable: true,
+    },
+    {
+      name: 'Project Updated',
+      selector: (row) => new Date(row.projectUpdated).getTime(),
+      cell: (row) => new Date(row.projectUpdated).toLocaleDateString(),
+      sortable: true,
+    },
+    {
+      name: 'Project Created',
+      selector: (row) => new Date(row.projectCreated).getTime(),
+      cell: (row) => new Date(row.projectCreated).toLocaleDateString(),
       sortable: true,
     },
   ];

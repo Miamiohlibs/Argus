@@ -29,11 +29,12 @@ export default async function EditProjectPage({
   const { id } = await params;
   const response = await getProject({ id });
   const project = response.project;
+  const userInfo = await getUserInfo(id);
   const {
-    permissions: { isOwner, isOwnerish, isAdmin },
+    permissions: { isOwner, isCoEditor, isOwnerish, isAdmin, canEdit },
   } = await getUserInfo(id);
 
-  if (!isOwnerish) {
+  if (!canEdit) {
     redirect(`/project/${id}`); // go to non-edit version of project page
   }
 
@@ -43,7 +44,7 @@ export default async function EditProjectPage({
     return (
       <>
         {/* this NonOwnerAlert has different conditions from others because the only one who should normally edit this page is the owner. */}
-        {!isOwner && <NonOwnerAlert />}
+        {!isOwner && !isCoEditor && <NonOwnerAlert />}
         <h1 className="h2">Edit Project Details</h1>
         {project && <ProjectMetadata project={project} />}
         <ProjectButtons
