@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.7.1 - 2026-02-09
+
+### Fixed
+
+- Fixed permission for editing a project: works for project owners, co-editors, admins; no longer showing the edit option to users who lack the permissions to execute the actions.
+- Fixed margins on buttons in All Projects and Public Projects pages.
+
+### Added
+
+- Added MIT license for open source release.
+- Added detailed configuration steps in README.
+
+### Changed
+
+- Updated layout of search results to include project updated and created dates.
+- Updated footer to include link to GitHub repo.
+- Added search icon next to "Search" in the header.
+
 ## 0.7.0 - 2026-01-28
 
 ### Fixed
