@@ -12,8 +12,8 @@ import { Button } from 'react-bootstrap';
 import { UnlockFill as Unlocked } from 'react-bootstrap-icons';
 
 // Use Prisma's generated type that includes the user relation
-type ProjectWithUser = Prisma.ProjectGetPayload<{
-  include: { user: true };
+type ProjectWithUserAndCoEditors = Prisma.ProjectGetPayload<{
+  include: { user: true; coEditors: true };
 }>;
 
 interface ProjectsTableProps {
@@ -31,10 +31,10 @@ export default function ProjectsTable({
   user = null,
   canPrint = false,
 }: ProjectsTableProps) {
-  const [projects, setProjects] = useState<ProjectWithUser[]>([]);
-  const [filteredProjects, setFilteredProjects] = useState<ProjectWithUser[]>(
-    []
-  );
+  const [projects, setProjects] = useState<ProjectWithUserAndCoEditors[]>([]);
+  const [filteredProjects, setFilteredProjects] = useState<
+    ProjectWithUserAndCoEditors[]
+  >([]);
   const [loading, setLoading] = useState(true);
   const [filterText, setFilterText] = useState('');
   const [archiveView, setArchiveView] = useState<boolean>(limitToArchived);
@@ -72,7 +72,7 @@ export default function ProjectsTable({
     console.log('deletedProjects changed:', deletedProjects);
   }, [deletedProjects]);
 
-  const columns: TableColumn<ProjectWithUser>[] = [
+  const columns: TableColumn<ProjectWithUserAndCoEditors>[] = [
     {
       name: 'Title',
       selector: (row) => row.title ?? '',
@@ -129,11 +129,15 @@ export default function ProjectsTable({
     {
       name: 'Tools',
       cell: (row) => {
+        const coEditorClerkIds =
+          row.coEditors?.map((coed) => coed.clerkUserId) ?? [];
+
         const canEdit =
           user?.role !== 'user' &&
           (user?.role === 'admin' ||
             user?.role === 'superadmin' ||
-            row.user.clerkUserId === user?.clerkUserId);
+            row.user.clerkUserId === user?.clerkUserId ||
+            (user && coEditorClerkIds.includes(user.clerkUserId)));
 
         return (
           <>
@@ -193,7 +197,7 @@ export default function ProjectsTable({
         project.notes,
         project.purpose,
         project.subjects.join(' '),
-      ].some((val) => val?.toLowerCase().includes(filterText.toLowerCase()))
+      ].some((val) => val?.toLowerCase().includes(filterText.toLowerCase())),
     );
     setFilteredProjects(filtered);
   }, [filterText, projects]);
