@@ -3,7 +3,7 @@ import About from '@/components/About';
 const Guest = () => {
   return (
     <div className="guest container">
-      <h1>Welcome</h1>
+      <h1 className="mb-3">Welcome</h1>
       {/* <p>Please sign in to view projects.</p> */}
       <SignInButton>
         <div className="btn btn-primary">Sign in</div>
