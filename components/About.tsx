@@ -8,14 +8,6 @@ export default function About({ className = '' }) {
       : 'Special Collections';
 
   const contactArr = [];
-  //   typeof process.env.NEXT_PUBLIC_CONTACT_EMAIL == 'string' &&
-  //     process.env.NEXT_PUBLIC_CONTACT_EMAIL != '' &&
-  //     contactArr.push(
-  //       <a href="mailto:{process.env.NEXT_PUBLIC_CONTACT_EMAIL}">
-  //         {process.env.NEXT_PUBLIC_CONTACT_EMAIL}
-  //       </a>,
-  //     );
-  //   const contactHow = contactArr.length > 0 ? ` at ${contactArr.join(' ')}` : '';
 
   const classes = `fs-4 ${className}`;
   return (
