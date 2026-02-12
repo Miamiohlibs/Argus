@@ -31,7 +31,7 @@ export function ContactInfo() {
 
   return (
     <p>
-      To get started
+      To get started,
       {hasDept && <> contact {CONTACT_DEPT}</>}
       {contactMethods.length > 0 && (
         <>
