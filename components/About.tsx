@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { ContactInfo } from './ContactInfo';
 
 export default function About({ className = '' }) {
   const deptName =
@@ -25,17 +25,7 @@ export default function About({ className = '' }) {
         can use it to create projects and add special collections items to the
         project by importing bibliographic records from the library catalog.
       </p>
-      <p>
-        To get started, contact {deptName} at{' '}
-        <span className="text-nowrap">
-          <a href="SpecColl@MiamiOH.edu">SpecColl@MiamiOH.edu</a>
-        </span>{' '}
-        or{' '}
-        <span className="text-nowrap">
-          <a href="+15135293323">(513) 529-3323</a>
-        </span>
-        .
-      </p>
+      <ContactInfo />
     </div>
   );
 }
