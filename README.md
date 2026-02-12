@@ -1,6 +1,6 @@
 # Argus
 
-Argus is a pull-slip manager for special collections. Library staff and researchers can create lists of bibliographic (bib) records from a connected Ex Libris Alma/Primo catalog to look up items by call number, barcode, or Alma's mms_id. Item records (for individual volumes) associate with each bib record can also be specified. Once lists are created, a user can generate pull slips for use in special collections.
+Argus is a project manager for special collections. Library staff and researchers can create lists of bibliographic (bib) records from a connected Ex Libris Alma/Primo catalog to look up items by call number, barcode, or Alma's mms_id. Item records (for individual volumes) associate with each bib record can also be specified. Once lists are created, a user can generate pull slips for use in special collections.
 
 User-created lists can be used to help researchers remember items of interest, and can help library workers easily re-use or update course-related items from one class/semester/year to the next, streamlining workflows and reducing duplicated effort.
 
@@ -87,9 +87,9 @@ LOG_LEVEL=info #info is the default, choose from: error,warn,info,verbose,debug,
 5. Add Alma / Primo details.
    - Using the ExLibris Developer network, create API keys for Alma and Primo and add them to the `.env` file as `ALMA_API_KEY` and `PRIMO_API_KEY`.
    - Set your `ALMA_PERMALINK_BASEURL` in `.env`. To find this, identify an item in Primo that has a permalink that ends with 'alma' and a string of numbers (e.g., "https://ohiolink-mu.primo.exlibrisgroup.com/permalink/01OHIOLINK_MU/1bhrr0p/alma991013473189708518"). To get the base URL, just remove the numbers after "alma" -- this will be the consistent base URL for Alma/Primo items in your catalog.
-   - Set your `PRIMO_QUERYSTRING` in `.env`. To find this, do a search in Primo and copy the URL. You only need the "tab", "scope", and "vid" paramters from the url, e.g. ("tab=Everything&scope=MyInst*and_CI&vid=01OHIOLINK_MU:MU"). Include these paramters and leave out any others in the URL.
+   - Set your `PRIMO_QUERYSTRING` in `.env`. To find this, do a search in Primo and copy the URL. You only need the "tab", "scope", and "vid" paramters from the url, e.g. ("tab=Everything&scope=MyInst\*and_CI&vid=01OHIOLINK_MU:MU"). Include these paramters and leave out any others in the URL.
    - Set `NEXT_PUBLIC_BARCODE_PREFIX` with the first few numbers of your local Alma barcodes.
-   - Set `NEXT_PUBLIC_INST_CODE` -- these will be the last four digits of your institution's Alma MMS IDs. For example, if an item has an MMS ID of `991017357419708518`, the institution code is `8518`. [Learn more about the "anatomy" of Alma record numbers](https://knowledge.exlibrisgroup.com/Alma/Product_Documentation/010Alma_Online_Help*(English)/Metadata_Management/005Introduction_to_Metadata_Management/020Record_Numbers). To find an example MMS ID, find a permalink as in step 5b -- the number after the "alma..." at the end of the permalink is an MMS ID; the last four digits become are institution code.
+   - Set `NEXT_PUBLIC_INST_CODE` -- these will be the last four digits of your institution's Alma MMS IDs. For example, if an item has an MMS ID of `991017357419708518`, the institution code is `8518`. [Learn more about the "anatomy" of Alma record numbers](<https://knowledge.exlibrisgroup.com/Alma/Product_Documentation/010Alma_Online_Help*(English)/Metadata_Management/005Introduction_to_Metadata_Management/020Record_Numbers>). To find an example MMS ID, find a permalink as in step 5b -- the number after the "alma..." at the end of the permalink is an MMS ID; the last four digits become are institution code.
 
 6. Host the configured project on a server (could be hosted locally or on a third-party site like Heroku)
    - Note: for testing things out initially, you can skip this step and host the project on a personal computer.
