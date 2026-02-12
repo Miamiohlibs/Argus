@@ -1,11 +1,14 @@
 import { SignInButton } from '@clerk/nextjs';
-
+import About from '@/components/About';
 const Guest = () => {
   return (
-    <div className="guest">
+    <div className="guest container">
       <h1>Welcome</h1>
-      <p>Please sign in to view projects.</p>
-      <SignInButton />
+      {/* <p>Please sign in to view projects.</p> */}
+      <SignInButton>
+        <div className="btn btn-primary">Sign in</div>
+      </SignInButton>
+      <About className="mt-5" />
     </div>
   );
 };
