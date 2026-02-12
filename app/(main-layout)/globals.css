@@ -21,6 +21,32 @@ footer {
   bottom: 0;
   width: 100%;
 }
+.footer-meta {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+  font-size: 0.9rem;
+}
+
+.footer-meta > * {
+  position: relative;
+}
+
+/* Add separator before every item except the first */
+.footer-meta > *:not(:first-child)::before {
+  content: "";
+  position: absolute;
+  left: -0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1px;
+  height: 0.9em;
+  background-color: rgba(0, 0, 0, 0.15);
+}
+
+
 .bib-entry{
   background-color: #ddd;
   box-shadow: var(--box-shadow);
