@@ -64,7 +64,9 @@ const Header = async () => {
           </SignedIn>
           <SignedOut>
             <NavItem>
-              <SignInButton />
+              <SignInButton>
+                <div className="btn btn-light">Sign in</div>
+              </SignInButton>
             </NavItem>
           </SignedOut>
           <SignedIn>

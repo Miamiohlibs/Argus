@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.7.2 - 2026-02-13
+
+### Added
+
+- add .env variables:
+  - NEXT_PUBLIC_CONTACT_DEPT
+  - NEXT_PUBLIC_CONTACT_EMAIL
+  - NEXT_PUBLIC_CONTACT_PHONE
+- create About page, add link in footer; uses new .env variables to include local contact info if available
+- add About info to Guest (unlogged in) page
+
+### Changed
+
+- more accessible/semantic layout for footer
+- use Bootstrap styling on login buttons
+
 ## 0.7.1 - 2026-02-09
 
 ### Fixed

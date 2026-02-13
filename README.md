@@ -1,6 +1,6 @@
 # Argus
 
-Argus is a pull-slip manager for special collections. Library staff and researchers can create lists of bibliographic (bib) records from a connected Ex Libris Alma/Primo catalog to look up items by call number, barcode, or Alma's mms_id. Item records (for individual volumes) associate with each bib record can also be specified. Once lists are created, a user can generate pull slips for use in special collections.
+Argus is a project manager for special collections. Library staff and researchers can create lists of bibliographic (bib) records from a connected Ex Libris Alma/Primo catalog to look up items by call number, barcode, or Alma's mms_id. Item records (for individual volumes) associate with each bib record can also be specified. Once lists are created, a user can generate pull slips for use in special collections.
 
 User-created lists can be used to help researchers remember items of interest, and can help library workers easily re-use or update course-related items from one class/semester/year to the next, streamlining workflows and reducing duplicated effort.
 
@@ -42,7 +42,13 @@ Connects with Ex Libris's Alma API; to allow call-number lookups, the Ex Libris 
 Set up a `.env` file in the root directory of the project. You can copy and paste the following template and edit it as appropriate. You can reorganize or comment out lines from the file with a hash-tag as needed.
 
 ```
+# Installation config
 NEXT_PUBLIC_APP_BASEPATH=/argus. # or whatever path you want to use; skip this to use /
+NEXT_PUBLIC_IS_DEV_ENV=false #when true, will display some ugly-useful JSON data on some results pages
+PORT=3333 # or whatever port you want to use
+NODE_ENV=development #or production -- note: production required to 'npm run build'; doesn't build under developement
+
+# External Services and APIs
 DATABASE_URL=postgresql://... # database connection string; I use Neon
 SHADOW_DATABASE_URL=postgresql://... # if hosting locally, you may need to specify a shadowdb for handling migrations
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
@@ -55,14 +61,16 @@ PRIMO_API_KEY=
 PRIMO_QUERYSTRING=tab=Everything&scope=MyInst_and_CI&vid=01OHIOLINK_MU:MU #use your tab, scope, and vid
 NEXT_PUBLIC_BARCODE_PREFIX=12345
 NEXT_PUBLIC_INST_CODE=4321
+
+# Local UI Customizations
 NEXT_PUBLIC_NAV_COLOR=primary #suggested: primary, dark, success (bootstrap theme colors suitable for light text)
 NEXT_PUBLIC_NAV_LABEL= #This text will be appended to the Argus logo text
-NEXT_PUBLIC_IS_DEV_ENV=false #when true, will display some ugly-useful JSON data on some results pages
+NEXT_PUBLIC_CONTACT_DEPT= #used in About & Guest page
+NEXT_PUBLIC_CONTACT_EMAIL= #used in About & Guest page
+NEXT_PUBLIC_CONTACT_PHONE= #used in About & Guest page
 NEXT_PUBLIC_LOCATION_CODES_JSON='[{"code":"arcli","name":"Archives"},{"code":"mss","name":"Manuscript Collection","unofficial":true},{"code":"spcfo","name":"Folios"}]' #this is a JSON string with an array of locations as [{code, name}] -- optionally, you can also add "unofficial:true" for entries that are not official locations in Alma; these locations are used only for Custom Entries. It does not need to be an exhaustive list of every location used in Alma, just the ones you want to be able to use for custom entries.
 NEXT_PUBLIC_PROJECT_PURPOSES='["Class","Conservation","Digitization","Event","Exhibit","Reference"]'
 NEXT_PUBLIC_SUBJECT_LIST='["Anthropology","Art and Architecture","Biology","Business","Chemistry and Biochemistry","Disability Studies","Economics","English","Environmental Sciences","History","Latin American Studies","Mathematics","Music","Political Science","Spanish and Portuguese","Theatre","Womens Gender and Sexuality Studies"]'
-PORT=3333 # or whatever port you want to use
-NODE_ENV=development #or production -- note: production required to 'npm run build'; doesn't build under developement
 
 ```
 
@@ -87,13 +95,14 @@ LOG_LEVEL=info #info is the default, choose from: error,warn,info,verbose,debug,
 5. Add Alma / Primo details.
    - Using the ExLibris Developer network, create API keys for Alma and Primo and add them to the `.env` file as `ALMA_API_KEY` and `PRIMO_API_KEY`.
    - Set your `ALMA_PERMALINK_BASEURL` in `.env`. To find this, identify an item in Primo that has a permalink that ends with 'alma' and a string of numbers (e.g., "https://ohiolink-mu.primo.exlibrisgroup.com/permalink/01OHIOLINK_MU/1bhrr0p/alma991013473189708518"). To get the base URL, just remove the numbers after "alma" -- this will be the consistent base URL for Alma/Primo items in your catalog.
-   - Set your `PRIMO_QUERYSTRING` in `.env`. To find this, do a search in Primo and copy the URL. You only need the "tab", "scope", and "vid" paramters from the url, e.g. ("tab=Everything&scope=MyInst*and_CI&vid=01OHIOLINK_MU:MU"). Include these paramters and leave out any others in the URL.
+   - Set your `PRIMO_QUERYSTRING` in `.env`. To find this, do a search in Primo and copy the URL. You only need the "tab", "scope", and "vid" paramters from the url, e.g. ("tab=Everything&scope=MyInst\*and_CI&vid=01OHIOLINK_MU:MU"). Include these paramters and leave out any others in the URL.
    - Set `NEXT_PUBLIC_BARCODE_PREFIX` with the first few numbers of your local Alma barcodes.
-   - Set `NEXT_PUBLIC_INST_CODE` -- these will be the last four digits of your institution's Alma MMS IDs. For example, if an item has an MMS ID of `991017357419708518`, the institution code is `8518`. [Learn more about the "anatomy" of Alma record numbers](https://knowledge.exlibrisgroup.com/Alma/Product_Documentation/010Alma_Online_Help*(English)/Metadata_Management/005Introduction_to_Metadata_Management/020Record_Numbers). To find an example MMS ID, find a permalink as in step 5b -- the number after the "alma..." at the end of the permalink is an MMS ID; the last four digits become are institution code.
+   - Set `NEXT_PUBLIC_INST_CODE` -- these will be the last four digits of your institution's Alma MMS IDs. For example, if an item has an MMS ID of `991017357419708518`, the institution code is `8518`. [Learn more about the "anatomy" of Alma record numbers](<https://knowledge.exlibrisgroup.com/Alma/Product_Documentation/010Alma_Online_Help*(English)/Metadata_Management/005Introduction_to_Metadata_Management/020Record_Numbers>). To find an example MMS ID, find a permalink as in step 5b -- the number after the "alma..." at the end of the permalink is an MMS ID; the last four digits become are institution code.
 
 6. Host the configured project on a server (could be hosted locally or on a third-party site like Heroku)
    - Note: for testing things out initially, you can skip this step and host the project on a personal computer.
 7. Add optional local customizations to the `.env` file.
+   - Set any or all local contact info settings: `NEXT_PUBLIC_CONTACT_DEPT`, `NEXT_PUBLIC_CONTACT_EMAIL`, `NEXT_PUBLIC_CONTACT_PHONE`. If used, these settings will add contact information to the About page and the Guest (unlogged-in user) page.
    - Set the `NEXT_PUBLIC_LOCATION_CODES_JSON` -- this is a JSON array (as a string) listing the in-house special collections locations used in the Alma catalog. Each array entry should be an object with the location code as "code" and the location name as "name". Optionally, you can also add `"unofficial":true` for entries that are not official locations in Alma. Example: `[{"code":"arcli","name":"Archives"},{"code":"mss","name":"Manuscript Collection"},{"code":"spcfo","name":"Folios"}]`. The locations listed here will be shown as options when creating a Custom Entry, and items from these locations will be sorted above other locations when looking up an item -- so if an item exists both in Special Collections and in the Main Stacks, the Special Collections item will appear higher in the display than the Main Stacks item. Unofficial locations are listed only when creating custom enties.
    - Edit `NEXT_PUBLIC_PROJECT_PURPOSES`. A project has a "purpose" associated with it, such as "class", "reference", etc. You can edit the list of purposes available based on the values defined in this array.
    - Edit `NEXT_PUBLIC_SUBJECT_LIST`. This is an array of subject areas; you will want to adapt the list in the template to subjects used at your institution. Subjects are optional for a project.
