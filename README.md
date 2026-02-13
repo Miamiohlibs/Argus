@@ -42,7 +42,13 @@ Connects with Ex Libris's Alma API; to allow call-number lookups, the Ex Libris 
 Set up a `.env` file in the root directory of the project. You can copy and paste the following template and edit it as appropriate. You can reorganize or comment out lines from the file with a hash-tag as needed.
 
 ```
+# Installation config
 NEXT_PUBLIC_APP_BASEPATH=/argus. # or whatever path you want to use; skip this to use /
+NEXT_PUBLIC_IS_DEV_ENV=false #when true, will display some ugly-useful JSON data on some results pages
+PORT=3333 # or whatever port you want to use
+NODE_ENV=development #or production -- note: production required to 'npm run build'; doesn't build under developement
+
+# External Services and APIs
 DATABASE_URL=postgresql://... # database connection string; I use Neon
 SHADOW_DATABASE_URL=postgresql://... # if hosting locally, you may need to specify a shadowdb for handling migrations
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
@@ -55,14 +61,16 @@ PRIMO_API_KEY=
 PRIMO_QUERYSTRING=tab=Everything&scope=MyInst_and_CI&vid=01OHIOLINK_MU:MU #use your tab, scope, and vid
 NEXT_PUBLIC_BARCODE_PREFIX=12345
 NEXT_PUBLIC_INST_CODE=4321
+
+# Local UI Customizations
 NEXT_PUBLIC_NAV_COLOR=primary #suggested: primary, dark, success (bootstrap theme colors suitable for light text)
 NEXT_PUBLIC_NAV_LABEL= #This text will be appended to the Argus logo text
-NEXT_PUBLIC_IS_DEV_ENV=false #when true, will display some ugly-useful JSON data on some results pages
+NEXT_PUBLIC_CONTACT_DEPT= #used in About & Guest page
+NEXT_PUBLIC_CONTACT_EMAIL= #used in About & Guest page
+NEXT_PUBLIC_CONTACT_PHONE= #used in About & Guest page
 NEXT_PUBLIC_LOCATION_CODES_JSON='[{"code":"arcli","name":"Archives"},{"code":"mss","name":"Manuscript Collection","unofficial":true},{"code":"spcfo","name":"Folios"}]' #this is a JSON string with an array of locations as [{code, name}] -- optionally, you can also add "unofficial:true" for entries that are not official locations in Alma; these locations are used only for Custom Entries. It does not need to be an exhaustive list of every location used in Alma, just the ones you want to be able to use for custom entries.
 NEXT_PUBLIC_PROJECT_PURPOSES='["Class","Conservation","Digitization","Event","Exhibit","Reference"]'
 NEXT_PUBLIC_SUBJECT_LIST='["Anthropology","Art and Architecture","Biology","Business","Chemistry and Biochemistry","Disability Studies","Economics","English","Environmental Sciences","History","Latin American Studies","Mathematics","Music","Political Science","Spanish and Portuguese","Theatre","Womens Gender and Sexuality Studies"]'
-PORT=3333 # or whatever port you want to use
-NODE_ENV=development #or production -- note: production required to 'npm run build'; doesn't build under developement
 
 ```
 
@@ -94,6 +102,7 @@ LOG_LEVEL=info #info is the default, choose from: error,warn,info,verbose,debug,
 6. Host the configured project on a server (could be hosted locally or on a third-party site like Heroku)
    - Note: for testing things out initially, you can skip this step and host the project on a personal computer.
 7. Add optional local customizations to the `.env` file.
+   - Set any or all local contact info settings: `NEXT_PUBLIC_CONTACT_DEPT`, `NEXT_PUBLIC_CONTACT_EMAIL`, `NEXT_PUBLIC_CONTACT_PHONE`. If used, these settings will add contact information to the About page and the Guest (unlogged-in user) page.
    - Set the `NEXT_PUBLIC_LOCATION_CODES_JSON` -- this is a JSON array (as a string) listing the in-house special collections locations used in the Alma catalog. Each array entry should be an object with the location code as "code" and the location name as "name". Optionally, you can also add `"unofficial":true` for entries that are not official locations in Alma. Example: `[{"code":"arcli","name":"Archives"},{"code":"mss","name":"Manuscript Collection"},{"code":"spcfo","name":"Folios"}]`. The locations listed here will be shown as options when creating a Custom Entry, and items from these locations will be sorted above other locations when looking up an item -- so if an item exists both in Special Collections and in the Main Stacks, the Special Collections item will appear higher in the display than the Main Stacks item. Unofficial locations are listed only when creating custom enties.
    - Edit `NEXT_PUBLIC_PROJECT_PURPOSES`. A project has a "purpose" associated with it, such as "class", "reference", etc. You can edit the list of purposes available based on the values defined in this array.
    - Edit `NEXT_PUBLIC_SUBJECT_LIST`. This is an array of subject areas; you will want to adapt the list in the template to subjects used at your institution. Subjects are optional for a project.
