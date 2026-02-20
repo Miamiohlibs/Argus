@@ -3,7 +3,7 @@
 import logger from '@/lib/logger';
 import type { RequestSlipProps } from '@/types/RequestSlipProps';
 import { getProjectPurposes } from '@/lib/utils';
-
+import styles from './RequestSlipHalfPageHtml.module.css';
 const projectPurposes = getProjectPurposes();
 export const RequestSlipHalfPage = ({
   author,
@@ -38,63 +38,92 @@ export const RequestSlipHalfPage = ({
       <></>
     );
   return (
-    <article>
-      <h1>Miami University Libraries</h1>
-      <p className="subhead">Special Collections & Archives Request Slip</p>
-      <h2>I. ITEM REQUESTED</h2>
-      <div className="row">
-        <div className="column">
+    <article className={styles.article}>
+      <h1 className={styles.h1}>Miami University Libraries</h1>
+      <p className={styles.subhead}>
+        Special Collections & Archives Request Slip
+      </p>
+      <h2 className={styles.h2}>I. ITEM REQUESTED</h2>
+      <div className={styles.row}>
+        <div className={styles.column}>
           <div>
-            <span className="label">Author:</span>{' '}
-            <span className="value">Baer, Elizabeth H</span>
+            <span className={styles.label}>Author:</span>{' '}
+            <span className={styles.value}>{author}</span>
           </div>
           <div>
-            <span className="label">Brief Title:</span>{' '}
-            <span className="value">
-              The history of the Miami University Libraries /
-            </span>
+            <span className={styles.label}>Brief Title:</span>{' '}
+            <span className={styles.value}>{title}</span>
           </div>
           <div>
-            <span className="label">Date of item:</span>{' '}
-            <span className="value">1997</span>
+            <span className={styles.label}>Date of item:</span>{' '}
+            <span className={styles.value}>{date}</span>
           </div>
+          {notes && (
+            <>
+              <h3 className={styles.h3}>Other Information</h3>
+              <div>{notes}</div>
+            </>
+          )}
         </div>
 
-        <div className="column">
-          <h3>Call Number</h3>
-          <div>Archives (arcli), Stacks (kngli)</div>
-          <div>Z733.M52 B347 1997</div>
+        <div className={styles.column}>
+          <h3 className={styles.h3}>Call Number</h3>
+          <div>{location}</div>
+          <div>{callNumber ?? ''}</div>
+          {ms && (
+            <div>
+              <span className={styles.label}>Manuscript #</span>{' '}
+              <span className={styles.value}>{ms}</span>
+            </div>
+          )}
+          {box && (
+            <div>
+              <span className={styles.label}>Box</span>{' '}
+              <span className={styles.value}>{box}</span>
+            </div>
+          )}
+          {folder && (
+            <div>
+              <span className={styles.label}>Folder</span>{' '}
+              <span className={styles.value}>{folder}</span>
+            </div>
+          )}
           <br />
-          <div>Volume:</div>
-          <div>
-            <b>Archives (arcli) (slip 1/5 for this bib record)</b>
-          </div>
+          {volumeLabel}
         </div>
+        {itemInfo?.map((item, i) => {
+          const counter =
+            i == highlightedItemIndex && itemInfo.length > 1
+              ? ` (slip ${i + 1}/${itemInfo.length} for this bib record)`
+              : '';
+          item += counter;
+          if (i == highlightedItemIndex) return <div key={i}>{item}</div>;
+        })}
       </div>
 
-      <h2>II. RESEARCHER INFORMATION</h2>
-      <div className="row researcher">
-        <div className="inner-column">
+      <h2 className={styles.h2}>II. RESEARCHER INFORMATION</h2>
+      <div className={`${styles.row} ${styles.researcher} `}>
+        <div className={styles.innerColumn}>
           <div>
-            <span className="label">Name:</span>
-            <span className="value">Ken Irwin</span>
+            <span className={styles.label}>Name:</span>
+            <span className={styles.value}>{userName}</span>
           </div>
         </div>
-        <div className="inner-column">
+        <div className={styles.innerColumn}>
           <div>
-            <span className="label">Email:</span>
-            <span className="value">irwinkr@miamioh.edu</span>
+            <span className={styles.label}>Email:</span>
+            <span className={styles.value}>{userEmail}</span>
           </div>
         </div>
-        <div className="inner-column">
+        <div className={styles.innerColumn}>
           <div>
-            <span className="label">Printed:</span>
-            <span className="value">2/17/2026</span>
+            <span className={styles.label}>Printed:</span>
+            <span className={styles.value}>2/17/2026</span>
           </div>
         </div>
       </div>
-      <div className="row">
-        <div className="column">
+      <div className={styles.row}>
+        <div className={styles.column}>
           <h3>Institution</h3>
           <div className="list-group">
             <div role="checkbox" aria-checked="true">
@@ -105,31 +134,55 @@ export const RequestSlipHalfPage = ({
             </div>
           </div>
         </div>
-        <div className="column-2">
-          <h3>Status</h3>
-          <div className="row">
-            <div className="inner-column">
-              <div className="list-group">
-                <div role="checkbox" aria-checked="false">
+        <div className={styles.column2}>
+          <h3 className={styles.h3}>Status</h3>
+          <div className={styles.row}>
+            <div className={styles.innerColumn}>
+              <div className={styles.listGroup}>
+                <div
+                  role="checkbox"
+                  aria-checked="false"
+                  className={styles.listGroupDiv}
+                >
                   Undergraduate
                 </div>
-                <div role="checkbox" aria-checked="false">
+                <div
+                  role="checkbox"
+                  aria-checked="false"
+                  className={styles.listGroupDiv}
+                >
                   Graduate
                 </div>
-                <div role="checkbox" aria-checked="false">
+                <div
+                  role="checkbox"
+                  aria-checked="false"
+                  className={styles.listGroupDiv}
+                >
                   Faculty
                 </div>
               </div>
             </div>
             <div className="inner-column">
               <div className="list-group">
-                <div role="checkbox" aria-checked="false">
+                <div
+                  role="checkbox"
+                  aria-checked="false"
+                  className={styles.listGroupDiv}
+                >
                   Alumni
                 </div>
-                <div role="checkbox" aria-checked="true">
+                <div
+                  role="checkbox"
+                  aria-checked="true"
+                  className={styles.listGroupDiv}
+                >
                   Staff
                 </div>
-                <div role="checkbox" aria-checked="false">
+                <div
+                  role="checkbox"
+                  aria-checked="false"
+                  className={styles.listGroupDiv}
+                >
                   Other
                 </div>
               </div>
@@ -138,58 +191,87 @@ export const RequestSlipHalfPage = ({
         </div>
       </div>
 
-      <h2>For Internal Use Only</h2>
-      <div className="row">
-        <div className="column">
-          <div className="list-group">
-            <div role="checkbox" aria-checked="false">
+      <h2 className={styles.h2}>For Internal Use Only</h2>
+      <div className={styles.row}>
+        <div className={styles.column}>
+          <div className={styles.listGroup}>
+            <div
+              role="checkbox"
+              aria-checked="false"
+              className={styles.listGroupDiv}
+            >
               Class
             </div>
-            <div role="checkbox" aria-checked="false">
+            <div
+              role="checkbox"
+              aria-checked="false"
+              className={styles.listGroupDiv}
+            >
               Conservation
             </div>
-            <div role="checkbox" aria-checked="true">
+            <div
+              role="checkbox"
+              aria-checked="true"
+              className={styles.listGroupDiv}
+            >
               Digitization
             </div>
-            <div role="checkbox" aria-checked="false">
+            <div
+              role="checkbox"
+              aria-checked="false"
+              className={styles.listGroupDiv}
+            >
               Event
             </div>
-            <div role="checkbox" aria-checked="false">
+            <div
+              role="checkbox"
+              aria-checked="false"
+              className={styles.listGroupDiv}
+            >
               Exhibit
             </div>
-            <div role="checkbox" aria-checked="false">
+            <div
+              role="checkbox"
+              aria-checked="false"
+              className={styles.listGroupDiv}
+            >
               Reference
             </div>
-            <div role="checkbox" aria-checked="false">
+            <div
+              role="checkbox"
+              aria-checked="false"
+              className={styles.listGroupDiv}
+            >
               Other
             </div>
           </div>
         </div>
-        <div className="column">
+        <div className={styles.column}>
           <div className="list-group">
             <div>
-              <span className="label">Slip pulled by:</span>{' '}
-              <span className="value"></span>
+              <span className={styles.label}>Slip pulled by:</span>{' '}
+              <span className={styles.value}></span>
             </div>
             <div>
-              <span className="label">Pulled by:</span>{' '}
-              <span className="value"></span>
+              <span className={styles.label}>Pulled by:</span>{' '}
+              <span className={styles.value}></span>
             </div>
           </div>
         </div>
-        <div className="column">
+        <div className={styles.column}>
           <div className="list-group">
             <div>
-              <span className="label">Reshelved by:</span>{' '}
-              <span className="value"></span>
+              <span className={styles.label}>Reshelved by:</span>{' '}
+              <span className={styles.value}></span>
             </div>
             <div>
-              <span className="label">Reshelved on date:</span>{' '}
-              <span className="value"></span>
+              <span className={styles.label}>Reshelved on date:</span>{' '}
+              <span className={styles.value}></span>
             </div>
           </div>
         </div>
       </div>
+      <hr />
     </article>
   );
 };

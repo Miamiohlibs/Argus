@@ -1,0 +1,60 @@
+.article { font-family: 'Times New Roman', Times, serif;}
+        .sheet > .article:nth-child(odd) { border-bottom: 1px dashed lightgrey; }
+        .sheet > .article:nth-child(even) { padding-top: 5mm;}
+             .h1 { font-size: 5mm;text-align: center; margin-top: 0; margin-bottom: 0; }
+        .h2 { font-size: 4mm; margin-top: 2mm; margin-bottom: 0 ;}
+        .h3, .h4, .p, .column .div, .inner-column .div { font-size: 3.5mm; margin-bottom: 0; margin-top: 0}
+        .h4, .p { margin-top: 0; }
+        .subhead { font-weight: bold; text-align: center; margin-top: 0;}
+        .researcher { background-color: #eee;
+                -webkit-print-color-adjust: exact !important; /* For Chrome, Safari, Edge (Blink/WebKit) */
+        print-color-adjust: exact !important; /* Standard property for Firefox and others */
+}
+
+        .row {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            width: 100%;
+        }
+
+        .column {
+            display: flex;
+            flex-direction: column;
+            flex-basis: 100%;
+            flex: 1;
+            border: 2px solid black;
+            padding: 1mm;
+        }
+        .column2 {
+            display: flex;
+            flex-direction: column;
+            flex-basis: 100%;
+            flex: 2;
+            border: 2px solid black;
+            padding: 1mm;
+        }
+        .innerColumn {
+            display: flex;
+            flex-direction: column;
+            flex-basis: 100%;
+            flex: 1;
+            padding: 1mm;
+        }
+        .value { font-weight: bold;}
+
+        .listGroupDiv { padding: 0; }
+
+        .listGroupDiv[aria-checked="true"]::before {
+            /* content: "[x]";  */
+            content: "■ ";
+            line-height: .8;
+            /* note: line-height change because the symbol messes with line-height */
+        }
+
+        .listGroupDiv[aria-checked="false"]::before {
+            content: "[ ]"; 
+            content: "☐ "; 
+            line-height: .8;
+            /* note: line-height change because the symbol messes with line-height */
+        }
