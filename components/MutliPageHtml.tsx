@@ -1,0 +1,37 @@
+import { RequestSlipProps } from '@/types/RequestSlipProps';
+// import { RequestSlipHalfPage } from './RequestSlipHalfPage';
+import { RequestSlipHalfPage } from './RequestSlipHalfPageHtml';
+// This component is called by: app/api/slipsPdf/[...slub]/route.tsx
+// That is where the data comes from
+// This component repeatedly calls RequestSlipHalfPage to print each page
+
+export const MultiPageHtml = ({ books }: { books: RequestSlipProps[] }) => {
+  // get pairs of books to pass to <RequestSlipPage />
+  const pairsArr = books
+    .map((element, index, array) => {
+      if (index % 2 == 0) {
+        if (array[index + 1] !== undefined) {
+          return [element, array[index + 1]];
+        } else {
+          return [element];
+        }
+      } else {
+        return null;
+      }
+    })
+    .filter((entry) => Array.isArray(entry));
+
+  return (
+    <>
+      {/*} document-level wrapper */}
+      {pairsArr.map((pair, i) => {
+        return (
+          <div className="sheet-outer letter">
+            <RequestSlipHalfPage {...pair[0]} />
+            {pair[1] && <RequestSlipHalfPage {...pair[1]} />}
+          </div>
+        );
+      })}
+    </>
+  );
+};
