@@ -29,16 +29,14 @@ export const RequestSlipHalfPage = ({
   logger.verbose(`Added fields: ${userStatus}`);
   const volumeLabel = // only show if items to show
     itemInfo && itemInfo.length > 1 ? (
-      <>
-        <br />
-        <span>Volume(s):</span>
-        <br />
-      </>
+      <div className={styles.bold}>Volume(s):</div>
     ) : (
       <></>
     );
   return (
-    <article className={styles.article}>
+    <article
+      className={`${styles.sheetOuterLetterArticle} ${styles.sheetArticle}`}
+    >
       <h1 className={styles.h1}>Miami University Libraries</h1>
       <p className={styles.subhead}>
         Special Collections & Archives Request Slip
@@ -61,15 +59,15 @@ export const RequestSlipHalfPage = ({
           {notes && (
             <>
               <h3 className={styles.h3}>Other Information</h3>
-              <div>{notes}</div>
+              <div className={styles.text}>{notes}</div>
             </>
           )}
         </div>
 
         <div className={styles.column}>
           <h3 className={styles.h3}>Call Number</h3>
-          <div>{location}</div>
-          <div>{callNumber ?? ''}</div>
+          <div className={styles.text}>{location}</div>
+          <div className={styles.text}>{callNumber ?? ''}</div>
           {ms && (
             <div>
               <span className={styles.label}>Manuscript #</span>{' '}
@@ -90,15 +88,20 @@ export const RequestSlipHalfPage = ({
           )}
           <br />
           {volumeLabel}
+          {itemInfo?.map((item, i) => {
+            const counter =
+              i == highlightedItemIndex && itemInfo.length > 1
+                ? ` (slip ${i + 1}/${itemInfo.length} for this bib record)`
+                : '';
+            item += counter;
+            if (i == highlightedItemIndex)
+              return (
+                <div key={i} className={styles.text}>
+                  {item}
+                </div>
+              );
+          })}
         </div>
-        {itemInfo?.map((item, i) => {
-          const counter =
-            i == highlightedItemIndex && itemInfo.length > 1
-              ? ` (slip ${i + 1}/${itemInfo.length} for this bib record)`
-              : '';
-          item += counter;
-          if (i == highlightedItemIndex) return <div key={i}>{item}</div>;
-        })}
       </div>
 
       <h2 className={styles.h2}>II. RESEARCHER INFORMATION</h2>
@@ -126,10 +129,18 @@ export const RequestSlipHalfPage = ({
         <div className={styles.column}>
           <h3>Institution</h3>
           <div className="list-group">
-            <div role="checkbox" aria-checked="true">
+            <div
+              role="checkbox"
+              aria-checked="true"
+              className={styles.listGroupDiv}
+            >
               Miami University
             </div>
-            <div role="checkbox" aria-checked="false">
+            <div
+              role="checkbox"
+              aria-checked="false"
+              className={styles.listGroupDiv}
+            >
               Other
             </div>
           </div>
@@ -271,7 +282,6 @@ export const RequestSlipHalfPage = ({
           </div>
         </div>
       </div>
-      <hr />
     </article>
   );
 };
