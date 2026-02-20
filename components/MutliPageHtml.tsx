@@ -26,7 +26,7 @@ export const MultiPageHtml = ({ books }: { books: RequestSlipProps[] }) => {
       {/*} document-level wrapper */}
       {pairsArr.map((pair, i) => {
         return (
-          <div className="sheet-outer letter">
+          <div className="sheet-outer letter" key={i}>
             <RequestSlipHalfPage {...pair[0]} />
             {pair[1] && <RequestSlipHalfPage {...pair[1]} />}
           </div>
