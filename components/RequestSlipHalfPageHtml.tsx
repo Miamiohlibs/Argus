@@ -5,6 +5,15 @@ import type { RequestSlipProps } from '@/types/RequestSlipProps';
 import { getProjectPurposes } from '@/lib/utils';
 import styles from './RequestSlipHalfPageHtml.module.css';
 const projectPurposes = getProjectPurposes();
+
+function shortenString(str: string, maxChars: number = 100) {
+  let newStr = str.substring(0, maxChars - 3);
+  if (newStr !== str) {
+    newStr += '...';
+  }
+  return newStr;
+}
+
 export const RequestSlipHalfPage = ({
   author,
   title,
@@ -46,11 +55,15 @@ export const RequestSlipHalfPage = ({
         <div className={styles.column}>
           <div>
             <span className={styles.label}>Author:</span>{' '}
-            <span className={styles.value}>{author}</span>
+            <span className={styles.value}>
+              {author && shortenString(author)}
+            </span>
           </div>
           <div>
             <span className={styles.label}>Brief Title:</span>{' '}
-            <span className={styles.value}>{title}</span>
+            <span className={styles.value}>
+              {title && shortenString(title)}
+            </span>
           </div>
           <div>
             <span className={styles.label}>Date of item:</span>{' '}
