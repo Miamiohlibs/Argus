@@ -1,10 +1,8 @@
 // app/pdf/RequestSlipPage.tsx
-// called by ./MultipagePdf with one bib's data
-import logger from '@/lib/logger';
+// called by ./MultipageHtml with one bib's data
+'use client';
 import type { RequestSlipProps } from '@/types/RequestSlipProps';
-import { getProjectPurposes } from '@/lib/utils';
 import styles from './RequestSlipHalfPageHtml.module.css';
-const projectPurposes = getProjectPurposes();
 
 function shortenString(str: string, maxChars: number = 100) {
   let newStr = str.substring(0, maxChars - 3);
@@ -34,8 +32,8 @@ export const RequestSlipHalfPage = ({
   projectName,
   purpose,
 }: RequestSlipProps) => {
-  logger.verbose('Item Info', itemInfo);
-  logger.verbose(`Added fields: ${userStatus}`);
+  // console.log('Item Info', itemInfo);
+  // console.log(`Added fields: ${userStatus}`);
   const volumeLabel = // only show if items to show
     itemInfo && itemInfo.length > 1 ? (
       <div className={styles.bold}>Volume(s):</div>
