@@ -134,13 +134,15 @@ export const RequestSlipHalfPage = ({
         <div className={styles.innerColumn}>
           <div>
             <span className={styles.label}>Printed:</span>
-            <span className={styles.value}>2/17/2026</span>
+            <span className={styles.value}>
+              {new Date().toLocaleDateString()}
+            </span>
           </div>
         </div>
       </div>
       <div className={styles.row}>
         <div className={styles.column}>
-          <h3>Institution</h3>
+          <h3 className={styles.h3}>Institution</h3>
           <div className="list-group">
             <div
               role="checkbox"
@@ -186,8 +188,8 @@ export const RequestSlipHalfPage = ({
                 </div>
               </div>
             </div>
-            <div className="inner-column">
-              <div className="list-group">
+            <div className={styles.innerColumn}>
+              <div className={styles.listGroup}>
                 <div
                   role="checkbox"
                   aria-checked="false"
