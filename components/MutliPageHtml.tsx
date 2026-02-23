@@ -22,6 +22,8 @@ export const MultiPageHtml = ({ books }: { books: RequestSlipProps[] }) => {
     })
     .filter((entry) => Array.isArray(entry));
 
+  pairsArr[0][0].displayPrintButton = true; // display print at top of first page
+
   return (
     <>
       {/*} document-level wrapper */}

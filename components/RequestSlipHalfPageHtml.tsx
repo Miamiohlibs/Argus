@@ -2,6 +2,7 @@
 // called by ./MultipageHtml with one bib's data
 'use client';
 import type { RequestSlipProps } from '@/types/RequestSlipProps';
+import { Button } from 'react-bootstrap';
 import styles from './RequestSlipHalfPageHtml.module.css';
 
 function shortenString(str: string, maxChars: number = 100) {
@@ -11,6 +12,20 @@ function shortenString(str: string, maxChars: number = 100) {
   }
   return newStr;
 }
+
+const PrintButton: React.FC = () => {
+  const handlePrint = () => {
+    window.print(); // Triggers the browser's print dialog for the entire page
+  };
+
+  return (
+    <>
+      <Button onClick={handlePrint} className="hideOnPrint">
+        Print this document
+      </Button>
+    </>
+  );
+};
 
 export const RequestSlipHalfPage = ({
   author,
@@ -31,6 +46,7 @@ export const RequestSlipHalfPage = ({
   personPrinting,
   projectName,
   purpose,
+  displayPrintButton,
 }: RequestSlipProps) => {
   // console.log('Item Info', itemInfo);
   // console.log(`Added fields: ${userStatus}`);
@@ -44,6 +60,7 @@ export const RequestSlipHalfPage = ({
     <article
       className={`${styles.sheetOuterLetterArticle} ${styles.sheetArticle}`}
     >
+      {displayPrintButton && <PrintButton>Print</PrintButton>}
       <h1 className={styles.h1}>Miami University Libraries</h1>
       <p className={styles.subhead}>
         Special Collections & Archives Request Slip
