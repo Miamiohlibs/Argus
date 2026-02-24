@@ -64,7 +64,7 @@ export const RequestSlipHalfPage = ({
   // console.log(`Added fields: ${userStatus}`);
   const volumeLabel = // only show if items to show
     itemInfo && itemInfo.length > 1 ? (
-      <div className={styles.bold}>Volume(s):</div>
+      <div className={`${styles.bold} ${styles.text}`}>Volume(s):</div>
     ) : (
       <></>
     );
@@ -126,7 +126,6 @@ export const RequestSlipHalfPage = ({
               <span className={styles.value}>{folder}</span>
             </div>
           )}
-          <br />
           {volumeLabel}
           {itemInfo?.map((item, i) => {
             const counter =
