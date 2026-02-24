@@ -27,7 +27,7 @@
         box-shadow: 0 .5mm 2mm rgba(0,0,0,.3); 
         margin: 5mm auto;
         margin-top: 50px;
-        /* border: 1px solid red */
+        margin-left: 10px;
     }
 }
 
