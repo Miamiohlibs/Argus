@@ -4,6 +4,12 @@
 import type { RequestSlipProps } from '@/types/RequestSlipProps';
 import { Button } from 'react-bootstrap';
 import styles from './RequestSlipHalfPageHtml.module.css';
+import { Roboto } from 'next/font/google';
+
+export const roboto = Roboto({
+  weight: '400',
+  subsets: ['latin'],
+});
 
 function shortenString(str: string, maxChars: number = 100) {
   let newStr = str.substring(0, maxChars - 3);
@@ -13,19 +19,20 @@ function shortenString(str: string, maxChars: number = 100) {
   return newStr;
 }
 
-interface PrintButtonProps {
-  styles: Record<string, string>;
-  children?: React.ReactNode;
-}
-
-const PrintButton: React.FC<PrintButtonProps> = ({ styles, children }) => {
+const PrintButton: React.FC<{ children?: React.ReactNode }> = ({
+  children,
+}) => {
   const handlePrint = () => {
     window.print(); // Triggers the browser's print dialog for the frame
   };
 
   return (
     <>
-      <Button onClick={handlePrint} className={styles.hideOnPrint}>
+      <Button
+        size="sm"
+        onClick={handlePrint}
+        className={`${styles.hideOnPrint} ${roboto.className}`}
+      >
         {children ?? 'Print this document'}
       </Button>
     </>
@@ -65,7 +72,7 @@ export const RequestSlipHalfPage = ({
     <article
       className={`${styles.sheetOuterLetterArticle} ${styles.sheetArticle}`}
     >
-      {displayPrintButton && <PrintButton styles={styles}>Print</PrintButton>}
+      {displayPrintButton && <PrintButton>Print</PrintButton>}
       <h1 className={styles.h1}>Miami University Libraries</h1>
       <p className={styles.subhead}>
         Special Collections & Archives Request Slip
