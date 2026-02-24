@@ -1,6 +1,6 @@
 'use server';
 import { Metadata } from 'next';
-import ClientIframe from './ClientIframe';
+import ClientMultiPagePdf from './ClientMultipagePdf';
 import { unauthorized } from 'next/navigation';
 import getUserInfo from '@/lib/getUserInfo';
 import { getProject } from '@/app/actions/projectActions';
@@ -31,7 +31,7 @@ export default async function PdfWrapper({ params }: PageProps) {
     <>
       {project && <ProjectMetadata project={project} />}
       <ProjectButtons projectId={parseInt(id)} onPage="slips" divClass="mb-4" />
-      <ClientIframe />
+      <ClientMultiPagePdf />
     </>
   );
 }
