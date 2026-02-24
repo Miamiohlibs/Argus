@@ -6,7 +6,7 @@ import { Button } from 'react-bootstrap';
 import styles from './RequestSlipHalfPageHtml.module.css';
 import { Roboto } from 'next/font/google';
 
-export const roboto = Roboto({
+const roboto = Roboto({
   weight: '400',
   subsets: ['latin'],
 });

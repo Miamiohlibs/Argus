@@ -2,7 +2,7 @@ import { Roboto } from 'next/font/google';
 import '@/app/styles/custom-bootstrap.scss';
 import styles from './print-layout.module.css';
 
-export const roboto = Roboto({
+const roboto = Roboto({
   weight: '400',
   subsets: ['latin'],
 });
