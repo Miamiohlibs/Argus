@@ -58,7 +58,7 @@ export const RequestSlipHalfPage = ({
   personPrinting,
   projectName,
   purpose,
-  // displayPrintButton,
+  displayPrintButton,
 }: RequestSlipProps) => {
   // console.log('Item Info', itemInfo);
   // console.log(`Added fields: ${userStatus}`);
@@ -72,7 +72,7 @@ export const RequestSlipHalfPage = ({
     <article
       className={`${styles.sheetOuterLetterArticle} ${styles.sheetArticle}`}
     >
-      {<PrintButton>Print</PrintButton>}
+      {displayPrintButton && <PrintButton>Print</PrintButton>}
       <h1 className={styles.h1}>Miami University Libraries</h1>
       <p className={styles.subhead}>
         Special Collections & Archives Request Slip
