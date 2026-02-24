@@ -114,3 +114,9 @@
   line-height: .8;
   /* note: line-height change because the symbol messes with line-height */
 }
+
+@media print {
+  .hideOnPrint {
+    display: none !important;
+  }
+}

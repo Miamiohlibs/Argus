@@ -13,15 +13,20 @@ function shortenString(str: string, maxChars: number = 100) {
   return newStr;
 }
 
-const PrintButton: React.FC = () => {
+interface PrintButtonProps {
+  styles: Record<string, string>;
+  children?: React.ReactNode;
+}
+
+const PrintButton: React.FC<PrintButtonProps> = ({ styles, children }) => {
   const handlePrint = () => {
-    window.print(); // Triggers the browser's print dialog for the entire page
+    window.print(); // Triggers the browser's print dialog for the frame
   };
 
   return (
     <>
-      <Button onClick={handlePrint} className="hideOnPrint">
-        Print this document
+      <Button onClick={handlePrint} className={styles.hideOnPrint}>
+        {children ?? 'Print this document'}
       </Button>
     </>
   );
@@ -60,7 +65,7 @@ export const RequestSlipHalfPage = ({
     <article
       className={`${styles.sheetOuterLetterArticle} ${styles.sheetArticle}`}
     >
-      {displayPrintButton && <PrintButton>Print</PrintButton>}
+      {displayPrintButton && <PrintButton styles={styles}>Print</PrintButton>}
       <h1 className={styles.h1}>Miami University Libraries</h1>
       <p className={styles.subhead}>
         Special Collections & Archives Request Slip
