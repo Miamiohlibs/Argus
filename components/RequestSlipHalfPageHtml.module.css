@@ -115,8 +115,15 @@
   /* note: line-height change because the symbol messes with line-height */
 }
 
+@media screen {
+  .printButton { 
+    position: fixed; 
+    z-index: 1;
+  }
+}
+
 @media print {
-  .hideOnPrint {
+  .printButton {
     display: none !important;
   }
 }

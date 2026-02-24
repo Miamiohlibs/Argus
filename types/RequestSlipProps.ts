@@ -24,5 +24,5 @@ export type RequestSlipProps = {
   personPrinting?: string;
   projectName?: string;
   purpose: string | undefined;
-  displayPrintButton?: boolean;
+  // displayPrintButton?: boolean;
 };
