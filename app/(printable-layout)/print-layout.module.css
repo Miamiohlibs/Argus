@@ -1,0 +1,14 @@
+@page {
+    size: letter;
+    margin: 0
+}
+
+.noMargin {
+    margin: 0;
+}
+
+@media print {
+#print-root {
+    display: contents !important;
+  }
+}

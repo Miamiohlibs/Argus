@@ -1,0 +1,42 @@
+/* body { margin: 0 } */
+.sheetOuter {
+    margin: 0;
+}
+.sheetOuterLetterSheet {
+  width: 216mm;
+  height: 280mm;
+}
+.sheet {
+    margin: 0;
+    overflow: hidden;
+    position: relative;
+    box-sizing: border-box;
+    page-break-after: always;
+    /* outline: 3mm black solid;
+    outline-offset: -3mm; */
+}
+.sheetPadding5mm { padding: 5mm }
+
+@media screen {
+    /* body { 
+        background: #e0e0e0 
+    } */
+   
+    .sheet {
+        background: white;
+        box-shadow: 0 .5mm 2mm rgba(0,0,0,.3); 
+        margin: 5mm auto;
+        margin-top: 50px;
+        margin-left: 10px;
+    }
+}
+
+@page {
+    size: letter;
+    margin: 0
+}
+@media print {
+    .sheetOuterLetter { 
+        width: 216mm 
+    }
+}

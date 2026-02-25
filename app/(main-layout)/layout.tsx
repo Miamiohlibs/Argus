@@ -3,7 +3,7 @@ import { Roboto } from 'next/font/google';
 // import 'bootstrap/dist/css/bootstrap.min.css';
 // import './styles/custom-bootstrap.scss';
 import '@/app/styles/custom-bootstrap.scss';
-import './(main-layout)/globals.css';
+import './globals.css';
 import { ClerkProvider } from '@clerk/nextjs';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';

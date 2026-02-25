@@ -7,7 +7,7 @@ export default function MultiPagePdf() {
     <div style={{ height: '100vh' }}>
       <iframe
         src={`${process.env.NEXT_PUBLIC_APP_BASEPATH ?? ''}/api/demoPdf`}
-        title="Data Driven Pdf"
+        title="Pull Slips for Printing"
         style={{ width: '100%', height: '100%', border: 'none' }}
       />
     </div>
