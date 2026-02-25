@@ -6,9 +6,20 @@ export default async function MePage() {
   const { user, error: userError } = await getCurrentUser();
   const { projects, error: projectError } = await getProjects();
 
+  const projectsAsOwner = projects?.filter((p) => p.user.id == user?.id);
+  const projectsAsCoEditor = projects?.filter((p) =>
+    p.coEditors.some((coEditor) => coEditor.id == user?.id),
+  );
+
   return (
     <>
-      {user && <UserDiagnosticInfo user={user} projects={projects ?? []} />}
+      {user && (
+        <UserDiagnosticInfo
+          user={user}
+          projectsAsOwner={projectsAsOwner ?? []}
+          projectsCoEditor={projectsAsCoEditor ?? []}
+        />
+      )}
       {process.env.NODE_ENV == 'development' && (
         <>
           <h2 className="mt-5">JSON</h2>

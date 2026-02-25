@@ -6,13 +6,31 @@ type ProjectWithUser = Prisma.ProjectGetPayload<{
   include: { user: true; coEditors: true };
 }>;
 
+function projectsList(projects: ProjectWithUser[]) {
+  return (
+    <ul>
+      {projects.map((project, i) => {
+        return (
+          <li key={i}>
+            <Link href={`/project/${project.id}`}>{project.title}</Link>
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+
 export default function UserDiagnosticInfo({
   user,
-  projects,
+  projectsAsOwner,
+  projectsCoEditor,
 }: {
   user: User;
-  projects: ProjectWithUser[];
+  projectsAsOwner: ProjectWithUser[];
+  projectsCoEditor: ProjectWithUser[];
 }) {
+  const ownerProjectsList = projectsList(projectsAsOwner);
+  const coEditorProjectsList = projectsList(projectsCoEditor);
   return (
     <>
       <h1>User: {user.name}</h1>
@@ -51,16 +69,11 @@ export default function UserDiagnosticInfo({
           </span>
         </li>
       </ul>
-      <h2>Projects</h2>
-      <ul>
-        {projects.map((project, i) => {
-          return (
-            <li key={i}>
-              <Link href={`/project/${project.id}`}>{project.title}</Link>
-            </li>
-          );
-        })}
-      </ul>
+      {projectsAsOwner.length > 0 && <h2>Projects as Owner</h2>}
+      {projectsAsOwner.length > 0 && ownerProjectsList}
+
+      {projectsCoEditor.length > 0 && <h2>Projects as CoEditor</h2>}
+      {projectsCoEditor.length > 0 && coEditorProjectsList}
     </>
   );
 }
