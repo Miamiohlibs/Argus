@@ -1,12 +1,5 @@
 // app/api/slipsPdf/[...slug]/route.tsx
 import logger from '@/lib/logger';
-import { NextRequest, NextResponse } from 'next/server';
-import { renderToStream } from '@react-pdf/renderer';
-import { RequestSlipProps } from '@/types/RequestSlipProps';
-import { MultiPagePdf } from '@/components/MultipagePdf';
-import getEntries from '@/app/actions/getEntries';
-import { getProject } from '@/app/actions/projectActions';
-import filenamify from 'filenamify';
 import { checkUser } from '@/lib/checkUser';
 import { isAllowedUserStatus, isAllowedAffiliation } from '@/lib/typeChecker';
 import { EntryWithItems } from '@/types/EntryWithItems';
