@@ -10,7 +10,7 @@ import ProjectButtons from '@/components/ProjectButtons';
 export async function generateMetadata(): Promise<Metadata> {
   return {
     title: 'Print Slips | Argus',
-    description: 'Print PDF slips for each project item',
+    description: 'Print slips for each project item',
   };
 }
 

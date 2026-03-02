@@ -17,7 +17,7 @@ export default function ClientQuickPages({
     ),
   ).toString();
 
-  // console.log(`***** Query string in ClientPdf: ${queryString}`);
+  // console.log(`***** Query string in ClientQuickPages: ${queryString}`);
 
   return (
     <div style={{ height: '100vh' }}>
