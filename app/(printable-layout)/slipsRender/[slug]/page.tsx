@@ -1,7 +1,7 @@
 // File: (printable-layout)/slipsRender/[slug]/page.tsx
 'use server';
 import logger from '@/lib/logger';
-import { MultiPageHtml } from '@/components/MutliPageHtml';
+import { MultiPageHtml } from '@/components/MultiPageHtml';
 import getEntries from '@/app/actions/getEntries';
 import { getProject } from '@/app/actions/projectActions';
 import { checkUser } from '@/lib/checkUser';

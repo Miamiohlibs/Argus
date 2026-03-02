@@ -8,7 +8,7 @@ import generateRequestSlipItems from '@/lib/generateRequestSlipItems';
 import { ItemEntry } from '@prisma/client';
 import { ItemEntry as ItemEntryZod } from '@/zod/ItemEntry';
 import { getLocationNameFromCode } from '@/lib/locationCodes';
-import { MultiPageHtml } from '@/components/MutliPageHtml';
+import { MultiPageHtml } from '@/components/MultiPageHtml';
 
 function createItemFromReq({
   params,
@@ -257,15 +257,4 @@ export default async function RenderQuickSlip({
   // console.log('****** BibEntries:', JSON.stringify(items, null, 2));
 
   return <MultiPageHtml books={items} />;
-  //   const stream = await renderToStream(<MultiPagePdf books={items} />);
-  //   const filenameBasis = 'Quick Slip';
-  //   //   const filenameBasis = item.title ?? 'Quick Slip';
-  //   const filename = filenamify(filenameBasis);
-
-  //   return new NextResponse(stream as any, {
-  //     headers: {
-  //       'Content-Type': 'application/pdf',
-  //       'Content-Disposition': `inline; filename="${filename}.pdf"`,
-  //     },
-  //   });
 }
