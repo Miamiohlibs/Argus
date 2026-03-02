@@ -1,3 +1,4 @@
+// File: (printable-layout)/slipsRender
 'use server';
 // app/api/slipsPdf/[...slug]/route.tsx
 import logger from '@/lib/logger';
