@@ -1,4 +1,4 @@
-// app/api/slipsPdf/[...slug]/route.tsx
+// app/(printable-layout)/slipsRender/quickSlip/page.tsx
 import logger from '@/lib/logger';
 import { checkUser } from '@/lib/checkUser';
 import { isAllowedUserStatus, isAllowedAffiliation } from '@/lib/typeChecker';
