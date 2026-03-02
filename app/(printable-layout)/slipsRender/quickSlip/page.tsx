@@ -226,30 +226,32 @@ function createItemFromReq({
 export default async function RenderQuickSlip({
   searchParams,
 }: {
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const user = await checkUser();
-
+  let selectedItemObjects: ItemEntry[] = [];
   // const params = Object.fromEntries(req.nextUrl.searchParams.entries());
 
-  const rawSelected = searchParams['selectedItems[]'];
+  const searchParamsResolved = await searchParams;
+  if (searchParamsResolved.hasOwnProperty('selectedItems[]')) {
+    const rawSelected = searchParamsResolved['selectedItems[]'];
+    // normalize the array
+    const selectedArray = Array.isArray(rawSelected)
+      ? rawSelected
+      : rawSelected
+        ? [rawSelected]
+        : [];
 
-  // normalize the array
-  const selectedArray = Array.isArray(rawSelected)
-    ? rawSelected
-    : rawSelected
-      ? [rawSelected]
-      : [];
-
-  const selectedItemObjects = selectedArray.map((item) => {
-    const itemObj: any = JSON.parse(item);
-    itemObj.id = itemObj.item_id; //.replace('item-', '');
-    return ItemEntryZod.parse(itemObj);
-  });
+    selectedItemObjects = selectedArray.map((item) => {
+      const itemObj: any = JSON.parse(item);
+      itemObj.id = itemObj.item_id; //.replace('item-', '');
+      return ItemEntryZod.parse(itemObj);
+    });
+  }
 
   // return <pre>{JSON.stringify(selectedItemObjects, null, 2)}</pre>;
   const { bib, project } = createItemFromReq({
-    params: searchParams,
+    params: searchParamsResolved,
     selectedItemObjects,
   });
 
