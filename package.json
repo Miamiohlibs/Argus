@@ -14,7 +14,6 @@
     "@clerk/nextjs": "^6.27.1",
     "@kenxirwin/alma-search": "^0.2.0",
     "@prisma/client": "^6.13.0",
-    "@react-pdf/renderer": "^4.3.0",
     "bootstrap": "^5.3.7",
     "datatables.net-dt": "^2.3.2",
     "datatables.net-react": "^1.0.1",
