@@ -1,11 +1,9 @@
+// File: (printable-layout)/slipsRender/[slug]/page.tsx
 'use server';
-// app/api/slipsPdf/[...slug]/route.tsx
 import logger from '@/lib/logger';
-// import { MultiPagePdf } from '@/components/MultipagePdf';
-import { MultiPageHtml } from '@/components/MutliPageHtml';
+import { MultiPageHtml } from '@/components/MultiPageHtml';
 import getEntries from '@/app/actions/getEntries';
 import { getProject } from '@/app/actions/projectActions';
-// import filenamify from 'filenamify';
 import { checkUser } from '@/lib/checkUser';
 import generateRequestSlipItems from '@/lib/generateRequestSlipItems';
 

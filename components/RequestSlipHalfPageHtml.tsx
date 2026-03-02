@@ -1,5 +1,5 @@
-// app/pdf/RequestSlipPage.tsx
-// called by ./MultipageHtml with one bib's data
+// components/RequestSlipHalfPageHtml.tsx
+// called by ./MultiPageHtml with one bib's data
 'use client';
 import type { RequestSlipProps } from '@/types/RequestSlipProps';
 import { Button } from 'react-bootstrap';
