@@ -1,7 +1,6 @@
 'use server';
 import logger from '@/lib/logger';
 import { db } from '@/lib/db';
-// import { User } from '@/types/User';
 import { User } from '@prisma/client';
 import { auth } from '@clerk/nextjs/server';
 
