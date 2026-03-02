@@ -18,7 +18,7 @@ type PageProps = {
   params: Promise<{ id: string; specificBibEntry: string }>;
 };
 
-export default async function PdfWrapper({ params }: PageProps) {
+export default async function PagesWrapper({ params }: PageProps) {
   const { id, specificBibEntry } = await params;
   const { project, error } = await getProject({ id });
   const {
