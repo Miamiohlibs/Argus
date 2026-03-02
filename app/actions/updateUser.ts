@@ -1,12 +1,11 @@
 'use server';
 import logger from '@/lib/logger';
 import { db } from '@/lib/db';
-// import { User } from '@/types/User';
 import { User } from '@prisma/client';
 
 async function updateUser(
   id: string,
-  data: Partial<User>
+  data: Partial<User>,
 ): Promise<{ user?: User; error?: string }> {
   try {
     const updatedUser = await db.user.update({

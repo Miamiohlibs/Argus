@@ -7,11 +7,10 @@ import { toast } from 'react-toastify';
 import { useEffect, useState } from 'react';
 // import { useRouter } from 'next/navigation'; // Changed from react-router-dom
 import { Project } from '@prisma/client';
-import { ProjectData } from '@/types/ProjectData';
 import { getProjectPurposes, getSubjects } from '@/lib/utils';
 
 type ProjectActionResult =
-  | { success: true; data: ProjectData; error?: never }
+  | { success: true; data: Project; error?: never }
   | { success: false; error: string; data?: never };
 
 interface ProjectFormProps {
@@ -20,7 +19,7 @@ interface ProjectFormProps {
   basePath: string | null;
   action: (
     prevState: unknown,
-    formData: FormData
+    formData: FormData,
   ) => Promise<ProjectActionResult>;
 
   // onSubmit: (formData: FormData) => Promise<void>;
@@ -35,13 +34,13 @@ export default function ProjectForm({
 }: ProjectFormProps) {
   const [state, formAction] = useActionState(action, null);
   const [selectedPurpose, setSelectedPurpose] = useState<string>(
-    project?.purpose ?? ''
+    project?.purpose ?? '',
   );
   const [selectedPublic, setSelectedPublic] = useState<boolean>(
-    project?.public ?? false
+    project?.public ?? false,
   );
   const [selectedSubject, setSelectedSubject] = useState<string>(
-    project?.subjects[0] ?? 'None'
+    project?.subjects[0] ?? 'None',
   );
 
   if (basePath === null) {
@@ -52,13 +51,13 @@ export default function ProjectForm({
   useEffect(() => {
     if (state?.error) {
       toast.error(
-        project ? 'Project update failed' : 'Project creation failed'
+        project ? 'Project update failed' : 'Project creation failed',
       );
     } else if (state?.data) {
       toast.success(
         project
           ? 'Project updated successfully'
-          : 'Project created successfully'
+          : 'Project created successfully',
       );
       // Client-side redirect after showing toast
       setTimeout(() => {

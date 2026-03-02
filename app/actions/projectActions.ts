@@ -4,7 +4,7 @@ import { db } from '@/lib/db';
 import getUserInfo from '@/lib/getUserInfo';
 import { getPermissions } from '@/lib/getUserInfo';
 import type { Prisma } from '@prisma/client';
-import { ProjectData } from '@/types/ProjectData';
+import { Project } from '@prisma/client';
 import type { ProjectWithUserAndBib } from '@/types/ProjectWithUserAndBib';
 import entryAction from './addEntry';
 import { ItemEntry } from '@prisma/client';
@@ -15,7 +15,7 @@ type ProjectWithUser = Prisma.ProjectGetPayload<{
 }>;
 
 type ProjectActionResult =
-  | { success: true; data: ProjectData; error?: never }
+  | { success: true; data: Project; error?: never }
   | { success: false; error: string; data?: never };
 
 export async function createProject(
