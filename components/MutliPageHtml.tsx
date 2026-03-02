@@ -1,8 +1,8 @@
 import { RequestSlipProps } from '@/types/RequestSlipProps';
-// import { RequestSlipHalfPage } from './RequestSlipHalfPage';
 import { RequestSlipHalfPage } from './RequestSlipHalfPageHtml';
 import styles from './MultiPageHtml.module.css';
-// This component is called by: app/api/slipsPdf/[...slub]/route.tsx
+// This component is called by: app/(printable-layout)/slipsRender/[slug]/page.tsx
+
 // That is where the data comes from
 // This component repeatedly calls RequestSlipHalfPage to print each page
 
