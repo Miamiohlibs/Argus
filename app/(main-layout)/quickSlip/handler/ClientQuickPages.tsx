@@ -1,10 +1,12 @@
 'use client';
 
-interface ClientQuickPdfProps {
+interface ClientQuickPagesProps {
   searchParams: Record<string, string | string[] | undefined>;
 }
 
-export default function ClientQuickPdf({ searchParams }: ClientQuickPdfProps) {
+export default function ClientQuickPages({
+  searchParams,
+}: ClientQuickPagesProps) {
   const queryString = new URLSearchParams(
     Object.entries(searchParams).flatMap(([key, value]) =>
       Array.isArray(value)

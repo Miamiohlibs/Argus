@@ -1,4 +1,4 @@
-import ClientQuickPdf from './ClientQuickPdf';
+import ClientQuickPages from './ClientQuickPages';
 import MainButtons from '@/components/MainButtons';
 import getUserInfo from '@/lib/getUserInfo';
 
@@ -18,7 +18,7 @@ export default async function QuickSlipHandler({ searchParams }: PageProps) {
       <div className="mb-3">
         <MainButtons canPrint={canPrint} isEditorOrAbove={isEditorOrAbove} />
       </div>
-      <ClientQuickPdf searchParams={resolvedParams} />
+      <ClientQuickPages searchParams={resolvedParams} />
     </>
   );
 }
