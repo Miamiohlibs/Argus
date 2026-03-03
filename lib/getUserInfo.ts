@@ -30,7 +30,6 @@ export async function getPermissions({
     canEdit: false, // requires projectId
     isOwner: false, // requires projectId
     isCoEditor: false, // requires projectId
-    isOwnerish: false, // requires projectId == isOwner || isEditor
     nonOwnerEditor: false, // requires projectId
   };
 
@@ -66,9 +65,6 @@ export async function getPermissions({
 
         // canEdit - requires projectId
         perms.canEdit = perms.isAdmin || perms.isOwner || perms.isCoEditor;
-
-        // isOwnerish can perform owner roles that co-editors can't
-        perms.isOwnerish = perms.isAdmin || perms.isOwner;
 
         // nonOwnerEditor - requires projectId
         // weirdly, co-editors are *not* nonOwnerEditors for this purpose
