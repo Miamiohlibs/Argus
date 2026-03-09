@@ -9,9 +9,10 @@ User-created lists can be used to help researchers remember items of interest, a
 - Users
   - Any user may have the "canPrint" option set by an admin; users with the canPrint option set may print slips
   - Supports four user roles: user, editor, admin, superadmin
-    - "User" role can view content
-    - "Editor" role can create their own projects or serve as a co-editor for someone else's project to which they've been added
-    - "Admin" role can change user permissions; and view, search or edit other user's projects
+    - "User" role can view public projects.
+    - "Editor" role can create their own projects or serve as a co-editor for someone else's project to which they've been added. This is the most typical role.
+    - "Admin" role can change user permissions; and view, search or edit other user's projects. This role is typically reserved for special collections staff.
+    - "Superadmin" role can only be edited by another superadmin. This role is usually reserved for a systems administrator.
 - Entries
   - An entry is a bibliographic record, typically part of a larger Project.
   - An entry is a record generate either by connecting with the Alma catalog to retrieve relevant bibliographic details or by entering custom information not drawn from Alma.
