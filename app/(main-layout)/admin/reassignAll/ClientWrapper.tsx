@@ -12,10 +12,16 @@ export interface FormProps {
 }
 
 export default function ClientWrapper({ action, users }: FormProps) {
+  const clickHandler: Promise<ReassignAllResult> = async (
+    prevState,
+    formData,
+  ) => {
+    const response = await action(prevState, formData);
+  };
   return (
     <>
       <h1>Reassign All Projects of User</h1>
-      <ReassignAllForm action={action} users={users} />
+      <ReassignAllForm action={clickHandler} users={users} />
     </>
   );
 }
