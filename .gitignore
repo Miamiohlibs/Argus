@@ -49,4 +49,5 @@ next-env.d.ts
 # private notes files
 .*.md
 .*.txt
+
 logs/
