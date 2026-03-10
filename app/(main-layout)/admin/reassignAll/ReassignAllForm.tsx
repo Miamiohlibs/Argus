@@ -3,15 +3,8 @@ import { Form, InputGroup, Button } from 'react-bootstrap';
 import { useActionState } from 'react';
 import { ReassignAllResult } from '@/app/actions/reassignAll';
 import SelectUserFormElement from '@/components/SelectUserFormElement';
-import type { User } from '@prisma/client';
 
-interface FormProps {
-  users: User[];
-  action: (
-    prevState: ReassignAllResult | null,
-    formData: FormData,
-  ) => Promise<ReassignAllResult>;
-}
+import { FormProps } from './ClientWrapper';
 
 export default function ReassignAllForm({ action, users }: FormProps) {
   const [state, formAction, isPending] = useActionState<
