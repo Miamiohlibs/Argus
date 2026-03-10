@@ -4,6 +4,7 @@ import { Form } from 'react-bootstrap';
 
 interface pageProps {
   users: User[];
+  fieldName: String;
 }
 export default function SelectUserFormElement({ users }: pageProps) {
   return (
