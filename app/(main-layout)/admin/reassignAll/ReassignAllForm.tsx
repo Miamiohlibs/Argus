@@ -41,7 +41,7 @@ export default function ReassignAllForm({ action, users }: FormProps) {
     let gotOldUser = false;
     let gotNewUser = false;
     if (oldUserData?.includes('&&&')) {
-      let [oldUserTempId, oldUserTempName] = oldUserData.split('&&&');
+      const [oldUserTempId, oldUserTempName] = oldUserData.split('&&&');
       console.log(oldUserData.split('&&&'));
       oldUserId = oldUserTempId;
       oldUserName = oldUserTempName;
