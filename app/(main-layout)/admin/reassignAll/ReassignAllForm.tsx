@@ -2,8 +2,9 @@
 import { Form, InputGroup, Button } from 'react-bootstrap';
 import { ReassignAllResult } from '@/app/actions/reassignAll';
 import SelectUserFormElement from '@/components/SelectUserFormElement';
-import { useActionState, startTransition } from 'react';
+import { useActionState, startTransition, useEffect } from 'react';
 import { User } from '@prisma/client';
+import { toast } from 'react-toastify';
 
 interface FormProps {
   users: User[];
@@ -18,6 +19,18 @@ export default function ReassignAllForm({ action, users }: FormProps) {
     ReassignAllResult | null,
     FormData
   >(action, null);
+
+  useEffect(() => {
+    if (!state) return;
+
+    if (state.error) {
+      toast.error(state.error || 'Unable to reassign ownership.');
+    }
+
+    if (state.success) {
+      toast.success('Ownerships successfully reassigned.');
+    }
+  }, [state]);
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -82,18 +95,6 @@ export default function ReassignAllForm({ action, users }: FormProps) {
       <Button type="submit" disabled={isPending}>
         {isPending ? 'Reassigning…' : 'Reassign All Projects'}
       </Button>
-
-      {state?.error && (
-        <p role="alert" className="text-danger mt-2">
-          {state.error}
-        </p>
-      )}
-
-      {state?.success && (
-        <p role="alert" className="bg-success text-white mt-2">
-          Success!
-        </p>
-      )}
     </form>
   );
 }
