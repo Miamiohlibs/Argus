@@ -16,12 +16,6 @@ export async function reassignAllAction(
   const newOwnerId = formData.get('newUserId')?.toString();
 
   try {
-    // const newUser = await db.user.findUnique({
-    //   where: {
-    //     id: newUserId,
-    //   },
-    // });
-
     const projects = await db.project.findMany({
       where: {
         user: {
@@ -32,7 +26,7 @@ export async function reassignAllAction(
 
     for (let i = 0; i < projects.length; i++) {
       const projectId = projects[i].id;
-      let response = await db.project.update({
+      const response = await db.project.update({
         where: {
           id: projectId,
         },
