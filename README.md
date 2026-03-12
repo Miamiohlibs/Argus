@@ -20,6 +20,9 @@ User-created lists can be used to help researchers remember items of interest, a
   - For entries drawn from Alma, the entry record also includes a link back to the Alma record.
 - Projects
   - A project is a collection bibliographic entries for items of interest. A project is owned and controlled by an Editor-level user or above; they can add other "Editor"-level users as co-editors on a project. A user may have many projects.
+  - A project can generate "pull slips" with information about each item, including item, bibliographic, and project/user information on each slip. Slips are half-page sheets printable two to a page.
+  - A project may have its ownership reassigned to another user (Editor-level or higher) by the owner or by an administrator.
+  - All of a user's projects may be reassigned _en masse_ to another user (Editor-level or higher) by an administrator in the "Users" tab.
   - Projects may be archived (hidden) or deleted. Users may view or unarchive their archived projects.
   - Projects may be duplicated (with all entries) -- this is of use when two users may want to start from a similar point but go in different directions (such as a class with sections taught by two different librarians or faculty members).
 - Quick Slips
