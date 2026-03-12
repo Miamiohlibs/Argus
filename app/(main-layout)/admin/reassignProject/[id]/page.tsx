@@ -4,6 +4,7 @@ import ReassignmentForm from './ReassignmentForm';
 import getUsers from '@/app/actions/getUsers';
 import getUserInfo from '@/lib/getUserInfo';
 import checkAccess from '@/lib/checkAccess';
+import ProjectButtons from '@/components/ProjectButtons';
 
 export default async function ReassignProjectPage({
   params,
@@ -24,6 +25,11 @@ export default async function ReassignProjectPage({
     return (
       <>
         <h1>Reassign Project Owner: {project?.title}</h1>
+        <ProjectButtons
+          projectId={project.id}
+          onPage="reassign"
+          divClass="mb-3"
+        />
         <b>Current Owner: {project?.user.name}</b>
         <ReassignmentForm
           projectId={project.id}
