@@ -5,7 +5,7 @@ import { Form } from 'react-bootstrap';
 interface pageProps {
   users: User[];
   fieldName: string;
-  appendNameString: boolean;
+  appendNameString?: boolean;
 }
 export default function SelectUserFormElement({
   users,
