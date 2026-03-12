@@ -11,11 +11,8 @@ import {
 } from 'react-bootstrap';
 import Image from 'next/image';
 import {
-  SignInButton,
-  // SignUpButton,
-  SignedIn,
-  SignedOut,
-  UserButton,
+SignInButton, // SignUpButton,
+Show, UserButton
 } from '@clerk/nextjs';
 import { Search } from 'react-bootstrap-icons';
 import { checkUser } from '@/lib/checkUser';
@@ -47,29 +44,29 @@ const Header = async () => {
       <NavbarCollapse id="navbar">
         <Nav className="ms-auto me-3 text-light">
           <NavEditor />
-          <SignedIn>
+          <Show when="signed-in">
             <NavItem>
               <NavLink as={NextLink} href="/publicProjects">
                 Public Projects
               </NavLink>
             </NavItem>
-          </SignedIn>
+          </Show>
           <NavAdmin />
-          <SignedIn>
+          <Show when="signed-in">
             <NavItem>
               <NavLink as={NextLink} href="/searchEntries">
                 <Search aria-hidden="true" /> Search
               </NavLink>
             </NavItem>
-          </SignedIn>
-          <SignedOut>
+          </Show>
+          <Show when="signed-out">
             <NavItem>
               <SignInButton>
                 <div className="btn btn-light">Sign in</div>
               </SignInButton>
             </NavItem>
-          </SignedOut>
-          <SignedIn>
+          </Show>
+          <Show when="signed-in">
             <div className="d-flex">
               {user?.name && (
                 <NavbarText className="text-light ms-4">
@@ -78,7 +75,7 @@ const Header = async () => {
               )}
               <UserButton />
             </div>
-          </SignedIn>
+          </Show>
         </Nav>
       </NavbarCollapse>
     </Navbar>

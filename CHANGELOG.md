@@ -19,6 +19,7 @@
 - Replaced PDF output for slips and quick slips with more accessible, semantic, formatted HTML/CSS pages.
 - Removed the confusing `isOwnerish` permission; it was the equivalent of `isOwner || isAdmin`; we'll use that clearer code from now on.
 - Removed unused or redundant Typescript types; use native Prisma-derived types where possible.
+- Updated Clerk to [Clerk Core 3](https://clerk.com/docs/guides/development/upgrading/upgrade-guides/core-3)
 
 ## 0.7.2 - 2026-02-13
 

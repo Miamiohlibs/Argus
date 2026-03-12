@@ -26,9 +26,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
-      <html lang="en">
-        <body className={`${roboto.className}`}>
+    <html lang="en">
+      <body className={`${roboto.className}`}><ClerkProvider>
           <div id="skiplink" className="visually-hidden-focusable">
             <a href="#main-content">Skip to Main Content</a>
           </div>
@@ -38,8 +37,7 @@ export default function RootLayout({
           </main>
           <ToastContainer />
           <Footer />
-        </body>
-      </html>
-    </ClerkProvider>
+        </ClerkProvider></body>
+    </html>
   );
 }
