@@ -188,7 +188,7 @@ export async function updateProjectOwner(
   } catch (error) {
     return {
       success: false,
-      error: `You are not authorized to reassign a projet.`,
+      error: `You are not authorized to reassign a project.`,
     };
   }
 
