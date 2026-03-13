@@ -18,14 +18,17 @@ import {
 } from '@clerk/nextjs';
 import { Search } from 'react-bootstrap-icons';
 import { User } from '@prisma/client';
+import { ArgusPermissions } from '@/types/ArgusPermissions';
+import ClientNavEditor from './ClientNavEditor';
 // import NavEditor from './NavEditor';
 // import NavAdmin from './NavAdmin';
 
 interface PageProps {
   user: User | null | undefined;
+  permissions: ArgusPermissions;
 }
 
-const ClientNav = async ({ user }: PageProps) => {
+const ClientNav = async ({ user, permissions }: PageProps) => {
   return (
     <Navbar
       bg={process.env.NEXT_PUBLIC_NAV_COLOR || 'dark'}
@@ -50,7 +53,7 @@ const ClientNav = async ({ user }: PageProps) => {
 
       <NavbarCollapse id="navbar">
         <Nav className="ms-auto me-3 text-light">
-          {/* <NavEditor /> */}
+          <ClientNavEditor permissions={permissions} />
           <Show when="signed-in">
             <NavItem>
               <Link href="/publicProjects" className="nav-link">
