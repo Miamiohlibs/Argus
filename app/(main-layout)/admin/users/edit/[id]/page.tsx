@@ -34,7 +34,10 @@ export default async function UserEditPage({
       <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
         <h2 className="h3">{userToEdit.name}</h2>
         <p>Email: {userToEdit.email}</p>
-        <UserEditForm user={userToEdit} actorIsSuperAdmin={actorIsSuperAdmin} />
+        <UserEditForm
+          user={userToEdit}
+          actorIsSuperAdmin={actorIsSuperAdmin ?? false}
+        />
       </div>
     </>
   );

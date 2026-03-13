@@ -84,7 +84,7 @@ export default async function EditEntryPage({
         holdingsData={holdingsData}
         actionType="edit"
         existingEntry={existingEntry}
-        isEditor={canEdit}
+        isEditor={canEdit ?? false}
       />
     </>
   );
