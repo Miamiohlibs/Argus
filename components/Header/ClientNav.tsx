@@ -20,6 +20,7 @@ import { Search } from 'react-bootstrap-icons';
 import { User } from '@prisma/client';
 import { ArgusPermissions } from '@/types/ArgusPermissions';
 import ClientNavEditor from './ClientNavEditor';
+import ClientNavAdmin from './ClientNavAdmin';
 // import NavEditor from './NavEditor';
 // import NavAdmin from './NavAdmin';
 
@@ -61,7 +62,7 @@ const ClientNav = async ({ user, permissions }: PageProps) => {
               </Link>
             </NavItem>
           </Show>
-          {/* <NavAdmin /> */}
+          <ClientNavAdmin permissions={permissions} />
           <Show when="signed-in">
             <NavItem>
               <Link className="nav-link" href="/searchEntries">

@@ -3,7 +3,6 @@ import { checkUser } from '@/lib/checkUser';
 // import checkAccess from '@/lib/checkAccess';
 import getUserInfo from '@/lib/getUserInfo';
 import ClientNav from './ClientNav';
-import type { ArgusPermissions } from '@/types/ArgusPermissions';
 
 export default async function HeaderWrapper() {
   const user = await checkUser();
