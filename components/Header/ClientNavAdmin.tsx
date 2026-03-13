@@ -1,21 +1,21 @@
-import logger from '@/lib/logger';
+'use client';
 import NextLink from 'next/link';
 import { NavItem, NavLink } from 'react-bootstrap';
-import checkAccess from '@/lib/checkAccess';
+import { ArgusPermissions } from '@/types/ArgusPermissions';
 
-const NavAdmin = async () => {
+interface PageProps {
+  permissions: ArgusPermissions;
+}
+
+const ClientNavAdmin = ({ permissions }: PageProps) => {
   // Check if the user has access to admin features
-  const hasAccess = await checkAccess({
-    permittedRoles: ['admin', 'superadmin'],
-    inline: true,
-  });
-  logger.verbose('NavAdmin - hasAccess:', hasAccess);
-  if (!hasAccess) {
+  console.log(JSON.stringify(permissions));
+  if (!permissions.isAdmin && !permissions.isSuperAdmin) {
     return null; // If no access, do not render the admin navigation
   }
+
   return (
     <>
-      {/* <Nav className="me-3"> */}
       <NavLink disabled aria-hidden="true" className="d-none d-md-block">
         |
       </NavLink>
@@ -29,9 +29,8 @@ const NavAdmin = async () => {
           Users
         </NavLink>
       </NavItem>
-      {/* </Nav> */}
     </>
   );
 };
 
-export default NavAdmin;
+export default ClientNavAdmin;

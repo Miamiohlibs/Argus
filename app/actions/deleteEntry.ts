@@ -25,7 +25,7 @@ async function deleteEntry({
   logger.verbose(
     `deletion request on ${entryId} by ${
       user.id
-    }; isAdmin: ${isAdmin.toString()}`
+    }; isAdmin: ${isAdmin?.toString()}`,
   );
 
   // only delete if isAdmin, isOwner, or isCoEditor

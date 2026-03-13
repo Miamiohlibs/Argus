@@ -5,7 +5,7 @@ import { Roboto } from 'next/font/google';
 import '@/app/styles/custom-bootstrap.scss';
 import './globals.css';
 import { ClerkProvider } from '@clerk/nextjs';
-import Header from '@/components/Header';
+import Header from '@/components/Header/Header';
 import Footer from '@/components/Footer';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -27,7 +27,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${roboto.className}`}><ClerkProvider>
+      <body className={`${roboto.className}`}>
+        <ClerkProvider>
           <div id="skiplink" className="visually-hidden-focusable">
             <a href="#main-content">Skip to Main Content</a>
           </div>
@@ -37,7 +38,8 @@ export default function RootLayout({
           </main>
           <ToastContainer />
           <Footer />
-        </ClerkProvider></body>
+        </ClerkProvider>
+      </body>
     </html>
   );
 }
