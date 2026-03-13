@@ -48,7 +48,43 @@ const ClientNav = async ({ user }: PageProps) => {
         </NavbarBrand>
       </Link>
 
-      <NavbarCollapse id="navbar"></NavbarCollapse>
+      <NavbarCollapse id="navbar">
+        <Nav className="ms-auto me-3 text-light">
+          {/* <NavEditor /> */}
+          <Show when="signed-in">
+            <NavItem>
+              <Link href="/publicProjects" className="nav-link">
+                Public Projects
+              </Link>
+            </NavItem>
+          </Show>
+          {/* <NavAdmin /> */}
+          <Show when="signed-in">
+            <NavItem>
+              <Link className="nav-link" href="/searchEntries">
+                <Search aria-hidden="true" /> Search
+              </Link>
+            </NavItem>
+          </Show>
+          <Show when="signed-out">
+            <NavItem>
+              <SignInButton>
+                <div className="btn btn-light">Sign in</div>
+              </SignInButton>
+            </NavItem>
+          </Show>
+          <Show when="signed-in">
+            <div className="d-flex">
+              {user?.name && (
+                <NavbarText className="text-light ms-4">
+                  {user?.name}
+                </NavbarText>
+              )}
+              <UserButton />
+            </div>
+          </Show>
+        </Nav>
+      </NavbarCollapse>
     </Navbar>
   );
 };
