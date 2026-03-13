@@ -40,9 +40,9 @@ async function SearchBibsPage({ searchParams }: SearchBibsPageProps) {
       <ServerDataFetcher projectId={projectId.toString()}>
         <ClientSearchBibsPage
           projectId={projectId}
-          userCanEditPage={canEdit}
-          userCanPrint={canPrint}
-          nonOwnerAlert={nonOwnerEditor}
+          userCanEditPage={canEdit ?? false}
+          userCanPrint={canPrint ?? false}
+          nonOwnerAlert={nonOwnerEditor ?? false}
           project={project}
         />
       </ServerDataFetcher>

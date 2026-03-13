@@ -1,8 +1,7 @@
-import NextLink from 'next/link';
+import Link from 'next/link';
 import {
   Nav,
   NavItem,
-  NavLink,
   Navbar,
   NavbarText,
   NavbarBrand,
@@ -11,17 +10,22 @@ import {
 } from 'react-bootstrap';
 import Image from 'next/image';
 import {
-SignInButton, // SignUpButton,
-Show, UserButton
+  SignInButton, // SignUpButton,
+  Show,
+  UserButton,
 } from '@clerk/nextjs';
 import { Search } from 'react-bootstrap-icons';
-import { checkUser } from '@/lib/checkUser';
-import NavEditor from './NavEditor';
-import NavAdmin from './NavAdmin';
+import { User } from '@prisma/client';
+import { ArgusPermissions } from '@/types/ArgusPermissions';
+import ClientNavEditor from './ClientNavEditor';
+import ClientNavAdmin from './ClientNavAdmin';
 
-const Header = async () => {
-  const user = await checkUser();
+interface PageProps {
+  user: User | null | undefined;
+  permissions: ArgusPermissions;
+}
 
+const ClientNav = async ({ user, permissions }: PageProps) => {
   return (
     <Navbar
       bg={process.env.NEXT_PUBLIC_NAV_COLOR || 'dark'}
@@ -30,33 +34,36 @@ const Header = async () => {
       className="px-2"
     >
       <NavbarToggle aria-controls="navbarScroll" />
-      <NavbarBrand as={NextLink} href="/">
-        <Image
-          src={`${process.env.NEXT_PUBLIC_APP_BASEPATH}/peacock-logo.png`}
-          alt="Peacock Logo"
-          width={40}
-          height={40}
-        />
-        <span className="ps-2">
-          Argus {process.env.NEXT_PUBLIC_NAV_LABEL || ''}
-        </span>
-      </NavbarBrand>
+      <Link href={'/'}>
+        <NavbarBrand>
+          <Image
+            src={`${process.env.NEXT_PUBLIC_APP_BASEPATH}/peacock-logo.png`}
+            alt="Peacock Logo"
+            width={40}
+            height={40}
+          />
+          <span className="ps-2">
+            Argus {process.env.NEXT_PUBLIC_NAV_LABEL || ''}
+          </span>
+        </NavbarBrand>
+      </Link>
+
       <NavbarCollapse id="navbar">
         <Nav className="ms-auto me-3 text-light">
-          <NavEditor />
+          <ClientNavEditor permissions={permissions} />
           <Show when="signed-in">
             <NavItem>
-              <NavLink as={NextLink} href="/publicProjects">
+              <Link href="/publicProjects" className="nav-link">
                 Public Projects
-              </NavLink>
+              </Link>
             </NavItem>
           </Show>
-          <NavAdmin />
+          <ClientNavAdmin permissions={permissions} />
           <Show when="signed-in">
             <NavItem>
-              <NavLink as={NextLink} href="/searchEntries">
+              <Link className="nav-link" href="/searchEntries">
                 <Search aria-hidden="true" /> Search
-              </NavLink>
+              </Link>
             </NavItem>
           </Show>
           <Show when="signed-out">
@@ -82,4 +89,4 @@ const Header = async () => {
   );
 };
 
-export default Header;
+export default ClientNav;
