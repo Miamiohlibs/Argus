@@ -72,6 +72,26 @@ export default function UserEditForm({ user, actorIsSuperAdmin }: pageProps) {
     toast.success('User updated successfully');
   };
 
+  const roleDescriptions = [
+    {
+      role: 'user',
+      description: 'Very limited permissions; can only view public projects.',
+    },
+    {
+      role: 'editor',
+      description:
+        'Most typical role; can create own projects and contribute as a co-editor.',
+    },
+    {
+      role: 'admin',
+      description: "Can create/edit users, and can edit other user's projects.",
+    },
+    {
+      role: 'superadmin',
+      description: 'Rare. Can only be edited or removed by another superadmin.',
+    },
+  ];
+
   const statusPulldown = validStatuses.map((r) => (
     <option key={r} value={r}>
       {r.charAt(0).toUpperCase() + r.slice(1)}
@@ -112,14 +132,19 @@ export default function UserEditForm({ user, actorIsSuperAdmin }: pageProps) {
           value={role ?? ''}
           onChange={(e) => handleChange('role')(e)}
         >
-          {validRoles.map(
-            (r) =>
+          {validRoles.map((r) => {
+            const description = roleDescriptions.find((roleArray) => {
+              return roleArray.role === r;
+            })?.description;
+            return (
               (actorIsSuperAdmin || r != 'superadmin') && (
                 <option key={r} value={r}>
-                  {r.charAt(0).toUpperCase() + r.slice(1)}
+                  {r.charAt(0).toUpperCase() + r.slice(1)} &nbsp;&nbsp;&nbsp;(
+                  {description})
                 </option>
               )
-          )}
+            );
+          })}
         </FormSelect>
       </InputGroup>
       <InputGroup className="mb-2 d-flex align-items-center">

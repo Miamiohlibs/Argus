@@ -1,6 +1,6 @@
 'use server';
 import { Metadata } from 'next';
-import ClientMultiPagePdf from './ClientMultipagePdf';
+import ClientIframe from './ClientIframe';
 import { unauthorized } from 'next/navigation';
 import getUserInfo from '@/lib/getUserInfo';
 import { getProject } from '@/app/actions/projectActions';
@@ -10,7 +10,7 @@ import ProjectButtons from '@/components/ProjectButtons';
 export async function generateMetadata(): Promise<Metadata> {
   return {
     title: 'Print Slips | Argus',
-    description: 'Print PDF slips for each project item',
+    description: 'Print slips for each project item',
   };
 }
 
@@ -18,7 +18,7 @@ type PageProps = {
   params: Promise<{ id: string; specificBibEntry: string }>;
 };
 
-export default async function PdfWrapper({ params }: PageProps) {
+export default async function PagesWrapper({ params }: PageProps) {
   const { id, specificBibEntry } = await params;
   const { project, error } = await getProject({ id });
   const {
@@ -31,7 +31,7 @@ export default async function PdfWrapper({ params }: PageProps) {
     <>
       {project && <ProjectMetadata project={project} />}
       <ProjectButtons projectId={parseInt(id)} onPage="slips" divClass="mb-4" />
-      <ClientMultiPagePdf />
+      <ClientIframe />
     </>
   );
 }

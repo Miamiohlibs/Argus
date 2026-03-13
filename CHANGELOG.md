@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.8.0 - 2026-03-13
+
+## Fixed
+
+- Fixed color contrast on footer links for accessibility.
+
+## Added
+
+- Added "reassignAll" feature on the admin/users page -- reassign ownership of all of a user's projects to another user. Useful when someone leaves the organization.
+- Added `/me` route with useful info about the logged-in user for diagnostic purposes.
+- Added [Zod](https://zod.dev/) dependency for type enforcement (not used widely yet -- we may want to update some older clunkier mechanisms to use it.)
+- Added missing "Back to Project" button on "reassignProject" page.
+- Added explanations of user roles in UserEditForm.
+
+## Changed
+
+- Replaced PDF output for slips and quick slips with more accessible, semantic, formatted HTML/CSS pages.
+- Removed the confusing `isOwnerish` permission; it was the equivalent of `isOwner || isAdmin`; we'll use that clearer code from now on.
+- Removed unused or redundant Typescript types; use native Prisma-derived types where possible.
+- Updated Clerk to [Clerk Core 3](https://clerk.com/docs/guides/development/upgrading/upgrade-guides/core-3)
+
 ## 0.7.2 - 2026-02-13
 
 ### Added

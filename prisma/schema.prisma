@@ -9,20 +9,19 @@ datasource db {
 }
 
 model User {
-  id           String           @id @default(uuid())
-  clerkUserId  String           @unique
-  email        String           @unique
-  name         String
-  imageUrl     String?
-  createdAt    DateTime         @default(now())
-  updatedAt    DateTime         @updatedAt
-  role         Role             @default(user)
-  affiliation  UserAffiliation?
-  status       UserStatus?
-  printSlips   Boolean          @default(false)
-  projects     Project[]        @relation("ProjectOwner")
-  transactions Transaction[]
-  coEditorOn   Project[]        @relation("ProjectCoEditors")
+  id          String           @id @default(uuid())
+  clerkUserId String           @unique
+  email       String           @unique
+  name        String
+  imageUrl    String?
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  role        Role             @default(user)
+  affiliation UserAffiliation?
+  status      UserStatus?
+  printSlips  Boolean          @default(false)
+  projects    Project[]        @relation("ProjectOwner")
+  coEditorOn  Project[]        @relation("ProjectCoEditors")
 }
 
 model Project {
@@ -74,17 +73,6 @@ model ItemEntry {
   folder        String?
   ms            String?
   BibEntry      BibEntry? @relation(fields: [bibEntryId], references: [id], onDelete: Cascade)
-}
-
-model Transaction {
-  id        String   @id @default(uuid())
-  text      String
-  amount    Float
-  userId    String
-  createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [clerkUserId], onDelete: Cascade)
-
-  @@index([userId])
 }
 
 enum Role {

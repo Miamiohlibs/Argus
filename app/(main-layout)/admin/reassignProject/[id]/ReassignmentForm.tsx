@@ -11,7 +11,7 @@ interface FormProps {
   actorId: string;
   action: (
     prevState: UpdateProjectOwnerResult | null,
-    formData: FormData
+    formData: FormData,
   ) => Promise<UpdateProjectOwnerResult>;
 }
 
@@ -34,7 +34,7 @@ export default function ReassignmentForm({
         <Form.Label className="d-flex align-items-center mx-2">
           New Project Owner
         </Form.Label>
-        <SelectUserFormElement users={users} />
+        <SelectUserFormElement users={users} fieldName="newOwnerId" />
       </InputGroup>
 
       <Button type="submit" disabled={isPending}>

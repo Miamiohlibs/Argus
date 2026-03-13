@@ -2,7 +2,6 @@
 import { TableColumn } from 'react-data-table-component';
 import { useEffect, useState } from 'react';
 import DataTable from 'react-data-table-component';
-// import { User } from '@/types/User';
 import { User } from '@prisma/client';
 import getUsers from '@/app/actions/getUsers';
 import Link from 'next/link';
@@ -27,7 +26,7 @@ export default function UserTable({
   const handleDelete = async (userIdtoDelete: string) => {
     console.log(`Delete user with ID: ${userIdtoDelete}`);
     const confirmed = window.confirm(
-      'Are you sure you want to delete this user and all their projects?'
+      'Are you sure you want to delete this user and all their projects?',
     );
     if (!confirmed) return;
     const { error } = await deleteUser(userIdtoDelete); // also gets {message}
@@ -39,7 +38,7 @@ export default function UserTable({
       setUsers(updatedUsers);
 
       const updatedFilteredUsers = filteredUsers.filter(
-        (item) => item.id != userIdtoDelete
+        (item) => item.id != userIdtoDelete,
       );
       setFilteredUsers(updatedFilteredUsers);
     }
@@ -60,8 +59,8 @@ export default function UserTable({
   useEffect(() => {
     const filtered = users.filter((user) =>
       [user.name, user.email, user.role].some((val) =>
-        val?.toLowerCase().includes(filterText.toLowerCase() || '')
-      )
+        val?.toLowerCase().includes(filterText.toLowerCase() || ''),
+      ),
     );
     setFilteredUsers(filtered);
   }, [filterText, users]);

@@ -10,7 +10,7 @@ type EntriesResult = {
 
 async function getEntries(
   projectId: string,
-  specificBibEntry?: string
+  specificBibEntry?: string,
 ): Promise<{
   data?: EntriesResult;
   error?: string;
@@ -36,7 +36,7 @@ async function getEntries(
     // }));
 
     logger.verbose(
-      `Fetched ${entries.length} entries for project ${projectId}`
+      `Fetched ${entries.length} entries for project ${projectId}`,
     );
 
     return {

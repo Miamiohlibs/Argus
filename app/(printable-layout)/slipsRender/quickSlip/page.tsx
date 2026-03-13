@@ -1,27 +1,26 @@
-// app/api/slipsPdf/[...slug]/route.tsx
+// app/(printable-layout)/slipsRender/quickSlip/page.tsx
 import logger from '@/lib/logger';
-import { NextRequest, NextResponse } from 'next/server';
-import { renderToStream } from '@react-pdf/renderer';
-import { RequestSlipProps } from '@/types/RequestSlipProps';
-import { MultiPagePdf } from '@/components/MultipagePdf';
-import getEntries from '@/app/actions/getEntries';
-import { getProject } from '@/app/actions/projectActions';
-import filenamify from 'filenamify';
 import { checkUser } from '@/lib/checkUser';
 import { isAllowedUserStatus, isAllowedAffiliation } from '@/lib/typeChecker';
 import { EntryWithItems } from '@/types/EntryWithItems';
 import { ProjectWithUserAndBib } from '@/types/ProjectWithUserAndBib';
 import generateRequestSlipItems from '@/lib/generateRequestSlipItems';
 import { ItemEntry } from '@prisma/client';
+import { ItemEntry as ItemEntryZod } from '@/zod/ItemEntry';
 import { getLocationNameFromCode } from '@/lib/locationCodes';
+import { MultiPageHtml } from '@/components/MultiPageHtml';
 
-function createItemFromReq(req: NextRequest) {
-  const params = Object.fromEntries(req.nextUrl.searchParams.entries());
+function createItemFromReq({
+  params,
+  selectedItemObjects,
+}: {
+  params: { [key: string]: string | string[] | undefined };
+  selectedItemObjects: ItemEntry[];
+}) {
+  // const params = Object.fromEntries(req.nextUrl.searchParams.entries());
   console.log('createItemFromReq params:', params);
 
-  const selectedItems =
-    req.nextUrl.searchParams.getAll('selectedItems[]') || [];
-  const selectedItemObjects = selectedItems.map((json) => JSON.parse(json));
+  // const selectedItemObjects = params.selectedItemObjects || [];
 
   // create some blank/dummy objects to start, with enough data to meet the minimum expectations for a db entry
   const project: ProjectWithUserAndBib = {
@@ -151,36 +150,46 @@ function createItemFromReq(req: NextRequest) {
     bib.callNumber = params.itemCallNumber;
   }
 
+  let blankItemFieldsCount = 0;
+
+  if (params.hasOwnProperty('itemCopy') && typeof params.itemCopy == 'string') {
+    blankItem.copy_id = params.itemCopy;
+    blankItemFieldsCount++;
+  }
+  if (params.hasOwnProperty('itemBox') && typeof params.itemBox == 'string') {
+    blankItem.box = params.itemBox;
+    blankItemFieldsCount++;
+  }
   if (
-    params.hasOwnProperty('itemCopy') ||
-    params.hasOwnProperty('itemBox') ||
-    params.hasOwnProperty('itemFolder') ||
-    params.hasOwnProperty('itemMs') ||
-    params.hasOwnProperty('itemBox') ||
-    params.hasOwnProperty('itemLocation')
+    params.hasOwnProperty('itemFolder') &&
+    typeof params.itemFolder == 'string'
   ) {
-    if (params.hasOwnProperty('itemCopy')) {
-      blankItem.copy_id = params.itemCopy;
-    }
-    if (params.hasOwnProperty('itemBox')) {
-      blankItem.box = params.itemBox;
-    }
-    if (params.hasOwnProperty('itemFolder')) {
-      blankItem.folder = params.itemFolder;
-    }
-    if (params.hasOwnProperty('itemMs')) {
-      blankItem.ms = params.itemMs;
-    }
-    if (params.hasOwnProperty('itemBox')) {
-      blankItem.box = params.itemBox;
-    }
-    if (params.hasOwnProperty('itemLocation')) {
-      blankItem.location_code = params.itemLocation;
-      blankItem.location_name =
-        getLocationNameFromCode(params.itemLocation) || '';
-    }
+    blankItem.folder = params.itemFolder;
+    blankItemFieldsCount++;
+  }
+  if (params.hasOwnProperty('itemMs') && typeof params.itemMs == 'string') {
+    blankItem.ms = params.itemMs;
+    blankItemFieldsCount++;
+  }
+  if (params.hasOwnProperty('itemBox') && typeof params.itemBox == 'string') {
+    blankItem.box = params.itemBox;
+    blankItemFieldsCount++;
+  }
+  if (
+    params.hasOwnProperty('itemLocation') &&
+    typeof params.itemLocation == 'string'
+  ) {
+    blankItem.location_code = params.itemLocation;
+    blankItem.location_name =
+      getLocationNameFromCode(params.itemLocation) || '';
+    blankItemFieldsCount++;
+  }
+
+  // if populated the blank item with any data, add it as an item
+  if (blankItemFieldsCount > 0) {
     bib.items.push(blankItem);
   }
+
   if (
     params.hasOwnProperty('publisher_const') &&
     typeof params.publisher_const == 'string'
@@ -214,23 +223,40 @@ function createItemFromReq(req: NextRequest) {
   return { bib, project };
 }
 
-export async function GET(req: NextRequest) {
+export default async function RenderQuickSlip({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
   const user = await checkUser();
-  const { bib, project } = createItemFromReq(req);
+  let selectedItemObjects: ItemEntry[] = [];
+  // const params = Object.fromEntries(req.nextUrl.searchParams.entries());
+
+  const searchParamsResolved = await searchParams;
+  if (searchParamsResolved.hasOwnProperty('selectedItems[]')) {
+    const rawSelected = searchParamsResolved['selectedItems[]'];
+    // normalize the array
+    const selectedArray = Array.isArray(rawSelected)
+      ? rawSelected
+      : rawSelected
+        ? [rawSelected]
+        : [];
+
+    selectedItemObjects = selectedArray.map((item) => {
+      const itemObj: any = JSON.parse(item);
+      itemObj.id = itemObj.item_id; //.replace('item-', '');
+      return ItemEntryZod.parse(itemObj);
+    });
+  }
+
+  // return <pre>{JSON.stringify(selectedItemObjects, null, 2)}</pre>;
+  const { bib, project } = createItemFromReq({
+    params: searchParamsResolved,
+    selectedItemObjects,
+  });
 
   const items = generateRequestSlipItems([bib], project, user);
-
   // console.log('****** BibEntries:', JSON.stringify(items, null, 2));
 
-  const stream = await renderToStream(<MultiPagePdf books={items} />);
-  const filenameBasis = 'Quick Slip';
-  //   const filenameBasis = item.title ?? 'Quick Slip';
-  const filename = filenamify(filenameBasis);
-
-  return new NextResponse(stream as any, {
-    headers: {
-      'Content-Type': 'application/pdf',
-      'Content-Disposition': `inline; filename="${filename}.pdf"`,
-    },
-  });
+  return <MultiPageHtml books={items} />;
 }

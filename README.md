@@ -9,9 +9,10 @@ User-created lists can be used to help researchers remember items of interest, a
 - Users
   - Any user may have the "canPrint" option set by an admin; users with the canPrint option set may print slips
   - Supports four user roles: user, editor, admin, superadmin
-    - "User" role can view content
-    - "Editor" role can create their own projects or serve as a co-editor for someone else's project to which they've been added
-    - "Admin" role can change user permissions; and view, search or edit other user's projects
+    - "User" role can view public projects.
+    - "Editor" role can create their own projects or serve as a co-editor for someone else's project to which they've been added. This is the most typical role.
+    - "Admin" role can change user permissions; and view, search or edit other user's projects. This role is typically reserved for special collections staff.
+    - "Superadmin" role can only be edited by another superadmin. This role is usually reserved for a systems administrator.
 - Entries
   - An entry is a bibliographic record, typically part of a larger Project.
   - An entry is a record generate either by connecting with the Alma catalog to retrieve relevant bibliographic details or by entering custom information not drawn from Alma.
@@ -19,6 +20,9 @@ User-created lists can be used to help researchers remember items of interest, a
   - For entries drawn from Alma, the entry record also includes a link back to the Alma record.
 - Projects
   - A project is a collection bibliographic entries for items of interest. A project is owned and controlled by an Editor-level user or above; they can add other "Editor"-level users as co-editors on a project. A user may have many projects.
+  - A project can generate "pull slips" with information about each item, including item, bibliographic, and project/user information on each slip. Slips are half-page sheets printable two to a page.
+  - A project may have its ownership reassigned to another user (Editor-level or higher) by the owner or by an administrator.
+  - All of a user's projects may be reassigned _en masse_ to another user (Editor-level or higher) by an administrator in the "Users" tab.
   - Projects may be archived (hidden) or deleted. Users may view or unarchive their archived projects.
   - Projects may be duplicated (with all entries) -- this is of use when two users may want to start from a similar point but go in different directions (such as a class with sections taught by two different librarians or faculty members).
 - Quick Slips
