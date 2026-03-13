@@ -1,9 +1,9 @@
-import { clerkMiddleware } from "@clerk/nextjs/server";
-import { NextResponse } from "next/server";
+import { clerkMiddleware } from '@clerk/nextjs/server';
+import { NextResponse } from 'next/server';
 
 export default clerkMiddleware((auth, req) => {
   // optional: protect certain paths, etc.
- return NextResponse.next();
+  return NextResponse.next();
 });
 
 export const config = {
