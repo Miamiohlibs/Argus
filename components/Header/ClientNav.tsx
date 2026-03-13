@@ -1,9 +1,7 @@
-import NextLink from 'next/link';
 import Link from 'next/link';
 import {
   Nav,
   NavItem,
-  NavLink,
   Navbar,
   NavbarText,
   NavbarBrand,
@@ -21,8 +19,6 @@ import { User } from '@prisma/client';
 import { ArgusPermissions } from '@/types/ArgusPermissions';
 import ClientNavEditor from './ClientNavEditor';
 import ClientNavAdmin from './ClientNavAdmin';
-// import NavEditor from './NavEditor';
-// import NavAdmin from './NavAdmin';
 
 interface PageProps {
   user: User | null | undefined;

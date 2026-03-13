@@ -1,8 +1,6 @@
 'use client';
 import NextLink from 'next/link';
-import Link from 'next/link';
 import { NavItem, NavLink } from 'react-bootstrap';
-// import checkAccess from '@/lib/checkAccess';
 import { ArgusPermissions } from '@/types/ArgusPermissions';
 
 interface PageProps {
