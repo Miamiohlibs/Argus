@@ -45,6 +45,6 @@
     "typescript": "^5"
   },
   "overrides": {
-    "effect": "3.20.0"
+    "effect": "^3.20.0"
   }
 }
