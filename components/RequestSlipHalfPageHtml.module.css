@@ -56,6 +56,10 @@
   margin-top: 0;
 }
 
+.dataPair {
+  line-height: 1;
+  padding-bottom: 4px;
+}
 .researcher {
   background-color: #eee;
   -webkit-print-color-adjust: exact !important;
