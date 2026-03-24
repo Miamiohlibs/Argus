@@ -145,7 +145,7 @@ export const RequestSlipHalfPage = ({
 
       <h2 className={styles.h2}>II. RESEARCHER INFORMATION</h2>
       <div className={`${styles.row} ${styles.researcher} `}>
-        <div className={styles.innerColumn}>
+        <div className={`${styles.innerColumn} ${styles.flex2}`}>
           <div>
             <span className={styles.label}>Name:</span>{' '}
             <span className={styles.value}>{userName}</span>
@@ -159,10 +159,12 @@ export const RequestSlipHalfPage = ({
             </span>
           </div>
         </div>
-        <div className={styles.innerColumn}>
+        <div className={`${styles.innerColumn} ${styles.flex3}`}>
           <div>
             <span className={styles.label}>For:</span>{' '}
-            <span className={styles.value}>{projectName}</span>
+            <span className={styles.value}>
+              {shortenString(projectName || '', 50)}
+            </span>
           </div>
         </div>
       </div>
