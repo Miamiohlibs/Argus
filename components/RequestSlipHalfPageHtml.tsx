@@ -160,7 +160,7 @@ export const RequestSlipHalfPage = ({
           </div>
         </div>
         <div className={styles.innerColumn}>
-          <div>
+          <div className={styles.dataPair}>
             <span className={styles.label}>For:</span>{' '}
             <span className={styles.value}>{projectName}</span>
           </div>
