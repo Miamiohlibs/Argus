@@ -80,13 +80,13 @@ export const RequestSlipHalfPage = ({
       <h2 className={styles.h2}>I. ITEM REQUESTED</h2>
       <div className={styles.row}>
         <div className={styles.column}>
-          <div>
+          <div className={styles.dataPair}>
             <span className={styles.label}>Author:</span>{' '}
             <span className={styles.value}>
-              {author && shortenString(author)}
+              {author && shortenString(author, 50)}
             </span>
           </div>
-          <div>
+          <div className={styles.dataPair}>
             <span className={styles.label}>Brief Title:</span>{' '}
             <span className={styles.value}>
               {title && shortenString(title)}
@@ -145,23 +145,25 @@ export const RequestSlipHalfPage = ({
 
       <h2 className={styles.h2}>II. RESEARCHER INFORMATION</h2>
       <div className={`${styles.row} ${styles.researcher} `}>
-        <div className={styles.innerColumn}>
+        <div className={`${styles.innerColumn} ${styles.flex2}`}>
           <div>
-            <span className={styles.label}>Name:</span>
+            <span className={styles.label}>Name:</span>{' '}
             <span className={styles.value}>{userName}</span>
           </div>
         </div>
         <div className={styles.innerColumn}>
           <div>
-            <span className={styles.label}>Email:</span>
-            <span className={styles.value}>{userEmail}</span>
-          </div>
-        </div>
-        <div className={styles.innerColumn}>
-          <div>
-            <span className={styles.label}>Printed:</span>
+            <span className={styles.label}>Printed:</span>{' '}
             <span className={styles.value}>
               {new Date().toLocaleDateString()}
+            </span>
+          </div>
+        </div>
+        <div className={`${styles.innerColumn} ${styles.flex3}`}>
+          <div>
+            <span className={styles.label}>For:</span>{' '}
+            <span className={styles.value}>
+              {shortenString(projectName || '', 50)}
             </span>
           </div>
         </div>
@@ -307,10 +309,6 @@ export const RequestSlipHalfPage = ({
             <div>
               <span className={styles.label}>Pulled by:</span>{' '}
               <span className={styles.value}></span>
-            </div>
-            <div>
-              <span className={styles.label}>For project:</span>{' '}
-              <span className={styles.value}>{projectName}</span>
             </div>
           </div>
         </div>
