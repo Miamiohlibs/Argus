@@ -22,6 +22,9 @@ export const MultiPageHtml = ({ books }: { books: RequestSlipProps[] }) => {
     })
     .filter((entry) => Array.isArray(entry));
 
+  if (!pairsArr[0] || !pairsArr[0][0]) {
+    return <div className="m-5">No entries to print.</div>;
+  }
   pairsArr[0][0].displayPrintButton = true; // display print at top of first page
 
   return (
