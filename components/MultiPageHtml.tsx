@@ -28,12 +28,15 @@ export const MultiPageHtml = ({ books }: { books: RequestSlipProps[] }) => {
     <>
       {/*} document-level wrapper */}
       {pairsArr.map((pair, i) => {
+        const isLastPage = i == pairsArr.length - 1;
         return (
           <div
             className={`${styles.sheetOuter} ${styles.sheetOuterLetter} ${styles.sheetOuterLetterSheet}`}
             key={i}
           >
-            <section className={`${styles.sheetPadding5mm} ${styles.sheet}`}>
+            <section
+              className={`${styles.sheetPadding5mm} ${styles.sheet} ${!isLastPage && styles.notLastPage}`}
+            >
               <RequestSlipHalfPage {...pair[0]} />
               {pair[1] && <RequestSlipHalfPage {...pair[1]} />}
             </section>
