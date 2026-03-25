@@ -11,10 +11,14 @@
     overflow: hidden;
     position: relative;
     box-sizing: border-box;
-    page-break-after: always;
     /* outline: 3mm black solid;
     outline-offset: -3mm; */
 }
+.notLastPage {
+    page-break-after: always;
+}
+
+
 .sheetPadding5mm { padding: 5mm }
 
 @media screen {
