@@ -4,15 +4,15 @@
 }
 .sheetOuterLetterSheet {
   width: 215mm;
-  height: 270mm;
+  height: 272mm;
 }
 .sheet {
     margin: 0;
     overflow: hidden;
     position: relative;
     box-sizing: border-box;
-    /* outline: 3mm black solid;
-    outline-offset: -3mm; */
+    outline: 3mm black solid;
+    outline-offset: -3mm;
 }
 .notLastPage {
     page-break-after: always;
