@@ -38,7 +38,7 @@ export const MultiPageHtml = ({ books }: { books: RequestSlipProps[] }) => {
             key={i}
           >
             <section
-              className={`${styles.sheetPadding5mm} ${styles.sheet} ${!isLastPage && styles.notLastPage}`}
+              className={`${styles.sheetPadding5mm} ${styles.sheet} ${!isLastPage && styles.insertPageBreak}`}
             >
               <RequestSlipHalfPage {...pair[0]} />
               {pair[1] && <RequestSlipHalfPage {...pair[1]} />}
