@@ -14,8 +14,10 @@
     /* outline: 3mm black solid;
     outline-offset: -3mm; */
 }
-.notLastPage {
+.insertPageBreak {
     page-break-after: always;
+        outline: 2mm green solid;
+    outline-offset: -2mm;
 }
 
 
