@@ -16,8 +16,8 @@
 }
 .insertPageBreak {
     page-break-after: always;
-        outline: 2mm green solid;
-    outline-offset: -2mm;
+        /* outline: 2mm green solid;
+    outline-offset: -2mm; */
 }
 
 
