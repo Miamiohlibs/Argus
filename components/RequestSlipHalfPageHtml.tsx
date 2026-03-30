@@ -80,13 +80,13 @@ export const RequestSlipHalfPage = ({
       <h2 className={styles.h2}>I. ITEM REQUESTED</h2>
       <div className={styles.row}>
         <div className={styles.column}>
-          <div>
+          <div className={styles.dataPair}>
             <span className={styles.label}>Author:</span>{' '}
             <span className={styles.value}>
-              {author && shortenString(author)}
+              {author && shortenString(author, 50)}
             </span>
           </div>
-          <div>
+          <div className={styles.dataPair}>
             <span className={styles.label}>Brief Title:</span>{' '}
             <span className={styles.value}>
               {title && shortenString(title)}
@@ -145,23 +145,25 @@ export const RequestSlipHalfPage = ({
 
       <h2 className={styles.h2}>II. RESEARCHER INFORMATION</h2>
       <div className={`${styles.row} ${styles.researcher} `}>
-        <div className={styles.innerColumn}>
+        <div className={`${styles.innerColumn} ${styles.flex2}`}>
           <div>
-            <span className={styles.label}>Name:</span>
+            <span className={styles.label}>Name:</span>{' '}
             <span className={styles.value}>{userName}</span>
           </div>
         </div>
         <div className={styles.innerColumn}>
           <div>
-            <span className={styles.label}>Email:</span>
-            <span className={styles.value}>{userEmail}</span>
-          </div>
-        </div>
-        <div className={styles.innerColumn}>
-          <div>
-            <span className={styles.label}>Printed:</span>
+            <span className={styles.label}>Printed:</span>{' '}
             <span className={styles.value}>
               {new Date().toLocaleDateString()}
+            </span>
+          </div>
+        </div>
+        <div className={`${styles.innerColumn} ${styles.flex3}`}>
+          <div>
+            <span className={styles.label}>For:</span>{' '}
+            <span className={styles.value}>
+              {shortenString(projectName || '', 50)}
             </span>
           </div>
         </div>
@@ -172,14 +174,14 @@ export const RequestSlipHalfPage = ({
           <div className="list-group">
             <div
               role="checkbox"
-              aria-checked="true"
+              aria-checked={userAffiliation == 'Miami'}
               className={styles.listGroupDiv}
             >
               Miami University
             </div>
             <div
               role="checkbox"
-              aria-checked="false"
+              aria-checked={userAffiliation == 'Other'}
               className={styles.listGroupDiv}
             >
               Other
@@ -193,21 +195,21 @@ export const RequestSlipHalfPage = ({
               <div className={styles.listGroup}>
                 <div
                   role="checkbox"
-                  aria-checked="false"
+                  aria-checked={userStatus == 'Undergrad'}
                   className={styles.listGroupDiv}
                 >
                   Undergraduate
                 </div>
                 <div
                   role="checkbox"
-                  aria-checked="false"
+                  aria-checked={userStatus == 'Graduate'}
                   className={styles.listGroupDiv}
                 >
                   Graduate
                 </div>
                 <div
                   role="checkbox"
-                  aria-checked="false"
+                  aria-checked={userStatus == 'Faculty'}
                   className={styles.listGroupDiv}
                 >
                   Faculty
@@ -218,21 +220,21 @@ export const RequestSlipHalfPage = ({
               <div className={styles.listGroup}>
                 <div
                   role="checkbox"
-                  aria-checked="false"
+                  aria-checked={userStatus == 'Alumni'}
                   className={styles.listGroupDiv}
                 >
                   Alumni
                 </div>
                 <div
                   role="checkbox"
-                  aria-checked="true"
+                  aria-checked={userStatus == 'Staff'}
                   className={styles.listGroupDiv}
                 >
                   Staff
                 </div>
                 <div
                   role="checkbox"
-                  aria-checked="false"
+                  aria-checked={userStatus == 'Other'}
                   className={styles.listGroupDiv}
                 >
                   Other
@@ -249,49 +251,49 @@ export const RequestSlipHalfPage = ({
           <div className={styles.listGroup}>
             <div
               role="checkbox"
-              aria-checked="false"
+              aria-checked={purpose == 'Class'}
               className={styles.listGroupDiv}
             >
               Class
             </div>
             <div
               role="checkbox"
-              aria-checked="false"
+              aria-checked={purpose == 'Conservation'}
               className={styles.listGroupDiv}
             >
               Conservation
             </div>
             <div
               role="checkbox"
-              aria-checked="true"
+              aria-checked={purpose == 'Digitization'}
               className={styles.listGroupDiv}
             >
               Digitization
             </div>
             <div
               role="checkbox"
-              aria-checked="false"
+              aria-checked={purpose == 'Event'}
               className={styles.listGroupDiv}
             >
               Event
             </div>
             <div
               role="checkbox"
-              aria-checked="false"
+              aria-checked={purpose == 'Exhibit'}
               className={styles.listGroupDiv}
             >
               Exhibit
             </div>
             <div
               role="checkbox"
-              aria-checked="false"
+              aria-checked={purpose == 'Reference'}
               className={styles.listGroupDiv}
             >
               Reference
             </div>
             <div
               role="checkbox"
-              aria-checked="false"
+              aria-checked={purpose == 'Other'}
               className={styles.listGroupDiv}
             >
               Other
@@ -302,7 +304,7 @@ export const RequestSlipHalfPage = ({
           <div className="list-group">
             <div>
               <span className={styles.label}>Slip pulled by:</span>{' '}
-              <span className={styles.value}></span>
+              <span className={styles.value}>{personPrinting}</span>
             </div>
             <div>
               <span className={styles.label}>Pulled by:</span>{' '}
