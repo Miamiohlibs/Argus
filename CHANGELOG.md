@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.8.1 - 2026-03-30
+
+# Fixed
+
+- Fix missing data on pull slips. (In move from 0.7.x to 0.8.0, some data was not displayed.)
+- Improved pull slip printing fit to page: shrink to fit page better across different OS/browser/etc; eliminate new-page CSS after last page (on some systems there is still sometimes a blank page after printing, but only sometimes now.)
+- If a project has no entries, return a graceful error message instead of a bare Next.js error when attempting to print slips.
+
+# Changed
+
+- Add override in package.json to bump npm package "effect" to ^3.20.0 for security.
+
 ## 0.8.0 - 2026-03-13
 
 ## Fixed

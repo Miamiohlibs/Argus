@@ -22,18 +22,24 @@ export const MultiPageHtml = ({ books }: { books: RequestSlipProps[] }) => {
     })
     .filter((entry) => Array.isArray(entry));
 
+  if (!pairsArr[0] || !pairsArr[0][0]) {
+    return <div className="m-5">No entries to print.</div>;
+  }
   pairsArr[0][0].displayPrintButton = true; // display print at top of first page
 
   return (
     <>
       {/*} document-level wrapper */}
       {pairsArr.map((pair, i) => {
+        const isLastPage = i == pairsArr.length - 1;
         return (
           <div
             className={`${styles.sheetOuter} ${styles.sheetOuterLetter} ${styles.sheetOuterLetterSheet}`}
             key={i}
           >
-            <section className={`${styles.sheetPadding5mm} ${styles.sheet}`}>
+            <section
+              className={`${styles.sheetPadding5mm} ${styles.sheet} ${!isLastPage && styles.insertPageBreak}`}
+            >
               <RequestSlipHalfPage {...pair[0]} />
               {pair[1] && <RequestSlipHalfPage {...pair[1]} />}
             </section>

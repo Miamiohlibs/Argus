@@ -1,27 +1,33 @@
-/* body { margin: 0 } */
 .sheetOuter {
     margin: 0;
 }
 .sheetOuterLetterSheet {
-  width: 216mm;
-  height: 280mm;
+  width: 215mm;
+  height: 279mm;
 }
 .sheet {
     margin: 0;
     overflow: hidden;
     position: relative;
     box-sizing: border-box;
-    page-break-after: always;
     /* outline: 3mm black solid;
     outline-offset: -3mm; */
 }
+.insertPageBreak {
+    page-break-after: always;
+        /* outline: 2mm green solid;
+    outline-offset: -2mm; */
+}
+
+
 .sheetPadding5mm { padding: 5mm }
 
+@page {
+    size: letter;
+    margin: 0
+}
+
 @media screen {
-    /* body { 
-        background: #e0e0e0 
-    } */
-   
     .sheet {
         background: white;
         box-shadow: 0 .5mm 2mm rgba(0,0,0,.3); 
@@ -31,10 +37,6 @@
     }
 }
 
-@page {
-    size: letter;
-    margin: 0
-}
 @media print {
     .sheetOuterLetter { 
         width: 216mm 
