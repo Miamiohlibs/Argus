@@ -21,7 +21,7 @@ const entryAction = async ({
 
     logger.verbose(
       `${actionType === 'add' ? 'Adding' : 'Updating'} entry with bibData:`,
-      bibData
+      bibData,
     );
 
     if (bibData.project_id === undefined && bibData.projectId !== undefined) {
@@ -32,7 +32,7 @@ const entryAction = async ({
     }
     // console.log('bibData.project_id', bibData.project_id);
     const projectId = parseInt(
-      (bibData.project_id as string).replace(/"/g, '')
+      (bibData.project_id as string).replace(/"/g, ''),
     );
     logger.verbose('Project ID:', projectId);
 
@@ -78,7 +78,7 @@ const entryAction = async ({
     // Prepare the data object
     const entryData = {
       itemTitle: bibData.title as string,
-      author: bibData.author as string,
+      author: (bibData.author as string) ?? '',
       location_codes: selectedLocationCodes as string,
       location_display: selectedLocationNames as string,
       pub_date:
@@ -152,7 +152,7 @@ const entryAction = async ({
   } catch (error) {
     logger.error(
       `Error ${actionType === 'add' ? 'adding' : 'updating'} entry:`,
-      error
+      error,
     );
     return {
       data: undefined,
