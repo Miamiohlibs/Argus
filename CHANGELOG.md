@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.8.2 - 2026-04-21
+
+### Fixed
+
+- Fixed bug that prevented adding Alma items with no title field using the bulkAdd feature.
+- Bump react-data-table-component to 7.7.1 -- fixes accessibility issue by removing tabindex from DataTable headers when not sortable.
+
 ## 0.8.1 - 2026-03-30
 
 ### Fixed
