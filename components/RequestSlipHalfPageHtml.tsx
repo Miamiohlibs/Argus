@@ -147,8 +147,10 @@ export const RequestSlipHalfPage = ({
       <div className={`${styles.row} ${styles.researcher} `}>
         <div className={`${styles.innerColumn} ${styles.flex2}`}>
           <div>
-            <span className={styles.label}>Name:</span>{' '}
-            <span className={styles.value}>{userName}</span>
+            <span className={styles.label}>For:</span>{' '}
+            <span className={styles.value}>
+              {shortenString(projectName || '', 50)}
+            </span>
           </div>
         </div>
         <div className={styles.innerColumn}>
@@ -160,12 +162,7 @@ export const RequestSlipHalfPage = ({
           </div>
         </div>
         <div className={`${styles.innerColumn} ${styles.flex3}`}>
-          <div>
-            <span className={styles.label}>For:</span>{' '}
-            <span className={styles.value}>
-              {shortenString(projectName || '', 50)}
-            </span>
-          </div>
+          <div>{/* this space intentionally left blank */}</div>
         </div>
       </div>
       <div className={styles.row}>
@@ -302,6 +299,10 @@ export const RequestSlipHalfPage = ({
         </div>
         <div className={styles.column}>
           <div className="list-group">
+            <div>
+              <span className={styles.label}>Project owner:</span>{' '}
+              <span className={styles.value}>{userName}</span>
+            </div>
             <div>
               <span className={styles.label}>Slip pulled by:</span>{' '}
               <span className={styles.value}>{personPrinting}</span>
