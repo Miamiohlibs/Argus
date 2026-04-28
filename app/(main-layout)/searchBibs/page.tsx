@@ -31,7 +31,7 @@ async function SearchBibsPage({ searchParams }: SearchBibsPageProps) {
   }
   const projectId = numericId;
   const {
-    permissions: { canEdit, canPrint, nonOwnerEditor },
+    permissions: { canEdit, canPrint, nonOwnerEditor, currentUserName },
   } = await getUserInfo(projectId);
   const { project } = await getProject({ id: projectId.toString() });
 
@@ -44,6 +44,8 @@ async function SearchBibsPage({ searchParams }: SearchBibsPageProps) {
           userCanPrint={canPrint}
           nonOwnerAlert={nonOwnerEditor}
           project={project}
+          nonOwnerEditor={nonOwnerEditor}
+          currentUserName={currentUserName}
         />
       </ServerDataFetcher>
     );
