@@ -71,6 +71,7 @@ export default async function CustomEntryPage({
             projectId={projectId}
             existingEntry={existingEntry}
             editable={canEdit}
+            currentUserName={currentUserName}
           />
         </>
       );
