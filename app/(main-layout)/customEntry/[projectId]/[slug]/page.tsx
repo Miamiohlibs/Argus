@@ -33,7 +33,7 @@ export default async function CustomEntryPage({
   const { project } = await getProject({ id: projectId.toString() });
   const existingEntryId: string = slugs ? slugs : 'new';
   const {
-    permissions: { canEdit, canPrint, nonOwnerEditor },
+    permissions: { canEdit, canPrint, nonOwnerEditor, currentUserName },
   } = await getUserInfo(projectId);
 
   if (existingEntryId !== 'new') {
@@ -42,9 +42,8 @@ export default async function CustomEntryPage({
     const {
       data: existingEntry,
       error: existingEntryError,
-    }: { data?: EntryWithItems; error?: string } = await getEntryById(
-      existingEntryId
-    );
+    }: { data?: EntryWithItems; error?: string } =
+      await getEntryById(existingEntryId);
 
     if (
       existingEntry &&
@@ -94,7 +93,12 @@ export default async function CustomEntryPage({
             divClass="mb-3"
           />
         )}
-        <CustomEntryForm projectId={projectId} editable={canEdit} />
+        <CustomEntryForm
+          projectId={projectId}
+          editable={canEdit}
+          nonOwnerEditor={nonOwnerEditor}
+          currentUserName={currentUserName}
+        />
       </>
     );
   }

@@ -16,6 +16,8 @@ interface CustomEntryFormProps {
   existingEntry?: EntryWithItems;
   editable?: boolean;
   quickSlip?: boolean;
+  nonOwnerEditor?: boolean;
+  currentUserName: string;
 }
 
 // interface LocationCode {
@@ -29,11 +31,13 @@ const CustomEntryForm = ({
   existingEntry,
   editable = true,
   quickSlip = false,
+  nonOwnerEditor = false,
+  currentUserName,
 }: CustomEntryFormProps) => {
   const router = useRouter();
   const [locations, setLocations] = useState<LocationCode[]>([]);
   const [selectedLocation, setSelectedLocation] = useState<LocationCode | null>(
-    null
+    null,
   );
 
   // Load locations only once on mount
@@ -113,9 +117,9 @@ const CustomEntryForm = ({
         value === null
           ? ''
           : typeof value === 'number'
-          ? value.toString()
-          : value,
-      ])
+            ? value.toString()
+            : value,
+      ]),
     );
 
     const safeItemData: {
@@ -159,7 +163,7 @@ const CustomEntryForm = ({
       toast.error(`Failed to ${actionType === 'add' ? 'add' : 'update'} entry`);
     } else {
       toast.success(
-        `Entry ${actionType === 'add' ? 'added' : 'updated'} successfully`
+        `Entry ${actionType === 'add' ? 'added' : 'updated'} successfully`,
       );
       console.log('Entry saved:', data);
 
@@ -368,7 +372,11 @@ const CustomEntryForm = ({
               aria-describedby="notes-note"
               placeholder={editable ? 'Item Notes' : ''}
               disabled={!editable}
-              defaultValue={existingEntry?.notes ?? ''}
+              defaultValue={
+                (existingEntry?.notes ?? nonOwnerEditor)
+                  ? `added by ${currentUserName} as admin`
+                  : ''
+              }
             />
           </InputGroup>
         </Form.Group>
