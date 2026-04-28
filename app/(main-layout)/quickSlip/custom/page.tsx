@@ -5,7 +5,8 @@ import { redirect } from 'next/navigation';
 
 export default async function quickSlipCustomPage() {
   const user = await getCurrentUser();
-  const { canPrint } = await getPermissions(user);
+  const { canPrint, currentUserName, nonOwnerEditor } =
+    await getPermissions(user);
   if (!canPrint) {
     redirect('/');
   }
@@ -13,7 +14,11 @@ export default async function quickSlipCustomPage() {
   return (
     <>
       <h1>Lookup item for Quick Slip</h1>
-      <CustomEntryForm quickSlip={true} />
+      <CustomEntryForm
+        quickSlip={true}
+        nonOwnerEditor={nonOwnerEditor}
+        currentUserName={currentUserName}
+      />
     </>
   );
 }

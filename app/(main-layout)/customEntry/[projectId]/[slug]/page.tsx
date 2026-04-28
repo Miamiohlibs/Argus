@@ -72,6 +72,7 @@ export default async function CustomEntryPage({
             existingEntry={existingEntry}
             editable={canEdit}
             currentUserName={currentUserName}
+            nonOwnerEditor={nonOwnerEditor}
           />
         </>
       );
