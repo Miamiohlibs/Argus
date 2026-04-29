@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.8.3 - 2026-04-29
+
+### Changed
+
+- When a nonOwnerEditor adds items to a project, by default it will add a note saying that the item was added by [name] in their admin capacity. This is a default for Alma and custom entries, but can be manually edited. For bulk additions, the text will be added and can only be removed after the fact -- there is no interface for preventing the addition due to the simpler interface for bulk additions.
+- Minor reorganization of pull slips: make the project name more visible, move the project owner to the bottom sections of the slip.
+
 ## 0.8.2 - 2026-04-21
 
 ### Fixed
