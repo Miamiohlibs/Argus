@@ -31,9 +31,12 @@ export async function getPermissions({
     isOwner: false, // requires projectId
     isCoEditor: false, // requires projectId
     nonOwnerEditor: false, // requires projectId
+    currentUserName: 'unknown',
   };
 
   if (user) {
+    perms.currentUserName = user.name;
+
     // isBasicUser
     perms.isBasicUser = user.role == 'user';
 

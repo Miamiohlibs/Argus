@@ -52,7 +52,7 @@ export default async function EditEntryPage({
 
   const mmsId = existingEntry?.almaId ?? '';
   const {
-    permissions: { canEdit, canPrint, nonOwnerEditor },
+    permissions: { canEdit, canPrint, nonOwnerEditor, currentUserName },
   } = await getUserInfo(projectId);
 
   const {
@@ -85,6 +85,8 @@ export default async function EditEntryPage({
         actionType="edit"
         existingEntry={existingEntry}
         isEditor={canEdit}
+        currentUserName={currentUserName}
+        nonOwnerEditor={nonOwnerEditor}
       />
     </>
   );

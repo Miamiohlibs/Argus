@@ -10,7 +10,15 @@ interface BulkAddResponse {
   status: 'success' | 'error';
 }
 
-const BulkAddForm = ({ projectId }: { projectId: string }) => {
+const BulkAddForm = ({
+  projectId,
+  currentUserName,
+  nonOwnerEditor,
+}: {
+  projectId: string;
+  currentUserName: string;
+  nonOwnerEditor: boolean;
+}) => {
   const [results, setResults] = useState<BulkAddResponse[]>([]);
   const [totalSubmissions, setTotalSubmissions] = useState(0);
   const [finalNotice, setFinalNotice] = useState<string | null>(null);
@@ -28,7 +36,9 @@ const BulkAddForm = ({ projectId }: { projectId: string }) => {
     entries.forEach(async (entry) => {
       const { status, message } = await LookupAndAddSingleEntry(
         entry.trim(),
-        projectId
+        projectId,
+        currentUserName,
+        nonOwnerEditor,
       );
 
       setResults((prev) => [
@@ -47,7 +57,7 @@ const BulkAddForm = ({ projectId }: { projectId: string }) => {
       const totalSuccess = results.filter((r) => r.status === 'success').length;
       const totalErrors = results.filter((r) => r.status === 'error').length;
       setFinalNotice(
-        `Total submissions: ${totalSubmissions}, Successful: ${totalSuccess}, Errors: ${totalErrors}`
+        `Total submissions: ${totalSubmissions}, Successful: ${totalSuccess}, Errors: ${totalErrors}`,
       );
     }
   }, [results, totalSubmissions]);
