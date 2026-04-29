@@ -13,6 +13,8 @@ interface BibResultsWrapperProps {
   searchActive?: boolean;
   searchFailed?: boolean;
   quickSlip?: boolean;
+  currentUserName: string;
+  nonOwnerEditor: boolean;
 }
 
 export default function BibResultsWrapper({
@@ -24,6 +26,8 @@ export default function BibResultsWrapper({
   searchActive,
   searchFailed,
   quickSlip,
+  currentUserName,
+  nonOwnerEditor,
 }: BibResultsWrapperProps) {
   if (searchActive) {
     return (
@@ -53,6 +57,8 @@ export default function BibResultsWrapper({
           existingEntry={existingEntry}
           isEditor={isEditor}
           quickSlip={quickSlip ?? false}
+          nonOwnerEditor={nonOwnerEditor}
+          currentUserName={currentUserName}
         />
       </>
     );

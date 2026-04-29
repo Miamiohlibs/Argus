@@ -27,7 +27,7 @@ export default async function BulkAddPage({
   } = await getProject({ id });
   const { project, error } = projectResponse;
   const {
-    permissions: { canEdit, canPrint, nonOwnerEditor },
+    permissions: { canEdit, canPrint, nonOwnerEditor, currentUserName },
   } = await getUserInfo(id);
 
   if (!canEdit) {
@@ -47,7 +47,11 @@ export default async function BulkAddPage({
           canPrint={canPrint}
           divClass="mb-3"
         />
-        <BulkAddForm projectId={id} />
+        <BulkAddForm
+          projectId={id}
+          currentUserName={currentUserName}
+          nonOwnerEditor={nonOwnerEditor}
+        />
       </>
     );
   } else {

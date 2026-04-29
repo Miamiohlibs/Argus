@@ -12,6 +12,8 @@ interface ClientSearchBibsPageProps {
   userCanPrint: boolean;
   nonOwnerAlert: boolean;
   project: ProjectWithUserAndBib;
+  nonOwnerEditor: boolean;
+  currentUserName: string;
 }
 
 const ClientSearchBibsPage = ({
@@ -20,6 +22,8 @@ const ClientSearchBibsPage = ({
   userCanPrint = false,
   nonOwnerAlert,
   project,
+  nonOwnerEditor,
+  currentUserName,
 }: ClientSearchBibsPageProps) => {
   // You can still use useSearchParams if needed for other params
   const params = useSearchParams();
@@ -54,6 +58,8 @@ const ClientSearchBibsPage = ({
         projectId={clientProjectId}
         userCanEditPage={userCanEditPage}
         quickSlip={false}
+        nonOwnerEditor={nonOwnerEditor}
+        currentUserName={currentUserName}
       />
     </>
   );
