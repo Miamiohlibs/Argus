@@ -38,6 +38,8 @@ interface HoldingEntryProps {
   existingEntry?: EntryWithItems;
   isEditor: boolean;
   quickSlip: boolean;
+  nonOwnerEditor: boolean;
+  currentUserName: string;
 }
 
 const HoldingEntry = ({
@@ -50,6 +52,8 @@ const HoldingEntry = ({
   existingEntry,
   isEditor,
   quickSlip,
+  nonOwnerEditor,
+  currentUserName,
 }: HoldingEntryProps) => {
   const router = useRouter();
   const [selectedItems, setSelectedItems] = useState<miniItemData[]>([]);
@@ -60,7 +64,7 @@ const HoldingEntry = ({
 
   const matchStringIfPresent = (
     str1: string | null | undefined,
-    str2: string | null | undefined
+    str2: string | null | undefined,
   ) => {
     if (typeof str1 == 'undefined' || str1 == null) {
       str1 = '';
@@ -83,11 +87,11 @@ const HoldingEntry = ({
             matchStringIfPresent(item.description, existingItem.description) &&
             matchStringIfPresent(
               item.location.value,
-              existingItem.location_code
+              existingItem.location_code,
             ) &&
             matchStringIfPresent(item.call_number, existingItem.call_number) &&
             matchStringIfPresent(item.barcode, existingItem.barcode) &&
-            matchStringIfPresent(item.copy_id, existingItem.copy_id)
+            matchStringIfPresent(item.copy_id, existingItem.copy_id),
         );
 
         if (matchingItem) {
@@ -116,13 +120,13 @@ const HoldingEntry = ({
       console.log('selected items after adding:', [...selectedItems, item]);
     } else {
       setSelectedItems((prev) =>
-        prev.filter((selectedItem) => selectedItem.item_id !== item.item_id)
+        prev.filter((selectedItem) => selectedItem.item_id !== item.item_id),
       );
       console.log(
         'selected items after removing:',
         selectedItems.filter(
-          (selectedItem) => selectedItem.item_id !== item.item_id
-        )
+          (selectedItem) => selectedItem.item_id !== item.item_id,
+        ),
       );
     }
   };
@@ -178,11 +182,11 @@ const HoldingEntry = ({
 
       if (error) {
         toast.error(
-          `Failed to ${actionType === 'add' ? 'add' : 'update'} entry`
+          `Failed to ${actionType === 'add' ? 'add' : 'update'} entry`,
         );
       } else {
         toast.success(
-          `Entry ${actionType === 'add' ? 'added' : 'updated'} successfully`
+          `Entry ${actionType === 'add' ? 'added' : 'updated'} successfully`,
         );
         console.log('Entry saved:', data);
 
@@ -229,10 +233,10 @@ const HoldingEntry = ({
     const inHouseCodes = inHouseLocationCodes();
     // sort into inHouse and not-inHouse location codes, keep the rest in order
     const inHouse = items.filter((item) =>
-      inHouseCodes.includes(item.location.value)
+      inHouseCodes.includes(item.location.value),
     );
     const other = items.filter(
-      (item) => !inHouseCodes.includes(item.location.value)
+      (item) => !inHouseCodes.includes(item.location.value),
     );
     items = inHouse.concat(other);
   }
@@ -329,7 +333,11 @@ const HoldingEntry = ({
               placeholder="Enter holdings note and/or select items below"
               aria-label="Holding note"
               aria-describedby="holding-note"
-              defaultValue={existingEntry?.notes ?? ''}
+              defaultValue={
+                (existingEntry?.notes ?? nonOwnerEditor)
+                  ? `added by ${currentUserName} as admin`
+                  : ''
+              }
             />
             <Button type="submit" variant="primary">
               {/* {actionType === 'add'
@@ -366,7 +374,7 @@ const HoldingEntry = ({
 
               // Check if this item is selected (controlled by selectedItems state)
               const isChecked = selectedItems.some(
-                (selected) => selected.item_id === itemData.item_id
+                (selected) => selected.item_id === itemData.item_id,
               );
 
               return (

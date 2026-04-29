@@ -8,12 +8,18 @@ import type { CondensedBibHoldings } from '@/types/CondensedBibHoldings';
 import BibResultsWrapper from './BibResultsWrapper';
 
 type RecordSearchFormProps =
-  | { quickSlip: false; projectId: number; userCanEditPage: boolean }
+  | {
+      quickSlip: false;
+      projectId: number;
+      userCanEditPage: boolean;
+      nonOwnerEditor: boolean;
+      currentUserName: string;
+    }
   | { quickSlip: true };
 
 const RecordSearchForm = (props: RecordSearchFormProps) => {
   const formRef = useRef<HTMLFormElement>(null);
-  let projectId, userCanEditPage, quickSlip;
+  let projectId, userCanEditPage, quickSlip, nonOwnerEditor, currentUserName;
   if (props.quickSlip) {
     quickSlip = true;
     userCanEditPage = true;
@@ -22,6 +28,8 @@ const RecordSearchForm = (props: RecordSearchFormProps) => {
     quickSlip = false;
     userCanEditPage = props.userCanEditPage;
     projectId = props.projectId;
+    nonOwnerEditor = props.nonOwnerEditor;
+    currentUserName = props.currentUserName;
   }
   const [results, setResults] = useState<CondensedBibHoldings | null>(null);
   const [searchFailed, setSearchFailed] = useState<boolean>(false);
@@ -81,6 +89,8 @@ const RecordSearchForm = (props: RecordSearchFormProps) => {
           searchActive={isPending}
           searchFailed={searchFailed}
           quickSlip={quickSlip}
+          currentUserName={currentUserName ?? 'unknown'}
+          nonOwnerEditor={nonOwnerEditor ?? false}
         />
         {process.env.NEXT_PUBLIC_IS_DEV_ENV && results && (
           <pre>{JSON.stringify(results, null, 2)}</pre>

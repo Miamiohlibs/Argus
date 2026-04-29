@@ -8,4 +8,5 @@ export interface ArgusPermissions {
   isOwner: boolean; // requires projectId
   isCoEditor: boolean; // requires projectId
   nonOwnerEditor: boolean; // requires projectId
+  currentUserName: string;
 }

@@ -7,7 +7,9 @@ import { ItemEntry } from '@prisma/client';
 
 export async function LookupAndAddSingleEntry(
   searchString: string,
-  project_id: string
+  project_id: string,
+  currentUserName: string,
+  nonOwnerEditor: boolean,
 ): Promise<{ query: string; message: string; status: 'success' | 'error' }> {
   // get holdings
   const result: { error?: string; data?: CondensedBibHoldings } =
@@ -20,7 +22,12 @@ export async function LookupAndAddSingleEntry(
   // if not error, prep data for database submission
   if (data !== undefined) {
     const itemData = createItemData(data);
-    const bibData = createBibData({ holdings: data, project_id });
+    const bibData = createBibData({
+      holdings: data,
+      project_id,
+      currentUserName,
+      nonOwnerEditor,
+    });
     if (bibData && itemData) {
       const entryData: EntryActionData = {
         bibData: bibData,
@@ -35,7 +42,7 @@ export async function LookupAndAddSingleEntry(
       if (databaseResponse.error) {
         console.error(
           'Error adding entry to database:',
-          databaseResponse.error
+          databaseResponse.error,
         );
         finalMessage = databaseResponse.error;
         finalStatus = 'error';
@@ -66,7 +73,9 @@ export async function LookupAndAddSingleEntry(
 
 export default async function bulkAddEntries(
   searchStrings: string[],
-  project_id: string
+  project_id: string,
+  currentUserName: string,
+  nonOwnerEditor: boolean,
 ): Promise<NextResponse> {
   //lookup holdings
   const holdings: Array<{
@@ -76,14 +85,19 @@ export default async function bulkAddEntries(
     searchStrings.map(async (item) => {
       const trimmedItem = item.trim();
       return await bibHoldingsByAny(trimmedItem);
-    })
+    }),
   );
 
   // format holdings to submit new entries
   const response = holdings.map((holding) => {
     if (holding.data) {
       const itemData = createItemData(holding.data);
-      const bibData = createBibData({ holdings: holding.data, project_id });
+      const bibData = createBibData({
+        holdings: holding.data,
+        project_id,
+        currentUserName,
+        nonOwnerEditor,
+      });
       return { itemData, bibData };
     }
     return {};
@@ -101,7 +115,7 @@ export default async function bulkAddEntries(
         };
         return await entryAction(entryData);
       }
-    })
+    }),
   );
 
   return NextResponse.json({ response, finalResult });
@@ -110,9 +124,13 @@ export default async function bulkAddEntries(
 function createBibData({
   holdings,
   project_id,
+  currentUserName,
+  nonOwnerEditor,
 }: {
   holdings: CondensedBibHoldings;
   project_id: string;
+  currentUserName: string;
+  nonOwnerEditor: boolean;
 }): Record<string, FormDataEntryValue> {
   const bibData: Record<string, FormDataEntryValue> = {
     project_id: project_id,
@@ -123,6 +141,7 @@ function createBibData({
     mms_id: holdings.bib_data.mms_id,
     location_codes: holdings.items.map((item) => item.location.value).join(','),
     location_names: holdings.items.map((item) => item.location.desc).join(','),
+    notes: nonOwnerEditor ? `added by ${currentUserName} as admin` : '',
   };
   return bibData;
 }
