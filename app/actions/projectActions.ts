@@ -478,8 +478,8 @@ export async function duplicateProject(projectId: string) {
       delete bibDataAsAny.id;
       bibDataAsAny.total_item_count = bibDataAsAny.totalItems;
       bibDataAsAny.project_id = duplicatedProject.id.toString();
-      if (bibDataAsAny.almaId && bibDataAsAny.almaIdType == 'mms_id') {
-        bibDataAsAny.mms_id = bibDataAsAny.almaId;
+      if (bibDataAsAny.catalogId && bibDataAsAny.catalogIdType == 'mms_id') {
+        bibDataAsAny.mms_id = bibDataAsAny.catalogId;
       }
       const itemDataAsAny: any[] = entry.items.map((item) => ({ ...item }));
       itemDataAsAny.map((entry) => {
