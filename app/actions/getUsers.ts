@@ -25,7 +25,7 @@ async function getUsers(roles?: Role[]): Promise<{
     return { users };
   } catch (error) {
     logger.error('DB error:', error);
-    return { error: 'Database error' };
+    return { error: 'Database error (getUsers)' };
   }
 }
 

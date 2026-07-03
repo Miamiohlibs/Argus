@@ -25,7 +25,7 @@ async function deleteEntry({
   logger.verbose(
     `deletion request on ${entryId} by ${
       user.id
-    }; isAdmin: ${isAdmin.toString()}`
+    }; isAdmin: ${isAdmin.toString()}`,
   );
 
   // only delete if isAdmin, isOwner, or isCoEditor
@@ -48,7 +48,7 @@ async function deleteEntry({
     return { message: 'Deleted entry' };
   } catch (error) {
     logger.verbose('DB error:', error);
-    return { error: 'Database error' };
+    return { error: 'Database error (deleteEntry)' };
   }
 }
 

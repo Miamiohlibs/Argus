@@ -20,7 +20,7 @@ async function getUserRole(): Promise<{
     return { role: user.role };
   } catch (error) {
     logger.verbose('DB error:', error);
-    return { error: 'Database error' };
+    return { error: ' (getUserRole)' };
   }
 }
 

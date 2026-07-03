@@ -32,7 +32,7 @@ export async function getUserByClerkUserId(clerkUserId: string): Promise<{
     return { user };
   } catch (error) {
     logger.error('DB error:', error);
-    return { error: 'Database error' };
+    return { error: 'Database error (getUserByClerkUserId)' };
   }
 }
 
@@ -60,6 +60,6 @@ export default async function getUser(id: string): Promise<{
     return { user: safeUser };
   } catch (error) {
     logger.verbose('DB error:', error);
-    return { error: 'Database error' };
+    return { error: 'Database error (getUser)' };
   }
 }
