@@ -17,13 +17,13 @@ async function deleteUser(userIdToDelete: string): Promise<{
     return { error: 'User not found' };
   }
   logger.verbose(
-    `deletion request for user ${userIdToDelete} by ${user.clerkUserId}`,
+    `deletion request for user ${userIdToDelete} by ${user.clerkUserId}`
   );
   const canDelete = isAdmin;
   const canDeleteSuperAdmin = isSuperAdmin;
   if (!canDelete) {
     logger.verbose(
-      `user deletion permission denied on ${userIdToDelete} by ${user.clerkUserId}`,
+      `user deletion permission denied on ${userIdToDelete} by ${user.clerkUserId}`
     );
     return { error: 'Delete user permission denied' };
   }
@@ -40,7 +40,7 @@ async function deleteUser(userIdToDelete: string): Promise<{
   }
   logger.verbose(
     'attempting to delete with requirements:',
-    deleteRequirementsArray,
+    deleteRequirementsArray
   );
   try {
     // this is a bit of a hack: we're not really going to deleteMany
@@ -57,7 +57,7 @@ async function deleteUser(userIdToDelete: string): Promise<{
     return { message: 'Deleted project' };
   } catch (error) {
     logger.verbose('DB error:', error);
-    return { error: 'Database error (deleteUser)' };
+    return { error: 'Database error' };
   }
 }
 

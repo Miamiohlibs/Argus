@@ -299,7 +299,7 @@ export async function getProject(params: { id: string }): Promise<{
     return { project };
   } catch (error) {
     logger.error('DB error:', error);
-    return { error: 'Database error (findUniqueOrThrow)' };
+    return { error: 'Database error' };
   }
 }
 
@@ -377,7 +377,7 @@ export async function getProjects(
     return { projects };
   } catch (error) {
     logger.error('DB error:', error);
-    return { error: 'Database error (getProjects)' };
+    return { error: 'Database error' };
   }
 }
 
@@ -424,7 +424,7 @@ export async function deleteProject(projectId: number): Promise<{
     }
   } catch (error) {
     logger.verbose('DB error:', error);
-    return { error: 'Database error (deleteProject)' };
+    return { error: 'Database error' };
   }
 }
 

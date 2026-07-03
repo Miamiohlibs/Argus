@@ -23,7 +23,7 @@ async function updateUser(
     return { user: safeUser };
   } catch (error) {
     logger.error('DB error:', error);
-    return { error: 'Database error (updateUser)' };
+    return { error: 'Database error' };
   }
 }
 

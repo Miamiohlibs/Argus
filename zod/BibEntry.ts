@@ -1,6 +1,6 @@
 import * as z from 'zod';
 
-export const Catalog = z.enum(['ALMA', 'ASPACE']);
+export const Catalog = z.enum(['ALMA', 'ASPACE', 'CUSTOM']);
 
 export const BibEntry = z.object({
   id: z.string().uuid().optional(),

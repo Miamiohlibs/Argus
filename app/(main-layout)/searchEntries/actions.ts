@@ -86,6 +86,6 @@ export async function searchAction(
     };
   } catch (error) {
     logger.error('DB error:', error);
-    return { results: [], error: 'Database error (searchAction)' };
+    return { results: [], error: 'Database error' };
   }
 }

@@ -30,7 +30,7 @@ const entryAction = async ({
     if (bibData.title === undefined && bibData.itemTitle !== undefined) {
       bibData.title = bibData.itemTitle;
     }
-    console.log('bibData.catalog', bibData.catalog);
+    // console.log('bibData.project_id', bibData.project_id);
     const projectId = parseInt(
       (bibData.project_id as string).replace(/"/g, ''),
     );
@@ -89,9 +89,9 @@ const entryAction = async ({
       totalItems: parseInt(bibData.total_item_count as string) || 1,
       url: url as string,
       notes: (bibData.holdingNote as string) ?? (bibData.notes as string),
-      catalogId: bibData.mms_id as string,
-      catalogIdType: 'mms_id' as const,
-      catalog: bibData.catalog ?? ('ALMA' as const),
+      catalogId: (bibData.catalogId as string) ?? (bibData.mms_id as string),
+      catalogIdType: (bibData.catalogIdType as string) ?? 'mms_id',
+      catalog: (bibData.catalog as any) ?? 'ALMA',
     };
 
     let response;

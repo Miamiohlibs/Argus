@@ -3,13 +3,7 @@ import { useRef } from 'react';
 import entryAction from '@/app/actions/addEntry';
 import { toast } from 'react-toastify';
 import { EntryWithItems } from '@/types/EntryWithItems';
-import {
-  Form,
-  InputGroup,
-  Button,
-  FormSelect,
-  FormControl,
-} from 'react-bootstrap';
+import { Form, InputGroup, Button, FormSelect } from 'react-bootstrap';
 import { BibEntry, ItemEntry } from '@prisma/client';
 import { useState } from 'react';
 import { useEffect } from 'react';
