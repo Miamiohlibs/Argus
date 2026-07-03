@@ -89,8 +89,9 @@ const entryAction = async ({
       totalItems: parseInt(bibData.total_item_count as string) || 1,
       url: url as string,
       notes: (bibData.holdingNote as string) ?? (bibData.notes as string),
-      almaId: bibData.mms_id as string,
-      almaIdType: 'mms_id' as const,
+      catalogId: (bibData.catalogId as string) ?? (bibData.mms_id as string),
+      catalogIdType: (bibData.catalogIdType as string) ?? 'mms_id',
+      catalog: (bibData.catalog as any) ?? 'ALMA',
     };
 
     let response;

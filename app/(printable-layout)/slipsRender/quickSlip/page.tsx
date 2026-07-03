@@ -53,8 +53,9 @@ function createItemFromReq({
   };
   const bib: EntryWithItems = {
     id: 'quick-slips',
-    almaId: '',
-    almaIdType: '',
+    catalogId: '',
+    catalogIdType: '',
+    catalog: 'ALMA',
     author: '',
     callNumber: '',
     items: selectedItemObjects,

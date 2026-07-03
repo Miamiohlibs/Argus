@@ -101,8 +101,9 @@ const CustomEntryForm = ({
     const bibData: Partial<BibEntry> = {
       itemTitle: formData.get('itemTitle') as string,
       author: formData.get('author') as string,
-      almaId: 'unknown',
-      almaIdType: 'unknown',
+      catalogId: 'unknown',
+      catalogIdType: 'unknown',
+      catalog: 'CUSTOM',
       // location: selectedLocation ? selectedLocation.code : '',
       location_codes: selectedLocation ? selectedLocation.code : '',
       location_display: selectedLocation ? selectedLocation.name : '',

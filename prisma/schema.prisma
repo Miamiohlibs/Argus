@@ -44,8 +44,9 @@ model Project {
 model BibEntry {
   id               String      @id @default(uuid())
   itemTitle        String
-  almaId           String?
-  almaIdType       String?
+  catalogId        String?
+  catalogIdType    String?
+  catalog          Catalog     @default(ALMA)
   author           String
   callNumber       String?
   notes            String?
@@ -80,6 +81,12 @@ enum Role {
   editor
   admin
   superadmin
+}
+
+enum Catalog {
+  ALMA
+  ASPACE
+  CUSTOM
 }
 
 enum UserAffiliation {

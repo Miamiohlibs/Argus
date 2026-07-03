@@ -50,7 +50,7 @@ export default async function EditEntryPage({
   const projectId = existingEntry?.projectId ?? 0;
   const { project } = await getProject({ id: projectId.toString() });
 
-  const mmsId = existingEntry?.almaId ?? '';
+  const mmsId = existingEntry?.catalogId ?? '';
   const {
     permissions: { canEdit, canPrint, nonOwnerEditor, currentUserName },
   } = await getUserInfo(projectId);
