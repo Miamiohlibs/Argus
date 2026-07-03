@@ -86,6 +86,7 @@ enum Role {
 enum Catalog {
   ALMA
   ASPACE
+  CUSTOM
 }
 
 enum UserAffiliation {
