@@ -21,3 +21,9 @@ export const BibEntry = z.object({
 });
 
 export type BibEntryType = z.infer<typeof BibEntry>;
+
+export const BibEntryDraft = BibEntry.omit({ id: true, projectId: true }).extend({
+  projectId: z.number().optional(),
+});
+
+export type BibEntryDraftType = z.infer<typeof BibEntryDraft>;

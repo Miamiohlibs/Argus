@@ -1,27 +1,24 @@
 // app/(printable-layout)/slipsRender/quickSlip/page.tsx
-import logger from '@/lib/logger';
+import * as z from 'zod';
 import { checkUser } from '@/lib/checkUser';
 import { isAllowedUserStatus, isAllowedAffiliation } from '@/lib/typeChecker';
 import { EntryWithItems } from '@/types/EntryWithItems';
 import { ProjectWithUserAndBib } from '@/types/ProjectWithUserAndBib';
 import generateRequestSlipItems from '@/lib/generateRequestSlipItems';
 import { ItemEntry } from '@prisma/client';
-import { ItemEntry as ItemEntryZod } from '@/zod/ItemEntry';
-import { getLocationNameFromCode } from '@/lib/locationCodes';
+import { BibEntryDraft, BibEntryDraftType } from '@/zod/BibEntry';
+import { ItemEntry as ItemEntryZod, ItemEntryDraftType } from '@/zod/ItemEntry';
 import { MultiPageHtml } from '@/components/MultiPageHtml';
 
 function createItemFromReq({
+  bibData,
+  itemData,
   params,
-  selectedItemObjects,
 }: {
+  bibData: BibEntryDraftType;
+  itemData: ItemEntryDraftType[];
   params: { [key: string]: string | string[] | undefined };
-  selectedItemObjects: ItemEntry[];
 }) {
-  // const params = Object.fromEntries(req.nextUrl.searchParams.entries());
-  console.log('createItemFromReq params:', params);
-
-  // const selectedItemObjects = params.selectedItemObjects || [];
-
   // create some blank/dummy objects to start, with enough data to meet the minimum expectations for a db entry
   const project: ProjectWithUserAndBib = {
     bibEntries: [],
@@ -51,23 +48,38 @@ function createItemFromReq({
     },
     userId: 'quick-slips',
   };
+
+  const items: ItemEntry[] = itemData.map((item, index) => ({
+    id: item.id ?? `quickSlip-${index}`,
+    description: item.description ?? null,
+    bibEntryId: item.bibEntryId ?? null,
+    call_number: item.call_number ?? null,
+    copy_id: item.copy_id ?? null,
+    barcode: item.barcode ?? null,
+    location_code: item.location_code ?? null,
+    location_name: item.location_name ?? null,
+    box: item.box ?? null,
+    folder: item.folder ?? null,
+    ms: item.ms ?? null,
+  }));
+
   const bib: EntryWithItems = {
     id: 'quick-slips',
-    catalogId: '',
-    catalogIdType: '',
-    catalog: 'ALMA',
-    author: '',
-    callNumber: '',
-    items: selectedItemObjects,
-    itemTitle: '',
-    location_codes: '',
-    location_display: '',
-    notes: '',
+    catalogId: bibData.catalogId ?? null,
+    catalogIdType: bibData.catalogIdType ?? null,
+    catalog: bibData.catalog ?? 'ALMA',
+    author: bibData.author ?? '',
+    callNumber: bibData.callNumber ?? null,
+    items,
+    itemTitle: bibData.itemTitle ?? '',
+    location_codes: bibData.location_codes ?? null,
+    location_display: bibData.location_display ?? null,
+    notes: bibData.notes ?? null,
     projectId: 99999,
-    pub_date: '',
-    publisher: '',
-    totalItems: 0,
-    url: '',
+    pub_date: bibData.pub_date ?? null,
+    publisher: bibData.publisher ?? null,
+    totalItems: bibData.totalItems ?? items.length,
+    url: bibData.url ?? null,
     project: {
       id: 99999,
       createdAt: new Date(),
@@ -82,121 +94,6 @@ function createItemFromReq({
       userId: 'none',
     },
   };
-  const blankItem: ItemEntry = {
-    id: 'quickSlip',
-    call_number: '',
-    barcode: '',
-    box: '',
-    copy_id: '',
-    description: '',
-    folder: '',
-    location_code: '',
-    location_name: '',
-    bibEntryId: '',
-    ms: '',
-  };
-
-  if (params.hasOwnProperty('title') && typeof params.title == 'string') {
-    bib.itemTitle = params.title;
-  } else if (
-    params.hasOwnProperty('itemTitle') &&
-    typeof params.itemTitle == 'string'
-  ) {
-    bib.itemTitle = params.itemTitle;
-  }
-
-  if (params.hasOwnProperty('author') && typeof params.author == 'string') {
-    bib.author = params.author;
-  }
-
-  if (
-    params.hasOwnProperty('holdingNote') &&
-    typeof params.holdingNote == 'string'
-  ) {
-    bib.notes = params.holdingNote;
-  }
-
-  // Question: we pass location and location_names -- what to use?
-  if (params.hasOwnProperty('location') && typeof params.location == 'string') {
-    bib.location_codes = params.location;
-  }
-
-  if (
-    params.hasOwnProperty('location_display') &&
-    typeof params.location_display == 'string'
-  ) {
-    bib.location_display = params.location_display;
-  }
-  if (
-    params.hasOwnProperty('date_of_publication') &&
-    typeof params.date_of_publication == 'string'
-  ) {
-    bib.pub_date = params.date_of_publication;
-  } else if (
-    params.hasOwnProperty('pub_date') &&
-    typeof params.pub_date == 'string'
-  ) {
-    bib.pub_date = params.pub_date;
-  }
-
-  if (
-    params.hasOwnProperty('call_number') &&
-    typeof params.call_number == 'string'
-  ) {
-    bib.callNumber = params.call_number;
-  } else if (
-    params.hasOwnProperty('itemCallNumber') &&
-    typeof params.itemCallNumber == 'string'
-  ) {
-    bib.callNumber = params.itemCallNumber;
-  }
-
-  let blankItemFieldsCount = 0;
-
-  if (params.hasOwnProperty('itemCopy') && typeof params.itemCopy == 'string') {
-    blankItem.copy_id = params.itemCopy;
-    blankItemFieldsCount++;
-  }
-  if (params.hasOwnProperty('itemBox') && typeof params.itemBox == 'string') {
-    blankItem.box = params.itemBox;
-    blankItemFieldsCount++;
-  }
-  if (
-    params.hasOwnProperty('itemFolder') &&
-    typeof params.itemFolder == 'string'
-  ) {
-    blankItem.folder = params.itemFolder;
-    blankItemFieldsCount++;
-  }
-  if (params.hasOwnProperty('itemMs') && typeof params.itemMs == 'string') {
-    blankItem.ms = params.itemMs;
-    blankItemFieldsCount++;
-  }
-  if (params.hasOwnProperty('itemBox') && typeof params.itemBox == 'string') {
-    blankItem.box = params.itemBox;
-    blankItemFieldsCount++;
-  }
-  if (
-    params.hasOwnProperty('itemLocation') &&
-    typeof params.itemLocation == 'string'
-  ) {
-    blankItem.location_code = params.itemLocation;
-    blankItem.location_name =
-      getLocationNameFromCode(params.itemLocation) || '';
-    blankItemFieldsCount++;
-  }
-
-  // if populated the blank item with any data, add it as an item
-  if (blankItemFieldsCount > 0) {
-    bib.items.push(blankItem);
-  }
-
-  if (
-    params.hasOwnProperty('publisher_const') &&
-    typeof params.publisher_const == 'string'
-  ) {
-    bib.publisher = params.publisher_const;
-  }
 
   if (params.hasOwnProperty('userName') && typeof params.userName == 'string') {
     project.user.name = params.userName;
@@ -221,6 +118,7 @@ function createItemFromReq({
   if (params.hasOwnProperty('purpose') && typeof params.purpose == 'string') {
     project.purpose = params.purpose;
   }
+
   return { bib, project };
 }
 
@@ -230,34 +128,25 @@ export default async function RenderQuickSlip({
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const user = await checkUser();
-  let selectedItemObjects: ItemEntry[] = [];
-  // const params = Object.fromEntries(req.nextUrl.searchParams.entries());
-
   const searchParamsResolved = await searchParams;
-  if (searchParamsResolved.hasOwnProperty('selectedItems[]')) {
-    const rawSelected = searchParamsResolved['selectedItems[]'];
-    // normalize the array
-    const selectedArray = Array.isArray(rawSelected)
-      ? rawSelected
-      : rawSelected
-        ? [rawSelected]
-        : [];
 
-    selectedItemObjects = selectedArray.map((item) => {
-      const itemObj: any = JSON.parse(item);
-      itemObj.id = itemObj.item_id; //.replace('item-', '');
-      return ItemEntryZod.parse(itemObj);
-    });
-  }
+  const bibDataRaw = searchParamsResolved.bibData;
+  const itemDataRaw = searchParamsResolved.itemData;
 
-  // return <pre>{JSON.stringify(selectedItemObjects, null, 2)}</pre>;
+  const bibData = BibEntryDraft.parse(
+    typeof bibDataRaw === 'string' ? JSON.parse(bibDataRaw) : {},
+  );
+  const itemData = z
+    .array(ItemEntryZod)
+    .parse(typeof itemDataRaw === 'string' ? JSON.parse(itemDataRaw) : []);
+
   const { bib, project } = createItemFromReq({
+    bibData,
+    itemData,
     params: searchParamsResolved,
-    selectedItemObjects,
   });
 
   const items = generateRequestSlipItems([bib], project, user);
-  // console.log('****** BibEntries:', JSON.stringify(items, null, 2));
 
   return <MultiPageHtml books={items} />;
 }

@@ -5,9 +5,12 @@ import ProjectButtons from '@/components/ProjectButtons';
 import NonOwnerAlert from '@/components/NonOwnerAlert';
 import ProjectMetadata from '@/components/ProjectMetadata';
 import { ProjectWithUserAndBib } from '@/types/ProjectWithUserAndBib';
+import type { Catalog } from '@prisma/client';
+import { CATALOG_DISPLAY_NAMES } from '@/lib/catalogs/displayNames';
 
 interface ClientSearchBibsPageProps {
   projectId?: number;
+  catalog?: Catalog;
   userCanEditPage: boolean;
   userCanPrint: boolean;
   nonOwnerAlert: boolean;
@@ -18,6 +21,7 @@ interface ClientSearchBibsPageProps {
 
 const ClientSearchBibsPage = ({
   projectId,
+  catalog,
   userCanEditPage,
   userCanPrint = false,
   nonOwnerAlert,
@@ -28,6 +32,8 @@ const ClientSearchBibsPage = ({
   // You can still use useSearchParams if needed for other params
   const params = useSearchParams();
   const tempId = projectId || params?.get('projectId') || 'none';
+  const resolvedCatalog: Catalog =
+    catalog ?? ((params?.get('catalog') as Catalog | null) || 'ALMA');
   let numericId: number;
   if (typeof tempId === 'number') {
     numericId = tempId;
@@ -45,7 +51,9 @@ const ClientSearchBibsPage = ({
   return (
     <>
       {nonOwnerAlert && <NonOwnerAlert />}
-      <h1 className="h2">Search Alma Catalog for Item</h1>
+      <h1 className="h2">
+        Search {CATALOG_DISPLAY_NAMES[resolvedCatalog]} Catalog for Item
+      </h1>
       <ProjectMetadata project={project} />
       <ProjectButtons
         projectId={clientProjectId}
@@ -56,6 +64,7 @@ const ClientSearchBibsPage = ({
       />
       <RecordSearchForm
         projectId={clientProjectId}
+        catalog={resolvedCatalog}
         userCanEditPage={userCanEditPage}
         quickSlip={false}
         nonOwnerEditor={nonOwnerEditor}

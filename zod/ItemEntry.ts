@@ -1,9 +1,9 @@
 import * as z from 'zod';
 
 export const ItemEntry = z.object({
-  id: z.string(),
+  id: z.string().optional(),
   description: z.string().nullable().default(null),
-  bibEntryId: z.string().nullable().default(null),
+  bibEntryId: z.string().nullable().optional(),
   call_number: z.string().nullable().default(null),
   copy_id: z.string().nullable().default(null),
   barcode: z.string().nullable().default(null),
@@ -13,3 +13,5 @@ export const ItemEntry = z.object({
   folder: z.string().nullable().default(null),
   ms: z.string().nullable().default(null),
 });
+
+export type ItemEntryDraftType = z.infer<typeof ItemEntry>;

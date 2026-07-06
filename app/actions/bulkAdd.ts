@@ -1,9 +1,9 @@
-import { bibHoldingsByAny } from '@/app/actions/almaSearch';
+'use server';
 import entryAction from '@/app/actions/addEntry';
 import EntryActionData from '@/types/EntryActionData';
 import { NextResponse } from 'next/server';
-import { CondensedBibHoldings } from '@/types/CondensedBibHoldings';
-import { ItemEntry } from '@prisma/client';
+import { almaProvider } from '@/lib/catalogs/alma/provider';
+import type { CatalogSearchResult } from '@/lib/catalogs/types';
 
 export async function LookupAndAddSingleEntry(
   searchString: string,
@@ -12,8 +12,8 @@ export async function LookupAndAddSingleEntry(
   nonOwnerEditor: boolean,
 ): Promise<{ query: string; message: string; status: 'success' | 'error' }> {
   // get holdings
-  const result: { error?: string; data?: CondensedBibHoldings } =
-    await bibHoldingsByAny(searchString);
+  const result: { error?: string; data?: CatalogSearchResult } =
+    await almaProvider.searchByAny(searchString);
   const { error, data } = result;
 
   if (error !== undefined) {
@@ -21,47 +21,32 @@ export async function LookupAndAddSingleEntry(
   }
   // if not error, prep data for database submission
   if (data !== undefined) {
-    const itemData = createItemData(data);
-    const bibData = createBibData({
-      holdings: data,
-      project_id,
-      currentUserName,
-      nonOwnerEditor,
-    });
-    if (bibData && itemData) {
-      const entryData: EntryActionData = {
-        bibData: bibData,
-        itemData: itemData,
-        actionType: 'add',
-      };
-      const databaseResponse: {
-        error?: string;
-        data?: { itemTitle: string; [key: string]: unknown };
-      } = await entryAction(entryData);
-      let finalMessage, finalStatus: 'success' | 'error';
-      if (databaseResponse.error) {
-        console.error(
-          'Error adding entry to database:',
-          databaseResponse.error,
-        );
-        finalMessage = databaseResponse.error;
-        finalStatus = 'error';
-      } else {
-        finalMessage =
-          'Entry added successfully: ' +
-          JSON.stringify(databaseResponse.data?.itemTitle);
-        finalStatus = 'success';
-      }
-      return {
-        status: finalStatus,
-        query: searchString,
-        message: finalMessage,
-      };
+    const { bibData, itemData } = withNotes(data, currentUserName, nonOwnerEditor);
+    const entryData: EntryActionData = {
+      bibData,
+      itemData,
+      projectId: parseInt(project_id, 10),
+      actionType: 'add',
+    };
+    const databaseResponse: {
+      error?: string;
+      data?: { itemTitle: string; [key: string]: unknown };
+    } = await entryAction(entryData);
+    let finalMessage, finalStatus: 'success' | 'error';
+    if (databaseResponse.error) {
+      console.error('Error adding entry to database:', databaseResponse.error);
+      finalMessage = databaseResponse.error;
+      finalStatus = 'error';
+    } else {
+      finalMessage =
+        'Entry added successfully: ' +
+        JSON.stringify(databaseResponse.data?.itemTitle);
+      finalStatus = 'success';
     }
     return {
-      status: 'error',
+      status: finalStatus,
       query: searchString,
-      message: 'Failed add entry to database (' + bibData.title + ')',
+      message: finalMessage,
     };
   }
   return {
@@ -77,40 +62,37 @@ export default async function bulkAddEntries(
   currentUserName: string,
   nonOwnerEditor: boolean,
 ): Promise<NextResponse> {
-  //lookup holdings
+  // lookup holdings
   const holdings: Array<{
-    data?: CondensedBibHoldings;
+    data?: CatalogSearchResult;
     error?: string;
   }> = await Promise.all(
     searchStrings.map(async (item) => {
       const trimmedItem = item.trim();
-      return await bibHoldingsByAny(trimmedItem);
+      return await almaProvider.searchByAny(trimmedItem);
     }),
   );
 
   // format holdings to submit new entries
-  const response = holdings.map((holding) => {
-    if (holding.data) {
-      const itemData = createItemData(holding.data);
-      const bibData = createBibData({
-        holdings: holding.data,
-        project_id,
-        currentUserName,
-        nonOwnerEditor,
-      });
-      return { itemData, bibData };
-    }
-    return {};
-  });
+  const response: Array<CatalogSearchResult | undefined> = holdings.map(
+    (holding) => {
+      if (holding.data) {
+        return withNotes(holding.data, currentUserName, nonOwnerEditor);
+      }
+      return undefined;
+    },
+  );
   console.log('response', response);
 
   // submit entries
+  const projectId = parseInt(project_id, 10);
   const finalResult = await Promise.all(
     response.map(async (res) => {
-      if (res.bibData && res.itemData) {
+      if (res) {
         const entryData: EntryActionData = {
           bibData: res.bibData,
           itemData: res.itemData,
+          projectId,
           actionType: 'add',
         };
         return await entryAction(entryData);
@@ -121,43 +103,16 @@ export default async function bulkAddEntries(
   return NextResponse.json({ response, finalResult });
 }
 
-function createBibData({
-  holdings,
-  project_id,
-  currentUserName,
-  nonOwnerEditor,
-}: {
-  holdings: CondensedBibHoldings;
-  project_id: string;
-  currentUserName: string;
-  nonOwnerEditor: boolean;
-}): Record<string, FormDataEntryValue> {
-  const bibData: Record<string, FormDataEntryValue> = {
-    project_id: project_id,
-    title: holdings.bib_data.title,
-    author: holdings.bib_data.author,
-    publisher: holdings.bib_data.publisher_const,
-    year: holdings.bib_data.date_of_publication,
-    mms_id: holdings.bib_data.mms_id,
-    location_codes: holdings.items.map((item) => item.location.value).join(','),
-    location_names: holdings.items.map((item) => item.location.desc).join(','),
-    notes: nonOwnerEditor ? `added by ${currentUserName} as admin` : '',
+function withNotes(
+  result: CatalogSearchResult,
+  currentUserName: string,
+  nonOwnerEditor: boolean,
+): CatalogSearchResult {
+  return {
+    ...result,
+    bibData: {
+      ...result.bibData,
+      notes: nonOwnerEditor ? `added by ${currentUserName} as admin` : '',
+    },
   };
-  return bibData;
-}
-
-function createItemData(holdings: CondensedBibHoldings): ItemEntry[] {
-  return holdings.items.map((item) => ({
-    call_number: item.call_number,
-    location_code: item.location.value,
-    location_name: item.location.desc,
-    barcode: item.barcode,
-    copy_id: null,
-    box: null,
-    folder: null,
-    ms: null,
-    description: null,
-    bibEntryId: null,
-    id: 'unknown',
-  }));
 }
