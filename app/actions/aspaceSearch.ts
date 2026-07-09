@@ -2,6 +2,8 @@
 import {
   AspaceClient,
   repoResourcesSchema,
+  repoTopContainerSchema,
+  repoArchivalObjectSchema,
 } from '@kenxirwin/archives-space-api-client';
 import type { RepoResources } from '@kenxirwin/archives-space-api-client';
 
@@ -39,6 +41,23 @@ export async function searchByUrl(url: string, client: AspaceClient) {
       case /repositories\/\d+\/resources\/\d+/.test(url): {
         const parsed = repoResourcesSchema.parse(raw);
         console.log(parsed);
+        console.log('type: resources');
+        break;
+      }
+
+      // https://archivesstaff.lib.miamioh.edu/api/repositories/2/top_containers/7838
+      case /repositories\/\d+\/top_containers\/\d+/.test(url): {
+        const parsed = repoTopContainerSchema.parse(raw);
+        console.log(parsed);
+        console.log('type: top containers');
+        break;
+      }
+
+      // https://archivesstaff.lib.miamioh.edu/api/repositories/2/archival_objects/5616
+      case /repositories\/\d+\/archival_objects\/\d+/.test(url): {
+        const parsed = repoArchivalObjectSchema.parse(raw);
+        console.log(parsed);
+        console.log('type: archival objects');
         break;
       }
 
