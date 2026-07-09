@@ -32,31 +32,24 @@ export async function searchByUrl(url: string, client: AspaceClient) {
 (repoTopContainerSchema): for endpoints like /repositories/2/top_containers/7838
 (repoArchivalObjectSchema): for endpoints like /repositories/2/archival_objects/5616
 */
-  switch (true) {
-    // https://archivesstaff.lib.miamioh.edu/api/repositories/2/resources/634
-    case /repositories\/\d+\/resources\/\d+/.test(url): {
-      // case /repositories\//.test(url): {
-      const response = await getRepoResources(url, client);
-      console.log(response);
-      break;
-    }
-
-    default: {
-      throw new Error(`Request URL did not match a known content type: ${url}`);
-    }
-  }
-}
-
-async function getRepoResources(url: string, client: AspaceClient) {
   try {
     const raw = await client.getUrl(url);
-    const parsed = repoResourcesSchema.parse(raw);
-    return parsed;
+    switch (true) {
+      // https://archivesstaff.lib.miamioh.edu/api/repositories/2/resources/634
+      case /repositories\/\d+\/resources\/\d+/.test(url): {
+        const parsed = repoResourcesSchema.parse(raw);
+        console.log(parsed);
+        break;
+      }
+
+      default: {
+        throw new Error(
+          `Request URL did not match a known content type: ${url}`,
+        );
+      }
+    }
   } catch (error) {
-    error instanceof Error &&
-      console.error(
-        `error in aspaceSearch.getRepoResources(): ${error.message}`,
-      );
+    error instanceof Error && console.error(error.message);
     throw error;
   }
 }
