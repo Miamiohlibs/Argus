@@ -5,7 +5,10 @@ import {
   repoTopContainerSchema,
   repoArchivalObjectSchema,
 } from '@kenxirwin/archives-space-api-client';
-import type { RepoResources } from '@kenxirwin/archives-space-api-client';
+import type {
+  RepoResources,
+  RepoTopContainer,
+} from '@kenxirwin/archives-space-api-client';
 import type {
   BibDataDraft,
   ItemDataDraft,
@@ -61,8 +64,10 @@ export async function searchByUrl(url: string, client: AspaceClient) {
       // https://archivesstaff.lib.miamioh.edu/api/repositories/2/top_containers/7838
       case /repositories\/\d+\/top_containers\/\d+/.test(url): {
         const parsed = repoTopContainerSchema.parse(raw);
-        console.log(parsed);
+        const argusData = repoTopContainerToDraft(parsed);
+        console.log(`ArgusData for repoTpContainer: ${argusData}`);
         console.log('type: top containers');
+        return argusData;
         break;
       }
 
@@ -103,7 +108,7 @@ function repoResourcesToDraft(data: RepoResources) {
     notes: '',
     pub_date: null,
     publisher: null,
-    totalItems: 1,
+    totalItems: data.instances.length,
     url: data.uri,
   };
 
@@ -121,6 +126,40 @@ function repoResourcesToDraft(data: RepoResources) {
     location_name: data.repository._resolved?.name ?? '',
     ms: '',
   }));
+
+  return { bibData, itemData };
+}
+function repoTopContainerToDraft(data: RepoTopContainer) {
+  const bibData: BibDataDraft = {
+    author: 'Unknown',
+    callNumber: data.indicator,
+    itemTitle: data.long_display_string,
+    catalog: 'ASPACE',
+    catalogId: data.uri,
+    catalogIdType: 'uri',
+    location_codes: data.repository._resolved?.slug ?? '',
+    location_display: data.repository._resolved?.name ?? '',
+    notes: '',
+    pub_date: null,
+    publisher: null,
+    totalItems: 1,
+    url: data.uri,
+  };
+
+  const itemData: ItemDataDraft[] = [
+    {
+      clientKey: `item-0`,
+      barcode: '',
+      box: '',
+      call_number: data.indicator,
+      copy_id: '',
+      description: data.indicator,
+      folder: '',
+      location_code: data.repository._resolved?.slug ?? '',
+      location_name: data.repository._resolved?.name ?? '',
+      ms: '',
+    },
+  ];
 
   return { bibData, itemData };
 }
