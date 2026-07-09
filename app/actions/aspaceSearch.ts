@@ -40,6 +40,10 @@ export async function searchByUrl(url: string, client: AspaceClient) {
 (repoArchivalObjectSchema): for endpoints like /repositories/2/archival_objects/5616
 */
   try {
+    const publicBaseUrl = process.env.ASPACE_PUBLIC_BASE_URL ?? '';
+    const apiBaseUrl = process.env.ASPACE_API_BASE_URL ?? '';
+    url = url.replace(publicBaseUrl, apiBaseUrl);
+    console.log(`fetching url: ${url}`);
     const raw = await client.getUrl(url, {
       resolve: ['linked_agents', 'repository', 'top_container'],
     });
@@ -49,7 +53,7 @@ export async function searchByUrl(url: string, client: AspaceClient) {
         const parsed = repoResourcesSchema.parse(raw);
         const argusData = repoResourcesToDraft(parsed);
         // console.log(JSON.stringify(argusData, null, 2));
-        console.log('type: resources');
+        // console.log('type: resources');
         return argusData;
         break;
       }
