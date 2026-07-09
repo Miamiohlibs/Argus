@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.9.0 - TBD
+
+### Changed
+
+- New .env variables: ASPACE_BASE_UR, ASPACE_USER, ASPACE_PASSWORD
+
 ## 0.8.3 - 2026-04-29
 
 ### Changed
