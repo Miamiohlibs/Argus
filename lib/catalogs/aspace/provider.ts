@@ -11,6 +11,7 @@ export const aspaceProvider: SearchableCatalogProvider = {
     try {
       const client = await getClient();
       const data = await searchByUrl(input, client);
+      // console.log(`Data (searchByAny): ${JSON.stringify(data)}`);
       if (data) {
         return { data };
       } else {

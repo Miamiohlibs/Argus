@@ -6,6 +6,7 @@ import {
   repoArchivalObjectSchema,
 } from '@kenxirwin/archives-space-api-client';
 import type {
+  RepoArchivalObject,
   RepoResources,
   RepoTopContainer,
 } from '@kenxirwin/archives-space-api-client';
@@ -74,8 +75,10 @@ export async function searchByUrl(url: string, client: AspaceClient) {
       // https://archivesstaff.lib.miamioh.edu/api/repositories/2/archival_objects/5616
       case /repositories\/\d+\/archival_objects\/\d+/.test(url): {
         const parsed = repoArchivalObjectSchema.parse(raw);
-        console.log(parsed);
+        const argusData = repoArchivalObjectToDraft(parsed);
+        console.log(argusData);
         console.log('type: archival objects');
+        return argusData;
         break;
       }
 
@@ -90,6 +93,10 @@ export async function searchByUrl(url: string, client: AspaceClient) {
     throw error;
   }
 }
+
+/*
+ * repoResourcesToDraft
+ */
 
 function repoResourcesToDraft(data: RepoResources) {
   const bibData: BibDataDraft = {
@@ -129,6 +136,10 @@ function repoResourcesToDraft(data: RepoResources) {
 
   return { bibData, itemData };
 }
+
+/*
+ * repoTopContainerToDraft
+ */
 function repoTopContainerToDraft(data: RepoTopContainer) {
   const bibData: BibDataDraft = {
     author: 'Unknown',
@@ -160,6 +171,56 @@ function repoTopContainerToDraft(data: RepoTopContainer) {
       ms: '',
     },
   ];
+
+  return { bibData, itemData };
+}
+
+/*
+ * repoArchivalObjectToDraft
+ */
+
+function repoArchivalObjectToDraft(data: RepoArchivalObject) {
+  const bibData: BibDataDraft = {
+    author:
+      data.linked_agents
+        .filter((entry) => entry.role == 'creator')
+        .map((entry) => entry._resolved?.names[0].sort_name)
+        .join('; ') ?? 'Unknown',
+    callNumber:
+      data.instances
+        .map(
+          (instance) =>
+            instance.sub_container.top_container._resolved?.indicator,
+        )
+        .join('; ') ?? '',
+    itemTitle: data.title,
+    catalog: 'ASPACE',
+    catalogId: data.uri,
+    catalogIdType: 'uri',
+    location_codes: data.repository._resolved?.slug ?? '',
+    location_display: data.repository._resolved?.name ?? '',
+    notes: '',
+    pub_date:
+      (data.dates && `${data.dates[0].begin} - ${data.dates[0].end}`) ?? '',
+    publisher: null,
+    totalItems: 1,
+    url: data.uri,
+  };
+
+  const itemData: ItemDataDraft[] = data.instances.map((item, index) => ({
+    clientKey: `item-${index}`,
+    barcode: '',
+    box: '',
+    call_number:
+      item.sub_container.top_container._resolved?.display_string ?? '',
+    copy_id: '',
+    description:
+      item.sub_container.top_container._resolved?.long_display_string ?? '',
+    folder: '',
+    location_code: data.repository._resolved?.slug ?? '',
+    location_name: data.repository._resolved?.name ?? '',
+    ms: '',
+  }));
 
   return { bibData, itemData };
 }
