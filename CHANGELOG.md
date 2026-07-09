@@ -4,7 +4,7 @@
 
 ### Changed
 
-- New .env variables: ASPACE_BASE_UR, ASPACE_USER, ASPACE_PASSWORD
+- New .env variables: ASPACE_API_BASE_URL, ASPACE_USER, ASPACE_PASSWORD
 
 ## 0.8.3 - 2026-04-29
 

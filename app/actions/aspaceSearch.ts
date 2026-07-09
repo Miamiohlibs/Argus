@@ -6,11 +6,16 @@ import {
   repoArchivalObjectSchema,
 } from '@kenxirwin/archives-space-api-client';
 import type { RepoResources } from '@kenxirwin/archives-space-api-client';
+import type {
+  BibDataDraft,
+  ItemDataDraft,
+  CatalogSearchResult,
+} from '@/lib/catalogs/types';
 
 export async function getClient() {
   try {
     const client = new AspaceClient({
-      baseUrl: process.env.ASPACE_BASE_URL || '',
+      baseUrl: process.env.ASPACE_API_BASE_URL || '',
       username: process.env.ASPACE_API_USER || '',
       password: process.env.ASPACE_API_PASSWORD || '',
     });
@@ -35,13 +40,17 @@ export async function searchByUrl(url: string, client: AspaceClient) {
 (repoArchivalObjectSchema): for endpoints like /repositories/2/archival_objects/5616
 */
   try {
-    const raw = await client.getUrl(url);
+    const raw = await client.getUrl(url, {
+      resolve: ['linked_agents', 'repository', 'top_container'],
+    });
     switch (true) {
       // https://archivesstaff.lib.miamioh.edu/api/repositories/2/resources/634
       case /repositories\/\d+\/resources\/\d+/.test(url): {
         const parsed = repoResourcesSchema.parse(raw);
-        console.log(parsed);
+        const argusData = repoResourcesToDraft(parsed);
+        // console.log(JSON.stringify(argusData, null, 2));
         console.log('type: resources');
+        return argusData;
         break;
       }
 
@@ -71,4 +80,43 @@ export async function searchByUrl(url: string, client: AspaceClient) {
     error instanceof Error && console.error(error.message);
     throw error;
   }
+}
+
+function repoResourcesToDraft(data: RepoResources) {
+  const bibData: BibDataDraft = {
+    author:
+      data.linked_agents
+        .filter((entry) => entry.role == 'creator')
+        .map((entry) => entry._resolved?.names[0].sort_name)
+        .join('; ') ?? 'Unknown',
+    callNumber: `${data.id_0}--${data.id_1}--${data.id_2}`,
+    itemTitle: data.title,
+    catalog: 'ASPACE',
+    catalogId: data.uri,
+    catalogIdType: 'uri',
+    location_codes: data.repository._resolved?.slug ?? '',
+    location_display: data.repository._resolved?.name ?? '',
+    notes: '',
+    pub_date: null,
+    publisher: null,
+    totalItems: 1,
+    url: data.uri,
+  };
+
+  const itemData: ItemDataDraft[] = data.instances.map((item, index) => ({
+    clientKey: `item-${index}`,
+    barcode: '',
+    box: '',
+    call_number:
+      item.sub_container.top_container._resolved?.display_string ?? '',
+    copy_id: '',
+    description:
+      item.sub_container.top_container._resolved?.long_display_string ?? '',
+    folder: '',
+    location_code: data.repository._resolved?.slug ?? '',
+    location_name: data.repository._resolved?.name ?? '',
+    ms: '',
+  }));
+
+  return { bibData, itemData };
 }

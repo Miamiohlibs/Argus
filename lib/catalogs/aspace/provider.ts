@@ -8,9 +8,20 @@ export const aspaceProvider: SearchableCatalogProvider = {
   displayName: CATALOG_DISPLAY_NAMES.ASPACE,
 
   async searchByAny(input: string) {
-    const client = await getClient();
-    await searchByUrl(input, client);
-    return { error: NOT_IMPLEMENTED };
+    try {
+      const client = await getClient();
+      const data = await searchByUrl(input, client);
+      if (data) {
+        return { data };
+      } else {
+        return { error: `Failed to get data in aspace/provider/searchByAny` };
+      }
+    } catch (error) {
+      console.error(`Error fetching data in aspace/provider/searchByAny`);
+      return { error: `Error fetching data in aspace/provider/searchByAny` };
+    }
+
+    // return { error: NOT_IMPLEMENTED };
   },
 
   async fetchByCatalogId() {
