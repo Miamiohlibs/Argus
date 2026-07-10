@@ -1,9 +1,10 @@
 import { Metadata } from 'next';
 import { EntryWithItems } from '@/types/EntryWithItems';
-import { bibHoldings } from '@/app/actions/almaSearch';
+import { fetchCatalogEntry } from '@/app/actions/catalogSearch';
 import getEntryById from '@/app/actions/getEntryById';
-import { CondensedBibHoldings } from '@/types/CondensedBibHoldings';
+import { CatalogSearchResult } from '@/lib/catalogs/types';
 import BibResultsWrapper from '@/components/BibResultsWrapper';
+import CustomEntryForm from '@/components/CustomEntryForm';
 import getUserInfo from '@/lib/getUserInfo';
 import NonOwnerAlert from '@/components/NonOwnerAlert';
 import ProjectButtons from '@/components/ProjectButtons';
@@ -50,17 +51,43 @@ export default async function EditEntryPage({
   const projectId = existingEntry?.projectId ?? 0;
   const { project } = await getProject({ id: projectId.toString() });
 
-  const mmsId = existingEntry?.catalogId ?? '';
   const {
     permissions: { canEdit, canPrint, nonOwnerEditor, currentUserName },
   } = await getUserInfo(projectId);
 
+  if (existingEntry?.catalog === 'CUSTOM') {
+    return (
+      <>
+        {nonOwnerEditor && <NonOwnerAlert />}
+        <h1 className="h2">
+          Edit Custom Entry: <i>{existingEntry.itemTitle}</i>
+        </h1>
+        <ProjectButtons
+          canEdit={canEdit}
+          canPrint={canPrint}
+          onPage="editEntry"
+          projectId={projectId}
+          divClass="mb-2"
+        />
+        {project && <ProjectMetadata project={project} />}
+        <CustomEntryForm
+          projectId={projectId}
+          existingEntry={existingEntry}
+          editable={canEdit}
+          currentUserName={currentUserName}
+          nonOwnerEditor={nonOwnerEditor}
+        />
+      </>
+    );
+  }
+
   const {
     data: holdingsData,
     error: holdingsError,
-  }: { data?: CondensedBibHoldings; error?: string } = await bibHoldings({
-    mms_id: mmsId,
-  });
+  }: { data?: CatalogSearchResult; error?: string } = await fetchCatalogEntry(
+    existingEntry?.catalog ?? 'ALMA',
+    existingEntry?.catalogId ?? '',
+  );
   if (holdingsError) {
     return <>Error refreshing catalog data</>;
   }
@@ -68,7 +95,7 @@ export default async function EditEntryPage({
     <>
       {nonOwnerEditor && <NonOwnerAlert />}
       <h1 className="h2">
-        Editing: <i>{holdingsData && holdingsData.bib_data.title}</i>
+        Editing: <i>{holdingsData && holdingsData.bibData.itemTitle}</i>
       </h1>
       <ProjectButtons
         canEdit={canEdit}

@@ -1,50 +1,54 @@
-import type { AlmaItemHoldingBibData } from '@/types/AlmaItem';
+import type { BibDataDraft } from '@/lib/catalogs/types';
+
+const FIELDS: Array<keyof BibDataDraft> = [
+  'author',
+  'itemTitle',
+  'location_display',
+  'location_codes',
+  'callNumber',
+  'pub_date',
+  'publisher',
+  'catalogId',
+  'catalogIdType',
+  'url',
+];
+
 const BibEntryComponent = ({
   entry,
-}: // projectId,
-{
-  entry: AlmaItemHoldingBibData;
-  // projectId: string | number;
+  extra,
+}: {
+  entry: BibDataDraft;
+  extra?: Record<string, string | undefined>;
 }) => {
-  console.log(entry);
-  const fields = [
-    'author',
-    'title',
-    'location',
-    'locationNames',
-    'locationNamesAndCodes',
-    'call_number',
-    'date_of_publication',
-    'publisher_const',
-    'place_of_publication',
-    'isbn',
-    'mms_id',
-  ];
+  const formatLabel = (field: string) =>
+    field.charAt(0).toUpperCase() + field.slice(1).replace(/_/g, ' ');
 
-  const getEntryValue = (
-    entry: AlmaItemHoldingBibData,
-    field: keyof AlmaItemHoldingBibData
-  ) => {
-    return entry[field];
-  };
-  const returnValue = (
+  return (
     <div className="bib-entry">
-      {fields.map((field: string) => {
-        if (Object.getOwnPropertyNames(entry).includes(field)) {
+      {FIELDS.map((field) => {
+        const value = entry[field];
+        if (value === null || value === undefined || value === '') {
+          return null;
+        }
+        return (
+          <p key={field}>
+            <span className="bib-entry-label">{formatLabel(field)}</span>:{' '}
+            {String(value)}
+          </p>
+        );
+      })}
+      {extra &&
+        Object.entries(extra).map(([field, value]) => {
+          if (!value) return null;
           return (
             <p key={field}>
-              <span className="bib-entry-label">
-                {field.charAt(0).toUpperCase() +
-                  field.slice(1).replace(/_/g, ' ')}
-              </span>
-              : {getEntryValue(entry, field as keyof AlmaItemHoldingBibData)}
+              <span className="bib-entry-label">{formatLabel(field)}</span>:{' '}
+              {value}
             </p>
           );
-        }
-      })}
+        })}
     </div>
   );
-  return returnValue;
 };
 
 export default BibEntryComponent;

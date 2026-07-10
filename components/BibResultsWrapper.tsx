@@ -1,4 +1,4 @@
-import { CondensedBibHoldings } from '@/types/CondensedBibHoldings';
+import { CatalogSearchResult } from '@/lib/catalogs/types';
 import { EntryWithItems } from '@/types/EntryWithItems';
 import BibEntryComponent from './BibEntryComponent';
 import HoldingEntry from './HoldingEntry';
@@ -6,7 +6,7 @@ import { Spinner } from 'react-bootstrap';
 
 interface BibResultsWrapperProps {
   projectId: number | undefined;
-  holdingsData: CondensedBibHoldings | undefined;
+  holdingsData: CatalogSearchResult | undefined;
   actionType: 'add' | 'edit' | 'quickSlip';
   existingEntry?: EntryWithItems;
   isEditor: boolean;
@@ -45,14 +45,12 @@ export default function BibResultsWrapper({
   } else {
     return (
       <>
-        <BibEntryComponent entry={holdingsData.bib_data} />
+        <BibEntryComponent entry={holdingsData.bibData} extra={holdingsData.extra} />
 
         <HoldingEntry
-          items={holdingsData.items}
-          bibData={holdingsData.bib_data}
+          items={holdingsData.itemData}
+          bibData={holdingsData.bibData}
           projectId={projectId !== undefined ? projectId : 0}
-          locationCodes={holdingsData.locationCodes}
-          locationNames={holdingsData.locationNames ?? ''}
           actionType={actionType}
           existingEntry={existingEntry}
           isEditor={isEditor}
