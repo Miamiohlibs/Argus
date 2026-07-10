@@ -2,6 +2,7 @@ import type { SearchableCatalogProvider } from '@/lib/catalogs/types';
 import { CATALOG_DISPLAY_NAMES } from '@/lib/catalogs/displayNames';
 import { searchByUrl, getClient } from '@/app/actions/aspaceSearch';
 const NOT_IMPLEMENTED = 'ArchivesSpace integration is not yet implemented.';
+import { PublicCatalogsSchema } from '@/zod/PublicCatalogsSchema';
 
 export const aspaceProvider: SearchableCatalogProvider = {
   catalog: 'ASPACE',
