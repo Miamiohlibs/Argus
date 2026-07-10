@@ -13,6 +13,7 @@ try {
   );
   throw error;
 }
+
 export const CATALOG_DISPLAY_NAMES: Record<Catalog, string> = {
   ALMA: validCatalogs.find((item) => item.slug == 'ALMA')?.label || 'Alma',
   ASPACE:
@@ -20,3 +21,5 @@ export const CATALOG_DISPLAY_NAMES: Record<Catalog, string> = {
     'ArchivesSpace',
   CUSTOM: 'Custom Entry',
 };
+
+export const activeCatalogs = validCatalogs;
