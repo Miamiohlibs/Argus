@@ -22,4 +22,10 @@ export const CATALOG_DISPLAY_NAMES: Record<Catalog, string> = {
   CUSTOM: 'Custom Entry',
 };
 
+export const CATALOG_SEARCH_PLACEHOLDER: Record<Catalog, string> = {
+  ALMA: 'Enter Call Number, Barcode, Alma MMS_ID, or Permalink URL',
+  ASPACE: 'Enter ArchivesSpace URL',
+  CUSTOM: 'Not applicable',
+};
+
 export const activeCatalogs = validCatalogs;
