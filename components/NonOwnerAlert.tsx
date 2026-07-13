@@ -1,4 +1,4 @@
-import { Alert } from 'react-bootstrap';
+import Alert from '@/components/ui/Alert';
 import { ExclamationTriangle } from 'react-bootstrap-icons';
 const NonOwnerAlert = () => {
   return (

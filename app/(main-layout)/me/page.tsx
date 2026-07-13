@@ -22,7 +22,7 @@ export default async function MePage() {
       )}
       {process.env.NODE_ENV == 'development' && (
         <>
-          <h2 className="mt-5">JSON</h2>
+          <h2 className="mt-12">JSON</h2>
           <h3>User</h3>
           <pre>{JSON.stringify(user, null, 2)}</pre>
           <h3>Projects</h3>

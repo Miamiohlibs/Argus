@@ -40,8 +40,8 @@ const Home = async () => {
   }
   return (
     <>
-      <h1 className="h2">{displayName}&apos;s Projects</h1>
-      <div className="mb-3">
+      <h1 className="text-3xl font-medium">{displayName}&apos;s Projects</h1>
+      <div className="mb-4">
         <MainButtons isEditorOrAbove={isEditorOrAbove} canPrint={canPrint} />
       </div>
       <ProjectsTable limitToUser={true} user={user} canPrint={canPrint} />

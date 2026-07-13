@@ -1,5 +1,5 @@
 import { ProjectWithUserAndBib } from '@/types/ProjectWithUserAndBib';
-import { Badge } from 'react-bootstrap';
+import Badge from '@/components/ui/Badge';
 import {
   UnlockFill as Unlocked,
   LockFill as Locked,
@@ -26,8 +26,8 @@ const ProjectMetadata = ({
   }
   return (
     <>
-      <div className="mb-3 text-muted small">
-        {!hideTitle && <span className="fw-bold">{project?.title}</span>}
+      <div className="mb-4 text-sm text-gray-500">
+        {!hideTitle && <span className="font-bold">{project?.title}</span>}
         <Badge bg="secondary" className="ms-2">
           Owner: {project?.user.name}
         </Badge>
@@ -38,7 +38,7 @@ const ProjectMetadata = ({
             </Badge>
           ))}
 
-        <div className="float-end">
+        <div className="float-right">
           {project.subjects && project.subjects.length > 0 && (
             <Badge bg="light" className="ms-2 text-dark">
               Subject(s): {project.subjects.join(', ')}

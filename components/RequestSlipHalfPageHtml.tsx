@@ -2,7 +2,7 @@
 // called by ./MultiPageHtml with one bib's data
 'use client';
 import type { RequestSlipProps } from '@/types/RequestSlipProps';
-import { Button } from 'react-bootstrap';
+import Button from '@/components/ui/Button';
 import styles from './RequestSlipHalfPageHtml.module.css';
 import { Roboto } from 'next/font/google';
 
@@ -168,7 +168,7 @@ export const RequestSlipHalfPage = ({
       <div className={styles.row}>
         <div className={styles.column}>
           <h3 className={styles.h3}>Institution</h3>
-          <div className="list-group">
+          <div className="flex flex-col">
             <div
               role="checkbox"
               aria-checked={userAffiliation == 'Miami'}
@@ -298,7 +298,7 @@ export const RequestSlipHalfPage = ({
           </div>
         </div>
         <div className={styles.column}>
-          <div className="list-group">
+          <div className="flex flex-col">
             <div>
               <span className={styles.label}>Project owner:</span>{' '}
               <span className={styles.value}>{userName}</span>
@@ -314,7 +314,7 @@ export const RequestSlipHalfPage = ({
           </div>
         </div>
         <div className={styles.column}>
-          <div className="list-group">
+          <div className="flex flex-col">
             <div>
               <span className={styles.label}>Reshelved by:</span>{' '}
               <span className={styles.value}></span>

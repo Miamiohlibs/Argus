@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import { Button } from 'react-bootstrap';
+import Button from '@/components/ui/Button';
 interface DeleteButtonProps {
   label: string;
   onDelete: () => Promise<void> | void;

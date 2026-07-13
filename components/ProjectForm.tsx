@@ -2,7 +2,12 @@
 // import { useRef } from 'react';
 import type { User } from '@prisma/client';
 import { useActionState } from 'react';
-import { Form, Button, Card, FormSelect } from 'react-bootstrap';
+import Input from '@/components/ui/Input';
+import Select from '@/components/ui/Select';
+import Button from '@/components/ui/Button';
+import Card from '@/components/ui/Card';
+import Label from '@/components/ui/Label';
+import Checkbox from '@/components/ui/Checkbox';
 import { toast } from 'react-toastify';
 import { useEffect, useState } from 'react';
 // import { useRouter } from 'next/navigation'; // Changed from react-router-dom
@@ -117,21 +122,21 @@ export default function ProjectForm({
         </Card.Title>
       </Card.Header>
       <Card.Body>
-        <Form action={formAction}>
-          <Form.Group className="mb-3" controlId="title">
-            <Form.Label>Title *</Form.Label>
-            <Form.Control
+        <form action={formAction}>
+          <div className="mb-4">
+            <Label>Title *</Label>
+            <Input
               type="text"
               name="title"
               defaultValue={project?.title || ''}
               placeholder="Enter project title..."
               required
-              size="lg"
+              className="py-2 text-lg"
             />
-          </Form.Group>
-          <Form.Group className="mb-3">
-            <Form.Label>Project Purpose *</Form.Label>
-            <FormSelect
+          </div>
+          <div className="mb-4">
+            <Label>Project Purpose *</Label>
+            <Select
               id="purpose"
               name="purpose"
               // disabled={!editable}
@@ -140,11 +145,11 @@ export default function ProjectForm({
               required={true}
             >
               {purposeSelectOptions}
-            </FormSelect>
-          </Form.Group>
+            </Select>
+          </div>
 
-          <Form.Label>Project Subject</Form.Label>
-          <FormSelect
+          <Label>Project Subject</Label>
+          <Select
             id="subjects"
             name="subjects"
             // disabled={!editable}
@@ -153,22 +158,22 @@ export default function ProjectForm({
             required={true}
           >
             {projectSubjectOptions}
-          </FormSelect>
+          </Select>
 
-          <Form.Group className="my-4" controlId="public-switch">
-            <Form.Check
-              type="switch"
+          <div className="my-6">
+            <Checkbox
+              switch
               id="public-switch"
               name="public"
               label="Make this project public"
               defaultChecked={project?.public}
               onChange={handlePublicChange}
             />
-          </Form.Group>
+          </div>
 
-          <Form.Group className="mb-4" controlId="notes">
-            <Form.Label>Notes</Form.Label>
-            <Form.Control
+          <div className="mb-6">
+            <Label>Notes</Label>
+            <Input
               as="textarea"
               rows={4}
               name="notes"
@@ -176,20 +181,18 @@ export default function ProjectForm({
               placeholder="Enter project notes or description (optional)..."
               className="resize-none"
             />
-          </Form.Group>
+          </div>
 
-          <Form.Control type="hidden" name="userId" value={user?.clerkUserId} />
+          <input type="hidden" name="userId" value={user?.clerkUserId} />
 
-          {project && (
-            <Form.Control type="hidden" name="projectId" value={project.id} />
-          )}
+          {project && <input type="hidden" name="projectId" value={project.id} />}
 
-          <div className="d-grid">
-            <Button variant="primary" type="submit" size="lg">
+          <div className="grid">
+            <Button variant="primary" type="submit" size="lg" className="w-full">
               {project ? 'Update Project' : 'Create New Project'}
             </Button>
           </div>
-        </Form>
+        </form>
       </Card.Body>
     </Card>
   );

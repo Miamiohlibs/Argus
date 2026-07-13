@@ -1,5 +1,9 @@
 'use client';
-import { Form, Button, Alert, Spinner } from 'react-bootstrap';
+import Input from '@/components/ui/Input';
+import Label from '@/components/ui/Label';
+import Button from '@/components/ui/Button';
+import Alert from '@/components/ui/Alert';
+import Spinner from '@/components/ui/Spinner';
 import { LookupAndAddSingleEntry } from '@/app/actions/bulkAdd';
 import { useState, useEffect } from 'react';
 import BulkAddResults from './BulkAddResults';
@@ -66,40 +70,39 @@ const BulkAddForm = ({
   return (
     <>
       {totalSubmissions > 0 && finalNotice == null && (
-        <Alert variant="info" className="mt-3">
-          <Spinner animation="border" size="sm" className="me-2" />
+        <Alert variant="info" className="mt-4">
+          <Spinner size="sm" className="me-2" />
           Submitting {totalSubmissions} entries...
         </Alert>
       )}
       <BulkAddResults entries={results} totalExpected={totalSubmissions} />
 
       {totalSubmissions > 0 && finalNotice !== null && (
-        <Alert variant="info" className="mt-3">
+        <Alert variant="info" className="mt-4">
           {finalNotice}
         </Alert>
       )}
-      <Form onSubmit={handleSubmit} ref={formRef}>
-        <Form.Label htmlFor="entries" className="mb-3">
+      <form onSubmit={handleSubmit} ref={formRef}>
+        <Label htmlFor="entries" className="mb-4">
           Enter entries (one per line). Add items by Call #, Barcode, Alma
           MMS_ID, or Alma Permalink Url.
-        </Form.Label>
-        <Form.Control
+        </Label>
+        <Input
           as="textarea"
           id="entries"
           name="entries"
-          className="form-control"
           rows={10}
           style={{ width: '80ch' }}
           placeholder="Enter your entries here, one per line."
         />
 
-        <Button type="submit" className="btn btn-primary mt-3">
+        <Button type="submit" className="mt-4">
           Submit
         </Button>
         <Button
           type="button"
           variant="outline-secondary"
-          className="ms-2 mt-3"
+          className="ms-2 mt-4"
           onClick={() => {
             // clear form contents
             formRef.current?.reset();
@@ -107,7 +110,7 @@ const BulkAddForm = ({
         >
           Clear Form
         </Button>
-      </Form>
+      </form>
     </>
   );
 };

@@ -1,5 +1,8 @@
 'use client';
-import { Form, Button, InputGroup } from 'react-bootstrap';
+import Input from '@/components/ui/Input';
+import Button from '@/components/ui/Button';
+import InputGroup, { InputGroupText } from '@/components/ui/InputGroup';
+import Checkbox from '@/components/ui/Checkbox';
 import { useState, useEffect, useRef } from 'react';
 import { toast } from 'react-toastify';
 import entryAction from '@/app/actions/addEntry';
@@ -178,14 +181,14 @@ const HoldingEntry = ({
       submitButtonText = 'Add Item to Project';
   }
   return (
-    <Form ref={formRef} onSubmit={handleSubmit}>
-      <div key={'holding'} className="mb-4 border p-3">
+    <form ref={formRef} onSubmit={handleSubmit}>
+      <div key={'holding'} className="mb-6 border p-3">
         {quickSlip && <QuickSlipProjectInfo />}
 
-        <Form.Group controlId={`mmsIdSearch`}>
-          <InputGroup className="mb-3">
-            <InputGroup.Text id="holding-note">Note</InputGroup.Text>
-            <Form.Control
+        <div>
+          <InputGroup className="mb-4">
+            <InputGroupText id="holding-note">Note</InputGroupText>
+            <Input
               ref={noteRef}
               name="holdingNote"
               placeholder="Enter holdings note and/or select items below"
@@ -201,7 +204,7 @@ const HoldingEntry = ({
               {submitButtonText}
             </Button>
           </InputGroup>
-        </Form.Group>
+        </div>
 
         {/* Item Selection */}
         <ul style={{ listStyleType: 'none', paddingLeft: 0 }}>
@@ -223,8 +226,7 @@ const HoldingEntry = ({
 
               return (
                 <li key={item.clientKey} className="mb-2">
-                  <Form.Check
-                    type="checkbox"
+                  <Checkbox
                     id={`item-${item.clientKey}`}
                     label={itemLabel}
                     checked={isChecked}
@@ -234,11 +236,11 @@ const HoldingEntry = ({
               );
             })
           ) : (
-            <li className="text-muted">No items found</li>
+            <li className="text-gray-500">No items found</li>
           )}
         </ul>
       </div>
-    </Form>
+    </form>
   );
 };
 

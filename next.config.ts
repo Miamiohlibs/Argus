@@ -1,8 +1,10 @@
 import type { NextConfig } from 'next';
+import path from 'node:path';
 const { version } = require('./package.json');
 
 const nextConfig: NextConfig = {
   /* config options here */
+  outputFileTracingRoot: path.join(__dirname),
   basePath: process.env.NEXT_PUBLIC_APP_BASEPATH
     ? `${process.env.NEXT_PUBLIC_APP_BASEPATH}`
     : '',

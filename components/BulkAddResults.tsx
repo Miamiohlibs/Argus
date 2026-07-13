@@ -1,11 +1,4 @@
-import {
-  // Alert,
-  // Toast,
-  // ToastHeader,
-  // ToastBody,
-  Card,
-  CardBody,
-} from 'react-bootstrap';
+import Card, { CardBody } from '@/components/ui/Card';
 import { XCircle, CheckCircle } from 'react-bootstrap-icons';
 interface BulkAddResponse {
   query: string;
@@ -29,11 +22,12 @@ const BulkAddResults = ({
           <Card
             key={index}
             aria-atomic={true}
-            className="w-100 mb-2"
+            className="w-full mb-2"
             style={{
-              backgroundColor: `rgba(var(--bs-${
-                entry.status === 'success' ? 'success' : 'danger'
-              }-rgb), 0.2)`,
+              backgroundColor:
+                entry.status === 'success'
+                  ? 'rgba(25, 135, 84, 0.2)'
+                  : 'rgba(220, 53, 69, 0.2)',
             }}
           >
             <CardBody>
