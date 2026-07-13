@@ -1,7 +1,31 @@
 import type { Catalog } from '@prisma/client';
+import type { z } from 'zod';
+import { PublicCatalogsSchema } from '@/zod/PublicCatalogsSchema';
+// import logger from '../logger';
+let validCatalogs: z.infer<typeof PublicCatalogsSchema> = [];
+try {
+  validCatalogs = PublicCatalogsSchema.parse(
+    JSON.parse(process.env.NEXT_PUBLIC_CATALOGS ?? '[]'),
+  );
+} catch (error) {
+  console.error(
+    'Trouble parsing NEXT_PUBLIC_CATALOGS in lib/catalog/displayNames',
+  );
+  throw error;
+}
 
 export const CATALOG_DISPLAY_NAMES: Record<Catalog, string> = {
-  ALMA: 'Alma',
-  ASPACE: 'ArchivesSpace',
+  ALMA: validCatalogs.find((item) => item.slug == 'ALMA')?.label || 'Alma',
+  ASPACE:
+    validCatalogs.find((item) => item.slug == 'ASPACE')?.label ||
+    'ArchivesSpace',
   CUSTOM: 'Custom Entry',
 };
+
+export const CATALOG_SEARCH_PLACEHOLDER: Record<Catalog, string> = {
+  ALMA: 'Enter Call Number, Barcode, Alma MMS_ID, or Permalink URL',
+  ASPACE: 'Enter ArchivesSpace URL',
+  CUSTOM: 'Not applicable',
+};
+
+export const activeCatalogs = validCatalogs;

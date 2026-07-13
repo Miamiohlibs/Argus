@@ -14,13 +14,13 @@ import { BibEntry } from '@prisma/client';
 
 async function searchEntries(
   query: string,
-  userId: string
+  userId: string,
 ): Promise<{
   entries?: BibEntry[];
   error?: string;
 }> {
   try {
-    console.log(query, userId);
+    logger.verbose(query, userId);
     const entries = await db.bibEntry.findMany({
       where: {
         OR: [

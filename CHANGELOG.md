@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.9.0 - TBD
+
+### Changed
+
+- New .env variables: ASPACE_API_BASE_URL, ASPACE_USER, ASPACE_PASSWORD, ASPACE_PUBLIC_BASE_URL, NEXT_PUBLIC_CATALOGS
+
 ## 0.8.3 - 2026-04-29
 
 ### Changed

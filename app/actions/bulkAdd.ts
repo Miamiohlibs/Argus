@@ -3,6 +3,7 @@ import entryAction from '@/app/actions/addEntry';
 import EntryActionData from '@/types/EntryActionData';
 import { NextResponse } from 'next/server';
 import { almaProvider } from '@/lib/catalogs/alma/provider';
+import logger from '@/lib/logger';
 import type { CatalogSearchResult } from '@/lib/catalogs/types';
 
 export async function LookupAndAddSingleEntry(
@@ -21,7 +22,11 @@ export async function LookupAndAddSingleEntry(
   }
   // if not error, prep data for database submission
   if (data !== undefined) {
-    const { bibData, itemData } = withNotes(data, currentUserName, nonOwnerEditor);
+    const { bibData, itemData } = withNotes(
+      data,
+      currentUserName,
+      nonOwnerEditor,
+    );
     const entryData: EntryActionData = {
       bibData,
       itemData,
@@ -82,7 +87,7 @@ export default async function bulkAddEntries(
       return undefined;
     },
   );
-  console.log('response', response);
+  logger.verbose('response', response);
 
   // submit entries
   const projectId = parseInt(project_id, 10);

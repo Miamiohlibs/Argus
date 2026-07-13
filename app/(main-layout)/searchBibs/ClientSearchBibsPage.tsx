@@ -7,6 +7,7 @@ import ProjectMetadata from '@/components/ProjectMetadata';
 import { ProjectWithUserAndBib } from '@/types/ProjectWithUserAndBib';
 import type { Catalog } from '@prisma/client';
 import { CATALOG_DISPLAY_NAMES } from '@/lib/catalogs/displayNames';
+import { CATALOG_SEARCH_PLACEHOLDER } from '@/lib/catalogs/displayNames';
 
 interface ClientSearchBibsPageProps {
   projectId?: number;
@@ -69,6 +70,7 @@ const ClientSearchBibsPage = ({
         quickSlip={false}
         nonOwnerEditor={nonOwnerEditor}
         currentUserName={currentUserName}
+        searchPlaceholder={CATALOG_SEARCH_PLACEHOLDER[resolvedCatalog]}
       />
     </>
   );

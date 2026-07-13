@@ -16,6 +16,7 @@ type RecordSearchFormProps =
       userCanEditPage: boolean;
       nonOwnerEditor: boolean;
       currentUserName: string;
+      searchPlaceholder: string;
       catalog?: Catalog;
     }
   | { quickSlip: true };
@@ -23,7 +24,13 @@ type RecordSearchFormProps =
 const RecordSearchForm = (props: RecordSearchFormProps) => {
   const formRef = useRef<HTMLFormElement>(null);
   const searchParams = useSearchParams();
-  let projectId, userCanEditPage, quickSlip, nonOwnerEditor, currentUserName, catalog;
+  let projectId,
+    userCanEditPage,
+    quickSlip,
+    nonOwnerEditor,
+    currentUserName,
+    placeholder,
+    catalog;
   if (props.quickSlip) {
     quickSlip = true;
     userCanEditPage = true;
@@ -35,8 +42,10 @@ const RecordSearchForm = (props: RecordSearchFormProps) => {
     projectId = props.projectId;
     nonOwnerEditor = props.nonOwnerEditor;
     currentUserName = props.currentUserName;
+    placeholder = props.searchPlaceholder;
     catalog =
-      props.catalog ?? ((searchParams?.get('catalog') as Catalog | null) || 'ALMA');
+      props.catalog ??
+      ((searchParams?.get('catalog') as Catalog | null) || 'ALMA');
   }
   const [results, setResults] = useState<CatalogSearchResult | null>(null);
   const [searchFailed, setSearchFailed] = useState<boolean>(false);
@@ -76,7 +85,7 @@ const RecordSearchForm = (props: RecordSearchFormProps) => {
             <InputGroup.Text id="any-input-label">Search by...</InputGroup.Text>
             <Form.Control
               name="any-input"
-              placeholder="Enter Call Number, Barcode, MMS_ID, or Permalink URL"
+              placeholder={placeholder}
               aria-label="Search String"
               aria-describedby="any-input-label"
             />

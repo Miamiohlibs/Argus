@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import DuplicateProjectButton from './DuplicateProjectButton';
 import UnarchiveProjectButton from './UnarchiveProjectButton';
+import { activeCatalogs } from '@/lib/catalogs/displayNames';
 
 const ProjectButtons = ({
   projectId,
@@ -21,6 +22,10 @@ const ProjectButtons = ({
   divClass?: string;
   showUnarchive?: boolean;
 }) => {
+  const includeAlma =
+    activeCatalogs.filter((item) => item.slug == 'ALMA').length > 0;
+  const includeAspace =
+    activeCatalogs.filter((item) => item.slug == 'ASPACE').length > 0;
   const classNames = 'me-2';
   return (
     <div className={divClass}>
@@ -32,12 +37,20 @@ const ProjectButtons = ({
           Back to Project
         </Link>
       )}
-      {canEdit && onPage !== 'searchBibs' && (
+      {includeAlma && canEdit && onPage !== 'searchBibs' && (
         <Link
           href={`/searchBibs?projectId=${projectId.toString()}`}
           className={classNames + ' btn btn-primary btn-sm'}
         >
           Add Alma Item
+        </Link>
+      )}
+      {includeAspace && canEdit && onPage !== 'searchBibs' && (
+        <Link
+          href={`/searchBibs?catalog=ASPACE&projectId=${projectId.toString()}`}
+          className={classNames + ' btn btn-primary btn-sm'}
+        >
+          Add ArchivesSpace Item
         </Link>
       )}
       {canEdit && onPage !== 'customEntry' && (

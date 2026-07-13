@@ -89,7 +89,7 @@ export default async function EditEntryPage({
     existingEntry?.catalogId ?? '',
   );
   if (holdingsError) {
-    return <>Error refreshing catalog data</>;
+    return <>`Error refreshing catalog data: {holdingsError}`</>;
   }
   return (
     <>
