@@ -15,14 +15,14 @@ export const aspaceProvider: SearchableCatalogProvider = {
     try {
       const client = await getClient();
       const data = await searchByUrl(input, client);
-      // console.log(`Data (searchByAny): ${JSON.stringify(data)}`);
+      logger.silly(`Data (searchByAny): ${JSON.stringify(data)}`);
       if (data) {
         return { data };
       } else {
         return { error: `Failed to get data in aspace/provider/searchByAny` };
       }
     } catch (error) {
-      console.error(`Error fetching data in aspace/provider/searchByAny`);
+      logger.error(`Error fetching data in aspace/provider/searchByAny`);
       return { error: `Error fetching data in aspace/provider/searchByAny` };
     }
 

@@ -5,6 +5,7 @@ import {
   repoTopContainerSchema,
   repoArchivalObjectSchema,
 } from '@kenxirwin/archives-space-api-client';
+import logger from '@/lib/logger';
 import type {
   RepoArchivalObject,
   RepoResources,
@@ -28,7 +29,7 @@ export async function getClient() {
     return client;
   } catch (error) {
     if (error instanceof Error) {
-      console.error(`Aspace connection error: ${error.message}`);
+      logger.error(`Aspace connection error: ${error.message}`);
       throw error;
     }
   }
@@ -53,7 +54,7 @@ export async function searchByUrl(url: string, client: AspaceClient) {
     const publicBaseUrl = process.env.ASPACE_PUBLIC_BASE_URL ?? '';
     const apiBaseUrl = process.env.ASPACE_API_BASE_URL ?? '';
     url = url.replace(publicBaseUrl, apiBaseUrl);
-    console.log(`fetching url: ${url}`);
+    logger.verbose(`fetching url: ${url}`);
     const raw = await client.getUrl(url, {
       resolve: ['linked_agents', 'repository', 'top_container'],
     });
@@ -62,8 +63,8 @@ export async function searchByUrl(url: string, client: AspaceClient) {
       case /repositories\/\d+\/resources\/\d+/.test(url): {
         const parsed = repoResourcesSchema.parse(raw);
         const argusData = repoResourcesToDraft(parsed);
-        // console.log(JSON.stringify(argusData, null, 2));
-        // console.log('type: resources');
+        logger.verbose(JSON.stringify(argusData, null, 2));
+        logger.verbose('type: resources');
         return argusData;
         break;
       }
@@ -72,8 +73,8 @@ export async function searchByUrl(url: string, client: AspaceClient) {
       case /repositories\/\d+\/top_containers\/\d+/.test(url): {
         const parsed = repoTopContainerSchema.parse(raw);
         const argusData = repoTopContainerToDraft(parsed);
-        console.log(`ArgusData for repoTpContainer: ${argusData}`);
-        console.log('type: top containers');
+        logger.verbose(`ArgusData for repoTpContainer: ${argusData}`);
+        logger.verbose('type: top containers');
         return argusData;
         break;
       }
@@ -82,8 +83,8 @@ export async function searchByUrl(url: string, client: AspaceClient) {
       case /repositories\/\d+\/archival_objects\/\d+/.test(url): {
         const parsed = repoArchivalObjectSchema.parse(raw);
         const argusData = repoArchivalObjectToDraft(parsed);
-        console.log(argusData);
-        console.log('type: archival objects');
+        logger.verbose(argusData);
+        logger.verbose('type: archival objects');
         return argusData;
         break;
       }
@@ -95,7 +96,7 @@ export async function searchByUrl(url: string, client: AspaceClient) {
       }
     }
   } catch (error) {
-    error instanceof Error && console.error(error.message);
+    error instanceof Error && logger.error(error.message);
     throw error;
   }
 }
