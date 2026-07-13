@@ -1,14 +1,14 @@
 import type { Catalog } from '@prisma/client';
 import type { z } from 'zod';
 import { PublicCatalogsSchema } from '@/zod/PublicCatalogsSchema';
-import logger from '../logger';
+// import logger from '../logger';
 let validCatalogs: z.infer<typeof PublicCatalogsSchema> = [];
 try {
   validCatalogs = PublicCatalogsSchema.parse(
     JSON.parse(process.env.NEXT_PUBLIC_CATALOGS ?? '[]'),
   );
 } catch (error) {
-  logger.error(
+  console.error(
     'Trouble parsing NEXT_PUBLIC_CATALOGS in lib/catalog/displayNames',
   );
   throw error;
