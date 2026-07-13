@@ -37,6 +37,12 @@ export async function getClient() {
   );
 }
 
+export async function bibHoldingsByUri({ uri }: { uri: string }) {
+  const client = await getClient();
+  const url = client.baseUrl + uri;
+  return await searchByUrl(url, client);
+}
+
 export async function searchByUrl(url: string, client: AspaceClient) {
   /* expects a url matching one of these endpoints and schemas: 
 (repoResourcesSchema): for endpoints like /repositories/2/resources/634
