@@ -9,16 +9,8 @@ const QuickSlipButton = () => {
         Quick Slip
       </Dropdown.Toggle>
       <Dropdown.Menu>
-        <Dropdown.Item
-          href={`${process.env.NEXT_PUBLIC_APP_BASEPATH}/quickSlip/alma`}
-        >
-          From Alma
-        </Dropdown.Item>
-        <Dropdown.Item
-          href={`${process.env.NEXT_PUBLIC_APP_BASEPATH}/quickSlip/custom`}
-        >
-          Custom Entry
-        </Dropdown.Item>
+        <Dropdown.Item href="/quickSlip/alma">From Alma</Dropdown.Item>
+        <Dropdown.Item href="/quickSlip/custom">Custom Entry</Dropdown.Item>
       </Dropdown.Menu>
     </Dropdown>
     // <Link href="/quickSlipAlma" className="mb-3 btn btn-primary">
