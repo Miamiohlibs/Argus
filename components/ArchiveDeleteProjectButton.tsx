@@ -116,7 +116,7 @@ const ArchiveDeleteProjectButton = ({
       <Button
         variant={`outline-${firstButtonColor}`}
         size="sm"
-        className="ms-1"
+        className="ms-1 relative rounded-r-none focus:z-10"
         onClick={(e) => firstButtonAction(project.id)}
         disabled={isArchived || isUnarchived || isDeleted}
       >
@@ -124,10 +124,11 @@ const ArchiveDeleteProjectButton = ({
         {(isArchived || isUnarchived) && !isDeleted && 'd'}
       </Button>
 
-      <Dropdown>
+      <Dropdown className="-ml-px">
         <Dropdown.Toggle
           variant="outline-danger"
           size="sm"
+          className="relative rounded-l-none focus:z-10"
           disabled={isArchived || isUnarchived || isDeleted}
         >
           <Trash />

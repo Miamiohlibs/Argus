@@ -49,9 +49,9 @@ const outlineClasses: Record<string, string> = {
 };
 
 const sizeClasses: Record<ButtonSize, string> = {
-  sm: 'px-2 py-1 text-sm gap-1',
-  md: 'px-3 py-1.5 text-base gap-1.5',
-  lg: 'px-4 py-2 text-lg gap-2',
+  sm: 'px-2 py-1 text-sm gap-1 min-h-[30px]',
+  md: 'px-3 py-1.5 text-base gap-1.5 min-h-[38px]',
+  lg: 'px-4 py-2 text-lg gap-2 min-h-[46px]',
 };
 
 export function buttonClasses({
@@ -104,5 +104,5 @@ export function ButtonGroup({
   children: React.ReactNode;
   className?: string;
 }) {
-  return <div className={`inline-flex items-center gap-1 ${className}`}>{children}</div>;
+  return <div className={`inline-flex items-center ${className}`}>{children}</div>;
 }
