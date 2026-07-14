@@ -81,7 +81,7 @@ export default function ProjectsTable({
           <Link href={`/project/${row.id}`}>
             {row.title || 'Untitled Project'}
           </Link>
-          {row.public && <Unlocked className="mx-2" />}
+          {row.public && <Unlocked className="mx-2 inline" />}
         </p>
       ),
       sortable: true,
