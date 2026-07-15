@@ -6,6 +6,7 @@ import {
   repoArchivalObjectSchema,
 } from '@kenxirwin/archives-space-api-client';
 import logger from '@/lib/logger';
+import callNumberOverrides from '@/lib/catalogs/aspace/callNumberOverrides';
 import type {
   RepoArchivalObject,
   RepoResources,
@@ -124,7 +125,9 @@ function repoResourcesToDraft(data: RepoResources) {
         .filter((entry) => entry.role == 'creator')
         .map((entry) => entry._resolved?.names[0].sort_name)
         .join('; ') ?? 'Unknown',
-    callNumber: `${data.id_0}--${data.id_1}--${data.id_2}`,
+    callNumber:
+      callNumberOverrides.resources?.bib?.(data) ??
+      `${data.id_0}--${data.id_1}--${data.id_2}`,
     itemTitle: data.title,
     catalog: 'ASPACE',
     catalogId: data.uri,
@@ -143,12 +146,14 @@ function repoResourcesToDraft(data: RepoResources) {
     barcode: '',
     box: '',
     call_number:
-      item.sub_container.top_container._resolved?.display_string ?? '',
+      callNumberOverrides.resources?.item?.(item, data) ??
+      item.sub_container.top_container._resolved?.display_string ??
+      '',
     copy_id: '',
-    description:
-      item.sub_container.top_container._resolved?.long_display_string ?? '',
+    description: '',
+    // item.sub_container.top_container._resolved?.long_display_string ?? '',
     folder: '',
-    location_code: data.repository._resolved?.slug ?? '',
+    location_code: '', //data.repository._resolved?.slug ?? '',
     location_name: data.repository._resolved?.name ?? '',
     ms: '',
   }));
@@ -162,7 +167,7 @@ function repoResourcesToDraft(data: RepoResources) {
 function repoTopContainerToDraft(data: RepoTopContainer) {
   const bibData: BibDataDraft = {
     author: 'Unknown',
-    callNumber: data.indicator,
+    callNumber: callNumberOverrides.topContainer?.bib?.(data) ?? data.indicator,
     itemTitle: data.long_display_string,
     catalog: 'ASPACE',
     catalogId: data.uri,
@@ -181,7 +186,8 @@ function repoTopContainerToDraft(data: RepoTopContainer) {
       clientKey: `item-0`,
       barcode: '',
       box: '',
-      call_number: data.indicator,
+      call_number:
+        callNumberOverrides.topContainer?.item?.(data) ?? data.indicator,
       copy_id: '',
       description: data.indicator,
       folder: '',
@@ -206,12 +212,14 @@ function repoArchivalObjectToDraft(data: RepoArchivalObject) {
         .map((entry) => entry._resolved?.names[0].sort_name)
         .join('; ') ?? 'Unknown',
     callNumber:
+      callNumberOverrides.archivalObject?.bib?.(data) ??
       data.instances
         .map(
           (instance) =>
             instance.sub_container.top_container._resolved?.indicator,
         )
-        .join('; ') ?? '',
+        .join('; ') ??
+      '',
     itemTitle: data.title,
     catalog: 'ASPACE',
     catalogId: data.uri,
@@ -220,7 +228,11 @@ function repoArchivalObjectToDraft(data: RepoArchivalObject) {
     location_display: data.repository._resolved?.name ?? '',
     notes: '',
     pub_date:
-      (data.dates && `${data.dates[0].begin} - ${data.dates[0].end}`) ?? '',
+      (data.dates &&
+        data.dates[0] &&
+        (data.dates[0].begin || data.dates[0].end) &&
+        `${data.dates[0]?.begin ?? ''} - ${data.dates[0]?.end ?? ''}`) ??
+      '',
     publisher: null,
     totalItems: 1,
     url: data.uri,
@@ -231,7 +243,9 @@ function repoArchivalObjectToDraft(data: RepoArchivalObject) {
     barcode: '',
     box: '',
     call_number:
-      item.sub_container.top_container._resolved?.display_string ?? '',
+      callNumberOverrides.archivalObject?.item?.(item, data) ??
+      item.sub_container.top_container._resolved?.display_string ??
+      '',
     copy_id: '',
     description:
       item.sub_container.top_container._resolved?.long_display_string ?? '',
