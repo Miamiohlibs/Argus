@@ -16,6 +16,7 @@ import type {
   ItemDataDraft,
   CatalogSearchResult,
 } from '@/lib/catalogs/types';
+import { ZodError } from 'zod';
 
 export async function getClient() {
   try {
@@ -54,13 +55,14 @@ export async function searchByUrl(url: string, client: AspaceClient) {
     const publicBaseUrl = process.env.ASPACE_PUBLIC_BASE_URL ?? '';
     const apiBaseUrl = process.env.ASPACE_API_BASE_URL ?? '';
     url = url.replace(publicBaseUrl, apiBaseUrl);
-    logger.verbose(`fetching url: ${url}`);
+    logger.verbose(`aspaceSearch/searchByUrl fetching: ${url}`);
     const raw = await client.getUrl(url, {
       resolve: ['linked_agents', 'repository', 'top_container'],
     });
     switch (true) {
       // https://archivesstaff.lib.miamioh.edu/api/repositories/2/resources/634
       case /repositories\/\d+\/resources\/\d+/.test(url): {
+        logger.verbose('aspaceSearch.searchByUrl found repoResources');
         const parsed = repoResourcesSchema.parse(raw);
         const argusData = repoResourcesToDraft(parsed);
         logger.verbose(JSON.stringify(argusData, null, 2));
@@ -71,6 +73,8 @@ export async function searchByUrl(url: string, client: AspaceClient) {
 
       // https://archivesstaff.lib.miamioh.edu/api/repositories/2/top_containers/7838
       case /repositories\/\d+\/top_containers\/\d+/.test(url): {
+        logger.verbose('aspaceSearch.searchByUrl found topContainers');
+
         const parsed = repoTopContainerSchema.parse(raw);
         const argusData = repoTopContainerToDraft(parsed);
         logger.verbose(`ArgusData for repoTpContainer: ${argusData}`);
@@ -78,9 +82,12 @@ export async function searchByUrl(url: string, client: AspaceClient) {
         return argusData;
         break;
       }
-
+      // https://archivesspace.lib.miamioh.edu/repositories/2/archival_objects/13405
+      // https://archivesstaff.lib.miamioh.edu/api/repositories/2/archival_objects/13282
       // https://archivesstaff.lib.miamioh.edu/api/repositories/2/archival_objects/5616
       case /repositories\/\d+\/archival_objects\/\d+/.test(url): {
+        logger.verbose('aspaceSearch.searchByUrl found archivalObjects');
+
         const parsed = repoArchivalObjectSchema.parse(raw);
         const argusData = repoArchivalObjectToDraft(parsed);
         logger.verbose(argusData);
@@ -96,8 +103,13 @@ export async function searchByUrl(url: string, client: AspaceClient) {
       }
     }
   } catch (error) {
-    error instanceof Error && logger.error(error.message);
-    throw error;
+    if (error instanceof ZodError) {
+      logger.error(`Zod parsing error: ${error.message}`);
+      throw error;
+    } else {
+      error instanceof Error && logger.error(error.message);
+      throw error;
+    }
   }
 }
 
