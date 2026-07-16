@@ -7,8 +7,10 @@ import type {
 type ResourceInstance = RepoResources['instances'][number];
 type ArchivalObjectInstance = RepoArchivalObject['instances'][number];
 
-const callRegexReg = /\d+(A|M)\-[A-Z]\-\d+[A-Z]/;
-const callRegexWestern = /\[Range \d+[A-Z]\];* Box \d+/;
+const callRegexMost = /\d+(A|M)\-[A-Z]\-\d+[A-Z]/g;
+// const callRegexRegGlobal = /\d+(A|M)\-[A-Z]\-\d+[A-Z]/g;
+const callRegexWestern = /\[Range \d+[A-Z]\];* Box \d+/g;
+// const callRegexWesternGlobal = /\[Range \d+[A-Z]\];* Box \d+/g;
 
 export interface AspaceCallNumberOverrides {
   resources?: {
@@ -40,6 +42,30 @@ const overrides: AspaceCallNumberOverrides = {
   //     return "return custom string";
   //   },
   // },
+  archivalObject: {
+    bib(data) {
+      const displayString = data.instances
+        .map(
+          (instance) =>
+            instance.sub_container.top_container._resolved?.indicator,
+        )
+        .join('; ');
+      const matches = displayString.match(callRegexMost)?.join('; ');
+      return matches ?? displayString;
+      // return displayString;
+    },
+
+    item(itemData) {
+      const displayString =
+        itemData.sub_container.top_container._resolved?.display_string;
+      const matches = `****${displayString?.match(callRegexMost)?.join(', ')}****`;
+      if (matches) {
+        return matches;
+      } else {
+        return `********${displayString || ''}********`;
+      }
+    },
+  },
 };
 
 export default overrides;
