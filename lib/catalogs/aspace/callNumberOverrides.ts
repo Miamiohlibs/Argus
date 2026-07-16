@@ -3,6 +3,8 @@ import type {
   RepoResources,
   RepoTopContainer,
 } from '@kenxirwin/archives-space-api-client';
+import { match } from 'assert';
+import { Underdog } from 'next/font/google';
 import { abort } from 'process';
 
 type ResourceInstance = RepoResources['instances'][number];
@@ -28,6 +30,7 @@ export interface AspaceCallNumberOverrides {
   archivalObject?: {
     bib?: (data: RepoArchivalObject) => string;
     item?: (item: ArchivalObjectInstance, data: RepoArchivalObject) => string;
+    allItems?: (data: RepoArchivalObject) => string[];
   };
 }
 
@@ -114,6 +117,14 @@ const overrides: AspaceCallNumberOverrides = {
       } else {
         return `${displayString || ''}`;
       }
+    },
+
+    allItems(data): string[] {
+      if (isWesternCollection(data)) {
+        const matches = getWesternItemCallNumbers(data);
+        return matches.filter((match) => match !== undefined) ?? [];
+      }
+      return [];
     },
   },
 };

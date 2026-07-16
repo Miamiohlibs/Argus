@@ -204,6 +204,43 @@ function repoTopContainerToDraft(data: RepoTopContainer, url: string) {
  * repoArchivalObjectToDraft
  */
 
+const getItems = (data: RepoArchivalObject) => {
+  if (data.instances.length > 0) {
+    return data.instances.map((item, index) => ({
+      clientKey: `item-${index}`,
+      barcode: '',
+      box: '',
+      call_number:
+        callNumberOverrides.archivalObject?.item?.(item, data) ??
+        item.sub_container.top_container._resolved?.display_string ??
+        '',
+      copy_id: '',
+      description:
+        item.sub_container.top_container._resolved?.long_display_string ?? '',
+      folder: '',
+      location_code: data.repository._resolved?.slug ?? '',
+      location_name: data.repository._resolved?.name ?? '',
+      ms: '',
+    }));
+  } else {
+    if (callNumberOverrides.archivalObject?.allItems) {
+      const callNumbers = callNumberOverrides.archivalObject?.allItems(data);
+      return callNumbers.map((callNumber, index) => ({
+        clientKey: `item-${index}`,
+        barcode: '',
+        box: '',
+        call_number: callNumber ?? '',
+        copy_id: '',
+        description: callNumber ?? '',
+        folder: '',
+        location_code: data.repository._resolved?.slug ?? '',
+        location_name: data.repository._resolved?.name ?? '',
+        ms: '',
+      }));
+    }
+  }
+};
+
 function repoArchivalObjectToDraft(data: RepoArchivalObject, url: string) {
   const bibData: BibDataDraft = {
     author:
@@ -238,22 +275,7 @@ function repoArchivalObjectToDraft(data: RepoArchivalObject, url: string) {
     url: url,
   };
 
-  const itemData: ItemDataDraft[] = data.instances.map((item, index) => ({
-    clientKey: `item-${index}`,
-    barcode: '',
-    box: '',
-    call_number:
-      callNumberOverrides.archivalObject?.item?.(item, data) ??
-      item.sub_container.top_container._resolved?.display_string ??
-      '',
-    copy_id: '',
-    description:
-      item.sub_container.top_container._resolved?.long_display_string ?? '',
-    folder: '',
-    location_code: data.repository._resolved?.slug ?? '',
-    location_name: data.repository._resolved?.name ?? '',
-    ms: '',
-  }));
+  const itemData: ItemDataDraft[] = getItems(data) ?? [];
 
   return { bibData, itemData };
 }
