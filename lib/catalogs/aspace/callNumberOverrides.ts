@@ -48,6 +48,32 @@ const condenseItemRange = (items: (string | undefined)[]) => {
   return `${first} ... ${last} (${length} items)`;
 };
 
+const isWesternCollection = (data: RepoArchivalObject) => {
+  return (
+    data.ancestors.find((ancestor) => ancestor.ref == westernAncestorRef)
+      ?.ref == westernAncestorRef
+  );
+};
+
+const getWesternItemCallNumbers = (data: RepoArchivalObject) => {
+  const abstractNotes = data.notes.filter(
+    (
+      note,
+    ): note is Extract<
+      (typeof data.notes)[number],
+      { jsonmodel_type: 'note_singlepart' }
+    > =>
+      note.type == 'abstract' &&
+      note.jsonmodel_type == 'note_singlepart' &&
+      note.content.length > 0,
+  );
+  const abstractString = abstractNotes
+    .flatMap((note) => note.content)
+    .join(' ');
+  const matches = abstractString.match(callRegexWestern) || [];
+  return matches;
+};
+
 const overrides: AspaceCallNumberOverrides = {
   resources: {
     bib(data) {
@@ -59,28 +85,11 @@ const overrides: AspaceCallNumberOverrides = {
   },
   archivalObject: {
     bib(data) {
-      const isWesternCollection =
-        data.ancestors.find((ancestor) => ancestor.ref == westernAncestorRef)
-          ?.ref == westernAncestorRef;
-
-      if (isWesternCollection) {
-        const abstractNotes = data.notes.filter(
-          (
-            note,
-          ): note is Extract<
-            (typeof data.notes)[number],
-            { jsonmodel_type: 'note_singlepart' }
-          > =>
-            note.type == 'abstract' &&
-            note.jsonmodel_type == 'note_singlepart' &&
-            note.content.length > 0,
-        );
-        const abstractString = abstractNotes
-          .flatMap((note) => note.content)
-          .join(' ');
-        const matches = abstractString.match(callRegexWestern) || [];
-        return condenseItemRange(matches) ?? '';
+      if (isWesternCollection(data)) {
+        const matches = getWesternItemCallNumbers(data);
+        return condenseItemRange(matches);
       }
+      // else, if not Western...
       const displayString = data.instances
         .map(
           (instance) =>
@@ -92,7 +101,11 @@ const overrides: AspaceCallNumberOverrides = {
       // return displayString;
     },
 
-    item(itemData) {
+    item(itemData, data) {
+      if (isWesternCollection(data)) {
+        const matches = getWesternItemCallNumbers(data);
+      }
+      // else, if not western...
       const displayString =
         itemData.sub_container.top_container._resolved?.display_string;
       const matches = `${displayString?.match(callRegexMost)?.join(', ')}`;
