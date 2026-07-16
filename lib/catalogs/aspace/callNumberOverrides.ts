@@ -37,11 +37,18 @@ export interface AspaceCallNumberOverrides {
  * to set this file up so local edits don't conflict with upstream updates.
  */
 const overrides: AspaceCallNumberOverrides = {
-  // resources: {
-  //   bib(data) {
-  //     return "return custom string";
-  //   },
-  // },
+  resources: {
+    bib(data) {
+      const itemCallNumbers = data.instances.map(
+        (item) => item.sub_container.top_container._resolved?.display_string,
+      );
+      const length = itemCallNumbers.length;
+      const first = itemCallNumbers[0];
+      const last = itemCallNumbers[length - 1];
+
+      return `${first} ... ${last} (${length} items)`;
+    },
+  },
   archivalObject: {
     bib(data) {
       const displayString = data.instances
