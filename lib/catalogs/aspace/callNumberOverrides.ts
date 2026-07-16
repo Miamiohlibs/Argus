@@ -8,7 +8,7 @@ import { abort } from 'process';
 type ResourceInstance = RepoResources['instances'][number];
 type ArchivalObjectInstance = RepoArchivalObject['instances'][number];
 
-const callRegexMost = /\d+(A|M)\-[A-Z]\-\d+[A-Z]/g;
+const callRegexMost = /\[*\d+(A|M)\-[A-Z]\-\d+[A-Z]\]*/g;
 // const callRegexRegGlobal = /\d+(A|M)\-[A-Z]\-\d+[A-Z]/g;
 //const callRegexWestern = /\[Range \d+[A-Z]\];* Box \d+/g;
 const callRegexWestern = /\[Range \d+[A-Z]\];* Box \d+/g;
