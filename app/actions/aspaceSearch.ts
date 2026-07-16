@@ -65,7 +65,7 @@ export async function searchByUrl(url: string, client: AspaceClient) {
       case /repositories\/\d+\/resources\/\d+/.test(url): {
         logger.verbose('aspaceSearch.searchByUrl found repoResources');
         const parsed = repoResourcesSchema.parse(raw);
-        const argusData = repoResourcesToDraft(parsed);
+        const argusData = repoResourcesToDraft(parsed, url);
         logger.verbose(JSON.stringify(argusData, null, 2));
         logger.verbose('type: resources');
         return argusData;
@@ -77,7 +77,7 @@ export async function searchByUrl(url: string, client: AspaceClient) {
         logger.verbose('aspaceSearch.searchByUrl found topContainers');
 
         const parsed = repoTopContainerSchema.parse(raw);
-        const argusData = repoTopContainerToDraft(parsed);
+        const argusData = repoTopContainerToDraft(parsed, url);
         logger.verbose(`ArgusData for repoTpContainer: ${argusData}`);
         logger.verbose('type: top containers');
         return argusData;
@@ -90,7 +90,7 @@ export async function searchByUrl(url: string, client: AspaceClient) {
         logger.verbose('aspaceSearch.searchByUrl found archivalObjects');
 
         const parsed = repoArchivalObjectSchema.parse(raw);
-        const argusData = repoArchivalObjectToDraft(parsed);
+        const argusData = repoArchivalObjectToDraft(parsed, url);
         logger.verbose(argusData);
         logger.verbose('type: archival objects');
         return argusData;
@@ -118,7 +118,7 @@ export async function searchByUrl(url: string, client: AspaceClient) {
  * repoResourcesToDraft
  */
 
-function repoResourcesToDraft(data: RepoResources) {
+function repoResourcesToDraft(data: RepoResources, url) {
   const bibData: BibDataDraft = {
     author:
       data.linked_agents
@@ -138,7 +138,7 @@ function repoResourcesToDraft(data: RepoResources) {
     pub_date: null,
     publisher: null,
     totalItems: data.instances.length,
-    url: data.uri,
+    url: url,
   };
 
   const itemData: ItemDataDraft[] = data.instances.map((item, index) => ({
@@ -164,7 +164,7 @@ function repoResourcesToDraft(data: RepoResources) {
 /*
  * repoTopContainerToDraft
  */
-function repoTopContainerToDraft(data: RepoTopContainer) {
+function repoTopContainerToDraft(data: RepoTopContainer, url) {
   const bibData: BibDataDraft = {
     author: 'Unknown',
     callNumber: callNumberOverrides.topContainer?.bib?.(data) ?? data.indicator,
@@ -178,7 +178,7 @@ function repoTopContainerToDraft(data: RepoTopContainer) {
     pub_date: null,
     publisher: null,
     totalItems: 1,
-    url: data.uri,
+    url: url,
   };
 
   const itemData: ItemDataDraft[] = [
@@ -204,7 +204,7 @@ function repoTopContainerToDraft(data: RepoTopContainer) {
  * repoArchivalObjectToDraft
  */
 
-function repoArchivalObjectToDraft(data: RepoArchivalObject) {
+function repoArchivalObjectToDraft(data: RepoArchivalObject, url) {
   const bibData: BibDataDraft = {
     author:
       data.linked_agents
@@ -235,7 +235,7 @@ function repoArchivalObjectToDraft(data: RepoArchivalObject) {
       '',
     publisher: null,
     totalItems: 1,
-    url: data.uri,
+    url: url,
   };
 
   const itemData: ItemDataDraft[] = data.instances.map((item, index) => ({
