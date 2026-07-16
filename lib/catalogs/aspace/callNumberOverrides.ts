@@ -65,11 +65,11 @@ const overrides: AspaceCallNumberOverrides = {
     item(itemData) {
       const displayString =
         itemData.sub_container.top_container._resolved?.display_string;
-      const matches = `****${displayString?.match(callRegexMost)?.join(', ')}****`;
+      const matches = `${displayString?.match(callRegexMost)?.join(', ')}`;
       if (matches) {
         return matches;
       } else {
-        return `********${displayString || ''}********`;
+        return `${displayString || ''}`;
       }
     },
   },
