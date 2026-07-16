@@ -231,7 +231,7 @@ const getItems = (data: RepoArchivalObject) => {
         box: '',
         call_number: callNumber ?? '',
         copy_id: '',
-        description: callNumber ?? '',
+        description: '',
         folder: '',
         location_code: data.repository._resolved?.slug ?? '',
         location_name: data.repository._resolved?.name ?? '',
