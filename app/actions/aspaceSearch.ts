@@ -118,7 +118,7 @@ export async function searchByUrl(url: string, client: AspaceClient) {
  * repoResourcesToDraft
  */
 
-function repoResourcesToDraft(data: RepoResources, url) {
+function repoResourcesToDraft(data: RepoResources, url: string) {
   const bibData: BibDataDraft = {
     author:
       data.linked_agents
@@ -164,7 +164,7 @@ function repoResourcesToDraft(data: RepoResources, url) {
 /*
  * repoTopContainerToDraft
  */
-function repoTopContainerToDraft(data: RepoTopContainer, url) {
+function repoTopContainerToDraft(data: RepoTopContainer, url: string) {
   const bibData: BibDataDraft = {
     author: 'Unknown',
     callNumber: callNumberOverrides.topContainer?.bib?.(data) ?? data.indicator,
@@ -204,7 +204,7 @@ function repoTopContainerToDraft(data: RepoTopContainer, url) {
  * repoArchivalObjectToDraft
  */
 
-function repoArchivalObjectToDraft(data: RepoArchivalObject, url) {
+function repoArchivalObjectToDraft(data: RepoArchivalObject, url: string) {
   const bibData: BibDataDraft = {
     author:
       data.linked_agents
