@@ -20,6 +20,7 @@ import type {
 import { ZodError } from 'zod';
 import { findNodeByKeyValuePair } from '@/lib/findNodeByKeyValuePair';
 import { cli } from 'winston/lib/winston/config';
+import { HandleMissingInstances } from './aspaceHandleMissingInstances';
 
 export interface ArchivalObjectExtraInfo {
   numItems: number;
@@ -119,32 +120,40 @@ export async function searchByUrl(url: string, client: AspaceClient) {
         if (parsed.instances.length == 0) {
           const parentResourceUrl = parsed.resource.ref;
           const originalUri = url.match(/\/repositories\/.*/);
-          console.log(`looking for more info about ${originalUri}`);
-          const resourceWithTree: RepoResources = await getResourceTree(
-            parentResourceUrl,
-            client,
-          );
-          console.log(`Resource Title: ${resourceWithTree.title}`);
-          console.log(
-            `find key value pair in tree with record_uri: "${originalUri?.toString()}"`,
-          );
-          const node = findNodeByKeyValuePair(
-            resourceWithTree,
-            'record_uri',
-            originalUri?.toString(), // not sure why toString is needed, but it is
-          );
-          const numItems = node.children.length;
-          const firstItemUrl = apiBaseUrl + node.children[0].record_uri;
-          const firstRecordArgusData = await searchByUrl(firstItemUrl, client);
-          console.log(`numItems: ${numItems}`);
-          console.log(`first child = ${JSON.stringify(node.children[0])}`);
-          extraInfo = {
-            numItems,
-            firstItemUrl,
-            firstRecordArgusData,
-          };
+          if (originalUri !== null) {
+            extraInfo = await HandleMissingInstances(
+              originalUri.toString(),
+              parentResourceUrl,
+              client,
+            );
+          }
         }
-        console.log(`extraInfo: ${JSON.stringify(extraInfo)}`);
+        //   console.log(`looking for more info about ${originalUri}`);
+        //   const resourceWithTree: RepoResources = await getResourceTree(
+        //     parentResourceUrl,
+        //     client,
+        //   );
+        //   console.log(`Resource Title: ${resourceWithTree.title}`);
+        //   console.log(
+        //     `find key value pair in tree with record_uri: "${originalUri?.toString()}"`,
+        //   );
+        //   const node = findNodeByKeyValuePair(
+        //     resourceWithTree,
+        //     'record_uri',
+        //     originalUri?.toString(), // not sure why toString is needed, but it is
+        //   );
+        //   const numItems = node.children.length;
+        //   const firstItemUrl = apiBaseUrl + node.children[0].record_uri;
+        //   const firstRecordArgusData = await searchByUrl(firstItemUrl, client);
+        //   console.log(`numItems: ${numItems}`);
+        //   console.log(`first child = ${JSON.stringify(node.children[0])}`);
+        //   extraInfo = {
+        //     numItems,
+        //     firstItemUrl,
+        //     firstRecordArgusData,
+        //   };
+        // }
+        // console.log(`extraInfo: ${JSON.stringify(extraInfo)}`);
         /* End special section dealing with missing archival_object data */
 
         let argusData;
