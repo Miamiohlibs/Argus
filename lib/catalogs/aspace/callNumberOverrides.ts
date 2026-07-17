@@ -3,6 +3,7 @@ import type {
   RepoResources,
   RepoTopContainer,
 } from '@kenxirwin/archives-space-api-client';
+import { ArchivalObjectExtraInfo } from '@/app/actions/aspaceSearch';
 import { match } from 'assert';
 import { Underdog } from 'next/font/google';
 import { abort } from 'process';
@@ -28,7 +29,10 @@ export interface AspaceCallNumberOverrides {
     item?: (data: RepoTopContainer) => string;
   };
   archivalObject?: {
-    bib?: (data: RepoArchivalObject) => string;
+    bib?: (
+      data: RepoArchivalObject,
+      extraInfo?: ArchivalObjectExtraInfo,
+    ) => string;
     item?: (item: ArchivalObjectInstance, data: RepoArchivalObject) => string;
     allItems?: (data: RepoArchivalObject) => string[];
   };
@@ -87,10 +91,17 @@ const overrides: AspaceCallNumberOverrides = {
     },
   },
   archivalObject: {
-    bib(data) {
+    bib(data, extraInfo) {
+      console.log('running archivalObject.bib override');
+      data && console.log('data present');
+      extraInfo && console.log(`extraInfo present`);
       if (isWesternCollection(data)) {
         const matches = getWesternItemCallNumbers(data);
         return condenseItemRange(matches);
+      }
+      if (extraInfo) {
+        console.log('trying to extra call number from extraInfo...');
+        return `${extraInfo.firstRecordArgusData.bibData.callNumber}... (${extraInfo.numItems} items)`;
       }
       // else, if not Western...
       const displayString = data.instances

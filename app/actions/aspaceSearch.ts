@@ -18,6 +18,14 @@ import type {
   CatalogSearchResult,
 } from '@/lib/catalogs/types';
 import { ZodError } from 'zod';
+import { findNodeByKeyValuePair } from '@/lib/findNodeByKeyValuePair';
+import { cli } from 'winston/lib/winston/config';
+
+export interface ArchivalObjectExtraInfo {
+  numItems: number;
+  firstItemUrl: string;
+  firstRecordArgusData: { bibData: BibDataDraft; itemData: ItemDataDraft };
+}
 
 export async function getClient() {
   try {
@@ -46,6 +54,18 @@ export async function bibHoldingsByUri({ uri }: { uri: string }) {
   return await searchByUrl(url, client);
 }
 
+export async function getResourceTree(url: string, client: AspaceClient) {
+  const publicBaseUrl = process.env.ASPACE_PUBLIC_BASE_URL ?? '';
+  const apiBaseUrl = process.env.ASPACE_API_BASE_URL ?? '';
+  url = url.replace(publicBaseUrl, apiBaseUrl);
+  logger.verbose(`aspaceSearch/getResourceTree fetching: ${url}`);
+  const raw = await client.getUrl(url, {
+    resolve: ['tree'],
+  });
+  const parsed = repoResourcesSchema.parse(raw);
+  return parsed;
+}
+
 export async function searchByUrl(url: string, client: AspaceClient) {
   /* expects a url matching one of these endpoints and schemas: 
 (repoResourcesSchema): for endpoints like /repositories/2/resources/634
@@ -60,6 +80,7 @@ export async function searchByUrl(url: string, client: AspaceClient) {
     const raw = await client.getUrl(url, {
       resolve: ['linked_agents', 'repository', 'top_container'],
     });
+    let extraInfo = {};
     switch (true) {
       // https://archivesstaff.lib.miamioh.edu/api/repositories/2/resources/634
       case /repositories\/\d+\/resources\/\d+/.test(url): {
@@ -90,7 +111,48 @@ export async function searchByUrl(url: string, client: AspaceClient) {
         logger.verbose('aspaceSearch.searchByUrl found archivalObjects');
 
         const parsed = repoArchivalObjectSchema.parse(raw);
-        const argusData = repoArchivalObjectToDraft(parsed, url);
+
+        /* 
+          If the archival object doesn't have any instances, try finding some 
+          by searching down the tree of the main resource
+        */
+        if (parsed.instances.length == 0) {
+          const parentResourceUrl = parsed.resource.ref;
+          const originalUri = url.match(/\/repositories\/.*/);
+          console.log(`looking for more info about ${originalUri}`);
+          const resourceWithTree: RepoResources = await getResourceTree(
+            parentResourceUrl,
+            client,
+          );
+          console.log(`Resource Title: ${resourceWithTree.title}`);
+          console.log(
+            `find key value pair in tree with record_uri: "${originalUri?.toString()}"`,
+          );
+          const node = findNodeByKeyValuePair(
+            resourceWithTree,
+            'record_uri',
+            originalUri?.toString(), // not sure why toString is needed, but it is
+          );
+          const numItems = node.children.length;
+          const firstItemUrl = apiBaseUrl + node.children[0].record_uri;
+          const firstRecordArgusData = await searchByUrl(firstItemUrl, client);
+          console.log(`numItems: ${numItems}`);
+          console.log(`first child = ${JSON.stringify(node.children[0])}`);
+          extraInfo = {
+            numItems,
+            firstItemUrl,
+            firstRecordArgusData,
+          };
+        }
+        console.log(`extraInfo: ${JSON.stringify(extraInfo)}`);
+        /* End special section dealing with missing archival_object data */
+
+        let argusData;
+        if (Object.keys(extraInfo).length > 0) {
+          argusData = repoArchivalObjectToDraft(parsed, url, extraInfo);
+        } else {
+          argusData = repoArchivalObjectToDraft(parsed, url);
+        }
         logger.verbose(argusData);
         logger.verbose('type: archival objects');
         return argusData;
@@ -241,7 +303,11 @@ const getItems = (data: RepoArchivalObject) => {
   }
 };
 
-function repoArchivalObjectToDraft(data: RepoArchivalObject, url: string) {
+function repoArchivalObjectToDraft(
+  data: RepoArchivalObject,
+  url: string,
+  extraInfo?: any,
+) {
   const bibData: BibDataDraft = {
     author:
       data.linked_agents
@@ -249,7 +315,7 @@ function repoArchivalObjectToDraft(data: RepoArchivalObject, url: string) {
         .map((entry) => entry._resolved?.names[0].sort_name)
         .join('; ') ?? 'Unknown',
     callNumber:
-      callNumberOverrides.archivalObject?.bib?.(data) ??
+      callNumberOverrides.archivalObject?.bib?.(data, extraInfo) ??
       data.instances
         .map(
           (instance) =>
