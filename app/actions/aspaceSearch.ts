@@ -241,8 +241,7 @@ function repoTopContainerToDraft(data: RepoTopContainer, url: string) {
   const bibData: BibDataDraft = {
     author: 'Unknown',
     callNumber: callNumberOverrides.topContainer?.bib?.(data) ?? data.indicator,
-    itemTitle:
-      titleOverrides.topContainer?.bib?.(data) ?? data.long_display_string,
+    itemTitle: titleOverrides.topContainer?.(data) ?? data.long_display_string,
     catalog: 'ASPACE',
     catalogId: data.uri,
     catalogIdType: 'uri',

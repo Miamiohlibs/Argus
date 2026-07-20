@@ -13,10 +13,11 @@ export interface AspaceTitleOverrides {
     bib?: (data: RepoResources) => string;
     // item?: (item: ResourceInstance, data: RepoResources) => string;
   };
-  topContainer?: {
-    bib?: (data: RepoTopContainer) => string;
-    // item?: (data: RepoTopContainer) => string;
-  };
+  topContainer?: (data: RepoTopContainer) => string;
+  //   {
+  //     bib?:
+  //     // item?: (data: RepoTopContainer) => string;
+  //   };
   archivalObject?: {
     bib?: (
       data: RepoArchivalObject,
@@ -48,16 +49,15 @@ const streamlineTitle = (input: string): string => {
 const titleOverrides: AspaceTitleOverrides = {
   resources: {},
 
-  topContainer: {
-    bib(data) {
-      console.log('****trying to replace title string');
-      if (data.long_display_string) {
-        return streamlineTitle(data.long_display_string);
-      } else {
-        return '';
-      }
-    },
+  topContainer: (data: RepoTopContainer): string => {
+    console.log('****trying to replace title string');
+    if (data.long_display_string) {
+      return streamlineTitle(data.long_display_string);
+    } else {
+      return '';
+    }
   },
+  //   },
 
   archivalObject: {},
 };
