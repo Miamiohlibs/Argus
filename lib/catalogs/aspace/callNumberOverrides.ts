@@ -4,9 +4,6 @@ import type {
   RepoTopContainer,
 } from '@kenxirwin/archives-space-api-client';
 import { ArchivalObjectExtraInfo } from '@/app/actions/aspaceSearch';
-import { match } from 'assert';
-import { Underdog } from 'next/font/google';
-import { abort } from 'process';
 
 type ResourceInstance = RepoResources['instances'][number];
 type ArchivalObjectInstance = RepoArchivalObject['instances'][number];
