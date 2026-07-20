@@ -37,12 +37,29 @@ export interface AspaceTitleOverrides {
  * to set this file up so local edits don't conflict with upstream updates.
  */
 
-const overrides: AspaceTitleOverrides = {
+const streamlineTitle = (input: string): string => {
+  const one = input.replace(
+    /King Library *,* *3rd Floor *,* *Walter Havighurst *,* *Special Collections and Archives/,
+    '',
+  );
+  return one;
+};
+
+const titleOverrides: AspaceTitleOverrides = {
   resources: {},
 
-  topContainer: {},
+  topContainer: {
+    bib(data) {
+      console.log('****trying to replace title string');
+      if (data.long_display_string) {
+        return streamlineTitle(data.long_display_string);
+      } else {
+        return '';
+      }
+    },
+  },
 
   archivalObject: {},
 };
 
-export default overrides;
+export default titleOverrides;

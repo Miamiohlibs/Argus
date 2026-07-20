@@ -7,6 +7,7 @@ import {
 } from '@kenxirwin/archives-space-api-client';
 import logger from '@/lib/logger';
 import callNumberOverrides from '@/lib/catalogs/aspace/callNumberOverrides';
+import titleOverrides from '@/lib/catalogs/aspace/titleOverrides';
 import type {
   RepoArchivalObject,
   RepoResources,
@@ -18,8 +19,6 @@ import type {
   CatalogSearchResult,
 } from '@/lib/catalogs/types';
 import { ZodError } from 'zod';
-import { findNodeByKeyValuePair } from '@/lib/findNodeByKeyValuePair';
-import { cli } from 'winston/lib/winston/config';
 import { HandleMissingInstances } from './aspaceHandleMissingInstances';
 
 export interface ArchivalObjectExtraInfo {
@@ -202,7 +201,7 @@ function repoResourcesToDraft(data: RepoResources, url: string) {
     callNumber:
       callNumberOverrides.resources?.bib?.(data) ??
       `${data.id_0}--${data.id_1}--${data.id_2}`,
-    itemTitle: data.title,
+    itemTitle: titleOverrides.resources?.bib?.(data) ?? data.title,
     catalog: 'ASPACE',
     catalogId: data.uri,
     catalogIdType: 'uri',
@@ -242,7 +241,8 @@ function repoTopContainerToDraft(data: RepoTopContainer, url: string) {
   const bibData: BibDataDraft = {
     author: 'Unknown',
     callNumber: callNumberOverrides.topContainer?.bib?.(data) ?? data.indicator,
-    itemTitle: data.long_display_string,
+    itemTitle:
+      titleOverrides.topContainer?.bib?.(data) ?? data.long_display_string,
     catalog: 'ASPACE',
     catalogId: data.uri,
     catalogIdType: 'uri',
@@ -335,7 +335,8 @@ function repoArchivalObjectToDraft(
         )
         .join('; ') ??
       '',
-    itemTitle: data.title,
+    itemTitle:
+      titleOverrides.archivalObject?.bib?.(data, extraInfo) ?? data.title,
     catalog: 'ASPACE',
     catalogId: data.uri,
     catalogIdType: 'uri',
