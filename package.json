@@ -13,7 +13,7 @@
   "dependencies": {
     "@clerk/nextjs": "^7.0.4",
     "@kenxirwin/alma-search": "^0.2.0",
-    "@kenxirwin/archives-space-api-client": "^0.2.3",
+    "@kenxirwin/archives-space-api-client": "^0.3.0",
     "@prisma/client": "^6.13.0",
     "bootstrap": "^5.3.7",
     "datatables.net-dt": "^2.3.2",
