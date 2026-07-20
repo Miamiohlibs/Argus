@@ -77,6 +77,7 @@ export async function searchByUrl(url: string, client: AspaceClient) {
     const publicBaseUrl = process.env.ASPACE_PUBLIC_BASE_URL ?? '';
     const apiBaseUrl = process.env.ASPACE_API_BASE_URL ?? '';
     url = url.replace(publicBaseUrl, apiBaseUrl);
+    const publicUrl = url.replace(apiBaseUrl, publicBaseUrl);
     logger.verbose(`aspaceSearch/searchByUrl fetching: ${url}`);
     const raw = await client.getUrl(url, {
       resolve: ['linked_agents', 'repository', 'top_container'],
@@ -87,7 +88,7 @@ export async function searchByUrl(url: string, client: AspaceClient) {
       case /repositories\/\d+\/resources\/\d+/.test(url): {
         logger.verbose('aspaceSearch.searchByUrl found repoResources');
         const parsed = repoResourcesSchema.parse(raw);
-        const argusData = repoResourcesToDraft(parsed, url);
+        const argusData = repoResourcesToDraft(parsed, publicUrl);
         logger.verbose(JSON.stringify(argusData, null, 2));
         logger.verbose('type: resources');
         return argusData;
@@ -99,7 +100,7 @@ export async function searchByUrl(url: string, client: AspaceClient) {
         logger.verbose('aspaceSearch.searchByUrl found topContainers');
 
         const parsed = repoTopContainerSchema.parse(raw);
-        const argusData = repoTopContainerToDraft(parsed, url);
+        const argusData = repoTopContainerToDraft(parsed, publicUrl);
         logger.verbose(`ArgusData for repoTpContainer: ${argusData}`);
         logger.verbose('type: top containers');
         return argusData;
@@ -160,9 +161,9 @@ export async function searchByUrl(url: string, client: AspaceClient) {
 
         let argusData;
         if (Object.keys(extraInfo).length > 0) {
-          argusData = repoArchivalObjectToDraft(parsed, url, extraInfo);
+          argusData = repoArchivalObjectToDraft(parsed, publicUrl, extraInfo);
         } else {
-          argusData = repoArchivalObjectToDraft(parsed, url);
+          argusData = repoArchivalObjectToDraft(parsed, publicUrl);
         }
         logger.verbose(argusData);
         logger.verbose('type: archival objects');
