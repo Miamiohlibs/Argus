@@ -119,7 +119,9 @@ export async function searchByUrl(url: string, client: AspaceClient) {
         */
         if (parsed.instances.length == 0) {
           const parentResourceUrl = parsed.resource.ref;
+          console.log(`parentResourceUrl: ${parentResourceUrl}`);
           const originalUri = url.match(/\/repositories\/.*/);
+          console.log(`originalUri: ${originalUri}`);
           if (originalUri !== null) {
             extraInfo = await HandleMissingInstances(
               originalUri.toString(),
