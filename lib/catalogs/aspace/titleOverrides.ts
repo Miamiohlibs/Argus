@@ -9,23 +9,24 @@ import { ArchivalObjectExtraInfo } from '@/app/actions/aspaceSearch';
 // type ArchivalObjectInstance = RepoArchivalObject['instances'][number];
 
 export interface AspaceTitleOverrides {
-  resources?: {
-    bib?: (data: RepoResources) => string;
-    // item?: (item: ResourceInstance, data: RepoResources) => string;
-  };
+  resources?: (data: RepoResources) => string;
+  //   {
+  //     bib?:
+  //     // item?: (item: ResourceInstance, data: RepoResources) => string;
+  //   };
   topContainer?: (data: RepoTopContainer) => string;
   //   {
   //     bib?:
   //     // item?: (data: RepoTopContainer) => string;
   //   };
-  archivalObject?: {
-    bib?: (
-      data: RepoArchivalObject,
-      extraInfo?: ArchivalObjectExtraInfo,
-    ) => string;
-    // item?: (item: ArchivalObjectInstance, data: RepoArchivalObject) => string;
-    // allItems?: (data: RepoArchivalObject) => string[];
-  };
+  archivalObject?: (data: RepoArchivalObject) => string;
+  //   {
+  //     bib?: (
+  //       ,
+  //       extraInfo?: ArchivalObjectExtraInfo,
+  //     ) => string;
+  // item?: (item: ArchivalObjectInstance, data: RepoArchivalObject) => string;
+  // allItems?: (data: RepoArchivalObject) => string[];
 }
 
 /**
@@ -47,19 +48,22 @@ const streamlineTitle = (input: string): string => {
 };
 
 const titleOverrides: AspaceTitleOverrides = {
-  resources: {},
+  resources: (data: RepoResources): string => {
+    return data.title;
+  },
 
   topContainer: (data: RepoTopContainer): string => {
     console.log('****trying to replace title string');
     if (data.long_display_string) {
       return streamlineTitle(data.long_display_string);
     } else {
-      return '';
+      return 'Title Unknown';
     }
   },
-  //   },
 
-  archivalObject: {},
+  archivalObject: (data: RepoArchivalObject): string => {
+    return data.title;
+  },
 };
 
 export default titleOverrides;

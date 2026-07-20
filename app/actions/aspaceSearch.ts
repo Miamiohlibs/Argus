@@ -201,7 +201,7 @@ function repoResourcesToDraft(data: RepoResources, url: string) {
     callNumber:
       callNumberOverrides.resources?.bib?.(data) ??
       `${data.id_0}--${data.id_1}--${data.id_2}`,
-    itemTitle: titleOverrides.resources?.bib?.(data) ?? data.title,
+    itemTitle: titleOverrides.resources?.(data) ?? data.title,
     catalog: 'ASPACE',
     catalogId: data.uri,
     catalogIdType: 'uri',
@@ -334,8 +334,7 @@ function repoArchivalObjectToDraft(
         )
         .join('; ') ??
       '',
-    itemTitle:
-      titleOverrides.archivalObject?.bib?.(data, extraInfo) ?? data.title,
+    itemTitle: titleOverrides.archivalObject?.(data) ?? data.title,
     catalog: 'ASPACE',
     catalogId: data.uri,
     catalogIdType: 'uri',
