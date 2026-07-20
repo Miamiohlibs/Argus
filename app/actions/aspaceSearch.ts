@@ -6,6 +6,7 @@ import {
   repoArchivalObjectSchema,
 } from '@kenxirwin/archives-space-api-client';
 import logger from '@/lib/logger';
+import callNumberOverrides from '@/lib/catalogs/aspace/callNumberOverrides';
 import type {
   RepoArchivalObject,
   RepoResources,
@@ -17,6 +18,15 @@ import type {
   CatalogSearchResult,
 } from '@/lib/catalogs/types';
 import { ZodError } from 'zod';
+import { findNodeByKeyValuePair } from '@/lib/findNodeByKeyValuePair';
+import { cli } from 'winston/lib/winston/config';
+import { HandleMissingInstances } from './aspaceHandleMissingInstances';
+
+export interface ArchivalObjectExtraInfo {
+  numItems: number;
+  firstItemUrl: string;
+  firstRecordArgusData: { bibData: BibDataDraft; itemData: ItemDataDraft };
+}
 
 export async function getClient() {
   try {
@@ -45,6 +55,18 @@ export async function bibHoldingsByUri({ uri }: { uri: string }) {
   return await searchByUrl(url, client);
 }
 
+export async function getResourceTree(url: string, client: AspaceClient) {
+  const publicBaseUrl = process.env.ASPACE_PUBLIC_BASE_URL ?? '';
+  const apiBaseUrl = process.env.ASPACE_API_BASE_URL ?? '';
+  url = url.replace(publicBaseUrl, apiBaseUrl);
+  logger.verbose(`aspaceSearch/getResourceTree fetching: ${url}`);
+  const raw = await client.getUrl(url, {
+    resolve: ['tree'],
+  });
+  const parsed = repoResourcesSchema.parse(raw);
+  return parsed;
+}
+
 export async function searchByUrl(url: string, client: AspaceClient) {
   /* expects a url matching one of these endpoints and schemas: 
 (repoResourcesSchema): for endpoints like /repositories/2/resources/634
@@ -55,16 +77,18 @@ export async function searchByUrl(url: string, client: AspaceClient) {
     const publicBaseUrl = process.env.ASPACE_PUBLIC_BASE_URL ?? '';
     const apiBaseUrl = process.env.ASPACE_API_BASE_URL ?? '';
     url = url.replace(publicBaseUrl, apiBaseUrl);
+    const publicUrl = url.replace(apiBaseUrl, publicBaseUrl);
     logger.verbose(`aspaceSearch/searchByUrl fetching: ${url}`);
     const raw = await client.getUrl(url, {
       resolve: ['linked_agents', 'repository', 'top_container'],
     });
+    let extraInfo = {};
     switch (true) {
       // https://archivesstaff.lib.miamioh.edu/api/repositories/2/resources/634
       case /repositories\/\d+\/resources\/\d+/.test(url): {
         logger.verbose('aspaceSearch.searchByUrl found repoResources');
         const parsed = repoResourcesSchema.parse(raw);
-        const argusData = repoResourcesToDraft(parsed);
+        const argusData = repoResourcesToDraft(parsed, publicUrl);
         logger.verbose(JSON.stringify(argusData, null, 2));
         logger.verbose('type: resources');
         return argusData;
@@ -76,7 +100,7 @@ export async function searchByUrl(url: string, client: AspaceClient) {
         logger.verbose('aspaceSearch.searchByUrl found topContainers');
 
         const parsed = repoTopContainerSchema.parse(raw);
-        const argusData = repoTopContainerToDraft(parsed);
+        const argusData = repoTopContainerToDraft(parsed, publicUrl);
         logger.verbose(`ArgusData for repoTpContainer: ${argusData}`);
         logger.verbose('type: top containers');
         return argusData;
@@ -89,7 +113,58 @@ export async function searchByUrl(url: string, client: AspaceClient) {
         logger.verbose('aspaceSearch.searchByUrl found archivalObjects');
 
         const parsed = repoArchivalObjectSchema.parse(raw);
-        const argusData = repoArchivalObjectToDraft(parsed);
+
+        /* 
+          If the archival object doesn't have any instances, try finding some 
+          by searching down the tree of the main resource
+        */
+        if (parsed.instances.length == 0) {
+          const parentResourceUrl = parsed.resource.ref;
+          console.log(`parentResourceUrl: ${parentResourceUrl}`);
+          const originalUri = url.match(/\/repositories\/.*/);
+          console.log(`originalUri: ${originalUri}`);
+          if (originalUri !== null) {
+            extraInfo = await HandleMissingInstances(
+              originalUri.toString(),
+              parentResourceUrl,
+              client,
+            );
+          }
+        }
+        //   console.log(`looking for more info about ${originalUri}`);
+        //   const resourceWithTree: RepoResources = await getResourceTree(
+        //     parentResourceUrl,
+        //     client,
+        //   );
+        //   console.log(`Resource Title: ${resourceWithTree.title}`);
+        //   console.log(
+        //     `find key value pair in tree with record_uri: "${originalUri?.toString()}"`,
+        //   );
+        //   const node = findNodeByKeyValuePair(
+        //     resourceWithTree,
+        //     'record_uri',
+        //     originalUri?.toString(), // not sure why toString is needed, but it is
+        //   );
+        //   const numItems = node.children.length;
+        //   const firstItemUrl = apiBaseUrl + node.children[0].record_uri;
+        //   const firstRecordArgusData = await searchByUrl(firstItemUrl, client);
+        //   console.log(`numItems: ${numItems}`);
+        //   console.log(`first child = ${JSON.stringify(node.children[0])}`);
+        //   extraInfo = {
+        //     numItems,
+        //     firstItemUrl,
+        //     firstRecordArgusData,
+        //   };
+        // }
+        // console.log(`extraInfo: ${JSON.stringify(extraInfo)}`);
+        /* End special section dealing with missing archival_object data */
+
+        let argusData;
+        if (Object.keys(extraInfo).length > 0) {
+          argusData = repoArchivalObjectToDraft(parsed, publicUrl, extraInfo);
+        } else {
+          argusData = repoArchivalObjectToDraft(parsed, publicUrl);
+        }
         logger.verbose(argusData);
         logger.verbose('type: archival objects');
         return argusData;
@@ -117,14 +192,16 @@ export async function searchByUrl(url: string, client: AspaceClient) {
  * repoResourcesToDraft
  */
 
-function repoResourcesToDraft(data: RepoResources) {
+function repoResourcesToDraft(data: RepoResources, url: string) {
   const bibData: BibDataDraft = {
     author:
       data.linked_agents
         .filter((entry) => entry.role == 'creator')
         .map((entry) => entry._resolved?.names[0].sort_name)
         .join('; ') ?? 'Unknown',
-    callNumber: `${data.id_0}--${data.id_1}--${data.id_2}`,
+    callNumber:
+      callNumberOverrides.resources?.bib?.(data) ??
+      `${data.id_0}--${data.id_1}--${data.id_2}`,
     itemTitle: data.title,
     catalog: 'ASPACE',
     catalogId: data.uri,
@@ -135,7 +212,7 @@ function repoResourcesToDraft(data: RepoResources) {
     pub_date: null,
     publisher: null,
     totalItems: data.instances.length,
-    url: data.uri,
+    url: url,
   };
 
   const itemData: ItemDataDraft[] = data.instances.map((item, index) => ({
@@ -143,12 +220,14 @@ function repoResourcesToDraft(data: RepoResources) {
     barcode: '',
     box: '',
     call_number:
-      item.sub_container.top_container._resolved?.display_string ?? '',
+      callNumberOverrides.resources?.item?.(item, data) ??
+      item.sub_container.top_container._resolved?.display_string ??
+      '',
     copy_id: '',
-    description:
-      item.sub_container.top_container._resolved?.long_display_string ?? '',
+    description: '',
+    // item.sub_container.top_container._resolved?.long_display_string ?? '',
     folder: '',
-    location_code: data.repository._resolved?.slug ?? '',
+    location_code: '', //data.repository._resolved?.slug ?? '',
     location_name: data.repository._resolved?.name ?? '',
     ms: '',
   }));
@@ -159,10 +238,10 @@ function repoResourcesToDraft(data: RepoResources) {
 /*
  * repoTopContainerToDraft
  */
-function repoTopContainerToDraft(data: RepoTopContainer) {
+function repoTopContainerToDraft(data: RepoTopContainer, url: string) {
   const bibData: BibDataDraft = {
     author: 'Unknown',
-    callNumber: data.indicator,
+    callNumber: callNumberOverrides.topContainer?.bib?.(data) ?? data.indicator,
     itemTitle: data.long_display_string,
     catalog: 'ASPACE',
     catalogId: data.uri,
@@ -173,7 +252,7 @@ function repoTopContainerToDraft(data: RepoTopContainer) {
     pub_date: null,
     publisher: null,
     totalItems: 1,
-    url: data.uri,
+    url: url,
   };
 
   const itemData: ItemDataDraft[] = [
@@ -181,7 +260,8 @@ function repoTopContainerToDraft(data: RepoTopContainer) {
       clientKey: `item-0`,
       barcode: '',
       box: '',
-      call_number: data.indicator,
+      call_number:
+        callNumberOverrides.topContainer?.item?.(data) ?? data.indicator,
       copy_id: '',
       description: data.indicator,
       folder: '',
@@ -198,7 +278,48 @@ function repoTopContainerToDraft(data: RepoTopContainer) {
  * repoArchivalObjectToDraft
  */
 
-function repoArchivalObjectToDraft(data: RepoArchivalObject) {
+const getItems = (data: RepoArchivalObject) => {
+  if (data.instances.length > 0) {
+    return data.instances.map((item, index) => ({
+      clientKey: `item-${index}`,
+      barcode: '',
+      box: '',
+      call_number:
+        callNumberOverrides.archivalObject?.item?.(item, data) ??
+        item.sub_container.top_container._resolved?.display_string ??
+        '',
+      copy_id: '',
+      description:
+        item.sub_container.top_container._resolved?.long_display_string ?? '',
+      folder: '',
+      location_code: data.repository._resolved?.slug ?? '',
+      location_name: data.repository._resolved?.name ?? '',
+      ms: '',
+    }));
+  } else {
+    if (callNumberOverrides.archivalObject?.allItems) {
+      const callNumbers = callNumberOverrides.archivalObject?.allItems(data);
+      return callNumbers.map((callNumber, index) => ({
+        clientKey: `item-${index}`,
+        barcode: '',
+        box: '',
+        call_number: callNumber ?? '',
+        copy_id: '',
+        description: '',
+        folder: '',
+        location_code: data.repository._resolved?.slug ?? '',
+        location_name: data.repository._resolved?.name ?? '',
+        ms: '',
+      }));
+    }
+  }
+};
+
+function repoArchivalObjectToDraft(
+  data: RepoArchivalObject,
+  url: string,
+  extraInfo?: any,
+) {
   const bibData: BibDataDraft = {
     author:
       data.linked_agents
@@ -206,12 +327,14 @@ function repoArchivalObjectToDraft(data: RepoArchivalObject) {
         .map((entry) => entry._resolved?.names[0].sort_name)
         .join('; ') ?? 'Unknown',
     callNumber:
+      callNumberOverrides.archivalObject?.bib?.(data, extraInfo) ??
       data.instances
         .map(
           (instance) =>
             instance.sub_container.top_container._resolved?.indicator,
         )
-        .join('; ') ?? '',
+        .join('; ') ??
+      '',
     itemTitle: data.title,
     catalog: 'ASPACE',
     catalogId: data.uri,
@@ -220,26 +343,17 @@ function repoArchivalObjectToDraft(data: RepoArchivalObject) {
     location_display: data.repository._resolved?.name ?? '',
     notes: '',
     pub_date:
-      (data.dates && `${data.dates[0].begin} - ${data.dates[0].end}`) ?? '',
+      (data.dates &&
+        data.dates[0] &&
+        (data.dates[0].begin || data.dates[0].end) &&
+        `${data.dates[0]?.begin ?? ''} - ${data.dates[0]?.end ?? ''}`) ??
+      '',
     publisher: null,
     totalItems: 1,
-    url: data.uri,
+    url: url,
   };
 
-  const itemData: ItemDataDraft[] = data.instances.map((item, index) => ({
-    clientKey: `item-${index}`,
-    barcode: '',
-    box: '',
-    call_number:
-      item.sub_container.top_container._resolved?.display_string ?? '',
-    copy_id: '',
-    description:
-      item.sub_container.top_container._resolved?.long_display_string ?? '',
-    folder: '',
-    location_code: data.repository._resolved?.slug ?? '',
-    location_name: data.repository._resolved?.name ?? '',
-    ms: '',
-  }));
+  const itemData: ItemDataDraft[] = getItems(data) ?? [];
 
   return { bibData, itemData };
 }

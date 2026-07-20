@@ -23,6 +23,7 @@ export const aspaceProvider: SearchableCatalogProvider = {
       }
     } catch (error) {
       console.error(`Error fetching data in aspace/provider/searchByAny`);
+      error instanceof Error && console.log(error.message);
       return { error: `Error fetching data in aspace/provider/searchByAny` };
     }
 
