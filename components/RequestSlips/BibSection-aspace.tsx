@@ -1,6 +1,7 @@
 import { RequestSlipProps } from '@/types/RequestSlipProps';
 import styles from './RequestSlipHalfPageHtml.module.css';
 import { shortenString } from './RequestSlipHalfPageHtml';
+import { bibSectionOverrides } from './BibSectionOverrides';
 
 export const bibSectionAspace = (props: RequestSlipProps) => {
   const {
@@ -18,6 +19,12 @@ export const bibSectionAspace = (props: RequestSlipProps) => {
     ms,
   } = props;
 
+  // return overrides if defined
+  if (bibSectionOverrides.aspace(props)) {
+    return bibSectionOverrides.aspace(props);
+  }
+
+  //else return normal aspace bibSection
   return (
     <div className={styles.row}>
       <div className={styles.column}>
