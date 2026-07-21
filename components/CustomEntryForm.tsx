@@ -116,7 +116,12 @@ const CustomEntryForm = ({
       const qs = new URLSearchParams();
       qs.set('bibData', JSON.stringify(draftBibData));
       qs.set('itemData', JSON.stringify([draftItemData]));
-      for (const key of ['userName', 'userStatus', 'userAffiliation', 'purpose']) {
+      for (const key of [
+        'userName',
+        'userStatus',
+        'userAffiliation',
+        'purpose',
+      ]) {
         const value = formData.get(key);
         if (value) {
           qs.set(key, value.toString());
@@ -160,7 +165,7 @@ const CustomEntryForm = ({
       <form ref={formRef} onSubmit={handleSubmit}>
         <div className="mb-2">
           <InputGroup>
-            <InputGroupText id="title-note">
+            <InputGroupText id="title-note" className="required">
               <label htmlFor="itemTitle">Title</label>
               <sup>*</sup>
             </InputGroupText>
@@ -179,7 +184,7 @@ const CustomEntryForm = ({
 
         <div className="mb-2">
           <InputGroup>
-            <InputGroupText id="author-note">
+            <InputGroupText id="author-note" className="required">
               <label htmlFor="author">Author</label> <sup>*</sup>
             </InputGroupText>
             <Input
@@ -196,9 +201,8 @@ const CustomEntryForm = ({
         </div>
         <div className="mb-2">
           <InputGroup>
-            <InputGroupText id="location-note">
-              <label htmlFor="itemLocation">Location</label>{' '}
-              <sup>*</sup>
+            <InputGroupText id="location-note" className="required">
+              <label htmlFor="itemLocation">Location</label> <sup>*</sup>
             </InputGroupText>
             <Select
               id="itemLocation"

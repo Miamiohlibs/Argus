@@ -1,11 +1,24 @@
-import { Children, HTMLAttributes, ReactElement, ReactNode, cloneElement, isValidElement } from 'react';
+import {
+  Children,
+  HTMLAttributes,
+  ReactElement,
+  ReactNode,
+  cloneElement,
+  isValidElement,
+} from 'react';
 
 interface InputGroupProps extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode;
 }
 
-export default function InputGroup({ children, className = '', ...props }: InputGroupProps) {
-  const items = Children.toArray(children).filter(isValidElement) as ReactElement<{
+export default function InputGroup({
+  children,
+  className = '',
+  ...props
+}: InputGroupProps) {
+  const items = Children.toArray(children).filter(
+    isValidElement,
+  ) as ReactElement<{
     className?: string;
   }>[];
 
@@ -34,9 +47,13 @@ export function InputGroupText({
   className = '',
   ...props
 }: HTMLAttributes<HTMLSpanElement>) {
+  let colorClasses = 'border-gray-300 bg-white text-black';
+  if (className.match(/required/)) {
+    colorClasses = 'border-gray-300 bg-primary text-white';
+  }
   return (
     <span
-      className={`flex items-center whitespace-nowrap rounded border border-gray-300 bg-primary px-3 text-sm font-medium text-white ${className}`}
+      className={`flex items-center whitespace-nowrap rounded border px-3 text-sm font-medium  ${className} ${colorClasses}`}
       {...props}
     >
       {children}
