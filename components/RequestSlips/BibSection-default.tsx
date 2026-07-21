@@ -9,7 +9,7 @@ export const bibSectionDefault = (props: RequestSlipProps) => {
     date,
     location,
     callNumber,
-    catalog,
+    // catalog,
     itemInfo,
     highlightedItemIndex,
     notes,

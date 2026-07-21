@@ -19,7 +19,12 @@ export default function generateRequestSlipItems(
         let info: string = '';
         // console.log('****** item info:', JSON.stringify(item));
         // console.log('****** entry loc: ', entry.location_codes);
-        locationArr.push(`${item.location_name} (${item.location_code})`);
+        if (entry.catalog == 'ASPACE') {
+          locationArr.push(`${item.location_name}`);
+        } else {
+          locationArr.push(`${item.location_name} (${item.location_code})`);
+        }
+
         // only add to item info if there's any item-specific info
         if (
           (item.copy_id && parseInt(item.copy_id) > 1) ||
@@ -31,7 +36,11 @@ export default function generateRequestSlipItems(
             entry.location_codes &&
             entry.location_codes.length > 1
           ) {
-            info += `${item.location_name} (${item.location_code}) `;
+            if (entry.catalog == 'ASPACE') {
+              info += `${item.location_name} `;
+            } else {
+              info += `${item.location_name} (${item.location_code}) `;
+            }
           }
           if (item.call_number !== entry.callNumber) {
             info += `${item.call_number} `;

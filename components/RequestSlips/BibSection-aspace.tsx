@@ -9,32 +9,24 @@ export const bibSectionAspace = (props: RequestSlipProps) => {
     date,
     location,
     callNumber,
-    catalog,
+    // catalog,
     itemInfo,
     highlightedItemIndex,
     notes,
     box,
     folder,
     ms,
-    // userName,
-    // userEmail,
-    // userAffiliation,
-    // userStatus,
-    // personPrinting,
-    // projectName,
-    // purpose,
-    // displayPrintButton,
   } = props;
 
   return (
     <div className={styles.row}>
       <div className={styles.column}>
-        <div className={styles.dataPair}>
+        {/* <div className={styles.dataPair}>
           <span className={styles.label}>Author:</span>{' '}
           <span className={styles.value}>
-            {author && shortenString(author, 50)}
+            {author && shortenString(author, 150)}
           </span>
-        </div>
+        </div> */}
         <div className={styles.dataPair}>
           <span className={styles.label}>Brief Title:</span>{' '}
           <span className={styles.value}>
@@ -55,9 +47,15 @@ export const bibSectionAspace = (props: RequestSlipProps) => {
       </div>
 
       <div className={styles.column}>
-        <h3 className={styles.h3}>Call Number</h3>
-        <div className={styles.text}>{location}</div>
-        <div className={styles.text}>{callNumber ?? ''}</div>
+        <h3 className={styles.h3}>Whereabouts</h3>
+        {/* <div className={styles.text}>{location}</div>
+         */}
+        {callNumber &&
+          callNumber != undefined &&
+          callNumber != 'undefined' &&
+          callNumber.length > 0 && (
+            <div className={styles.text}>{callNumber ?? ''}</div>
+          )}
         {ms && (
           <div>
             <span className={styles.label}>Manuscript #</span>{' '}
