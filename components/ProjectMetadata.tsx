@@ -45,7 +45,7 @@ const ProjectMetadata = ({
             </Badge>
           )}
           <Badge bg="light" className="ms-2 text-dark">
-            <IconComponent className="mx-2" />
+            <IconComponent className="mx-2 inline" />
             Project is {publicStatus}
           </Badge>
         </div>
