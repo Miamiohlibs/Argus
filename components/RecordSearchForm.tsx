@@ -21,7 +21,7 @@ type RecordSearchFormProps =
       searchPlaceholder: string;
       catalog?: Catalog;
     }
-  | { quickSlip: true };
+  | { quickSlip: true; catalog?: Catalog; searchPlaceholder: string };
 
 const RecordSearchForm = (props: RecordSearchFormProps) => {
   const formRef = useRef<HTMLFormElement>(null);
@@ -38,6 +38,7 @@ const RecordSearchForm = (props: RecordSearchFormProps) => {
     userCanEditPage = true;
     projectId = undefined;
     catalog = 'ALMA' as Catalog;
+    placeholder = props.searchPlaceholder;
   } else {
     quickSlip = false;
     userCanEditPage = props.userCanEditPage;
