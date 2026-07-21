@@ -22,7 +22,8 @@ export type ButtonSize = 'sm' | 'md' | 'lg';
 
 const solidClasses: Record<string, string> = {
   primary: 'bg-primary hover:bg-primary-hover border-primary text-white',
-  secondary: 'bg-secondary hover:bg-secondary-hover border-secondary text-white',
+  secondary:
+    'bg-secondary hover:bg-secondary-hover border-secondary text-white',
   success: 'bg-success hover:bg-success-hover border-success text-white',
   danger: 'bg-danger hover:bg-danger-hover border-danger text-white',
   warning: 'bg-warning hover:bg-warning-hover border-warning text-gray-900',
@@ -67,7 +68,7 @@ export function buttonClasses({
   const color = isOutline ? variant.replace('outline-', '') : variant;
   const colorClasses = isOutline ? outlineClasses[color] : solidClasses[color];
   return [
-    'inline-flex items-center justify-center rounded border font-medium whitespace-nowrap transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-current disabled:opacity-65 disabled:pointer-events-none print:hidden',
+    'inline-flex items-center justify-center rounded border font-medium whitespace-nowrap transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-current disabled:opacity-65 disabled:pointer-events-none print:hidden btn',
     sizeClasses[size],
     colorClasses,
     className,
@@ -82,7 +83,16 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ variant = 'primary', size = 'md', className = '', type = 'button', ...props }, ref) => {
+  (
+    {
+      variant = 'primary',
+      size = 'md',
+      className = '',
+      type = 'button',
+      ...props
+    },
+    ref,
+  ) => {
     return (
       <button
         ref={ref}
@@ -104,5 +114,7 @@ export function ButtonGroup({
   children: React.ReactNode;
   className?: string;
 }) {
-  return <div className={`inline-flex items-center ${className}`}>{children}</div>;
+  return (
+    <div className={`inline-flex items-center ${className}`}>{children}</div>
+  );
 }
