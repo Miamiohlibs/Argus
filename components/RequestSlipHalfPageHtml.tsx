@@ -39,45 +39,106 @@ const PrintButton: React.FC<{ children?: React.ReactNode }> = ({
   );
 };
 
-export const RequestSlipHalfPage = ({
-  author,
-  title,
-  date,
-  location,
-  callNumber,
-  itemInfo,
-  highlightedItemIndex,
-  notes,
-  box,
-  folder,
-  ms,
-  userName,
-  userEmail,
-  userAffiliation,
-  userStatus,
-  personPrinting,
-  projectName,
-  purpose,
-  displayPrintButton,
-}: RequestSlipProps) => {
-  // console.log('Item Info', itemInfo);
-  // console.log(`Added fields: ${userStatus}`);
-  const volumeLabel = // only show if items to show
-    itemInfo && itemInfo.length > 1 ? (
-      <div className={`${styles.bold} ${styles.text}`}>Volume(s):</div>
-    ) : (
-      <></>
+export const bibSection = (props: RequestSlipProps) => {
+  const {
+    author,
+    title,
+    date,
+    location,
+    callNumber,
+    catalog,
+    itemInfo,
+    highlightedItemIndex,
+    notes,
+    box,
+    folder,
+    ms,
+    // userName,
+    // userEmail,
+    // userAffiliation,
+    // userStatus,
+    // personPrinting,
+    // projectName,
+    // purpose,
+    // displayPrintButton,
+  } = props;
+  if (catalog == 'ASPACE') {
+    return (
+      <div className={styles.row}>
+        <div className={styles.column}>
+          <div className={styles.dataPair}>
+            <span className={styles.label}>Author:</span>{' '}
+            <span className={styles.value}>
+              {author && shortenString(author, 50)}
+            </span>
+          </div>
+          <div className={styles.dataPair}>
+            <span className={styles.label}>Brief Title:</span>{' '}
+            <span className={styles.value}>
+              {/* {title && shortenString(title)} */}
+              {title}
+            </span>
+          </div>
+          {/* <div>
+            <span className={styles.label}>Date of item:</span>{' '}
+            <span className={styles.value}>{date}</span>
+          </div> */}
+          {notes && (
+            <>
+              <h3 className={styles.h3}>Other Information</h3>
+              <div className={styles.text}>{notes}</div>
+            </>
+          )}
+        </div>
+
+        <div className={styles.column}>
+          <h3 className={styles.h3}>Call Number</h3>
+          <div className={styles.text}>{location}</div>
+          <div className={styles.text}>{callNumber ?? ''}</div>
+          {ms && (
+            <div>
+              <span className={styles.label}>Manuscript #</span>{' '}
+              <span className={styles.value}>{ms}</span>
+            </div>
+          )}
+          {box && (
+            <div>
+              <span className={styles.label}>Box</span>{' '}
+              <span className={styles.value}>{box}</span>
+            </div>
+          )}
+          {folder && (
+            <div>
+              <span className={styles.label}>Folder</span>{' '}
+              <span className={styles.value}>{folder}</span>
+            </div>
+          )}
+          {itemInfo?.map((item, i) => {
+            const counter =
+              i == highlightedItemIndex && itemInfo.length > 1
+                ? ` (slip ${i + 1}/${itemInfo.length} for this bib record)`
+                : '';
+            item += counter;
+            if (i == highlightedItemIndex)
+              return (
+                <div key={i} className={styles.text}>
+                  {item}
+                </div>
+              );
+          })}
+        </div>
+      </div>
     );
-  return (
-    <article
-      className={`${styles.sheetOuterLetterArticle} ${styles.sheetArticle}`}
-    >
-      {displayPrintButton && <PrintButton>Print</PrintButton>}
-      <h1 className={styles.h1}>Miami University Libraries</h1>
-      <p className={styles.subhead}>
-        Special Collections & Archives Request Slip
-      </p>
-      <h2 className={styles.h2}>I. ITEM REQUESTED</h2>
+  }
+
+  if (catalog == 'ALMA') {
+    const volumeLabel = // only show if items to show
+      itemInfo && itemInfo.length > 1 ? (
+        <div className={`${styles.bold} ${styles.text}`}>Volume(s):</div>
+      ) : (
+        <></>
+      );
+    return (
       <div className={styles.row}>
         <div className={styles.column}>
           <div className={styles.dataPair}>
@@ -142,6 +203,48 @@ export const RequestSlipHalfPage = ({
           })}
         </div>
       </div>
+    );
+  }
+};
+
+export const RequestSlipHalfPage = (props: RequestSlipProps) => {
+  const {
+    author,
+    title,
+    date,
+    location,
+    callNumber,
+    catalog,
+    itemInfo,
+    highlightedItemIndex,
+    notes,
+    box,
+    folder,
+    ms,
+    userName,
+    userEmail,
+    userAffiliation,
+    userStatus,
+    personPrinting,
+    projectName,
+    purpose,
+    displayPrintButton,
+  } = props;
+  // console.log('Item Info', itemInfo);
+  // console.log(`Added fields: ${userStatus}`);
+
+  const bibSectionHtml = bibSection(props);
+  return (
+    <article
+      className={`${styles.sheetOuterLetterArticle} ${styles.sheetArticle}`}
+    >
+      {displayPrintButton && <PrintButton>Print</PrintButton>}
+      <h1 className={styles.h1}>Miami University Libraries</h1>
+      <p className={styles.subhead}>
+        Special Collections & Archives Request Slip
+      </p>
+      <h2 className={styles.h2}>I. ITEM REQUESTED</h2>
+      {bibSectionHtml}
 
       <h2 className={styles.h2}>II. RESEARCHER INFORMATION</h2>
       <div className={`${styles.row} ${styles.researcher} `}>
