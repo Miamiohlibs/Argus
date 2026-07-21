@@ -12,7 +12,7 @@ export default async function MePage() {
   );
 
   return (
-    <>
+    <div className="default">
       {user && (
         <UserDiagnosticInfo
           user={user}
@@ -29,6 +29,6 @@ export default async function MePage() {
           <pre>{JSON.stringify(projects, null, 2)}</pre>
         </>
       )}
-    </>
+    </div>
   );
 }

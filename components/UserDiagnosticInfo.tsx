@@ -8,7 +8,7 @@ type ProjectWithUser = Prisma.ProjectGetPayload<{
 
 function projectsList(projects: ProjectWithUser[]) {
   return (
-    <ul>
+    <ul className="list-disc list-inside">
       {projects.map((project, i) => {
         return (
           <li key={i}>
@@ -35,7 +35,7 @@ export default function UserDiagnosticInfo({
     <>
       <h1>User: {user.name}</h1>
       <h2>Profile</h2>
-      <ul>
+      <ul className="list-disc list-inside">
         <li>
           <b className="listLabel">Email: </b>
           <span className="listValue">{user.email}</span>
