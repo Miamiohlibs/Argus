@@ -4,9 +4,7 @@ import type {
   RepoTopContainer,
 } from '@kenxirwin/archives-space-api-client';
 import { ArchivalObjectExtraInfo } from '@/app/actions/aspaceSearch';
-import { match } from 'assert';
-import { Underdog } from 'next/font/google';
-import { abort } from 'process';
+import logger from '@/lib/logger';
 
 type ResourceInstance = RepoResources['instances'][number];
 type ArchivalObjectInstance = RepoArchivalObject['instances'][number];
@@ -85,29 +83,29 @@ const overrides: AspaceCallNumberOverrides = {
   resources: {
     bib(data) {
       const itemCallNumbers = data.instances.map(
-        (item) => item.sub_container.top_container._resolved?.display_string,
+        (item) => item.sub_container?.top_container?._resolved?.display_string,
       );
       return condenseItemRange(itemCallNumbers);
     },
   },
   archivalObject: {
     bib(data, extraInfo) {
-      console.log('running archivalObject.bib override');
-      data && console.log('data present');
-      extraInfo && console.log(`extraInfo present`);
+      logger.silly('running archivalObject.bib override');
+      data && logger.silly('data present');
+      extraInfo && logger.silly(`extraInfo present`);
       if (isWesternCollection(data)) {
         const matches = getWesternItemCallNumbers(data);
         return condenseItemRange(matches);
       }
       if (extraInfo) {
-        console.log('trying to extra call number from extraInfo...');
+        logger.silly('trying to extra call number from extraInfo...');
         return `${extraInfo.firstRecordArgusData.bibData.callNumber}... (${extraInfo.numItems} items)`;
       }
       // else, if not Western...
       const displayString = data.instances
         .map(
           (instance) =>
-            instance.sub_container.top_container._resolved?.indicator,
+            instance?.sub_container?.top_container?._resolved?.indicator,
         )
         .join('; ');
       const matches = displayString.match(callRegexMost)?.join('; ');
@@ -121,7 +119,7 @@ const overrides: AspaceCallNumberOverrides = {
       }
       // else, if not western...
       const displayString =
-        itemData.sub_container.top_container._resolved?.display_string;
+        itemData.sub_container?.top_container?._resolved?.display_string;
       const matches = `${displayString?.match(callRegexMost)?.join(', ')}`;
       if (matches) {
         return matches;

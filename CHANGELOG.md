@@ -5,6 +5,8 @@
 ### Changed
 
 - New .env variables: ASPACE_API_BASE_URL, ASPACE_USER, ASPACE_PASSWORD, ASPACE_PUBLIC_BASE_URL, NEXT_PUBLIC_CATALOGS
+- callNumberOverrides -> these files need to be reset to blank for the release
+- titleOverrides -> these files need to be reset to blank for the release
 
 ## 0.8.3 - 2026-04-29
 
