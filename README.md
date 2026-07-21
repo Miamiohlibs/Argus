@@ -115,6 +115,22 @@ LOG_LEVEL=info #info is the default, choose from: error,warn,info,verbose,debug,
    - Set `NEXT_PUBLIC_IS_DEV_ENV`. Should be `false` for production; when true, will display some ugly/useful JSON data on some results pages.
 8. When the site is ready to go into production (i.e., after testing), use the Google Developer Console to create a project to handle authentication. Provide the Google project configuration to Clerk to let Google handle the authentication and have Clerk manage users. Refer to Clerk's documentation on [Deploying to production](https://clerk.com/docs/guides/development/deployment/production) for and this [video tutorial](https://youtu.be/qKU6MQp-g7w?si=Qq6pp1VvRVp64edq) guidance.
 
+### ArchivesSpace call-number and title customization
+
+Different institutions structure their ArchivesSpace `id_0`/`id_1`/`id_2`/`indicator`/`display_string` fields differently, so call-number parsing is a designated per-installation extension point rather than a one-size-fits-all default.
+
+`lib/catalogs/aspace/callNumberOverrides.ts` ships with empty defaults (today's built-in parsing behavior). To customize call-number parsing for your installation, edit that file directly and implement whichever of the `resources`, `topContainer`, or `archivalObject` `bib`/`item` functions you need — anything left unimplemented falls back to the built-in logic. The function signatures are fully typed against the ArchivesSpace client's response types, so your editor will show you exactly what data is available.
+
+Structured like the callNumberOverrides.ts file, `lib/catalogs/aspace/titleOverrides.ts` allows for local customizations of how titles are extracted from ArchivesSpace data.
+
+Because these files are meant to diverge per installation, set it up once so future `git pull`s from upstream don't create merge conflicts on your local edits:
+
+```
+git config merge.ours.driver true
+```
+
+This tells git to keep your local version of any file matching a `merge=ours` rule in `.gitattributes` (already configured for `callNumberOverrides.ts`) whenever you merge or pull changes from upstream, instead of trying to merge the two versions. Upstream Argus development should never need to edit this file's contents again after it's created, so in practice this means your customization simply persists across updates.
+
 ## Getting Started (Boilerplate NextJs stuff)
 
 First, run the development server:
