@@ -5,8 +5,8 @@ import type { RequestSlipProps } from '@/types/RequestSlipProps';
 import { Button } from 'react-bootstrap';
 import styles from './RequestSlipHalfPageHtml.module.css';
 import { Roboto } from 'next/font/google';
-import { bibSectionAspace } from './BibInfo-aspace';
-import { bibSectionDefault } from './BibInfo-default';
+import { bibSectionAspace } from './BibSection-aspace';
+import { bibSectionDefault } from './BibSection-default';
 
 const roboto = Roboto({
   weight: '400',
