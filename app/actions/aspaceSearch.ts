@@ -81,6 +81,7 @@ export async function searchByUrl(url: string, client: AspaceClient) {
     const raw = await client.getUrl(url, {
       resolve: ['linked_agents', 'repository', 'top_container'],
     });
+    logger.silly(`Raw response: ${JSON.stringify(raw)}`);
     let extraInfo = {};
     switch (true) {
       // https://archivesstaff.lib.miamioh.edu/api/repositories/2/resources/634
@@ -119,9 +120,9 @@ export async function searchByUrl(url: string, client: AspaceClient) {
         */
         if (parsed.instances.length == 0) {
           const parentResourceUrl = parsed.resource.ref;
-          console.log(`parentResourceUrl: ${parentResourceUrl}`);
+          logger.verbose(`parentResourceUrl: ${parentResourceUrl}`);
           const originalUri = url.match(/\/repositories\/.*/);
-          console.log(`originalUri: ${originalUri}`);
+          logger.verbose(`originalUri: ${originalUri}`);
           if (originalUri !== null) {
             extraInfo = await HandleMissingInstances(
               originalUri.toString(),
@@ -130,33 +131,6 @@ export async function searchByUrl(url: string, client: AspaceClient) {
             );
           }
         }
-        //   console.log(`looking for more info about ${originalUri}`);
-        //   const resourceWithTree: RepoResources = await getResourceTree(
-        //     parentResourceUrl,
-        //     client,
-        //   );
-        //   console.log(`Resource Title: ${resourceWithTree.title}`);
-        //   console.log(
-        //     `find key value pair in tree with record_uri: "${originalUri?.toString()}"`,
-        //   );
-        //   const node = findNodeByKeyValuePair(
-        //     resourceWithTree,
-        //     'record_uri',
-        //     originalUri?.toString(), // not sure why toString is needed, but it is
-        //   );
-        //   const numItems = node.children.length;
-        //   const firstItemUrl = apiBaseUrl + node.children[0].record_uri;
-        //   const firstRecordArgusData = await searchByUrl(firstItemUrl, client);
-        //   console.log(`numItems: ${numItems}`);
-        //   console.log(`first child = ${JSON.stringify(node.children[0])}`);
-        //   extraInfo = {
-        //     numItems,
-        //     firstItemUrl,
-        //     firstRecordArgusData,
-        //   };
-        // }
-        // console.log(`extraInfo: ${JSON.stringify(extraInfo)}`);
-        /* End special section dealing with missing archival_object data */
 
         let argusData;
         if (Object.keys(extraInfo).length > 0) {
@@ -285,11 +259,11 @@ const getItems = (data: RepoArchivalObject) => {
       box: '',
       call_number:
         callNumberOverrides.archivalObject?.item?.(item, data) ??
-        item.sub_container.top_container._resolved?.display_string ??
+        item.sub_container?.top_container?._resolved?.display_string ??
         '',
       copy_id: '',
       description:
-        item.sub_container.top_container._resolved?.long_display_string ?? '',
+        item.sub_container?.top_container?._resolved?.long_display_string ?? '',
       folder: '',
       location_code: data.repository._resolved?.slug ?? '',
       location_name: data.repository._resolved?.name ?? '',
