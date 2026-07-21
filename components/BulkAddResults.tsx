@@ -32,9 +32,9 @@ const BulkAddResults = ({
           >
             <CardBody>
               {entry.status === 'success' ? (
-                <CheckCircle className="ml-2" aria-hidden="true" />
+                <CheckCircle className="ml-2 inline" aria-hidden="true" />
               ) : (
-                <XCircle className="ml-2" aria-hidden="true" />
+                <XCircle className="ml-2 inline" aria-hidden="true" />
               )}{' '}
               {entry.query} - {entry.message}
             </CardBody>
