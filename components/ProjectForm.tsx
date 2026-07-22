@@ -48,9 +48,7 @@ export default function ProjectForm({
     project?.subjects[0] ?? 'None',
   );
 
-  if (basePath === null) {
-    basePath = '/';
-  }
+  const resolvedBasePath = basePath ?? '/';
 
   // Handle notifications
   useEffect(() => {
@@ -66,10 +64,10 @@ export default function ProjectForm({
       );
       // Client-side redirect after showing toast
       setTimeout(() => {
-        window.location.href = `${basePath}/project/${state.data?.id}`;
+        window.location.href = `${resolvedBasePath}/project/${state.data?.id}`;
       }, 500); // Give time for toast to show
     }
-  }, [state, project, basePath]);
+  }, [state, project, resolvedBasePath]);
 
   const projectPurposes = getProjectPurposes();
   const projectSubjects = getSubjects();

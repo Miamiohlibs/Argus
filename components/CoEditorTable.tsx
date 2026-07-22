@@ -1,6 +1,6 @@
 'use client';
 import { TableColumn } from 'react-data-table-component';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import DataTable from 'react-data-table-component';
 import Button from '@/components/ui/Button';
 import { getPossibleCoEditors } from '@/app/actions/coEditors';
@@ -16,7 +16,6 @@ type UserWithCoEditor = Prisma.UserGetPayload<{
 
 export default function CoEditorTable({ projectId }: { projectId: string }) {
   const [users, setUsers] = useState<UserWithCoEditor[]>([]);
-  const [filteredUsers, setFilteredUsers] = useState<UserWithCoEditor[]>([]);
   const [loading, setLoading] = useState(true);
   const [filterText, setFilterText] = useState('');
 
@@ -25,21 +24,21 @@ export default function CoEditorTable({ projectId }: { projectId: string }) {
     const fetchUsers = async () => {
       const data = await getPossibleCoEditors(projectId); // Assuming getUsers is an async function that fetches users
       setUsers(data ?? []);
-      setFilteredUsers(data ?? []);
       setLoading(false);
     };
 
     fetchUsers();
   }, [projectId]);
 
-  useEffect(() => {
-    const filtered = users.filter((user) =>
-      [user.name, user.email, user.role].some((val) =>
-        val?.toLowerCase().includes(filterText.toLowerCase() || '')
-      )
-    );
-    setFilteredUsers(filtered);
-  }, [filterText, users]);
+  const filteredUsers = useMemo(
+    () =>
+      users.filter((user) =>
+        [user.name, user.email, user.role].some((val) =>
+          val?.toLowerCase().includes(filterText.toLowerCase() || '')
+        )
+      ),
+    [users, filterText]
+  );
 
   const columns: TableColumn<UserWithCoEditor>[] = [
     {

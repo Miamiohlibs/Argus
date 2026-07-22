@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Select from '@/components/ui/Select';
 
 type FloatingSelectFieldProps = {
@@ -17,11 +17,13 @@ type FloatingSelectFieldProps = {
 
 const FloatingSelectField = (props: FloatingSelectFieldProps) => {
   const [hasValue, setHasValue] = useState<boolean>(Boolean(props.value));
+  const [prevValue, setPrevValue] = useState(props.value);
 
   // Keep the floated state in sync if the value is controlled from outside.
-  useEffect(() => {
+  if (props.value !== prevValue) {
+    setPrevValue(props.value);
     setHasValue(Boolean(props.value));
-  }, [props.value]);
+  }
 
   const { onChange: externalOnChange, ...restFormControlProps } =
     (props.formControlProps ?? {}) as {
