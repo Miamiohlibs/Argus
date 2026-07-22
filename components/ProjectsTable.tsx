@@ -1,7 +1,7 @@
 'use client';
 
 import { TableColumn } from 'react-data-table-component';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import DataTable from 'react-data-table-component';
 import { Prisma } from '@prisma/client';
 import Link from 'next/link';
@@ -36,9 +36,6 @@ export default function ProjectsTable({
   canPrint = false,
 }: ProjectsTableProps) {
   const [projects, setProjects] = useState<ProjectWithUserAndCoEditors[]>([]);
-  const [filteredProjects, setFilteredProjects] = useState<
-    ProjectWithUserAndCoEditors[]
-  >([]);
   const [loading, setLoading] = useState(true);
   const [filterText, setFilterText] = useState('');
   const [archiveView, setArchiveView] = useState<boolean>(limitToArchived);
@@ -58,18 +55,15 @@ export default function ProjectsTable({
     console.log(`Delete project with ID: ${projectId}`);
 
     setProjects((prev) => prev.filter((p) => p.id !== projectId));
-    setFilteredProjects((prev) => prev.filter((p) => p.id !== projectId));
     setDeletedProjects((prev) => [...prev, projectId]);
   };
 
   const handleArchive = (projectId: number) => {
     setProjects((prev) => prev.filter((p) => p.id !== projectId));
-    setFilteredProjects((prev) => prev.filter((p) => p.id !== projectId));
   };
 
   const handleUnrchive = (projectId: number) => {
     setProjects((prev) => prev.filter((p) => p.id !== projectId));
-    setFilteredProjects((prev) => prev.filter((p) => p.id !== projectId));
   };
 
   useEffect(() => {
@@ -201,25 +195,25 @@ export default function ProjectsTable({
         limitToArchived: archiveView,
       });
       setProjects(data.projects ?? []);
-      setFilteredProjects(data.projects ?? []);
       setLoading(false);
     };
 
     fetchProjects();
-  }, [normalizedLimitToUser, archiveView]);
+  }, [normalizedLimitToUser, limitToPublic, archiveView]);
 
-  useEffect(() => {
-    const filtered = projects.filter((project) =>
-      [
-        project.title,
-        project.user.name,
-        project.notes,
-        project.purpose,
-        project.subjects.join(' '),
-      ].some((val) => val?.toLowerCase().includes(filterText.toLowerCase())),
-    );
-    setFilteredProjects(filtered);
-  }, [filterText, projects]);
+  const filteredProjects = useMemo(
+    () =>
+      projects.filter((project) =>
+        [
+          project.title,
+          project.user.name,
+          project.notes,
+          project.purpose,
+          project.subjects.join(' '),
+        ].some((val) => val?.toLowerCase().includes(filterText.toLowerCase())),
+      ),
+    [projects, filterText],
+  );
 
   return (
     <div className="react-data-table" id="projects-table">

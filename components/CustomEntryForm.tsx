@@ -9,7 +9,6 @@ import InputGroup, { InputGroupText } from '@/components/ui/InputGroup';
 import Button from '@/components/ui/Button';
 import type { BibDataDraft, ItemDataDraft } from '@/lib/catalogs/types';
 import { useState } from 'react';
-import { useEffect } from 'react';
 import { LocationCode, inHouseLocationData } from '@/lib/locationCodes';
 import QuickSlipProjectInfo from './QuickSlipProjectInfo';
 import { useRouter } from 'next/navigation';
@@ -38,18 +37,10 @@ const CustomEntryForm = ({
   currentUserName,
 }: CustomEntryFormProps) => {
   const router = useRouter();
-  const [locations, setLocations] = useState<LocationCode[]>([]);
+  const [locations] = useState<LocationCode[]>(() => inHouseLocationData() ?? []);
   const [selectedLocation, setSelectedLocation] = useState<LocationCode | null>(
     null,
   );
-
-  // Load locations only once on mount
-  useEffect(() => {
-    const locationCodes = inHouseLocationData();
-    if (typeof locationCodes != 'undefined') {
-      setLocations(locationCodes);
-    }
-  }, []);
 
   const handleLocationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     // console.log(`Selected location: ${e.target.value}`);

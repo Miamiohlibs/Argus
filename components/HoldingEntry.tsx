@@ -3,7 +3,7 @@ import Input from '@/components/ui/Input';
 import Button from '@/components/ui/Button';
 import InputGroup, { InputGroupText } from '@/components/ui/InputGroup';
 import Checkbox from '@/components/ui/Checkbox';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { toast } from 'react-toastify';
 import entryAction from '@/app/actions/addEntry';
 import { EntryWithItems } from '@/types/EntryWithItems';
@@ -36,10 +36,6 @@ const HoldingEntry = ({
   currentUserName,
 }: HoldingEntryProps) => {
   const router = useRouter();
-  const [selectedItems, setSelectedItems] = useState<ItemDataDraft[]>([]);
-  const [isInitialized, setIsInitialized] = useState(false);
-  const formRef = useRef<HTMLFormElement>(null);
-  const noteRef = useRef<HTMLInputElement>(null);
 
   const matchStringIfPresent = (
     str1: string | null | undefined,
@@ -53,34 +49,36 @@ const HoldingEntry = ({
     }
     return str1 == str2;
   };
+
   // Initialize selectedItems with existing entry items
-  useEffect(() => {
-    if (existingEntry && !isInitialized) {
-      const existingItemData: ItemDataDraft[] = [];
+  const [selectedItems, setSelectedItems] = useState<ItemDataDraft[]>(() => {
+    if (!existingEntry) return [];
 
-      existingEntry.items.forEach((existingItem) => {
-        // Find the matching item from the items array
-        const matchingItem = items.find(
-          (item) =>
-            matchStringIfPresent(item.description, existingItem.description) &&
-            matchStringIfPresent(
-              item.location_code,
-              existingItem.location_code,
-            ) &&
-            matchStringIfPresent(item.call_number, existingItem.call_number) &&
-            matchStringIfPresent(item.barcode, existingItem.barcode) &&
-            matchStringIfPresent(item.copy_id, existingItem.copy_id),
-        );
+    const existingItemData: ItemDataDraft[] = [];
 
-        if (matchingItem) {
-          existingItemData.push(matchingItem);
-        }
-      });
+    existingEntry.items.forEach((existingItem) => {
+      // Find the matching item from the items array
+      const matchingItem = items.find(
+        (item) =>
+          matchStringIfPresent(item.description, existingItem.description) &&
+          matchStringIfPresent(
+            item.location_code,
+            existingItem.location_code,
+          ) &&
+          matchStringIfPresent(item.call_number, existingItem.call_number) &&
+          matchStringIfPresent(item.barcode, existingItem.barcode) &&
+          matchStringIfPresent(item.copy_id, existingItem.copy_id),
+      );
 
-      setSelectedItems(existingItemData);
-      setIsInitialized(true);
-    }
-  }, [existingEntry, items, isInitialized]);
+      if (matchingItem) {
+        existingItemData.push(matchingItem);
+      }
+    });
+
+    return existingItemData;
+  });
+  const formRef = useRef<HTMLFormElement>(null);
+  const noteRef = useRef<HTMLInputElement>(null);
 
   const handleItemCheck = (item: ItemDataDraft, checked: boolean) => {
     if (checked) {

@@ -5,7 +5,7 @@ import Button from '@/components/ui/Button';
 import Alert from '@/components/ui/Alert';
 import Spinner from '@/components/ui/Spinner';
 import { LookupAndAddSingleEntry } from '@/app/actions/bulkAdd';
-import { useState, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import BulkAddResults from './BulkAddResults';
 import { useRef } from 'react';
 interface BulkAddResponse {
@@ -25,13 +25,11 @@ const BulkAddForm = ({
 }) => {
   const [results, setResults] = useState<BulkAddResponse[]>([]);
   const [totalSubmissions, setTotalSubmissions] = useState(0);
-  const [finalNotice, setFinalNotice] = useState<string | null>(null);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setResults([]);
     setTotalSubmissions(0);
-    setFinalNotice(null);
     const form = event.currentTarget as HTMLFormElement;
     const formData = new FormData(form);
     const allEntries = formData.get('entries')?.toString().split('\n') || [];
@@ -52,18 +50,13 @@ const BulkAddForm = ({
     });
   };
 
-  useEffect(() => {
-    if (totalSubmissions === 0) return;
-    if (results.length < totalSubmissions) {
-      return;
+  const finalNotice = useMemo(() => {
+    if (totalSubmissions === 0 || results.length < totalSubmissions) {
+      return null;
     }
-    if (results.length == totalSubmissions && totalSubmissions > 0) {
-      const totalSuccess = results.filter((r) => r.status === 'success').length;
-      const totalErrors = results.filter((r) => r.status === 'error').length;
-      setFinalNotice(
-        `Total submissions: ${totalSubmissions}, Successful: ${totalSuccess}, Errors: ${totalErrors}`,
-      );
-    }
+    const totalSuccess = results.filter((r) => r.status === 'success').length;
+    const totalErrors = results.filter((r) => r.status === 'error').length;
+    return `Total submissions: ${totalSubmissions}, Successful: ${totalSuccess}, Errors: ${totalErrors}`;
   }, [results, totalSubmissions]);
 
   const formRef = useRef<HTMLFormElement>(null);

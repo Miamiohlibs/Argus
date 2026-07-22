@@ -1,6 +1,6 @@
 'use client';
 import { TableColumn } from 'react-data-table-component';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import DataTable from 'react-data-table-component';
 import { User } from '@prisma/client';
 import getUsers from '@/app/actions/getUsers';
@@ -18,7 +18,6 @@ export default function UserTable({
   canDeleteSuperAdmin: boolean;
 }) {
   const [users, setUsers] = useState<User[]>([]);
-  const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [filterText, setFilterText] = useState('');
 
@@ -33,13 +32,7 @@ export default function UserTable({
       toast.error('Entry deletion failed');
     } else {
       toast.success('Entry deleted successfully');
-      const updatedUsers = users.filter((item) => item.id !== userIdtoDelete);
-      setUsers(updatedUsers);
-
-      const updatedFilteredUsers = filteredUsers.filter(
-        (item) => item.id != userIdtoDelete,
-      );
-      setFilteredUsers(updatedFilteredUsers);
+      setUsers((prev) => prev.filter((item) => item.id !== userIdtoDelete));
     }
   };
 
@@ -48,21 +41,21 @@ export default function UserTable({
     const fetchUsers = async () => {
       const data = await getUsers(); // Assuming getUsers is an async function that fetches users
       setUsers(data.users ?? []);
-      setFilteredUsers(data.users ?? []);
       setLoading(false);
     };
 
     fetchUsers();
   }, []);
 
-  useEffect(() => {
-    const filtered = users.filter((user) =>
-      [user.name, user.email, user.role].some((val) =>
-        val?.toLowerCase().includes(filterText.toLowerCase() || ''),
+  const filteredUsers = useMemo(
+    () =>
+      users.filter((user) =>
+        [user.name, user.email, user.role].some((val) =>
+          val?.toLowerCase().includes(filterText.toLowerCase() || ''),
+        ),
       ),
-    );
-    setFilteredUsers(filtered);
-  }, [filterText, users]);
+    [users, filterText],
+  );
 
   const columns: TableColumn<User>[] = [
     {

@@ -10,7 +10,7 @@ import {
 import Button, { ButtonGroup } from '@/components/ui/Button';
 import Dropdown from '@/components/ui/Dropdown';
 import { Trash } from 'react-bootstrap-icons';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 const ArchiveDeleteProjectButton = ({
   project,
@@ -28,6 +28,14 @@ const ArchiveDeleteProjectButton = ({
   const [isArchived, setIsArchived] = useState(false);
   const [isUnarchived, setIsUnarchived] = useState(false);
   const [isDeleted, setIsDeleted] = useState(false);
+  const [prevShowingArchive, setPrevShowingArchive] = useState(showingArchive);
+
+  // Reset local archive/unarchive state when the showingArchive prop changes
+  if (showingArchive !== prevShowingArchive) {
+    setPrevShowingArchive(showingArchive);
+    setIsArchived(false);
+    setIsUnarchived(false);
+  }
 
   const handleDeleteProject = async (
     projectId: number,
@@ -73,11 +81,6 @@ const ArchiveDeleteProjectButton = ({
     setIsUnarchived(false);
     onArchived?.();
   };
-
-  useEffect(() => {
-    setIsArchived(false);
-    setIsUnarchived(false);
-  }, [showingArchive]);
 
   const handleUnarchiveProject = async (projectId: number) => {
     const confirmed = window.confirm(

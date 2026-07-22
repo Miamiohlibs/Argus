@@ -1,6 +1,6 @@
 'use client';
 import { TableColumn } from 'react-data-table-component';
-import { useEffect, useState } from 'react';
+import { useMemo, useState } from 'react';
 import DataTable from 'react-data-table-component';
 import Link from 'next/link';
 import DeleteButton from './DeleteButton';
@@ -22,10 +22,25 @@ export default function EntriesTable({
   canEdit = false,
   canPrint = false,
 }: EntriesTableProps) {
-  const [currentEntries, setCurrentEntries] = useState<EntryWithItems[]>([]); // Track current entries
-  const [filteredEntries, setFilteredEntries] = useState<EntryWithItems[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [currentEntries, setCurrentEntries] = useState(entries); // Track current entries
+  const [prevEntries, setPrevEntries] = useState(entries);
   const [filterText, setFilterText] = useState('');
+
+  // Reset local entries when the entries prop changes (e.g. navigating to a different project)
+  if (entries !== prevEntries) {
+    setPrevEntries(entries);
+    setCurrentEntries(entries);
+  }
+
+  const filteredEntries = useMemo(
+    () =>
+      currentEntries.filter((entry) =>
+        [entry.itemTitle, entry.author, entry.notes].some((val) =>
+          val?.toLowerCase().includes(filterText.toLowerCase() || '')
+        )
+      ),
+    [currentEntries, filterText]
+  );
 
   const handleDelete = async ({
     entryId,
@@ -46,34 +61,9 @@ export default function EntriesTable({
       toast.error(`Entry deletion failed: ${error}`);
     } else {
       toast.success('Entry deleted successfully');
-      const updatedEntries = currentEntries.filter(
-        (item) => item.id !== entryId
-      );
-      setCurrentEntries(updatedEntries);
-
-      const updatedFilteredEntries = filteredEntries.filter(
-        (item) => item.id != entryId
-      );
-      setFilteredEntries(updatedFilteredEntries);
+      setCurrentEntries((prev) => prev.filter((item) => item.id !== entryId));
     }
   };
-
-  // Initialize data when entries prop changes
-  useEffect(() => {
-    setCurrentEntries(entries);
-    setFilteredEntries(entries);
-    setLoading(false);
-  }, [entries]); // Only run when entries prop changes
-
-  // Filter entries when filterText or currentEntries change
-  useEffect(() => {
-    const filtered = currentEntries.filter((entry) =>
-      [entry.itemTitle, entry.author, entry.notes].some((val) =>
-        val?.toLowerCase().includes(filterText.toLowerCase() || '')
-      )
-    );
-    setFilteredEntries(filtered);
-  }, [filterText, currentEntries]); // Use currentEntries instead of entries
 
   // Move columns inside the component so handleDelete is in scope
   const columns: TableColumn<EntryWithItems>[] = [
@@ -214,7 +204,6 @@ export default function EntriesTable({
       <DataTable
         columns={columns}
         data={filteredEntries}
-        progressPending={loading}
         pagination
         paginationPerPage={25}
         paginationRowsPerPageOptions={[10, 25, 50, 100]}
