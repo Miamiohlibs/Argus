@@ -52,6 +52,7 @@ footer {
 
 footer a {
   color: #0248b1 !important;
+  text-decoration: underline;
 }
 .footer-meta {
   display: flex;
