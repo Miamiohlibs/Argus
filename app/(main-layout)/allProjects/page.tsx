@@ -23,8 +23,8 @@ const AllProjectsPage = async () => {
   }
   return (
     <>
-      <h1 className="h2">All Projects</h1>
-      <div className="mb-3">
+      <h1 className="text-3xl font-medium">All Projects</h1>
+      <div className="mb-4">
         <MainButtons isEditorOrAbove={isEditorOrAbove} canPrint={canPrint} />
       </div>
       <ProjectsTable limitToUser={false} user={user} canPrint={canPrint} />

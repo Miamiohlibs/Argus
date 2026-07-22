@@ -59,7 +59,7 @@ export default async function EditEntryPage({
     return (
       <>
         {nonOwnerEditor && <NonOwnerAlert />}
-        <h1 className="h2">
+        <h1 className="text-3xl font-medium">
           Edit Custom Entry: <i>{existingEntry.itemTitle}</i>
         </h1>
         <ProjectButtons
@@ -94,7 +94,7 @@ export default async function EditEntryPage({
   return (
     <>
       {nonOwnerEditor && <NonOwnerAlert />}
-      <h1 className="h2">
+      <h1 className="text-3xl font-medium">
         Editing: <i>{holdingsData && holdingsData.bibData.itemTitle}</i>
       </h1>
       <ProjectButtons

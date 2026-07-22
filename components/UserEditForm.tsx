@@ -4,13 +4,10 @@ import { useEffect, useState } from 'react';
 import updateUser from '@/app/actions/updateUser';
 import { toast } from 'react-toastify';
 import { User, Role, UserAffiliation, UserStatus } from '@prisma/client';
-import {
-  Form,
-  FormLabel,
-  FormSelect,
-  Button,
-  InputGroup,
-} from 'react-bootstrap';
+import Input from '@/components/ui/Input';
+import Select from '@/components/ui/Select';
+import Label from '@/components/ui/Label';
+import Button from '@/components/ui/Button';
 
 interface pageProps {
   user: User;
@@ -109,12 +106,12 @@ export default function UserEditForm({ user, actorIsSuperAdmin }: pageProps) {
   );
 
   return (
-    <Form onSubmit={handleSubmit}>
-      <InputGroup className="mb-2 d-flex align-items-center">
-        <FormLabel htmlFor="name" className="me-2">
+    <form onSubmit={handleSubmit}>
+      <div className="mb-2 flex items-center">
+        <Label htmlFor="name" className="me-2">
           Name
-        </FormLabel>
-        <Form.Control
+        </Label>
+        <Input
           type="text"
           id="name"
           defaultValue={name}
@@ -122,12 +119,12 @@ export default function UserEditForm({ user, actorIsSuperAdmin }: pageProps) {
             handleNameChange(e as React.ChangeEvent<HTMLInputElement>)
           }
         />
-      </InputGroup>
-      <InputGroup className="mb-2 d-flex align-items-center">
-        <FormLabel htmlFor="role" className="me-2">
+      </div>
+      <div className="mb-2 flex items-center">
+        <Label htmlFor="role" className="me-2">
           Role
-        </FormLabel>
-        <FormSelect
+        </Label>
+        <Select
           id="role"
           value={role ?? ''}
           onChange={(e) => handleChange('role')(e)}
@@ -145,49 +142,49 @@ export default function UserEditForm({ user, actorIsSuperAdmin }: pageProps) {
               )
             );
           })}
-        </FormSelect>
-      </InputGroup>
-      <InputGroup className="mb-2 d-flex align-items-center">
-        <FormLabel htmlFor="affiliation" className="me-2">
+        </Select>
+      </div>
+      <div className="mb-2 flex items-center">
+        <Label htmlFor="affiliation" className="me-2">
           Affiliation
-        </FormLabel>
-        <FormSelect
+        </Label>
+        <Select
           id="affiliation"
           value={affiliation ?? ''}
           onChange={handleChange('affiliation')}
         >
           {affiliationPulldown.unshift(blankPullDownOption) &&
             affiliationPulldown}
-        </FormSelect>
-      </InputGroup>
-      <InputGroup className="mb-2 d-flex align-items-center">
-        <FormLabel htmlFor="status" className="me-2">
+        </Select>
+      </div>
+      <div className="mb-2 flex items-center">
+        <Label htmlFor="status" className="me-2">
           Status
-        </FormLabel>
-        <FormSelect
+        </Label>
+        <Select
           id="status"
           value={status ?? ''}
           onChange={handleChange('status')}
         >
           {statusPulldown.unshift(blankPullDownOption) && statusPulldown}
-        </FormSelect>
-      </InputGroup>
-      <InputGroup className="mb-2 d-flex align-items-center">
-        <FormLabel htmlFor="printSlips" className="me-2">
+        </Select>
+      </div>
+      <div className="mb-2 flex items-center">
+        <Label htmlFor="printSlips" className="me-2">
           Print Slips permissions
-        </FormLabel>
-        <FormSelect
+        </Label>
+        <Select
           id="printSlips"
           value={printSlips.toString() ?? 'false'}
           onChange={handleChange('printSlips')}
         >
           <option value="false">False</option>
           <option value="true">True</option>
-        </FormSelect>
-      </InputGroup>
-      <Button className="btn btn-primary mt-4" type="submit">
+        </Select>
+      </div>
+      <Button className="mt-6" type="submit">
         Save Changes
       </Button>
-    </Form>
+    </form>
   );
 }

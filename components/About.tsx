@@ -9,7 +9,7 @@ export default function About({ className = '' }) {
 
   const contactArr = [];
 
-  const classes = `fs-4 ${className}`;
+  const classes = `text-2xl ${className}`;
   return (
     <div className={classes}>
       <p>

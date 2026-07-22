@@ -1,5 +1,7 @@
 'use client';
-import { Button, Form, InputGroup } from 'react-bootstrap';
+import Button from '@/components/ui/Button';
+import Input from '@/components/ui/Input';
+import InputGroup, { InputGroupText } from '@/components/ui/InputGroup';
 import { useRef } from 'react';
 import { toast } from 'react-toastify';
 import { searchCatalogByAny } from '@/app/actions/catalogSearch';
@@ -19,7 +21,7 @@ type RecordSearchFormProps =
       searchPlaceholder: string;
       catalog?: Catalog;
     }
-  | { quickSlip: true };
+  | { quickSlip: true; catalog?: Catalog; searchPlaceholder: string };
 
 const RecordSearchForm = (props: RecordSearchFormProps) => {
   const formRef = useRef<HTMLFormElement>(null);
@@ -36,6 +38,7 @@ const RecordSearchForm = (props: RecordSearchFormProps) => {
     userCanEditPage = true;
     projectId = undefined;
     catalog = 'ALMA' as Catalog;
+    placeholder = props.searchPlaceholder;
   } else {
     quickSlip = false;
     userCanEditPage = props.userCanEditPage;
@@ -78,12 +81,12 @@ const RecordSearchForm = (props: RecordSearchFormProps) => {
 
   return (
     <>
-      <Form ref={formRef} action={handleSubmit}>
-        <Form.Control type="hidden" name="searchType" value="any" />
-        <Form.Group controlId="anySearch">
-          <InputGroup className="mb-3">
-            <InputGroup.Text id="any-input-label">Search by...</InputGroup.Text>
-            <Form.Control
+      <form ref={formRef} action={handleSubmit}>
+        <input type="hidden" name="searchType" value="any" />
+        <div>
+          <InputGroup className="mb-4">
+            <InputGroupText id="any-input-label">Search by...</InputGroupText>
+            <Input
               name="any-input"
               placeholder={placeholder}
               aria-label="Search String"
@@ -93,8 +96,8 @@ const RecordSearchForm = (props: RecordSearchFormProps) => {
               Search
             </Button>
           </InputGroup>
-        </Form.Group>
-      </Form>
+        </div>
+      </form>
 
       <div aria-live="assertive">
         <BibResultsWrapper

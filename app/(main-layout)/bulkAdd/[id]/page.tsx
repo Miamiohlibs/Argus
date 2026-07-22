@@ -37,7 +37,7 @@ export default async function BulkAddPage({
     return (
       <>
         {nonOwnerEditor && <NonOwnerAlert />}
-        <h1 className="h2">Bulk Add Items: {project?.title}</h1>
+        <h1 className="text-3xl font-medium">Bulk Add Items: {project?.title}</h1>
         <ProjectMetadata project={project} />
 
         <ProjectButtons

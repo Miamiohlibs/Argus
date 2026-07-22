@@ -1,84 +1,70 @@
 import NextLink from 'next/link';
-import {
-  Nav,
-  NavItem,
-  NavLink,
-  Navbar,
-  NavbarText,
-  NavbarBrand,
-  NavbarCollapse,
-  NavbarToggle,
-} from 'react-bootstrap';
 import Image from 'next/image';
-import {
-SignInButton, // SignUpButton,
-Show, UserButton
-} from '@clerk/nextjs';
+import { SignInButton, Show, UserButton } from '@clerk/nextjs';
 import { Search } from 'react-bootstrap-icons';
 import { checkUser } from '@/lib/checkUser';
 import NavEditor from './NavEditor';
 import NavAdmin from './NavAdmin';
+import HeaderNav from './HeaderNav';
+import { NAV_LINK_CLASS } from './navLinkStyles';
+import { buttonClasses } from './ui/Button';
+
+const NAV_BG_CLASSES: Record<string, string> = {
+  primary: 'bg-primary',
+  secondary: 'bg-secondary',
+  success: 'bg-success',
+  danger: 'bg-danger',
+  warning: 'bg-warning',
+  info: 'bg-info',
+  light: 'bg-light',
+  dark: 'bg-dark',
+};
 
 const Header = async () => {
   const user = await checkUser();
+  const navBgClass =
+    NAV_BG_CLASSES[process.env.NEXT_PUBLIC_NAV_COLOR ?? 'dark'] ?? NAV_BG_CLASSES.dark;
+
+  const brand = (
+    <NextLink href="/" className={`flex items-center ${NAV_LINK_CLASS}`}>
+      <Image
+        src={`${process.env.NEXT_PUBLIC_APP_BASEPATH}/peacock-logo.png`}
+        alt="Peacock Logo"
+        width={40}
+        height={40}
+      />
+      <span className="ps-2 text-lg">
+        Argus {process.env.NEXT_PUBLIC_NAV_LABEL || ''}
+      </span>
+    </NextLink>
+  );
 
   return (
-    <Navbar
-      bg={process.env.NEXT_PUBLIC_NAV_COLOR || 'dark'}
-      variant="dark"
-      expand="md"
-      className="px-2"
-    >
-      <NavbarToggle aria-controls="navbarScroll" />
-      <NavbarBrand as={NextLink} href="/">
-        <Image
-          src={`${process.env.NEXT_PUBLIC_APP_BASEPATH}/peacock-logo.png`}
-          alt="Peacock Logo"
-          width={40}
-          height={40}
-        />
-        <span className="ps-2">
-          Argus {process.env.NEXT_PUBLIC_NAV_LABEL || ''}
-        </span>
-      </NavbarBrand>
-      <NavbarCollapse id="navbar">
-        <Nav className="ms-auto me-3 text-light">
-          <NavEditor />
-          <Show when="signed-in">
-            <NavItem>
-              <NavLink as={NextLink} href="/publicProjects">
-                Public Projects
-              </NavLink>
-            </NavItem>
-          </Show>
-          <NavAdmin />
-          <Show when="signed-in">
-            <NavItem>
-              <NavLink as={NextLink} href="/searchEntries">
-                <Search aria-hidden="true" /> Search
-              </NavLink>
-            </NavItem>
-          </Show>
-          <Show when="signed-out">
-            <NavItem>
-              <SignInButton>
-                <div className="btn btn-light">Sign in</div>
-              </SignInButton>
-            </NavItem>
-          </Show>
-          <Show when="signed-in">
-            <div className="d-flex">
-              {user?.name && (
-                <NavbarText className="text-light ms-4">
-                  {user?.name}
-                </NavbarText>
-              )}
-              <UserButton />
-            </div>
-          </Show>
-        </Nav>
-      </NavbarCollapse>
-    </Navbar>
+    <HeaderNav navBgClass={navBgClass} brand={brand}>
+      <NavEditor />
+      <Show when="signed-in">
+        <NextLink href="/publicProjects" className={NAV_LINK_CLASS}>
+          Public Projects
+        </NextLink>
+      </Show>
+      <NavAdmin />
+      <Show when="signed-in">
+        <NextLink href="/searchEntries" className={`flex items-center gap-1 ${NAV_LINK_CLASS}`}>
+          <Search aria-hidden="true" /> Search
+        </NextLink>
+      </Show>
+      <Show when="signed-out">
+        <SignInButton>
+          <div className={buttonClasses({ variant: 'light' })}>Sign in</div>
+        </SignInButton>
+      </Show>
+      <Show when="signed-in">
+        <div className="flex items-center gap-4">
+          {user?.name && <span className="text-white">{user?.name}</span>}
+          <UserButton />
+        </div>
+      </Show>
+    </HeaderNav>
   );
 };
 

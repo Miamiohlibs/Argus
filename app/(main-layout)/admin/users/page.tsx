@@ -3,6 +3,7 @@ import UserTableWrapper from '@/components/UserTableWrapper';
 import checkAccess from '@/lib/checkAccess';
 import { checkUser } from '@/lib/checkUser';
 import Link from 'next/link';
+import { buttonClasses } from '@/components/ui/Button';
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -21,8 +22,11 @@ export default async function UsersPage() {
   }
   return (
     <>
-      <h1 className="text-xl font-bold mb-4 h2">Manage Users</h1>
-      <Link className="btn btn-outline-secondary" href="/admin/reassignAll/">
+      <h1 className="text-xl font-bold mb-6">Manage Users</h1>
+      <Link
+        className={buttonClasses({ variant: 'outline-secondary' })}
+        href="/admin/reassignAll/"
+      >
         Reassign All Projects of User
       </Link>
       <UserTableWrapper user={user} canDeleteSuperAdmin={canDeleteSuperAdmin} />

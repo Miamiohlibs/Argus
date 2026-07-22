@@ -1,7 +1,7 @@
 import logger from '@/lib/logger';
 import NextLink from 'next/link';
-import { NavItem, NavLink } from 'react-bootstrap';
 import checkAccess from '@/lib/checkAccess';
+import { NAV_LINK_CLASS } from './navLinkStyles';
 
 const NavAdmin = async () => {
   // Check if the user has access to admin features
@@ -15,21 +15,15 @@ const NavAdmin = async () => {
   }
   return (
     <>
-      {/* <Nav className="me-3"> */}
-      <NavLink disabled aria-hidden="true" className="d-none d-md-block">
+      <span aria-hidden="true" className="hidden text-white md:inline">
         |
-      </NavLink>
-      <NavItem>
-        <NavLink as={NextLink} href="/allProjects">
-          All Projects
-        </NavLink>
-      </NavItem>
-      <NavItem>
-        <NavLink as={NextLink} href="/admin/users">
-          Users
-        </NavLink>
-      </NavItem>
-      {/* </Nav> */}
+      </span>
+      <NextLink href="/allProjects" className={NAV_LINK_CLASS}>
+        All Projects
+      </NextLink>
+      <NextLink href="/admin/users" className={NAV_LINK_CLASS}>
+        Users
+      </NextLink>
     </>
   );
 };

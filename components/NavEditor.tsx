@@ -1,7 +1,7 @@
 import logger from '@/lib/logger';
 import NextLink from 'next/link';
-import { NavItem, NavLink } from 'react-bootstrap';
 import getUserInfo from '@/lib/getUserInfo';
+import { NAV_LINK_CLASS } from './navLinkStyles';
 const NavEditor = async () => {
   // Check if the user has access to editor features
   const {
@@ -13,13 +13,9 @@ const NavEditor = async () => {
     return null; // If no access, do not render the editor navigation
   }
   return (
-    <>
-      <NavItem>
-        <NavLink as={NextLink} href="/">
-          My Projects
-        </NavLink>
-      </NavItem>
-    </>
+    <NextLink href="/" className={NAV_LINK_CLASS}>
+      My Projects
+    </NextLink>
   );
 };
 

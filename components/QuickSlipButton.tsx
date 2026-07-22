@@ -1,28 +1,17 @@
-import {
-  Dropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-} from 'react-bootstrap';
+'use client';
+
+import Dropdown from '@/components/ui/Dropdown';
 
 const QuickSlipButton = () => {
   return (
-    <Dropdown style={{ display: 'inline' }}>
-      <DropdownToggle variant="primary" id="quickslip">
+    <Dropdown>
+      <Dropdown.Toggle variant="primary" id="quickslip">
         Quick Slip
-      </DropdownToggle>
-      <DropdownMenu>
-        <DropdownItem
-          href={`${process.env.NEXT_PUBLIC_APP_BASEPATH}/quickSlip/alma`}
-        >
-          From Alma
-        </DropdownItem>
-        <DropdownItem
-          href={`${process.env.NEXT_PUBLIC_APP_BASEPATH}/quickSlip/custom`}
-        >
-          Custom Entry
-        </DropdownItem>
-      </DropdownMenu>
+      </Dropdown.Toggle>
+      <Dropdown.Menu>
+        <Dropdown.Item href="/quickSlip/alma">From Alma</Dropdown.Item>
+        <Dropdown.Item href="/quickSlip/custom">Custom Entry</Dropdown.Item>
+      </Dropdown.Menu>
     </Dropdown>
     // <Link href="/quickSlipAlma" className="mb-3 btn btn-primary">
     //   Quick Slip

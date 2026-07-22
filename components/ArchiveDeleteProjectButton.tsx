@@ -7,7 +7,8 @@ import {
   deleteProject,
 } from '@/app/actions/projectActions';
 
-import { Dropdown, Button, ButtonGroup } from 'react-bootstrap';
+import Button, { ButtonGroup } from '@/components/ui/Button';
+import Dropdown from '@/components/ui/Dropdown';
 import { Trash } from 'react-bootstrap-icons';
 import { useEffect, useState } from 'react';
 
@@ -100,7 +101,7 @@ const ArchiveDeleteProjectButton = ({
     onUnarchived?.();
   };
 
-  let firstButtonColor = 'danger';
+  let firstButtonColor: 'danger' | 'success' = 'danger';
   let firstButtonVerb = 'Archive';
   let firstButtonAction = handleArchiveProject;
 
@@ -111,11 +112,11 @@ const ArchiveDeleteProjectButton = ({
   }
 
   return (
-    <ButtonGroup className="flex-nowrap">
+    <ButtonGroup>
       <Button
         variant={`outline-${firstButtonColor}`}
         size="sm"
-        className="ms-1"
+        className="ms-1 relative rounded-r-none focus:z-10"
         onClick={(e) => firstButtonAction(project.id)}
         disabled={isArchived || isUnarchived || isDeleted}
       >
@@ -123,10 +124,11 @@ const ArchiveDeleteProjectButton = ({
         {(isArchived || isUnarchived) && !isDeleted && 'd'}
       </Button>
 
-      <Dropdown as={ButtonGroup}>
+      <Dropdown className="-ml-px">
         <Dropdown.Toggle
           variant="outline-danger"
           size="sm"
+          className="relative rounded-l-none focus:z-10"
           disabled={isArchived || isUnarchived || isDeleted}
         >
           <Trash />

@@ -1,6 +1,6 @@
 'use client';
 import { toast } from 'react-toastify';
-import { Button } from 'react-bootstrap';
+import Button from '@/components/ui/Button';
 import { useState } from 'react';
 import { removeCoEditor } from '@/app/actions/coEditors';
 

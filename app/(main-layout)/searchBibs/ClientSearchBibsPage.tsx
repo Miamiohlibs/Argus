@@ -52,7 +52,7 @@ const ClientSearchBibsPage = ({
   return (
     <>
       {nonOwnerAlert && <NonOwnerAlert />}
-      <h1 className="h2">
+      <h1 className="text-3xl font-medium">
         Search {CATALOG_DISPLAY_NAMES[resolvedCatalog]} Catalog for Item
       </h1>
       <ProjectMetadata project={project} />

@@ -8,7 +8,7 @@ import Link from 'next/link';
 import { getProjects } from '@/app/actions/projectActions';
 import ArchiveDeleteProjectButton from './ArchiveDeleteProjectButton';
 import { User } from '@prisma/client';
-import { Button } from 'react-bootstrap';
+import Button, { buttonClasses } from '@/components/ui/Button';
 import { UnlockFill as Unlocked } from 'react-bootstrap-icons';
 
 // Use Prisma's generated type that includes the user relation
@@ -85,7 +85,7 @@ export default function ProjectsTable({
           <Link href={`/project/${row.id}`}>
             {row.title || 'Untitled Project'} ({row._count.bibEntries})
           </Link>
-          {row.public && <Unlocked className="mx-2" />}
+          {row.public && <Unlocked className="mx-2 inline" />}
         </p>
       ),
       sortable: true,
@@ -148,7 +148,7 @@ export default function ProjectsTable({
             {canEdit && (
               <Link
                 href={`/editProject/${row.id}`}
-                className="me-1 btn btn-outline-primary btn-sm"
+                className={buttonClasses({ variant: 'outline-primary', size: 'sm', className: 'me-1' })}
               >
                 Edit
               </Link>
@@ -156,7 +156,7 @@ export default function ProjectsTable({
             {canPrint && (
               <Link
                 href={`/slips/${row.id}`}
-                className="me-1 btn btn-outline-primary btn-sm"
+                className={buttonClasses({ variant: 'outline-primary', size: 'sm', className: 'me-1' })}
               >
                 Print
               </Link>

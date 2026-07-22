@@ -1,6 +1,6 @@
 import { User } from '@prisma/client';
 import getUsers from '@/app/actions/getUsers';
-import { Form } from 'react-bootstrap';
+import Select from '@/components/ui/Select';
 
 interface pageProps {
   users: User[];
@@ -13,7 +13,7 @@ export default function SelectUserFormElement({
   appendNameString = false,
 }: pageProps) {
   return (
-    <Form.Select name={fieldName}>
+    <Select name={fieldName}>
       <option value="">---Select a user---</option>
       {users &&
         users.map((u) => (
@@ -25,6 +25,6 @@ export default function SelectUserFormElement({
             {u.name}
           </option>
         ))}
-    </Form.Select>
+    </Select>
   );
 }
