@@ -10,6 +10,7 @@ import ArchiveDeleteProjectButton from './ArchiveDeleteProjectButton';
 import { User } from '@prisma/client';
 import Button, { buttonClasses } from '@/components/ui/Button';
 import { UnlockFill as Unlocked } from 'react-bootstrap-icons';
+import Badge from './ui/Badge';
 
 // Use Prisma's generated type that includes the user relation
 type ProjectWithUserAndCoEditors = Prisma.ProjectGetPayload<{
@@ -78,8 +79,16 @@ export default function ProjectsTable({
         <p>
           <Link href={`/project/${row.id}`}>
             {row.title || 'Untitled Project'}
+            <Badge
+              className="mx-1 bg-secondary rounded-2xl"
+              aria-label={`${row._count.bibEntries} entries in project`}
+            >
+              {row._count.bibEntries}
+            </Badge>
           </Link>
-          {row.public && <Unlocked className="mx-2 inline" />}
+          {row.public && (
+            <Unlocked className="mx-2 inline" aria-label="Public project" />
+          )}
         </p>
       ),
       sortable: true,
@@ -118,13 +127,13 @@ export default function ProjectsTable({
       sortable: true,
       width: '7em',
     },
-    {
-      name: 'Items',
-      cell: (row) => row._count.bibEntries,
-      sortable: false, // when true, fails to sort
-      width: '6em',
-      // right: true, // when true, gets Next error
-    },
+    // {
+    //   name: 'Items',
+    //   cell: (row) => row._count.bibEntries,
+    //   sortable: false, // when true, fails to sort
+    //   width: '6em',
+    //   // right: true, // when true, gets Next error
+    // },
     {
       name: 'Notes',
       selector: (row) => row.notes ?? '',
