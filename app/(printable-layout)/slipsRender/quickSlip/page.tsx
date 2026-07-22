@@ -8,7 +8,7 @@ import generateRequestSlipItems from '@/lib/generateRequestSlipItems';
 import { ItemEntry } from '@prisma/client';
 import { BibEntryDraft, BibEntryDraftType } from '@/zod/BibEntry';
 import { ItemEntry as ItemEntryZod, ItemEntryDraftType } from '@/zod/ItemEntry';
-import { MultiPageHtml } from '@/components/MultiPageHtml';
+import { MultiPageHtml } from '@/components/RequestSlips/MultiPageHtml';
 
 function createItemFromReq({
   bibData,
