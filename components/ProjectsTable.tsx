@@ -13,7 +13,11 @@ import { UnlockFill as Unlocked } from 'react-bootstrap-icons';
 
 // Use Prisma's generated type that includes the user relation
 type ProjectWithUserAndCoEditors = Prisma.ProjectGetPayload<{
-  include: { user: true; coEditors: true };
+  include: {
+    user: true;
+    coEditors: true;
+    _count: { select: { bibEntries: true } };
+  };
 }>;
 
 interface ProjectsTableProps {
@@ -79,7 +83,7 @@ export default function ProjectsTable({
       cell: (row) => (
         <p>
           <Link href={`/project/${row.id}`}>
-            {row.title || 'Untitled Project'}
+            {row.title || 'Untitled Project'} ({row._count.bibEntries})
           </Link>
           {row.public && <Unlocked className="mx-2" />}
         </p>
