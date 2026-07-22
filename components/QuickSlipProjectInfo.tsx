@@ -1,5 +1,7 @@
 'use client';
-import { Form, FormControl, FormLabel, InputGroup } from 'react-bootstrap';
+import Input from '@/components/ui/Input';
+import Select from '@/components/ui/Select';
+import InputGroup, { InputGroupText } from '@/components/ui/InputGroup';
 import { useState } from 'react';
 import { UserAffiliation, UserStatus } from '@prisma/client';
 import { getProjectPurposes } from '@/lib/utils';
@@ -69,48 +71,48 @@ export default function QuickSlipProjectInfo() {
 
   return (
     <>
-      <InputGroup className="mb-3">
-        <InputGroup.Text id="patron-label">Patron Name</InputGroup.Text>
-        <FormControl
+      <InputGroup className="mb-4">
+        <InputGroupText id="patron-label">Patron Name</InputGroupText>
+        <Input
           placeholder="Patron Name"
           aria-labelledby="patron-label"
           name="userName"
         />
       </InputGroup>
 
-      <InputGroup className="mb-3">
-        <InputGroup.Text id="status-label">User Status</InputGroup.Text>
-        <Form.Select
+      <InputGroup className="mb-4">
+        <InputGroupText id="status-label">User Status</InputGroupText>
+        <Select
           aria-labelledby="status-label"
           name="userStatus"
           onChange={handleChange('status')}
         >
           {statusPulldown.unshift(blankPullDownOption) && statusPulldown}
-        </Form.Select>
+        </Select>
       </InputGroup>
 
-      <InputGroup className="mb-3">
-        <InputGroup.Text id="affil-label">User Affiliation</InputGroup.Text>
-        <Form.Select
+      <InputGroup className="mb-4">
+        <InputGroupText id="affil-label">User Affiliation</InputGroupText>
+        <Select
           aria-labelledby="affil-label"
           name="userAffiliation"
           onChange={handleChange('affiliation')}
         >
           {affiliationPulldown.unshift(blankPullDownOption) &&
             affiliationPulldown}
-        </Form.Select>
+        </Select>
       </InputGroup>
 
-      <InputGroup className="mb-3">
-        <InputGroup.Text id="affil-label">Purpose</InputGroup.Text>
-        <Form.Select
+      <InputGroup className="mb-4">
+        <InputGroupText id="affil-label">Purpose</InputGroupText>
+        <Select
           aria-labelledby="affil-label"
           name="purpose"
           onChange={handleChange('purpose')}
         >
           {purposeSelectOptions.unshift(blankPullDownOption) &&
             purposeSelectOptions}
-        </Form.Select>
+        </Select>
       </InputGroup>
     </>
   );

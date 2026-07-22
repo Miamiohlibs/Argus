@@ -1,5 +1,5 @@
 import { Roboto } from 'next/font/google';
-import '@/app/styles/custom-bootstrap.scss';
+import '@/app/(main-layout)/globals.css';
 import styles from './print-layout.module.css';
 
 const roboto = Roboto({

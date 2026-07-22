@@ -3,7 +3,10 @@ import { useRef } from 'react';
 import entryAction from '@/app/actions/addEntry';
 import { toast } from 'react-toastify';
 import { EntryWithItems } from '@/types/EntryWithItems';
-import { Form, InputGroup, Button, FormSelect } from 'react-bootstrap';
+import Input from '@/components/ui/Input';
+import Select from '@/components/ui/Select';
+import InputGroup, { InputGroupText } from '@/components/ui/InputGroup';
+import Button from '@/components/ui/Button';
 import type { BibDataDraft, ItemDataDraft } from '@/lib/catalogs/types';
 import { useState } from 'react';
 import { useEffect } from 'react';
@@ -113,7 +116,12 @@ const CustomEntryForm = ({
       const qs = new URLSearchParams();
       qs.set('bibData', JSON.stringify(draftBibData));
       qs.set('itemData', JSON.stringify([draftItemData]));
-      for (const key of ['userName', 'userStatus', 'userAffiliation', 'purpose']) {
+      for (const key of [
+        'userName',
+        'userStatus',
+        'userAffiliation',
+        'purpose',
+      ]) {
         const value = formData.get(key);
         if (value) {
           qs.set(key, value.toString());
@@ -154,14 +162,14 @@ const CustomEntryForm = ({
   const formRef = useRef<HTMLFormElement>(null);
   return (
     <>
-      <Form ref={formRef} onSubmit={handleSubmit}>
-        <Form.Group className="mb-2">
+      <form ref={formRef} onSubmit={handleSubmit}>
+        <div className="mb-2">
           <InputGroup>
-            <InputGroup.Text id="title-note" className="bg-primary text-white">
-              <Form.Label htmlFor="itemTitle">Title</Form.Label>
+            <InputGroupText id="title-note" className="required">
+              <label htmlFor="itemTitle">Title</label>
               <sup>*</sup>
-            </InputGroup.Text>
-            <Form.Control
+            </InputGroupText>
+            <Input
               type="text"
               id="itemTitle"
               name="itemTitle"
@@ -172,14 +180,14 @@ const CustomEntryForm = ({
               required={true}
             />
           </InputGroup>
-        </Form.Group>
+        </div>
 
-        <Form.Group className="mb-2">
+        <div className="mb-2">
           <InputGroup>
-            <InputGroup.Text className="bg-primary text-white" id="author-note">
-              <Form.Label htmlFor="author">Author</Form.Label> <sup>*</sup>
-            </InputGroup.Text>
-            <Form.Control
+            <InputGroupText id="author-note" className="required">
+              <label htmlFor="author">Author</label> <sup>*</sup>
+            </InputGroupText>
+            <Input
               type="text"
               id="author"
               name="author"
@@ -190,17 +198,13 @@ const CustomEntryForm = ({
               required={true}
             />
           </InputGroup>
-        </Form.Group>
-        <Form.Group className="mb-2">
+        </div>
+        <div className="mb-2">
           <InputGroup>
-            <InputGroup.Text
-              id="location-note"
-              className="bg-primary text-white"
-            >
-              <Form.Label htmlFor="itemLocation">Location</Form.Label>{' '}
-              <sup>*</sup>
-            </InputGroup.Text>
-            <FormSelect
+            <InputGroupText id="location-note" className="required">
+              <label htmlFor="itemLocation">Location</label> <sup>*</sup>
+            </InputGroupText>
+            <Select
               id="itemLocation"
               name="itemLocation"
               aria-describedby="location-note"
@@ -210,16 +214,16 @@ const CustomEntryForm = ({
               required={true}
             >
               {locationSelectOptions}
-            </FormSelect>
+            </Select>
           </InputGroup>
-        </Form.Group>
+        </div>
 
-        <Form.Group className="mb-2">
+        <div className="mb-2">
           <InputGroup>
-            <InputGroup.Text id="pub-date-note">
-              <Form.Label htmlFor="pub_date">Publication Date</Form.Label>
-            </InputGroup.Text>
-            <Form.Control
+            <InputGroupText id="pub-date-note">
+              <label htmlFor="pub_date">Publication Date</label>
+            </InputGroupText>
+            <Input
               type="text"
               id="pub_date"
               name="pub_date"
@@ -229,14 +233,14 @@ const CustomEntryForm = ({
               defaultValue={existingEntry?.pub_date ?? ''}
             />
           </InputGroup>
-        </Form.Group>
+        </div>
 
-        <Form.Group className="mb-2">
+        <div className="mb-2">
           <InputGroup>
-            <InputGroup.Text id="call-number-note">
-              <Form.Label htmlFor="itemCallNumber">Call Number</Form.Label>
-            </InputGroup.Text>
-            <Form.Control
+            <InputGroupText id="call-number-note">
+              <label htmlFor="itemCallNumber">Call Number</label>
+            </InputGroupText>
+            <Input
               type="text"
               id="itemCallNumber"
               name="itemCallNumber"
@@ -246,14 +250,14 @@ const CustomEntryForm = ({
               defaultValue={itemData?.call_number ?? ''}
             />
           </InputGroup>
-        </Form.Group>
+        </div>
 
-        <Form.Group className="mb-2">
+        <div className="mb-2">
           <InputGroup>
-            <InputGroup.Text id="copy-note">
-              <Form.Label htmlFor="itemCopy">Copy</Form.Label>
-            </InputGroup.Text>
-            <Form.Control
+            <InputGroupText id="copy-note">
+              <label htmlFor="itemCopy">Copy</label>
+            </InputGroupText>
+            <Input
               type="text"
               id="itemCopy"
               name="itemCopy"
@@ -263,14 +267,14 @@ const CustomEntryForm = ({
               defaultValue={itemData?.copy_id ?? ''}
             />
           </InputGroup>
-        </Form.Group>
+        </div>
 
-        <Form.Group className="mb-2">
+        <div className="mb-2">
           <InputGroup>
-            <InputGroup.Text id="box-note">
-              <Form.Label htmlFor="itemBox">Box</Form.Label>
-            </InputGroup.Text>
-            <Form.Control
+            <InputGroupText id="box-note">
+              <label htmlFor="itemBox">Box</label>
+            </InputGroupText>
+            <Input
               type="text"
               id="itemBox"
               name="itemBox"
@@ -280,14 +284,14 @@ const CustomEntryForm = ({
               disabled={!editable}
             />
           </InputGroup>
-        </Form.Group>
+        </div>
 
-        <Form.Group className="mb-2">
+        <div className="mb-2">
           <InputGroup>
-            <InputGroup.Text id="folder-note">
-              <Form.Label htmlFor="itemFolder">Folder</Form.Label>
-            </InputGroup.Text>
-            <Form.Control
+            <InputGroupText id="folder-note">
+              <label htmlFor="itemFolder">Folder</label>
+            </InputGroupText>
+            <Input
               type="text"
               id="itemFolder"
               name="itemFolder"
@@ -297,14 +301,14 @@ const CustomEntryForm = ({
               defaultValue={itemData?.folder ?? ''}
             />
           </InputGroup>
-        </Form.Group>
+        </div>
 
-        <Form.Group className="mb-2">
+        <div className="mb-2">
           <InputGroup>
-            <InputGroup.Text id="ms-note">
-              <Form.Label htmlFor="itemMs">Manuscript</Form.Label>
-            </InputGroup.Text>
-            <Form.Control
+            <InputGroupText id="ms-note">
+              <label htmlFor="itemMs">Manuscript</label>
+            </InputGroupText>
+            <Input
               type="text"
               id="itemMs"
               name="itemMs"
@@ -314,14 +318,14 @@ const CustomEntryForm = ({
               defaultValue={itemData?.ms ?? ''}
             />
           </InputGroup>
-        </Form.Group>
+        </div>
 
-        <Form.Group className="mb-2">
+        <div className="mb-2">
           <InputGroup>
-            <InputGroup.Text id="notes-note">
-              <Form.Label htmlFor="itemNotes">Notes</Form.Label>
-            </InputGroup.Text>
-            <Form.Control
+            <InputGroupText id="notes-note">
+              <label htmlFor="itemNotes">Notes</label>
+            </InputGroupText>
+            <Input
               type="text"
               id="itemNotes"
               name="itemNotes"
@@ -335,14 +339,13 @@ const CustomEntryForm = ({
               }
             />
           </InputGroup>
-        </Form.Group>
+        </div>
 
         {quickSlip && <QuickSlipProjectInfo />}
 
         {editable && (
           <Button
             type="submit"
-            className="btn btn-primary"
             onClick={() => {
               console.log('Form submitted');
             }}
@@ -350,7 +353,7 @@ const CustomEntryForm = ({
             Submit
           </Button>
         )}
-      </Form>
+      </form>
     </>
   );
 };

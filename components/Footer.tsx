@@ -2,12 +2,12 @@ import Link from 'next/link';
 
 const Footer = () => {
   return (
-    <footer className="footer mt-auto py-2 bg-light">
-      <div className="container">
+    <footer className="mt-auto bg-light py-2 print:hidden">
+      <div className="mx-auto max-w-screen-xl px-4">
         <div className="footer-meta">
           <div>
             <Link href="https://github.com/Miamiohlibs/Argus">Argus</Link>{' '}
-            <span className="text-muted">
+            <span className="text-gray-500">
               version {process.env.APP_VERSION}
             </span>
           </div>
@@ -16,7 +16,7 @@ const Footer = () => {
             <Link href="/about">About</Link>
           </div>
 
-          <div className="text-muted">© 2026 Miami University Libraries</div>
+          <div className="text-gray-500">© 2026 Miami University Libraries</div>
         </div>
       </div>
     </footer>

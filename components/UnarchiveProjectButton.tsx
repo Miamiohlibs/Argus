@@ -1,7 +1,7 @@
 'use client';
 import { updateProjectStatus } from '@/app/actions/projectActions';
 import { toast } from 'react-toastify';
-import { Button } from 'react-bootstrap';
+import Button from '@/components/ui/Button';
 import { useRouter } from 'next/navigation';
 
 export default function UnarchiveProjectButton({

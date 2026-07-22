@@ -2,7 +2,7 @@ import { CatalogSearchResult } from '@/lib/catalogs/types';
 import { EntryWithItems } from '@/types/EntryWithItems';
 import BibEntryComponent from './BibEntryComponent';
 import HoldingEntry from './HoldingEntry';
-import { Spinner } from 'react-bootstrap';
+import Spinner from '@/components/ui/Spinner';
 
 interface BibResultsWrapperProps {
   projectId: number | undefined;
@@ -31,9 +31,9 @@ export default function BibResultsWrapper({
 }: BibResultsWrapperProps) {
   if (searchActive) {
     return (
-      <div className="d-flex justify-content-center w-100 bg-info bg-opacity-25 p-3">
-        <Spinner animation="border" className="me-2" />
-        <p className="fs-4">Searching...</p>
+      <div className="flex justify-center w-full bg-info/25 p-4">
+        <Spinner className="me-2" />
+        <p className="text-2xl">Searching...</p>
       </div>
     );
   } else if (holdingsData === undefined || holdingsData === null) {

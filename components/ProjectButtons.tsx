@@ -2,6 +2,7 @@ import Link from 'next/link';
 import DuplicateProjectButton from './DuplicateProjectButton';
 import UnarchiveProjectButton from './UnarchiveProjectButton';
 import { activeCatalogs } from '@/lib/catalogs/displayNames';
+import { buttonClasses } from '@/components/ui/Button';
 
 const ProjectButtons = ({
   projectId,
@@ -32,7 +33,11 @@ const ProjectButtons = ({
       {onPage !== 'project' && (
         <Link
           href={`/project/${projectId}`}
-          className={classNames + ' btn btn-outline-secondary btn-sm'}
+          className={buttonClasses({
+            variant: 'outline-secondary',
+            size: 'sm',
+            className: classNames,
+          })}
         >
           Back to Project
         </Link>
@@ -40,7 +45,11 @@ const ProjectButtons = ({
       {includeAlma && canEdit && onPage !== 'searchBibs' && (
         <Link
           href={`/searchBibs?projectId=${projectId.toString()}`}
-          className={classNames + ' btn btn-primary btn-sm'}
+          className={buttonClasses({
+            variant: 'primary',
+            size: 'sm',
+            className: classNames,
+          })}
         >
           Add Alma Item
         </Link>
@@ -48,7 +57,11 @@ const ProjectButtons = ({
       {includeAspace && canEdit && onPage !== 'searchBibs' && (
         <Link
           href={`/searchBibs?catalog=ASPACE&projectId=${projectId.toString()}`}
-          className={classNames + ' btn btn-primary btn-sm'}
+          className={buttonClasses({
+            variant: 'primary',
+            size: 'sm',
+            className: classNames,
+          })}
         >
           Add ArchivesSpace Item
         </Link>
@@ -56,7 +69,11 @@ const ProjectButtons = ({
       {canEdit && onPage !== 'customEntry' && (
         <Link
           href={`/customEntry/${projectId.toString()}/new`}
-          className={classNames + ' btn btn-primary btn-sm'}
+          className={buttonClasses({
+            variant: 'primary',
+            size: 'sm',
+            className: classNames,
+          })}
         >
           Add Custom Item
         </Link>
@@ -64,7 +81,11 @@ const ProjectButtons = ({
       {canEdit && onPage !== 'bulkAdd' && (
         <Link
           href={`/bulkAdd/${projectId.toString()}`}
-          className={classNames + ' btn btn-primary btn-sm'}
+          className={buttonClasses({
+            variant: 'primary',
+            size: 'sm',
+            className: classNames,
+          })}
         >
           Bulk Add Items
         </Link>
@@ -72,7 +93,11 @@ const ProjectButtons = ({
       {canPrint && (
         <Link
           href={`/slips/${projectId}`}
-          className={'me-2 btn btn-outline-primary btn-sm'}
+          className={buttonClasses({
+            variant: 'outline-primary',
+            size: 'sm',
+            className: 'me-2',
+          })}
         >
           Print Slips
         </Link>
@@ -86,7 +111,11 @@ const ProjectButtons = ({
         ['project', 'edit-project-details'].includes(onPage) && (
           <Link
             href={`/editProject/${projectId.toString()}/coEditors`}
-            className="me-2 btn btn-outline-secondary btn-sm"
+            className={buttonClasses({
+              variant: 'outline-secondary',
+              size: 'sm',
+              className: 'me-2',
+            })}
           >
             Add/Remove Co-Editors
           </Link>
@@ -97,7 +126,11 @@ const ProjectButtons = ({
       {isAdmin && (
         <Link
           href={`/admin/reassignProject/${projectId.toString()}`}
-          className="me-2 btn btn-outline-secondary btn-sm"
+          className={buttonClasses({
+            variant: 'outline-secondary',
+            size: 'sm',
+            className: 'me-2',
+          })}
         >
           Reassign Ownership
         </Link>

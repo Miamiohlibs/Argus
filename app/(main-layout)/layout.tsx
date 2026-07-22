@@ -1,8 +1,5 @@
 import type { Metadata } from 'next';
 import { Roboto } from 'next/font/google';
-// import 'bootstrap/dist/css/bootstrap.min.css';
-// import './styles/custom-bootstrap.scss';
-import '@/app/styles/custom-bootstrap.scss';
 import './globals.css';
 import { ClerkProvider } from '@clerk/nextjs';
 import Header from '@/components/Header';
@@ -27,17 +24,19 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${roboto.className}`}><ClerkProvider>
-          <div id="skiplink" className="visually-hidden-focusable">
+      <body className={`${roboto.className}`}>
+        <ClerkProvider>
+          <div id="skiplink" className="sr-only focus:not-sr-only">
             <a href="#main-content">Skip to Main Content</a>
           </div>
           <Header />
-          <main className="container-fluid px-4 py-3" id="main-content">
+          <main className="w-full px-4 py-3" id="main-content">
             {children}
           </main>
           <ToastContainer />
           <Footer />
-        </ClerkProvider></body>
+        </ClerkProvider>
+      </body>
     </html>
   );
 }

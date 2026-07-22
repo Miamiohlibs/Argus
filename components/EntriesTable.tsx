@@ -7,6 +7,7 @@ import DeleteButton from './DeleteButton';
 import deleteEntry from '@/app/actions/deleteEntry';
 import { toast } from 'react-toastify';
 import { EntryWithItems } from '@/types/EntryWithItems';
+import { buttonClasses } from '@/components/ui/Button';
 // import { User } from '@prisma/client';
 
 // Define the props interface
@@ -162,7 +163,7 @@ export default function EntriesTable({
           <Link
             href={LinkOutUrl}
             target="_blank"
-            className="btn btn-outline-info btn-sm me-1"
+            className={buttonClasses({ variant: 'outline-info', size: 'sm', className: 'me-1' })}
           >
             Record
           </Link>
@@ -180,14 +181,14 @@ export default function EntriesTable({
                   ? `/customEntry/${row.projectId}/${row.id}`
                   : `/editEntry/${row.id}`
               }
-              className="me-1 btn btn-outline-primary btn-sm"
+              className={buttonClasses({ variant: 'outline-primary', size: 'sm', className: 'me-1' })}
             >
               Edit
             </Link>
             {canPrint && (
               <Link
                 href={`/slips/${row.projectId}--${row.id}`}
-                className="me-1 btn btn-outline-primary btn-sm"
+                className={buttonClasses({ variant: 'outline-primary', size: 'sm', className: 'me-1' })}
               >
                 Print
               </Link>

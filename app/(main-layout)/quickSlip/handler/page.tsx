@@ -15,7 +15,7 @@ export default async function QuickSlipHandler({ searchParams }: PageProps) {
 
   return (
     <>
-      <div className="mb-3">
+      <div className="mb-4">
         <MainButtons canPrint={canPrint} isEditorOrAbove={isEditorOrAbove} />
       </div>
       <ClientQuickPages searchParams={resolvedParams} />

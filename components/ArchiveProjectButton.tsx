@@ -6,7 +6,7 @@
 import { Project } from '@prisma/client';
 import { toast } from 'react-toastify';
 import { updateProjectStatus } from '@/app/actions/projectActions';
-import { Button } from 'react-bootstrap';
+import Button from '@/components/ui/Button';
 // import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 

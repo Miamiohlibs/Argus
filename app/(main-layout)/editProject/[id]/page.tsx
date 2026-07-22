@@ -45,11 +45,11 @@ export default async function EditProjectPage({
       <>
         {/* this NonOwnerAlert has different conditions from others because the only one who should normally edit this page is the owner. */}
         {!isOwner && !isCoEditor && <NonOwnerAlert />}
-        <h1 className="h2">Edit Project Details</h1>
+        <h1 className="text-3xl font-medium">Edit Project Details</h1>
         {project && <ProjectMetadata project={project} />}
         <ProjectButtons
           projectId={parseInt(id)}
-          divClass="mb-3"
+          divClass="mb-4"
           canAssignCoEditors={isOwner || isAdmin}
           isAdmin={isAdmin}
           onPage="edit-project-details"

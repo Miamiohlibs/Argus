@@ -5,11 +5,10 @@ import DataTable from 'react-data-table-component';
 import { User } from '@prisma/client';
 import getUsers from '@/app/actions/getUsers';
 import Link from 'next/link';
-import { Button } from 'react-bootstrap';
+import Button, { buttonClasses } from '@/components/ui/Button';
 import DeleteButton from './DeleteButton';
 import deleteUser from '@/app/actions/deleteUser';
 import { toast } from 'react-toastify';
-import createUtilityClassName from 'react-bootstrap/esm/createUtilityClasses';
 
 export default function UserTable({
   user,
@@ -139,7 +138,7 @@ export default function UserTable({
           <>
             <Link
               href={`/admin/users/edit/${row.id}`}
-              className="me-1 btn btn-outline-primary btn-sm" // change path to your route
+              className={buttonClasses({ variant: 'outline-primary', size: 'sm', className: 'me-1' })} // change path to your route
             >
               Edit
             </Link>
