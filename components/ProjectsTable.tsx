@@ -80,7 +80,8 @@ export default function ProjectsTable({
           <Link href={`/project/${row.id}`}>
             {row.title || 'Untitled Project'}
             <Badge
-              className="mx-1 bg-secondary rounded-2xl"
+              bg="light"
+              className="mx-1 rounded-2xl"
               aria-label={`${row._count.bibEntries} entries in project`}
             >
               {row._count.bibEntries}
