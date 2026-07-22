@@ -13,7 +13,11 @@ import { UnlockFill as Unlocked } from 'react-bootstrap-icons';
 
 // Use Prisma's generated type that includes the user relation
 type ProjectWithUserAndCoEditors = Prisma.ProjectGetPayload<{
-  include: { user: true; coEditors: true };
+  include: {
+    user: true;
+    coEditors: true;
+    _count: { select: { bibEntries: true } };
+  };
 }>;
 
 interface ProjectsTableProps {
@@ -121,6 +125,13 @@ export default function ProjectsTable({
       width: '7em',
     },
     {
+      name: 'Items',
+      cell: (row) => row._count.bibEntries,
+      sortable: false, // when true, fails to sort
+      width: '6em',
+      // right: true, // when true, gets Next error
+    },
+    {
       name: 'Notes',
       selector: (row) => row.notes ?? '',
       sortable: false,
@@ -144,7 +155,11 @@ export default function ProjectsTable({
             {canEdit && (
               <Link
                 href={`/editProject/${row.id}`}
-                className={buttonClasses({ variant: 'outline-primary', size: 'sm', className: 'me-1' })}
+                className={buttonClasses({
+                  variant: 'outline-primary',
+                  size: 'sm',
+                  className: 'me-1',
+                })}
               >
                 Edit
               </Link>
@@ -152,7 +167,11 @@ export default function ProjectsTable({
             {canPrint && (
               <Link
                 href={`/slips/${row.id}`}
-                className={buttonClasses({ variant: 'outline-primary', size: 'sm', className: 'me-1' })}
+                className={buttonClasses({
+                  variant: 'outline-primary',
+                  size: 'sm',
+                  className: 'me-1',
+                })}
               >
                 Print
               </Link>

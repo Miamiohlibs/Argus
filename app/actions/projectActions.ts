@@ -12,7 +12,11 @@ import type { BibDataDraft, ItemDataDraft } from '@/lib/catalogs/types';
 import type EntryActionData from '@/types/EntryActionData';
 
 type ProjectWithUser = Prisma.ProjectGetPayload<{
-  include: { user: true; coEditors: true };
+  include: {
+    user: true;
+    coEditors: true;
+    _count: { select: { bibEntries: true } };
+  };
 }>;
 
 type ProjectActionResult =
@@ -338,6 +342,11 @@ export async function getProjects(
         include: {
           user: true, // Include user details if needed
           coEditors: true,
+          _count: {
+            select: {
+              bibEntries: true,
+            },
+          },
         },
         orderBy: {
           createdAt: 'desc',
@@ -368,6 +377,11 @@ export async function getProjects(
         include: {
           user: true, // Include user details if needed
           coEditors: true,
+          _count: {
+            select: {
+              bibEntries: true,
+            },
+          },
         },
         orderBy: {
           createdAt: 'desc',
