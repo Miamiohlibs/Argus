@@ -229,7 +229,7 @@ export default function ProjectForm({
                     name="patronName"
                     defaultValue={project?.patronName || ''}
                     placeholder="Enter patron name..."
-                    required
+                    required={false}
                     className="py-2"
                   />
                 </div>
@@ -241,7 +241,7 @@ export default function ProjectForm({
                     // disabled={!editable}
                     value={selectedPatronAffiliation ?? ''}
                     onChange={handlePatronAffiliationChange}
-                    required={true}
+                    required={false}
                   >
                     {patronAffiliationOptions}
                   </Select>
@@ -254,7 +254,7 @@ export default function ProjectForm({
                     // disabled={!editable}
                     value={selectedPatronStatus ?? ''}
                     onChange={handlePatronStatusChange}
-                    required={true}
+                    required={false}
                   >
                     {patronStatusOptions}
                   </Select>
