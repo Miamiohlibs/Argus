@@ -22,6 +22,7 @@ interface ProjectFormProps {
   user: User | null;
   project?: Project | null;
   basePath: string | null;
+  isAdmin: boolean;
   action: (
     prevState: unknown,
     formData: FormData,
@@ -36,6 +37,7 @@ export default function ProjectForm({
   project = undefined,
   action,
   basePath,
+  isAdmin,
 }: ProjectFormProps) {
   const [state, formAction] = useActionState(action, null);
   const [selectedPurpose, setSelectedPurpose] = useState<string>(
@@ -169,6 +171,27 @@ export default function ProjectForm({
             />
           </div>
 
+          {isAdmin && (
+            <Card className="mb-5">
+              <Card.Header className="bg-green-100">
+                Patron Info (only if creating project for a non-Argus user)
+              </Card.Header>
+              <Card.Body className="bg-green-50">
+                <div className="mb-4">
+                  <Label>Patron Name</Label>
+                  <Input
+                    type="text"
+                    name="patronName"
+                    defaultValue={project?.patronName || ''}
+                    placeholder="Enter patron name..."
+                    required
+                    className="py-2"
+                  />
+                </div>
+              </Card.Body>
+            </Card>
+          )}
+
           <div className="mb-6">
             <Label>Notes</Label>
             <Input
@@ -183,10 +206,17 @@ export default function ProjectForm({
 
           <input type="hidden" name="userId" value={user?.clerkUserId} />
 
-          {project && <input type="hidden" name="projectId" value={project.id} />}
+          {project && (
+            <input type="hidden" name="projectId" value={project.id} />
+          )}
 
           <div className="grid">
-            <Button variant="primary" type="submit" size="lg" className="w-full">
+            <Button
+              variant="primary"
+              type="submit"
+              size="lg"
+              className="w-full"
+            >
               {project ? 'Update Project' : 'Create New Project'}
             </Button>
           </div>

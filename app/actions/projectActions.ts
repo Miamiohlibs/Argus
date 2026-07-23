@@ -33,13 +33,17 @@ export async function createProject(
     if (!user) {
       return { success: false, error: 'User not authenticated' };
     }
-
     const titleValue = formData.get('title');
     //   const ownerValue = formData.get('userId');
     const notesValue = formData.get('notes') ?? '';
     const purposeValue = formData.get('purpose') ?? 'Other';
     const publicValue = formData.get('public') !== null;
     const subjectString = formData.get('subjects') as string;
+    let patronName = null;
+    if ((formData.get('patronName') as string) != '') {
+      patronName = formData.get('patronName') as string;
+    }
+
     const subjects = [subjectString];
     // const subjectsJson = formData.get('subjects') as string;
     // const subjects = JSON.parse(subjectsJson) || [];
@@ -87,6 +91,7 @@ export async function createProject(
           purpose,
           public: publicValue,
           subjects,
+          patronName,
           userId: user.clerkUserId,
         },
         include: {
