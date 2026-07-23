@@ -10,6 +10,12 @@ import { useSearchParams } from 'next/navigation';
 import type { Catalog } from '@prisma/client';
 import type { CatalogSearchResult } from '@/lib/catalogs/types';
 import BibResultsWrapper from './BibResultsWrapper';
+import { User } from '@prisma/client';
+
+// interface getUserResponse {
+//   user?: User | undefined;
+//   error?: string;
+// }
 
 type RecordSearchFormProps =
   | {
@@ -21,7 +27,12 @@ type RecordSearchFormProps =
       searchPlaceholder: string;
       catalog?: Catalog;
     }
-  | { quickSlip: true; catalog?: Catalog; searchPlaceholder: string };
+  | {
+      quickSlip: true;
+      catalog?: Catalog;
+      searchPlaceholder: string;
+      user: User;
+    };
 
 const RecordSearchForm = (props: RecordSearchFormProps) => {
   const formRef = useRef<HTMLFormElement>(null);

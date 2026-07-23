@@ -15,14 +15,17 @@ export default async function quickSlipAlmaPage() {
     redirect('/');
   }
 
-  return (
-    <>
-      <h1>Lookup item for Quick Slip</h1>
-      <RecordSearchForm
-        quickSlip={true}
-        catalog="ALMA"
-        searchPlaceholder={CATALOG_SEARCH_PLACEHOLDER[resolvedCatalog]}
-      />
-    </>
-  );
+  if (user.user) {
+    return (
+      <>
+        <h1>Lookup item for Quick Slip</h1>
+        <RecordSearchForm
+          quickSlip={true}
+          catalog="ALMA"
+          searchPlaceholder={CATALOG_SEARCH_PLACEHOLDER[resolvedCatalog]}
+          user={user.user}
+        />
+      </>
+    );
+  }
 }

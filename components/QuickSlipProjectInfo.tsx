@@ -21,7 +21,7 @@ import {
 
 export default function QuickSlipProjectInfo() {
   const [userStatus, setUserStatus] = useState<UserStatus | undefined>(
-    undefined
+    undefined,
   );
   const [userAffiliation, setUserAffiliation] = useState<
     UserAffiliation | undefined
@@ -71,6 +71,9 @@ export default function QuickSlipProjectInfo() {
 
   return (
     <>
+      <Input type="hidden" name="userStatus" value="" />
+      <Input type="hidden" name="userAffiliation" value="" />
+      <Input type="hidden" name="userStatus" value="" />
       <InputGroup className="mb-4">
         <InputGroupText id="patron-label">Patron Name</InputGroupText>
         <Input
@@ -81,10 +84,10 @@ export default function QuickSlipProjectInfo() {
       </InputGroup>
 
       <InputGroup className="mb-4">
-        <InputGroupText id="status-label">User Status</InputGroupText>
+        <InputGroupText id="status-label">Patron Status</InputGroupText>
         <Select
           aria-labelledby="status-label"
-          name="userStatus"
+          name="patronStatus"
           onChange={handleChange('status')}
         >
           {statusPulldown.unshift(blankPullDownOption) && statusPulldown}
@@ -92,10 +95,10 @@ export default function QuickSlipProjectInfo() {
       </InputGroup>
 
       <InputGroup className="mb-4">
-        <InputGroupText id="affil-label">User Affiliation</InputGroupText>
+        <InputGroupText id="affil-label">Patron Affiliation</InputGroupText>
         <Select
           aria-labelledby="affil-label"
-          name="userAffiliation"
+          name="patronAffiliation"
           onChange={handleChange('affiliation')}
         >
           {affiliationPulldown.unshift(blankPullDownOption) &&
