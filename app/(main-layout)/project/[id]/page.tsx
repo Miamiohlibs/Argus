@@ -69,6 +69,10 @@ export default async function ProjectPage({
           entries={bibEntries.data?.entries}
           canEdit={canEdit}
           canPrint={canPrint}
+          handleSelectSubmit={async (ids) => {
+            'use server';
+            console.log(ids);
+          }}
         />
       ) : (
         <p>No bibliography entries found.</p>

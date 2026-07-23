@@ -1,13 +1,16 @@
 'use client';
 import { TableColumn } from 'react-data-table-component';
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import DataTable from 'react-data-table-component';
 import Link from 'next/link';
 import DeleteButton from './DeleteButton';
 import deleteEntry from '@/app/actions/deleteEntry';
 import { toast } from 'react-toastify';
 import { EntryWithItems } from '@/types/EntryWithItems';
-import { buttonClasses } from '@/components/ui/Button';
+import Button, { buttonClasses } from '@/components/ui/Button';
+import Checkbox from '@/components/ui/Checkbox';
+import { CheckCircle as Check } from 'react-bootstrap-icons';
+
 // import { User } from '@prisma/client';
 
 // Define the props interface
@@ -15,12 +18,14 @@ interface EntriesTableProps {
   entries?: EntryWithItems[];
   canEdit?: boolean;
   canPrint?: boolean;
+  handleSelectSubmit: (selectedIds: string[]) => void;
 }
 
 export default function EntriesTable({
   entries = [],
   canEdit = false,
   canPrint = false,
+  handleSelectSubmit,
 }: EntriesTableProps) {
   const [currentEntries, setCurrentEntries] = useState(entries); // Track current entries
   const [prevEntries, setPrevEntries] = useState(entries);
@@ -36,10 +41,10 @@ export default function EntriesTable({
     () =>
       currentEntries.filter((entry) =>
         [entry.itemTitle, entry.author, entry.notes].some((val) =>
-          val?.toLowerCase().includes(filterText.toLowerCase() || '')
-        )
+          val?.toLowerCase().includes(filterText.toLowerCase() || ''),
+        ),
       ),
-    [currentEntries, filterText]
+    [currentEntries, filterText],
   );
 
   const handleDelete = async ({
@@ -50,7 +55,7 @@ export default function EntriesTable({
     projectId: string;
   }) => {
     const confirmed = window.confirm(
-      'Are you sure you want to delete this entry?'
+      'Are you sure you want to delete this entry?',
     );
     if (!confirmed) return;
 
@@ -65,8 +70,34 @@ export default function EntriesTable({
     }
   };
 
+  const [selectedItems, setSelectedItems] = useState<string[]>([]);
+
+  const handleItemCheck = (item: string, checked: boolean) => {
+    if (checked) {
+      setSelectedItems((prev) => [...prev, item]);
+    } else {
+      setSelectedItems((prev) =>
+        prev.filter((selectedItem) => selectedItem !== item),
+      );
+    }
+  };
+
   // Move columns inside the component so handleDelete is in scope
   const columns: TableColumn<EntryWithItems>[] = [
+    {
+      name: <Check></Check>,
+      sortable: false,
+      width: '2.5em',
+      wrap: false,
+      cell: (row) => (
+        <Checkbox
+          name="selectEntry[]"
+          value={row.id}
+          label=""
+          onChange={(e) => handleItemCheck(row.id, e.target.checked)}
+        ></Checkbox>
+      ),
+    },
     {
       name: 'Title',
       selector: (row: EntryWithItems) => row.itemTitle ?? '',
@@ -153,7 +184,11 @@ export default function EntriesTable({
           <Link
             href={LinkOutUrl}
             target="_blank"
-            className={buttonClasses({ variant: 'outline-info', size: 'sm', className: 'me-1' })}
+            className={buttonClasses({
+              variant: 'outline-info',
+              size: 'sm',
+              className: 'me-1',
+            })}
           >
             Record
           </Link>
@@ -171,14 +206,22 @@ export default function EntriesTable({
                   ? `/customEntry/${row.projectId}/${row.id}`
                   : `/editEntry/${row.id}`
               }
-              className={buttonClasses({ variant: 'outline-primary', size: 'sm', className: 'me-1' })}
+              className={buttonClasses({
+                variant: 'outline-primary',
+                size: 'sm',
+                className: 'me-1',
+              })}
             >
               Edit
             </Link>
             {canPrint && (
               <Link
                 href={`/slips/${row.projectId}--${row.id}`}
-                className={buttonClasses({ variant: 'outline-primary', size: 'sm', className: 'me-1' })}
+                className={buttonClasses({
+                  variant: 'outline-primary',
+                  size: 'sm',
+                  className: 'me-1',
+                })}
               >
                 Print
               </Link>
@@ -200,27 +243,36 @@ export default function EntriesTable({
   ];
 
   return (
-    <div className="react-data-table" id="entries-table">
-      <DataTable
-        columns={columns}
-        data={filteredEntries}
-        pagination
-        paginationPerPage={25}
-        paginationRowsPerPageOptions={[10, 25, 50, 100]}
-        highlightOnHover
-        striped
-        subHeader
-        subHeaderComponent={
-          <input
-            type="text"
-            placeholder="Search entries..."
-            aria-label="Search entries"
-            value={filterText}
-            onChange={(e) => setFilterText(e.target.value)}
-            className="p-2 border rounded w-full md:w-1/3"
+    <>
+      <div className="react-data-table" id="entries-table">
+        <form action={() => handleSelectSubmit(selectedItems)}>
+          {selectedItems.length > 0 && (
+            <Button type="submit" variant="outline-primary">
+              Print Selected Items <Check />
+            </Button>
+          )}
+          <DataTable
+            columns={columns}
+            data={filteredEntries}
+            pagination
+            paginationPerPage={25}
+            paginationRowsPerPageOptions={[10, 25, 50, 100]}
+            highlightOnHover
+            striped
+            subHeader
+            subHeaderComponent={
+              <input
+                type="text"
+                placeholder="Search entries..."
+                aria-label="Search entries"
+                value={filterText}
+                onChange={(e) => setFilterText(e.target.value)}
+                className="p-2 border rounded w-full md:w-1/3"
+              />
+            }
           />
-        }
-      />
-    </div>
+        </form>
+      </div>
+    </>
   );
 }
