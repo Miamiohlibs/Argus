@@ -89,7 +89,7 @@ export const bibSectionAspace = (props: RequestSlipProps) => {
           item += counter;
           if (i == highlightedItemIndex)
             return (
-              <div key={i} className={styles.text}>
+              <div key={i} className={`${styles.text} ${styles.bold}`}>
                 {item}
               </div>
             );

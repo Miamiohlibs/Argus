@@ -29,7 +29,8 @@ export default function generateRequestSlipItems(
         if (
           (item.copy_id && parseInt(item.copy_id) > 1) ||
           (item.description && item.description.length > 0) ||
-          item.location_code != entry.location_codes
+          item.location_code != entry.location_codes ||
+          (item.call_number && item.call_number !== entry.callNumber)
         ) {
           if (
             item.location_code &&
