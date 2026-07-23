@@ -251,6 +251,10 @@ export async function updateProject(
     const publicValue = formData.get('public') !== null;
     const subjectString = formData.get('subjects') as string;
     const subjects = [subjectString];
+    let patronName = null;
+    if ((formData.get('patronName') as string) != '') {
+      patronName = formData.get('patronName') as string;
+    }
     // const subjectsJson = formData.get('subjects') as string;
     // const subjects = JSON.parse(subjectsJson) || [];
     // console.log('***** subjectString', subjectString);
@@ -278,6 +282,7 @@ export async function updateProject(
         title,
         notes: notes || null,
         purpose,
+        patronName,
         public: publicValue,
         subjects,
       },
