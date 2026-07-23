@@ -1,7 +1,7 @@
 'use client';
-import { TableColumn } from 'react-data-table-component';
-import { useMemo, useState, useEffect } from 'react';
-import DataTable from 'react-data-table-component';
+import { TableColumn, TableProps } from 'react-data-table-component';
+import { useMemo, useState } from 'react';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import DeleteButton from './DeleteButton';
 import deleteEntry from '@/app/actions/deleteEntry';
@@ -13,6 +13,14 @@ import { CheckCircle as Check } from 'react-bootstrap-icons';
 import Form from 'next/form';
 
 // import { User } from '@prisma/client';
+
+// react-data-table-component's built-in pagination bar reads
+// window.innerWidth during render to pick a responsive layout, which never
+// matches the server-rendered markup -- load it client-only to avoid that.
+const DataTable = dynamic<TableProps<EntryWithItems>>(
+  () => import('react-data-table-component'),
+  { ssr: false },
+);
 
 // Define the props interface
 interface EntriesTableProps {
