@@ -99,8 +99,8 @@ function createItemFromReq({
       subjects: [],
       updatedAt: new Date(),
       userId: 'none',
-      patronAffiliation: 'Miami',
-      patronStatus: 'Other',
+      patronAffiliation: project.patronAffiliation ?? 'Miami',
+      patronStatus: project.patronStatus ?? 'Other',
       patronName: '',
     },
   };
@@ -131,12 +131,22 @@ function createItemFromReq({
   ) {
     project.patronName = params.patronName;
   }
+
   if (
     params.hasOwnProperty('patronAffiliation') &&
     isUserAffiliation(params.patronAffiliation)
   ) {
     project.patronAffiliation = params.patronAffiliation;
   }
+
+  if (
+    params.hasOwnProperty('patronStatus') &&
+    typeof params.patronStatus == 'string' &&
+    isAllowedUserStatus(params.patronStatus)
+  ) {
+    project.patronStatus = params.patronStatus;
+  }
+
   if (params.hasOwnProperty('purpose') && typeof params.purpose == 'string') {
     project.purpose = params.purpose;
   }
