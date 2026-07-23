@@ -1,6 +1,6 @@
 'use server';
 import { Metadata } from 'next';
-import ClientIframe from './ClientIframe';
+import ClientIframe from '../ClientIframe';
 import { unauthorized } from 'next/navigation';
 import getUserInfo from '@/lib/getUserInfo';
 import { getProject } from '@/app/actions/projectActions';
@@ -20,6 +20,7 @@ type PageProps = {
 
 export default async function PagesWrapper({ params }: PageProps) {
   const { id, specificBibEntry } = await params;
+  const idToPrint = specificBibEntry ? `${id}--${specificBibEntry}` : id;
   const { project, error } = await getProject({ id });
   const {
     permissions: { canPrint },
@@ -31,7 +32,7 @@ export default async function PagesWrapper({ params }: PageProps) {
     <>
       {project && <ProjectMetadata project={project} />}
       <ProjectButtons projectId={parseInt(id)} onPage="slips" divClass="mb-4" />
-      <ClientIframe />
+      <ClientIframe src={`/slipsRender/${idToPrint}`} />
     </>
   );
 }

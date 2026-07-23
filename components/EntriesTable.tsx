@@ -10,6 +10,7 @@ import { EntryWithItems } from '@/types/EntryWithItems';
 import Button, { buttonClasses } from '@/components/ui/Button';
 import Checkbox from '@/components/ui/Checkbox';
 import { CheckCircle as Check } from 'react-bootstrap-icons';
+import Form from 'next/form';
 
 // import { User } from '@prisma/client';
 
@@ -245,7 +246,7 @@ export default function EntriesTable({
   return (
     <>
       <div className="react-data-table" id="entries-table">
-        <form action={() => handleSelectSubmit(selectedItems)}>
+        <Form action={() => handleSelectSubmit(selectedItems)}>
           {selectedItems.length > 0 && (
             <Button type="submit" variant="outline-primary">
               Print Selected Items <Check />
@@ -271,7 +272,7 @@ export default function EntriesTable({
               />
             }
           />
-        </form>
+        </Form>
       </div>
     </>
   );
