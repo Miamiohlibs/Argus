@@ -3,7 +3,7 @@ import logger from '@/lib/logger';
 import { db } from '@/lib/db';
 import getUserInfo from '@/lib/getUserInfo';
 import { getPermissions } from '@/lib/getUserInfo';
-import type { Prisma } from '@prisma/client';
+import type { Prisma, UserAffiliation, UserStatus } from '@prisma/client';
 import { Project } from '@prisma/client';
 import type { ProjectWithUserAndBib } from '@/types/ProjectWithUserAndBib';
 import entryAction from './addEntry';
@@ -42,6 +42,14 @@ export async function createProject(
     let patronName = null;
     if ((formData.get('patronName') as string) != '') {
       patronName = formData.get('patronName') as string;
+    }
+    let patronAffiliation = null;
+    if (formData.get('patronAffiliation') != '') {
+      patronAffiliation = formData.get('patronAffiliation') as UserAffiliation;
+    }
+    let patronStatus = null;
+    if (formData.get('patronStatus') != '') {
+      patronStatus = formData.get('patronStatus') as UserStatus;
     }
 
     const subjects = [subjectString];
@@ -92,6 +100,8 @@ export async function createProject(
           public: publicValue,
           subjects,
           patronName,
+          patronAffiliation,
+          patronStatus,
           userId: user.clerkUserId,
         },
         include: {
@@ -255,6 +265,14 @@ export async function updateProject(
     if ((formData.get('patronName') as string) != '') {
       patronName = formData.get('patronName') as string;
     }
+    let patronAffiliation = null;
+    if (formData.get('patronAffiliation') != '') {
+      patronAffiliation = formData.get('patronAffiliation') as UserAffiliation;
+    }
+    let patronStatus = null;
+    if (formData.get('patronStatus') != '') {
+      patronStatus = formData.get('patronStatus') as UserStatus;
+    }
     // const subjectsJson = formData.get('subjects') as string;
     // const subjects = JSON.parse(subjectsJson) || [];
     // console.log('***** subjectString', subjectString);
@@ -283,6 +301,8 @@ export async function updateProject(
         notes: notes || null,
         purpose,
         patronName,
+        patronAffiliation,
+        patronStatus,
         public: publicValue,
         subjects,
       },
