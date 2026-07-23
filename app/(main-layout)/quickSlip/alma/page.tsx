@@ -23,7 +23,7 @@ export default async function quickSlipAlmaPage() {
           quickSlip={true}
           catalog="ALMA"
           searchPlaceholder={CATALOG_SEARCH_PLACEHOLDER[resolvedCatalog]}
-          user={user.user}
+          currentUser={user.user}
         />
       </>
     );

@@ -31,7 +31,7 @@ type RecordSearchFormProps =
       quickSlip: true;
       catalog?: Catalog;
       searchPlaceholder: string;
-      user: User;
+      currentUser: User;
     };
 
 const RecordSearchForm = (props: RecordSearchFormProps) => {
@@ -43,13 +43,15 @@ const RecordSearchForm = (props: RecordSearchFormProps) => {
     nonOwnerEditor,
     currentUserName,
     placeholder,
-    catalog;
+    catalog,
+    currentUser;
   if (props.quickSlip) {
     quickSlip = true;
     userCanEditPage = true;
     projectId = undefined;
     catalog = 'ALMA' as Catalog;
     placeholder = props.searchPlaceholder;
+    currentUser = props.currentUser;
   } else {
     quickSlip = false;
     userCanEditPage = props.userCanEditPage;
@@ -121,6 +123,7 @@ const RecordSearchForm = (props: RecordSearchFormProps) => {
           quickSlip={quickSlip}
           currentUserName={currentUserName ?? 'unknown'}
           nonOwnerEditor={nonOwnerEditor ?? false}
+          currentUser={currentUser}
         />
         {process.env.NEXT_PUBLIC_IS_DEV_ENV && results && (
           <pre>{JSON.stringify(results, null, 2)}</pre>

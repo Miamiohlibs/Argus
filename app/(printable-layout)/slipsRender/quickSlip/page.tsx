@@ -1,7 +1,11 @@
 // app/(printable-layout)/slipsRender/quickSlip/page.tsx
 import * as z from 'zod';
 import { checkUser } from '@/lib/checkUser';
-import { isAllowedUserStatus, isAllowedAffiliation } from '@/lib/typeChecker';
+import {
+  isAllowedUserStatus,
+  isAllowedAffiliation,
+  isUserAffiliation,
+} from '@/lib/typeChecker';
 import { EntryWithItems } from '@/types/EntryWithItems';
 import { ProjectWithUserAndBib } from '@/types/ProjectWithUserAndBib';
 import generateRequestSlipItems from '@/lib/generateRequestSlipItems';
@@ -33,6 +37,9 @@ function createItemFromReq({
     subjects: [],
     title: 'Quick Slips',
     updatedAt: new Date(),
+    patronName: '',
+    patronAffiliation: 'Miami',
+    patronStatus: 'Other',
     user: {
       affiliation: 'Miami',
       clerkUserId: 'quick-slips',
@@ -92,6 +99,9 @@ function createItemFromReq({
       subjects: [],
       updatedAt: new Date(),
       userId: 'none',
+      patronAffiliation: 'Miami',
+      patronStatus: 'Other',
+      patronName: '',
     },
   };
 
@@ -115,6 +125,18 @@ function createItemFromReq({
     project.user.affiliation = params.userAffiliation;
   }
 
+  if (
+    params.hasOwnProperty('patronName') &&
+    typeof params.patronName == 'string'
+  ) {
+    project.patronName = params.patronName;
+  }
+  if (
+    params.hasOwnProperty('patronAffiliation') &&
+    isUserAffiliation(params.patronAffiliation)
+  ) {
+    project.patronAffiliation = params.patronAffiliation;
+  }
   if (params.hasOwnProperty('purpose') && typeof params.purpose == 'string') {
     project.purpose = params.purpose;
   }
