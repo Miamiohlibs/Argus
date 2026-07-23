@@ -248,7 +248,7 @@ export default function EntriesTable({
       <div className="react-data-table" id="entries-table">
         <Form action={() => handleSelectSubmit(selectedItems)}>
           {selectedItems.length > 0 && (
-            <Button type="submit" variant="outline-primary">
+            <Button type="submit" variant="outline-primary" size="sm">
               Print Selected Items <Check />
             </Button>
           )}
