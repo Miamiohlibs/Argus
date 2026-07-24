@@ -75,6 +75,7 @@ NEXT_PUBLIC_CONTACT_PHONE= #used in About & Guest page
 NEXT_PUBLIC_LOCATION_CODES_JSON='[{"code":"arcli","name":"Archives"},{"code":"mss","name":"Manuscript Collection","unofficial":true},{"code":"spcfo","name":"Folios"}]' #this is a JSON string with an array of locations as [{code, name}] -- optionally, you can also add "unofficial:true" for entries that are not official locations in Alma; these locations are used only for Custom Entries. It does not need to be an exhaustive list of every location used in Alma, just the ones you want to be able to use for custom entries.
 NEXT_PUBLIC_PROJECT_PURPOSES='["Class","Conservation","Digitization","Event","Exhibit","Reference"]'
 NEXT_PUBLIC_USER_AFFILIATIONS='["Miami","Other"]'
+NEXT_PUBLIC_USER_STATUSES='["Undergrad","Graduate","Faculty","Staff","Alumni","Western","Other"]'
 NEXT_PUBLIC_SUBJECT_LIST='["Anthropology","Art and Architecture","Biology","Business","Chemistry and Biochemistry","Disability Studies","Economics","English","Environmental Sciences","History","Latin American Studies","Mathematics","Music","Political Science","Spanish and Portuguese","Theatre","Womens Gender and Sexuality Studies"]'
 
 ```

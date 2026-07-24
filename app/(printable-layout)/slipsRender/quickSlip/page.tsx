@@ -1,7 +1,7 @@
 // app/(printable-layout)/slipsRender/quickSlip/page.tsx
 import * as z from 'zod';
 import { checkUser } from '@/lib/checkUser';
-import { isAllowedUserStatus, isAllowedAffiliation } from '@/lib/typeChecker';
+import { isAllowedStatus, isAllowedAffiliation } from '@/lib/typeChecker';
 import { EntryWithItems } from '@/types/EntryWithItems';
 import { ProjectWithUserAndBib } from '@/types/ProjectWithUserAndBib';
 import generateRequestSlipItems from '@/lib/generateRequestSlipItems';
@@ -110,7 +110,7 @@ function createItemFromReq({
   if (
     params.hasOwnProperty('userStatus') &&
     typeof params.userStatus == 'string' &&
-    isAllowedUserStatus(params.userStatus)
+    isAllowedStatus(params.userStatus)
   ) {
     project.user.status = params.userStatus;
   }
@@ -141,7 +141,7 @@ function createItemFromReq({
   if (
     params.hasOwnProperty('patronStatus') &&
     typeof params.patronStatus == 'string' &&
-    isAllowedUserStatus(params.patronStatus)
+    isAllowedStatus(params.patronStatus)
   ) {
     project.patronStatus = params.patronStatus;
   }

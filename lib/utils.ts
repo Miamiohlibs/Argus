@@ -46,6 +46,23 @@ export function getUserAffiliations(): string[] {
   }
 }
 
+export function getUserStatuses(): string[] {
+  // get the list of allowed user/patron status options from .env
+  // unlike purposes/subjects, order is preserved as-is (an institution's own
+  // name should likely lead the list) and "Other" is not forced to appear
+  try {
+    if (process.env.NEXT_PUBLIC_USER_STATUSES) {
+      return JSON.parse(process.env.NEXT_PUBLIC_USER_STATUSES);
+    }
+    return ['Other'];
+  } catch (err) {
+    console.error(
+      `Error reading environment var NEXT_PUBLIC_USER_STATUSES; invalid JSON array? Error: ${err}`,
+    );
+    return ['Bad options'];
+  }
+}
+
 export function getSubjects(): string[] {
   // get the list of allowed project subjects from .env
   // if it includes "Other" or "None", remove "Other" from the list

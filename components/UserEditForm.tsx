@@ -3,12 +3,12 @@ import React from 'react';
 import { useEffect, useState } from 'react';
 import updateUser from '@/app/actions/updateUser';
 import { toast } from 'react-toastify';
-import { User, Role, UserStatus } from '@prisma/client';
+import { User, Role } from '@prisma/client';
 import Input from '@/components/ui/Input';
 import Select from '@/components/ui/Select';
 import Label from '@/components/ui/Label';
 import Button from '@/components/ui/Button';
-import { getUserAffiliations } from '@/lib/utils';
+import { getUserAffiliations, getUserStatuses } from '@/lib/utils';
 
 interface pageProps {
   user: User;
@@ -20,7 +20,7 @@ export default function UserEditForm({ user, actorIsSuperAdmin }: pageProps) {
   const validRoles = Object.values(Role);
   // type Role = (typeof validRoles)[number];
   const [status, setStatus] = useState(user.status);
-  const validStatuses = Object.values(UserStatus);
+  const validStatuses = getUserStatuses();
   const [affiliation, setAffiliation] = useState(user.affiliation);
   const validAffiliations = getUserAffiliations();
   const [printSlips, setPrintSlips] = useState(user.printSlips);
@@ -44,7 +44,7 @@ export default function UserEditForm({ user, actorIsSuperAdmin }: pageProps) {
           setAffiliation(e.target.value);
           break;
         case 'status':
-          setStatus(e.target.value as UserStatus);
+          setStatus(e.target.value);
           break;
         case 'printSlips':
           setPrintSlips((e.target.value.toLowerCase() === 'true') as boolean);
@@ -57,7 +57,7 @@ export default function UserEditForm({ user, actorIsSuperAdmin }: pageProps) {
     const updatedUser = await updateUser(user.id, {
       name: name,
       role: role as Role,
-      status: status as UserStatus,
+      status: status,
       affiliation: affiliation,
       printSlips: (printSlips ||
         role == 'admin' ||

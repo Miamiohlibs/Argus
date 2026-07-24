@@ -3,7 +3,7 @@ import Input from '@/components/ui/Input';
 import Select from '@/components/ui/Select';
 import InputGroup, { InputGroupText } from '@/components/ui/InputGroup';
 import { useState } from 'react';
-import { User, UserStatus } from '@prisma/client';
+import { User } from '@prisma/client';
 import { getProjectPurposes } from '@/lib/utils';
 import {
   validStatuses,
@@ -21,9 +21,7 @@ export default function QuickSlipProjectInfo({
 }: {
   currentUser?: User | null;
 }) {
-  const [userStatus, setUserStatus] = useState<UserStatus | undefined>(
-    undefined,
-  );
+  const [userStatus, setUserStatus] = useState<string | undefined>(undefined);
   const [userAffiliation, setUserAffiliation] = useState<string | undefined>(
     undefined,
   );
@@ -38,7 +36,7 @@ export default function QuickSlipProjectInfo({
           setUserAffiliation(e.target.value);
           break;
         case 'status':
-          setUserStatus(e.target.value as UserStatus);
+          setUserStatus(e.target.value);
           break;
         case 'purpose':
           setSelectedPurpose(e.target.value);

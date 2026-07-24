@@ -14,23 +14,11 @@ export type RequestSlipProps = {
   highlightedItemIndex?: number;
   patronName?: string;
   patronAffiliation?: string;
-  patronStatus?:
-    | 'Undergrad'
-    | 'Graduate'
-    | 'Faculty'
-    | 'Staff'
-    | 'Alumni'
-    | 'Other';
+  patronStatus?: string;
   userName?: string;
   userEmail?: string;
   userAffiliation?: string;
-  userStatus?:
-    | 'Undergrad'
-    | 'Graduate'
-    | 'Faculty'
-    | 'Staff'
-    | 'Alumni'
-    | 'Other';
+  userStatus?: string;
   personPrinting?: string;
   projectName?: string;
   purpose: string | undefined;
