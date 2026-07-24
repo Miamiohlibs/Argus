@@ -8,7 +8,7 @@
 
 ### Added
 
-- New .env variables: ASPACE_API_BASE_URL, ASPACE_USER, ASPACE_PASSWORD, ASPACE_PUBLIC_BASE_URL, NEXT_PUBLIC_CATALOGS, NEXT_PUBLIC_USER_AFFILIATIONS,NEXT_PUBLIC_USER_STATUSES
+- New .env variables: ASPACE_API_BASE_URL, ASPACE_USER, ASPACE_PASSWORD, ASPACE_PUBLIC_BASE_URL, NEXT_PUBLIC_CATALOGS, NEXT_PUBLIC_USER_AFFILIATIONS,NEXT_PUBLIC_USER_STATUSES, NEXT_PUBLIC_SLIP_HEADER, NEXT_PUBLIC_SLIP_SUBHEAD
 - Added support for ArchivesSpace
 - callNumberOverrides -> these files need to be reset to blank for the release
 - titleOverrides -> these files need to be reset to blank for the release
