@@ -117,6 +117,9 @@ const CustomEntryForm = ({
         'userStatus',
         'userAffiliation',
         'purpose',
+        'patronName',
+        'patronAffiliation',
+        'patronStatus',
       ]) {
         const value = formData.get(key);
         if (value) {
