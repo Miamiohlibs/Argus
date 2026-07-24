@@ -1,14 +1,11 @@
 // app/(printable-layout)/slipsRender/quickSlip/page.tsx
 import * as z from 'zod';
 import { checkUser } from '@/lib/checkUser';
-import {
-  isAllowedUserStatus,
-  isAllowedAffiliation,
-  isUserAffiliation,
-} from '@/lib/typeChecker';
+import { isAllowedStatus, isAllowedAffiliation } from '@/lib/typeChecker';
 import { EntryWithItems } from '@/types/EntryWithItems';
 import { ProjectWithUserAndBib } from '@/types/ProjectWithUserAndBib';
 import generateRequestSlipItems from '@/lib/generateRequestSlipItems';
+import { getUserAffiliations } from '@/lib/utils';
 import { ItemEntry } from '@prisma/client';
 import { BibEntryDraft, BibEntryDraftType } from '@/zod/BibEntry';
 import { ItemEntry as ItemEntryZod, ItemEntryDraftType } from '@/zod/ItemEntry';
@@ -24,6 +21,7 @@ function createItemFromReq({
   params: { [key: string]: string | string[] | undefined };
 }) {
   // create some blank/dummy objects to start, with enough data to meet the minimum expectations for a db entry
+  const defaultAffiliation = getUserAffiliations()[0] ?? 'Other';
   const project: ProjectWithUserAndBib = {
     bibEntries: [],
     coEditors: [],
@@ -38,10 +36,10 @@ function createItemFromReq({
     title: 'Quick Slips',
     updatedAt: new Date(),
     patronName: '',
-    patronAffiliation: 'Miami',
+    patronAffiliation: defaultAffiliation,
     patronStatus: 'Other',
     user: {
-      affiliation: 'Miami',
+      affiliation: defaultAffiliation,
       clerkUserId: 'quick-slips',
       createdAt: new Date(),
       email: '',
@@ -99,7 +97,7 @@ function createItemFromReq({
       subjects: [],
       updatedAt: new Date(),
       userId: 'none',
-      patronAffiliation: project.patronAffiliation ?? 'Miami',
+      patronAffiliation: project.patronAffiliation ?? defaultAffiliation,
       patronStatus: project.patronStatus ?? 'Other',
       patronName: '',
     },
@@ -112,7 +110,7 @@ function createItemFromReq({
   if (
     params.hasOwnProperty('userStatus') &&
     typeof params.userStatus == 'string' &&
-    isAllowedUserStatus(params.userStatus)
+    isAllowedStatus(params.userStatus)
   ) {
     project.user.status = params.userStatus;
   }
@@ -134,7 +132,8 @@ function createItemFromReq({
 
   if (
     params.hasOwnProperty('patronAffiliation') &&
-    isUserAffiliation(params.patronAffiliation)
+    typeof params.patronAffiliation == 'string' &&
+    isAllowedAffiliation(params.patronAffiliation)
   ) {
     project.patronAffiliation = params.patronAffiliation;
   }
@@ -142,7 +141,7 @@ function createItemFromReq({
   if (
     params.hasOwnProperty('patronStatus') &&
     typeof params.patronStatus == 'string' &&
-    isAllowedUserStatus(params.patronStatus)
+    isAllowedStatus(params.patronStatus)
   ) {
     project.patronStatus = params.patronStatus;
   }

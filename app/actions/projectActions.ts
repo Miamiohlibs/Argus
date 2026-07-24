@@ -3,7 +3,7 @@ import logger from '@/lib/logger';
 import { db } from '@/lib/db';
 import getUserInfo from '@/lib/getUserInfo';
 import { getPermissions } from '@/lib/getUserInfo';
-import type { Prisma, UserAffiliation, UserStatus } from '@prisma/client';
+import type { Prisma } from '@prisma/client';
 import { Project } from '@prisma/client';
 import type { ProjectWithUserAndBib } from '@/types/ProjectWithUserAndBib';
 import entryAction from './addEntry';
@@ -45,11 +45,11 @@ export async function createProject(
     }
     let patronAffiliation = null;
     if (formData.get('patronAffiliation') != '') {
-      patronAffiliation = formData.get('patronAffiliation') as UserAffiliation;
+      patronAffiliation = formData.get('patronAffiliation') as string;
     }
     let patronStatus = null;
     if (formData.get('patronStatus') != '') {
-      patronStatus = formData.get('patronStatus') as UserStatus;
+      patronStatus = formData.get('patronStatus') as string;
     }
 
     const subjects = [subjectString];
@@ -267,11 +267,11 @@ export async function updateProject(
     }
     let patronAffiliation = null;
     if (formData.get('patronAffiliation') != '') {
-      patronAffiliation = formData.get('patronAffiliation') as UserAffiliation;
+      patronAffiliation = formData.get('patronAffiliation') as string;
     }
     let patronStatus = null;
     if (formData.get('patronStatus') != '') {
-      patronStatus = formData.get('patronStatus') as UserStatus;
+      patronStatus = formData.get('patronStatus') as string;
     }
     // const subjectsJson = formData.get('subjects') as string;
     // const subjects = JSON.parse(subjectsJson) || [];

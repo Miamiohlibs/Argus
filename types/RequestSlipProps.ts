@@ -13,24 +13,12 @@ export type RequestSlipProps = {
   itemInfo?: string[] | never[] | undefined;
   highlightedItemIndex?: number;
   patronName?: string;
-  patronAffiliation?: 'Miami' | 'Other';
-  patronStatus?:
-    | 'Undergrad'
-    | 'Graduate'
-    | 'Faculty'
-    | 'Staff'
-    | 'Alumni'
-    | 'Other';
+  patronAffiliation?: string;
+  patronStatus?: string;
   userName?: string;
   userEmail?: string;
-  userAffiliation?: 'Miami' | 'Other';
-  userStatus?:
-    | 'Undergrad'
-    | 'Graduate'
-    | 'Faculty'
-    | 'Staff'
-    | 'Alumni'
-    | 'Other';
+  userAffiliation?: string;
+  userStatus?: string;
   personPrinting?: string;
   projectName?: string;
   purpose: string | undefined;

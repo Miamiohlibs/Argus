@@ -8,6 +8,7 @@ import { Roboto } from 'next/font/google';
 import { bibSectionAspace } from './BibSection-aspace';
 import { bibSectionDefault } from './BibSection-default';
 import { bibSectionOverrides } from './BibSectionOverrides';
+import { getUserAffiliations, getUserStatuses } from '@/lib/utils';
 
 const roboto = Roboto({
   weight: '400',
@@ -88,6 +89,10 @@ export const RequestSlipHalfPage = (props: RequestSlipProps) => {
   // patron status/affiliation overrides user status/affiliation
   const status = patronStatus ?? userStatus;
   const affiliation = patronAffiliation ?? userAffiliation;
+  const allStatuses = getUserStatuses();
+  const half = Math.ceil(allStatuses.length / 2);
+  const firstHalfStatuses = allStatuses.slice(0, half);
+  const secondHalfStatuses = allStatuses.slice(half);
 
   return (
     <article
@@ -127,20 +132,16 @@ export const RequestSlipHalfPage = (props: RequestSlipProps) => {
         <div className={styles.column}>
           <h3 className={styles.h3}>Institution</h3>
           <div className="flex flex-col">
-            <div
-              role="checkbox"
-              aria-checked={affiliation == 'Miami'}
-              className={styles.listGroupDiv}
-            >
-              Miami University
-            </div>
-            <div
-              role="checkbox"
-              aria-checked={affiliation == 'Other'}
-              className={styles.listGroupDiv}
-            >
-              Other
-            </div>
+            {getUserAffiliations().map((option) => (
+              <div
+                key={option}
+                role="checkbox"
+                aria-checked={affiliation == option}
+                className={styles.listGroupDiv}
+              >
+                {option}
+              </div>
+            ))}
           </div>
         </div>
         <div className={styles.column2}>
@@ -148,52 +149,30 @@ export const RequestSlipHalfPage = (props: RequestSlipProps) => {
           <div className={styles.row}>
             <div className={styles.innerColumn}>
               <div className={styles.listGroup}>
-                <div
-                  role="checkbox"
-                  aria-checked={status == 'Undergrad'}
-                  className={styles.listGroupDiv}
-                >
-                  Undergraduate
-                </div>
-                <div
-                  role="checkbox"
-                  aria-checked={status == 'Graduate'}
-                  className={styles.listGroupDiv}
-                >
-                  Graduate
-                </div>
-                <div
-                  role="checkbox"
-                  aria-checked={status == 'Faculty'}
-                  className={styles.listGroupDiv}
-                >
-                  Faculty
-                </div>
+                {firstHalfStatuses.map((option: string) => (
+                  <div
+                    key={option}
+                    role="checkbox"
+                    aria-checked={status == option}
+                    className={styles.listGroupDiv}
+                  >
+                    {option}
+                  </div>
+                ))}
               </div>
             </div>
             <div className={styles.innerColumn}>
               <div className={styles.listGroup}>
-                <div
-                  role="checkbox"
-                  aria-checked={status == 'Alumni'}
-                  className={styles.listGroupDiv}
-                >
-                  Alumni
-                </div>
-                <div
-                  role="checkbox"
-                  aria-checked={status == 'Staff'}
-                  className={styles.listGroupDiv}
-                >
-                  Staff
-                </div>
-                <div
-                  role="checkbox"
-                  aria-checked={status == 'Other'}
-                  className={styles.listGroupDiv}
-                >
-                  Other
-                </div>
+                {secondHalfStatuses.map((option: string) => (
+                  <div
+                    key={option}
+                    role="checkbox"
+                    aria-checked={status == option}
+                    className={styles.listGroupDiv}
+                  >
+                    {option}
+                  </div>
+                ))}
               </div>
             </div>
           </div>

@@ -1,41 +1,19 @@
-import { UserAffiliation } from '@prisma/client';
+import { getUserAffiliations, getUserStatuses } from '@/lib/utils';
 
-export function isUserAffiliation(
-  value: string | string[] | undefined
-): value is UserAffiliation {
+export function isAllowedStatus(
+  value: string | string[] | undefined,
+): value is string | undefined {
   return (
-    typeof value === 'string' &&
-    (Object.values(UserAffiliation) as string[]).includes(value)
+    value === undefined ||
+    (typeof value === 'string' && getUserStatuses().includes(value))
   );
 }
 
-export type AllowedUserStatus =
-  | 'Undergrad'
-  | 'Graduate'
-  | 'Faculty'
-  | 'Staff'
-  | 'Alumni'
-  | 'Other'
-  | undefined;
-
-export function isAllowedUserStatus(
-  value: string | undefined
-): value is AllowedUserStatus {
-  return [
-    'Undergrad',
-    'Graduate',
-    'Faculty',
-    'Staff',
-    'Alumni',
-    'Other',
-    undefined,
-  ].includes(value);
-}
-
-export type AllowedAffiliation = 'Miami' | 'Other' | undefined;
-
 export function isAllowedAffiliation(
-  value: string | undefined
-): value is AllowedAffiliation {
-  return ['Miami', 'Other', undefined].includes(value);
+  value: string | string[] | undefined,
+): value is string | undefined {
+  return (
+    value === undefined ||
+    (typeof value === 'string' && getUserAffiliations().includes(value))
+  );
 }
