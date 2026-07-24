@@ -58,6 +58,7 @@ export default async function EditProjectPage({
           user={currentUser}
           action={updateProject}
           project={project}
+          isAdmin={isAdmin}
           basePath={process.env.NEXT_PUBLIC_APP_BASEPATH ?? '/'}
         />
       </>

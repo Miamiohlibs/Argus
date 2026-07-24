@@ -10,6 +10,12 @@ import { useSearchParams } from 'next/navigation';
 import type { Catalog } from '@prisma/client';
 import type { CatalogSearchResult } from '@/lib/catalogs/types';
 import BibResultsWrapper from './BibResultsWrapper';
+import { User } from '@prisma/client';
+
+// interface getUserResponse {
+//   user?: User | undefined;
+//   error?: string;
+// }
 
 type RecordSearchFormProps =
   | {
@@ -21,7 +27,12 @@ type RecordSearchFormProps =
       searchPlaceholder: string;
       catalog?: Catalog;
     }
-  | { quickSlip: true; catalog?: Catalog; searchPlaceholder: string };
+  | {
+      quickSlip: true;
+      catalog?: Catalog;
+      searchPlaceholder: string;
+      currentUser: User;
+    };
 
 const RecordSearchForm = (props: RecordSearchFormProps) => {
   const formRef = useRef<HTMLFormElement>(null);
@@ -32,13 +43,15 @@ const RecordSearchForm = (props: RecordSearchFormProps) => {
     nonOwnerEditor,
     currentUserName,
     placeholder,
-    catalog;
+    catalog,
+    currentUser;
   if (props.quickSlip) {
     quickSlip = true;
     userCanEditPage = true;
     projectId = undefined;
     catalog = 'ALMA' as Catalog;
     placeholder = props.searchPlaceholder;
+    currentUser = props.currentUser;
   } else {
     quickSlip = false;
     userCanEditPage = props.userCanEditPage;
@@ -110,6 +123,7 @@ const RecordSearchForm = (props: RecordSearchFormProps) => {
           quickSlip={quickSlip}
           currentUserName={currentUserName ?? 'unknown'}
           nonOwnerEditor={nonOwnerEditor ?? false}
+          currentUser={currentUser}
         />
         {process.env.NEXT_PUBLIC_IS_DEV_ENV && results && (
           <pre>{JSON.stringify(results, null, 2)}</pre>

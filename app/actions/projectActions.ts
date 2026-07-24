@@ -3,7 +3,7 @@ import logger from '@/lib/logger';
 import { db } from '@/lib/db';
 import getUserInfo from '@/lib/getUserInfo';
 import { getPermissions } from '@/lib/getUserInfo';
-import type { Prisma } from '@prisma/client';
+import type { Prisma, UserAffiliation, UserStatus } from '@prisma/client';
 import { Project } from '@prisma/client';
 import type { ProjectWithUserAndBib } from '@/types/ProjectWithUserAndBib';
 import entryAction from './addEntry';
@@ -33,13 +33,25 @@ export async function createProject(
     if (!user) {
       return { success: false, error: 'User not authenticated' };
     }
-
     const titleValue = formData.get('title');
     //   const ownerValue = formData.get('userId');
     const notesValue = formData.get('notes') ?? '';
     const purposeValue = formData.get('purpose') ?? 'Other';
     const publicValue = formData.get('public') !== null;
     const subjectString = formData.get('subjects') as string;
+    let patronName = null;
+    if ((formData.get('patronName') as string) != '') {
+      patronName = formData.get('patronName') as string;
+    }
+    let patronAffiliation = null;
+    if (formData.get('patronAffiliation') != '') {
+      patronAffiliation = formData.get('patronAffiliation') as UserAffiliation;
+    }
+    let patronStatus = null;
+    if (formData.get('patronStatus') != '') {
+      patronStatus = formData.get('patronStatus') as UserStatus;
+    }
+
     const subjects = [subjectString];
     // const subjectsJson = formData.get('subjects') as string;
     // const subjects = JSON.parse(subjectsJson) || [];
@@ -87,6 +99,9 @@ export async function createProject(
           purpose,
           public: publicValue,
           subjects,
+          patronName,
+          patronAffiliation,
+          patronStatus,
           userId: user.clerkUserId,
         },
         include: {
@@ -246,6 +261,18 @@ export async function updateProject(
     const publicValue = formData.get('public') !== null;
     const subjectString = formData.get('subjects') as string;
     const subjects = [subjectString];
+    let patronName = null;
+    if ((formData.get('patronName') as string) != '') {
+      patronName = formData.get('patronName') as string;
+    }
+    let patronAffiliation = null;
+    if (formData.get('patronAffiliation') != '') {
+      patronAffiliation = formData.get('patronAffiliation') as UserAffiliation;
+    }
+    let patronStatus = null;
+    if (formData.get('patronStatus') != '') {
+      patronStatus = formData.get('patronStatus') as UserStatus;
+    }
     // const subjectsJson = formData.get('subjects') as string;
     // const subjects = JSON.parse(subjectsJson) || [];
     // console.log('***** subjectString', subjectString);
@@ -273,6 +300,9 @@ export async function updateProject(
         title,
         notes: notes || null,
         purpose,
+        patronName,
+        patronAffiliation,
+        patronStatus,
         public: publicValue,
         subjects,
       },

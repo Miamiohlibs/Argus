@@ -11,14 +11,17 @@ export default async function quickSlipCustomPage() {
     redirect('/');
   }
 
-  return (
-    <>
-      <h1>Lookup item for Quick Slip</h1>
-      <CustomEntryForm
-        quickSlip={true}
-        nonOwnerEditor={nonOwnerEditor}
-        currentUserName={currentUserName}
-      />
-    </>
-  );
+  if (user.user) {
+    return (
+      <>
+        <h1>Lookup item for Quick Slip</h1>
+        <CustomEntryForm
+          quickSlip={true}
+          nonOwnerEditor={nonOwnerEditor}
+          currentUserName={currentUserName}
+          currentUser={user.user}
+        />
+      </>
+    );
+  }
 }

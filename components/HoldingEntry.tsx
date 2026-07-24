@@ -11,6 +11,7 @@ import type { BibDataDraft, ItemDataDraft } from '@/lib/catalogs/types';
 import { inHouseLocationCodes } from '@/lib/locationCodes';
 import { useRouter } from 'next/navigation';
 import QuickSlipProjectInfo from './QuickSlipProjectInfo';
+import { User } from '@prisma/client';
 
 interface HoldingEntryProps {
   bibData: BibDataDraft;
@@ -22,6 +23,7 @@ interface HoldingEntryProps {
   quickSlip: boolean;
   nonOwnerEditor: boolean;
   currentUserName: string;
+  currentUser?: User;
 }
 
 const HoldingEntry = ({
@@ -34,6 +36,7 @@ const HoldingEntry = ({
   quickSlip,
   nonOwnerEditor,
   currentUserName,
+  currentUser,
 }: HoldingEntryProps) => {
   const router = useRouter();
 
@@ -85,7 +88,9 @@ const HoldingEntry = ({
       setSelectedItems((prev) => [...prev, item]);
     } else {
       setSelectedItems((prev) =>
-        prev.filter((selectedItem) => selectedItem.clientKey !== item.clientKey),
+        prev.filter(
+          (selectedItem) => selectedItem.clientKey !== item.clientKey,
+        ),
       );
     }
   };
@@ -107,7 +112,15 @@ const HoldingEntry = ({
       const qs = new URLSearchParams();
       qs.set('bibData', JSON.stringify(finalBibData));
       qs.set('itemData', JSON.stringify(selectedItems));
-      for (const key of ['userName', 'userStatus', 'userAffiliation', 'purpose']) {
+      for (const key of [
+        'userName',
+        'userStatus',
+        'userAffiliation',
+        'purpose',
+        'patronName',
+        'patronStatus',
+        'patronAffiliation',
+      ]) {
         const value = formData.get(key);
         if (value) {
           qs.set(key, value.toString());
@@ -126,9 +139,7 @@ const HoldingEntry = ({
     });
 
     if (error) {
-      toast.error(
-        `Failed to ${actionType === 'add' ? 'add' : 'update'} entry`,
-      );
+      toast.error(`Failed to ${actionType === 'add' ? 'add' : 'update'} entry`);
     } else {
       toast.success(
         `Entry ${actionType === 'add' ? 'added' : 'updated'} successfully`,
@@ -181,7 +192,7 @@ const HoldingEntry = ({
   return (
     <form ref={formRef} onSubmit={handleSubmit}>
       <div key={'holding'} className="mb-6 border p-3">
-        {quickSlip && <QuickSlipProjectInfo />}
+        {quickSlip && <QuickSlipProjectInfo currentUser={currentUser} />}
 
         <div>
           <InputGroup className="mb-4">
@@ -212,7 +223,9 @@ const HoldingEntry = ({
                 item.copy_id && parseInt(item.copy_id) > 1
                   ? `, Copy: ${item.copy_id}`
                   : '';
-              const description = item.description ? `, ${item.description}` : '';
+              const description = item.description
+                ? `, ${item.description}`
+                : '';
               const itemLabel =
                 sortedItems.length === 1
                   ? 'Sole Item'

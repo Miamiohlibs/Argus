@@ -72,6 +72,9 @@ export default function generateRequestSlipItems(
         folder: entry.items[0].folder ?? undefined,
         itemInfo: itemInfos, // full array of all items
         highlightedItemIndex: idx, // which one is current
+        patronName: project.patronName ?? undefined,
+        patronAffiliation: project.patronAffiliation ?? undefined,
+        patronStatus: project.patronStatus ?? undefined,
         userName: project?.user.name,
         userEmail: project?.user.email,
         userAffiliation: project?.user.affiliation ?? undefined,
@@ -96,6 +99,9 @@ export default function generateRequestSlipItems(
           ms: '',
           itemInfo: [],
           highlightedItemIndex: 0,
+          patronName: project.patronName ?? undefined,
+          patronAffiliation: project.patronAffiliation ?? undefined,
+          patronStatus: project.patronStatus ?? undefined,
           userName: project?.user.name,
           userEmail: project?.user.email,
           userAffiliation: project?.user.affiliation ?? undefined,

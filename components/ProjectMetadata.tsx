@@ -37,6 +37,11 @@ const ProjectMetadata = ({
               Co-Editor: {ed.name}
             </Badge>
           ))}
+        {project.patronName && (
+          <Badge bg="light" className="ms-2 text-dark">
+            Patron: {project.patronName}
+          </Badge>
+        )}
 
         <div className="float-right">
           {project.subjects && project.subjects.length > 0 && (

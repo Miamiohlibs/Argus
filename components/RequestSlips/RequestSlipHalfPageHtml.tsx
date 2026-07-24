@@ -68,6 +68,9 @@ export const RequestSlipHalfPage = (props: RequestSlipProps) => {
     box,
     folder,
     ms,
+    patronName,
+    patronAffiliation,
+    patronStatus,
     userName,
     userEmail,
     userAffiliation,
@@ -81,6 +84,11 @@ export const RequestSlipHalfPage = (props: RequestSlipProps) => {
   // console.log(`Added fields: ${userStatus}`);
 
   const bibSectionHtml = bibSection(props);
+
+  // patron status/affiliation overrides user status/affiliation
+  const status = patronStatus ?? userStatus;
+  const affiliation = patronAffiliation ?? userAffiliation;
+
   return (
     <article
       className={`${styles.sheetOuterLetterArticle} ${styles.sheetArticle}`}
@@ -121,14 +129,14 @@ export const RequestSlipHalfPage = (props: RequestSlipProps) => {
           <div className="flex flex-col">
             <div
               role="checkbox"
-              aria-checked={userAffiliation == 'Miami'}
+              aria-checked={affiliation == 'Miami'}
               className={styles.listGroupDiv}
             >
               Miami University
             </div>
             <div
               role="checkbox"
-              aria-checked={userAffiliation == 'Other'}
+              aria-checked={affiliation == 'Other'}
               className={styles.listGroupDiv}
             >
               Other
@@ -142,21 +150,21 @@ export const RequestSlipHalfPage = (props: RequestSlipProps) => {
               <div className={styles.listGroup}>
                 <div
                   role="checkbox"
-                  aria-checked={userStatus == 'Undergrad'}
+                  aria-checked={status == 'Undergrad'}
                   className={styles.listGroupDiv}
                 >
                   Undergraduate
                 </div>
                 <div
                   role="checkbox"
-                  aria-checked={userStatus == 'Graduate'}
+                  aria-checked={status == 'Graduate'}
                   className={styles.listGroupDiv}
                 >
                   Graduate
                 </div>
                 <div
                   role="checkbox"
-                  aria-checked={userStatus == 'Faculty'}
+                  aria-checked={status == 'Faculty'}
                   className={styles.listGroupDiv}
                 >
                   Faculty
@@ -167,21 +175,21 @@ export const RequestSlipHalfPage = (props: RequestSlipProps) => {
               <div className={styles.listGroup}>
                 <div
                   role="checkbox"
-                  aria-checked={userStatus == 'Alumni'}
+                  aria-checked={status == 'Alumni'}
                   className={styles.listGroupDiv}
                 >
                   Alumni
                 </div>
                 <div
                   role="checkbox"
-                  aria-checked={userStatus == 'Staff'}
+                  aria-checked={status == 'Staff'}
                   className={styles.listGroupDiv}
                 >
                   Staff
                 </div>
                 <div
                   role="checkbox"
-                  aria-checked={userStatus == 'Other'}
+                  aria-checked={status == 'Other'}
                   className={styles.listGroupDiv}
                 >
                   Other
@@ -249,6 +257,10 @@ export const RequestSlipHalfPage = (props: RequestSlipProps) => {
         </div>
         <div className={styles.column}>
           <div className="flex flex-col">
+            <div>
+              <span className={styles.label}>Patron name:</span>{' '}
+              <span className={styles.value}>{patronName}</span>
+            </div>
             <div>
               <span className={styles.label}>Project owner:</span>{' '}
               <span className={styles.value}>{userName}</span>

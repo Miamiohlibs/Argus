@@ -3,7 +3,7 @@ import Input from '@/components/ui/Input';
 import Select from '@/components/ui/Select';
 import InputGroup, { InputGroupText } from '@/components/ui/InputGroup';
 import { useState } from 'react';
-import { UserAffiliation, UserStatus } from '@prisma/client';
+import { User, UserAffiliation, UserStatus } from '@prisma/client';
 import { getProjectPurposes } from '@/lib/utils';
 import {
   validStatuses,
@@ -19,9 +19,13 @@ import {
 // what can we do to make these more flexible? It doesn't look like we can devise types on the fly
 // like in a .env
 
-export default function QuickSlipProjectInfo() {
+export default function QuickSlipProjectInfo({
+  currentUser,
+}: {
+  currentUser?: User | null;
+}) {
   const [userStatus, setUserStatus] = useState<UserStatus | undefined>(
-    undefined
+    undefined,
   );
   const [userAffiliation, setUserAffiliation] = useState<
     UserAffiliation | undefined
@@ -71,20 +75,32 @@ export default function QuickSlipProjectInfo() {
 
   return (
     <>
+      <Input type="hidden" name="userName" value={currentUser?.name ?? ''} />
+      <Input
+        type="hidden"
+        name="userAffiliation"
+        value={currentUser?.affiliation ?? ''}
+      />
+      <Input
+        type="hidden"
+        name="userStatus"
+        value={currentUser?.status ?? ''}
+      />
+
       <InputGroup className="mb-4">
         <InputGroupText id="patron-label">Patron Name</InputGroupText>
         <Input
           placeholder="Patron Name"
           aria-labelledby="patron-label"
-          name="userName"
+          name="patronName"
         />
       </InputGroup>
 
       <InputGroup className="mb-4">
-        <InputGroupText id="status-label">User Status</InputGroupText>
+        <InputGroupText id="status-label">Patron Status</InputGroupText>
         <Select
           aria-labelledby="status-label"
-          name="userStatus"
+          name="patronStatus"
           onChange={handleChange('status')}
         >
           {statusPulldown.unshift(blankPullDownOption) && statusPulldown}
@@ -92,10 +108,10 @@ export default function QuickSlipProjectInfo() {
       </InputGroup>
 
       <InputGroup className="mb-4">
-        <InputGroupText id="affil-label">User Affiliation</InputGroupText>
+        <InputGroupText id="affil-label">Patron Affiliation</InputGroupText>
         <Select
           aria-labelledby="affil-label"
-          name="userAffiliation"
+          name="patronAffiliation"
           onChange={handleChange('affiliation')}
         >
           {affiliationPulldown.unshift(blankPullDownOption) &&

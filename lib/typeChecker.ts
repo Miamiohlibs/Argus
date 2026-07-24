@@ -1,4 +1,13 @@
-// import { UserStatus } from '@prisma/client';
+import { UserAffiliation } from '@prisma/client';
+
+export function isUserAffiliation(
+  value: string | string[] | undefined
+): value is UserAffiliation {
+  return (
+    typeof value === 'string' &&
+    (Object.values(UserAffiliation) as string[]).includes(value)
+  );
+}
 
 export type AllowedUserStatus =
   | 'Undergrad'

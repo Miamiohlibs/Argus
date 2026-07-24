@@ -13,6 +13,7 @@ import { useEffect, useState } from 'react';
 // import { useRouter } from 'next/navigation'; // Changed from react-router-dom
 import { Project } from '@prisma/client';
 import { getProjectPurposes, getSubjects } from '@/lib/utils';
+import { UserAffiliation, UserStatus } from '@prisma/client';
 
 type ProjectActionResult =
   | { success: true; data: Project; error?: never }
@@ -22,6 +23,7 @@ interface ProjectFormProps {
   user: User | null;
   project?: Project | null;
   basePath: string | null;
+  isAdmin: boolean;
   action: (
     prevState: unknown,
     formData: FormData,
@@ -36,6 +38,7 @@ export default function ProjectForm({
   project = undefined,
   action,
   basePath,
+  isAdmin,
 }: ProjectFormProps) {
   const [state, formAction] = useActionState(action, null);
   const [selectedPurpose, setSelectedPurpose] = useState<string>(
@@ -46,6 +49,12 @@ export default function ProjectForm({
   );
   const [selectedSubject, setSelectedSubject] = useState<string>(
     project?.subjects[0] ?? 'None',
+  );
+  const [selectedPatronAffiliation, setSelectedPatronAffiliation] = useState(
+    project?.patronAffiliation ?? null,
+  );
+  const [selectedPatronStatus, setSelectedPatronStatus] = useState(
+    project?.patronStatus ?? null,
   );
 
   const resolvedBasePath = basePath ?? '/';
@@ -71,6 +80,8 @@ export default function ProjectForm({
 
   const projectPurposes = getProjectPurposes();
   const projectSubjects = getSubjects();
+  const patronAffiliations = Object.values(UserAffiliation);
+  const patronStatuses = Object.values(UserStatus);
 
   const purposeSelectOptions = projectPurposes.map((item: string) => (
     <option key={item} value={item}>
@@ -79,6 +90,16 @@ export default function ProjectForm({
   ));
 
   const projectSubjectOptions = projectSubjects.map((item: string) => (
+    <option key={item} value={item}>
+      {item}
+    </option>
+  ));
+  const patronAffiliationOptions = patronAffiliations.map((item: string) => (
+    <option key={item} value={item}>
+      {item}
+    </option>
+  ));
+  const patronStatusOptions = patronStatuses.map((item: string) => (
     <option key={item} value={item}>
       {item}
     </option>
@@ -98,6 +119,20 @@ export default function ProjectForm({
   );
   projectSubjectOptions.unshift(blankSubjectPullDownOption);
 
+  const blankAffliationOption = (
+    <option key="none" value="">
+      No Patron Affliation Selected
+    </option>
+  );
+  patronAffiliationOptions.unshift(blankAffliationOption);
+
+  const blankPatronStatusOption = (
+    <option key="none" value="">
+      No Patron Status Selected
+    </option>
+  );
+  patronStatusOptions.unshift(blankPatronStatusOption);
+
   const handlePurposeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     // console.log(`Selected purpose: ${e.target.value}`);
     setSelectedPurpose(e.target.value);
@@ -110,6 +145,20 @@ export default function ProjectForm({
   const handleSubjectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     // console.log(`Selected purpose: ${e.target.value}`);
     setSelectedSubject(e.target.value);
+  };
+  const handlePatronAffiliationChange = (
+    e: React.ChangeEvent<HTMLSelectElement | null>,
+  ) => {
+    if (patronAffiliations.includes(e.target.value as UserAffiliation)) {
+      setSelectedPatronAffiliation(e.target.value as UserAffiliation);
+    }
+  };
+  const handlePatronStatusChange = (
+    e: React.ChangeEvent<HTMLSelectElement | null>,
+  ) => {
+    if (patronStatuses.includes(e.target.value as UserStatus)) {
+      setSelectedPatronStatus(e.target.value as UserStatus);
+    }
   };
 
   return (
@@ -145,7 +194,6 @@ export default function ProjectForm({
               {purposeSelectOptions}
             </Select>
           </div>
-
           <Label>Project Subject</Label>
           <Select
             id="subjects"
@@ -157,7 +205,6 @@ export default function ProjectForm({
           >
             {projectSubjectOptions}
           </Select>
-
           <div className="my-6">
             <Checkbox
               switch
@@ -168,7 +215,53 @@ export default function ProjectForm({
               onChange={handlePublicChange}
             />
           </div>
-
+          {/* only allow admins to create project on behalf of a patron */}
+          {isAdmin && (
+            <Card className="mb-5">
+              <Card.Header className="bg-green-100">
+                Patron Info (only if creating project for a non-Argus user)
+              </Card.Header>
+              <Card.Body className="bg-green-50">
+                <div className="mb-4">
+                  <Label>Patron Name</Label>
+                  <Input
+                    type="text"
+                    name="patronName"
+                    defaultValue={project?.patronName || ''}
+                    placeholder="Enter patron name..."
+                    required={false}
+                    className="py-2"
+                  />
+                </div>
+                <div className="mb-4">
+                  <Label>Patron Affiliation</Label>
+                  <Select
+                    id="patronAffiliation"
+                    name="patronAffiliation"
+                    // disabled={!editable}
+                    value={selectedPatronAffiliation ?? ''}
+                    onChange={handlePatronAffiliationChange}
+                    required={false}
+                  >
+                    {patronAffiliationOptions}
+                  </Select>
+                </div>
+                <div className="mb-4">
+                  <Label>Patron Status</Label>
+                  <Select
+                    id="patronStatus"
+                    name="patronStatus"
+                    // disabled={!editable}
+                    value={selectedPatronStatus ?? ''}
+                    onChange={handlePatronStatusChange}
+                    required={false}
+                  >
+                    {patronStatusOptions}
+                  </Select>
+                </div>
+              </Card.Body>
+            </Card>
+          )}
           <div className="mb-6">
             <Label>Notes</Label>
             <Input
@@ -180,13 +273,17 @@ export default function ProjectForm({
               className="resize-none"
             />
           </div>
-
           <input type="hidden" name="userId" value={user?.clerkUserId} />
-
-          {project && <input type="hidden" name="projectId" value={project.id} />}
-
+          {project && (
+            <input type="hidden" name="projectId" value={project.id} />
+          )}
           <div className="grid">
-            <Button variant="primary" type="submit" size="lg" className="w-full">
+            <Button
+              variant="primary"
+              type="submit"
+              size="lg"
+              className="w-full"
+            >
               {project ? 'Update Project' : 'Create New Project'}
             </Button>
           </div>

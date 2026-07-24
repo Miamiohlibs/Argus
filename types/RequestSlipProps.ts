@@ -12,6 +12,15 @@ export type RequestSlipProps = {
   notes?: string;
   itemInfo?: string[] | never[] | undefined;
   highlightedItemIndex?: number;
+  patronName?: string;
+  patronAffiliation?: 'Miami' | 'Other';
+  patronStatus?:
+    | 'Undergrad'
+    | 'Graduate'
+    | 'Faculty'
+    | 'Staff'
+    | 'Alumni'
+    | 'Other';
   userName?: string;
   userEmail?: string;
   userAffiliation?: 'Miami' | 'Other';

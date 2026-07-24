@@ -12,6 +12,7 @@ import { useState } from 'react';
 import { LocationCode, inHouseLocationData } from '@/lib/locationCodes';
 import QuickSlipProjectInfo from './QuickSlipProjectInfo';
 import { useRouter } from 'next/navigation';
+import { User } from '@prisma/client';
 
 interface CustomEntryFormProps {
   projectId?: number;
@@ -20,6 +21,7 @@ interface CustomEntryFormProps {
   quickSlip?: boolean;
   nonOwnerEditor?: boolean;
   currentUserName: string;
+  currentUser?: User;
 }
 
 // interface LocationCode {
@@ -35,9 +37,12 @@ const CustomEntryForm = ({
   quickSlip = false,
   nonOwnerEditor = false,
   currentUserName,
+  currentUser,
 }: CustomEntryFormProps) => {
   const router = useRouter();
-  const [locations] = useState<LocationCode[]>(() => inHouseLocationData() ?? []);
+  const [locations] = useState<LocationCode[]>(
+    () => inHouseLocationData() ?? [],
+  );
   const [selectedLocation, setSelectedLocation] = useState<LocationCode | null>(
     null,
   );
@@ -112,6 +117,9 @@ const CustomEntryForm = ({
         'userStatus',
         'userAffiliation',
         'purpose',
+        'patronName',
+        'patronAffiliation',
+        'patronStatus',
       ]) {
         const value = formData.get(key);
         if (value) {
@@ -332,7 +340,9 @@ const CustomEntryForm = ({
           </InputGroup>
         </div>
 
-        {quickSlip && <QuickSlipProjectInfo />}
+        {quickSlip && (
+          <QuickSlipProjectInfo currentUser={currentUser ?? null} />
+        )}
 
         {editable && (
           <Button

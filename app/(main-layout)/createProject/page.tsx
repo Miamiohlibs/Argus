@@ -14,14 +14,19 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function CreateProjectPage() {
   const {
     user,
-    permissions: { isEditorOrAbove },
+    permissions: { isEditorOrAbove, isAdmin },
   } = await getUserInfo();
   const basePath = process.env.NEXT_PUBLIC_APP_BASEPATH ?? '/';
 
   if (isEditorOrAbove && user != undefined) {
     return (
       <>
-        <ProjectForm user={user} action={createProject} basePath={basePath} />
+        <ProjectForm
+          user={user}
+          action={createProject}
+          basePath={basePath}
+          isAdmin={isAdmin}
+        />
       </>
     );
   } else {
