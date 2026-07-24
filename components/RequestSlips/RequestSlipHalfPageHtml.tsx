@@ -99,10 +99,8 @@ export const RequestSlipHalfPage = (props: RequestSlipProps) => {
       className={`${styles.sheetOuterLetterArticle} ${styles.sheetArticle}`}
     >
       {displayPrintButton && <PrintButton>Print</PrintButton>}
-      <h1 className={styles.h1}>Miami University Libraries</h1>
-      <p className={styles.subhead}>
-        Special Collections & Archives Request Slip
-      </p>
+      <h1 className={styles.h1}>{process.env.NEXT_PUBLIC_SLIP_HEADER}</h1>
+      <p className={styles.subhead}>{process.env.NEXT_PUBLIC_SLIP_SUBHEAD}</p>
       <h2 className={styles.h2}>I. ITEM REQUESTED</h2>
       {bibSectionHtml}
 
