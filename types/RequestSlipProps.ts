@@ -13,7 +13,7 @@ export type RequestSlipProps = {
   itemInfo?: string[] | never[] | undefined;
   highlightedItemIndex?: number;
   patronName?: string;
-  patronAffiliation?: 'Miami' | 'Other';
+  patronAffiliation?: string;
   patronStatus?:
     | 'Undergrad'
     | 'Graduate'
@@ -23,7 +23,7 @@ export type RequestSlipProps = {
     | 'Other';
   userName?: string;
   userEmail?: string;
-  userAffiliation?: 'Miami' | 'Other';
+  userAffiliation?: string;
   userStatus?:
     | 'Undergrad'
     | 'Graduate'

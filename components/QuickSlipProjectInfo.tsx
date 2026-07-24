@@ -3,7 +3,7 @@ import Input from '@/components/ui/Input';
 import Select from '@/components/ui/Select';
 import InputGroup, { InputGroupText } from '@/components/ui/InputGroup';
 import { useState } from 'react';
-import { User, UserAffiliation, UserStatus } from '@prisma/client';
+import { User, UserStatus } from '@prisma/client';
 import { getProjectPurposes } from '@/lib/utils';
 import {
   validStatuses,
@@ -15,9 +15,6 @@ import {
 
 // Note - Ken: the pulldown menus here (userStatus, userAffiliation, etc) recycle code from UserEditForm;
 // we tried to move those functions to something reusable but failed. Try again?
-// also, some of this relies on hard-coding type that may vary with different institutions
-// what can we do to make these more flexible? It doesn't look like we can devise types on the fly
-// like in a .env
 
 export default function QuickSlipProjectInfo({
   currentUser,
@@ -27,9 +24,9 @@ export default function QuickSlipProjectInfo({
   const [userStatus, setUserStatus] = useState<UserStatus | undefined>(
     undefined,
   );
-  const [userAffiliation, setUserAffiliation] = useState<
-    UserAffiliation | undefined
-  >(undefined);
+  const [userAffiliation, setUserAffiliation] = useState<string | undefined>(
+    undefined,
+  );
   const [selectedPurpose, setSelectedPurpose] = useState<string>('');
 
   const handleChange =
@@ -38,7 +35,7 @@ export default function QuickSlipProjectInfo({
       // console.log(`changing target: ${targetField}, ${e.target.value}`);
       switch (targetField) {
         case 'affiliation':
-          setUserAffiliation(e.target.value as UserAffiliation);
+          setUserAffiliation(e.target.value);
           break;
         case 'status':
           setUserStatus(e.target.value as UserStatus);

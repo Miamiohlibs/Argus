@@ -8,6 +8,7 @@ import { Roboto } from 'next/font/google';
 import { bibSectionAspace } from './BibSection-aspace';
 import { bibSectionDefault } from './BibSection-default';
 import { bibSectionOverrides } from './BibSectionOverrides';
+import { getUserAffiliations } from '@/lib/utils';
 
 const roboto = Roboto({
   weight: '400',
@@ -127,20 +128,16 @@ export const RequestSlipHalfPage = (props: RequestSlipProps) => {
         <div className={styles.column}>
           <h3 className={styles.h3}>Institution</h3>
           <div className="flex flex-col">
-            <div
-              role="checkbox"
-              aria-checked={affiliation == 'Miami'}
-              className={styles.listGroupDiv}
-            >
-              Miami University
-            </div>
-            <div
-              role="checkbox"
-              aria-checked={affiliation == 'Other'}
-              className={styles.listGroupDiv}
-            >
-              Other
-            </div>
+            {getUserAffiliations().map((option) => (
+              <div
+                key={option}
+                role="checkbox"
+                aria-checked={affiliation == option}
+                className={styles.listGroupDiv}
+              >
+                {option}
+              </div>
+            ))}
           </div>
         </div>
         <div className={styles.column2}>

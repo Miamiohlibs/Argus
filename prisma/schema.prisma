@@ -17,7 +17,7 @@ model User {
   createdAt   DateTime         @default(now())
   updatedAt   DateTime         @updatedAt
   role        Role             @default(user)
-  affiliation UserAffiliation?
+  affiliation String?
   status      UserStatus?
   printSlips  Boolean          @default(false)
   projects    Project[]        @relation("ProjectOwner")
@@ -37,7 +37,7 @@ model Project {
   subjects          String[]
   status            String?
   patronName        String?
-  patronAffiliation UserAffiliation?
+  patronAffiliation String?
   patronStatus      UserStatus?
   bibEntries        BibEntry[]
   user              User             @relation("ProjectOwner", fields: [userId], references: [clerkUserId], onDelete: Cascade)
@@ -90,11 +90,6 @@ enum Catalog {
   ALMA
   ASPACE
   CUSTOM
-}
-
-enum UserAffiliation {
-  Miami
-  Other
 }
 
 enum UserStatus {

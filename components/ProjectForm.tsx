@@ -12,8 +12,8 @@ import { toast } from 'react-toastify';
 import { useEffect, useState } from 'react';
 // import { useRouter } from 'next/navigation'; // Changed from react-router-dom
 import { Project } from '@prisma/client';
-import { getProjectPurposes, getSubjects } from '@/lib/utils';
-import { UserAffiliation, UserStatus } from '@prisma/client';
+import { getProjectPurposes, getSubjects, getUserAffiliations } from '@/lib/utils';
+import { UserStatus } from '@prisma/client';
 
 type ProjectActionResult =
   | { success: true; data: Project; error?: never }
@@ -80,7 +80,7 @@ export default function ProjectForm({
 
   const projectPurposes = getProjectPurposes();
   const projectSubjects = getSubjects();
-  const patronAffiliations = Object.values(UserAffiliation);
+  const patronAffiliations = getUserAffiliations();
   const patronStatuses = Object.values(UserStatus);
 
   const purposeSelectOptions = projectPurposes.map((item: string) => (
@@ -149,8 +149,8 @@ export default function ProjectForm({
   const handlePatronAffiliationChange = (
     e: React.ChangeEvent<HTMLSelectElement | null>,
   ) => {
-    if (patronAffiliations.includes(e.target.value as UserAffiliation)) {
-      setSelectedPatronAffiliation(e.target.value as UserAffiliation);
+    if (patronAffiliations.includes(e.target.value)) {
+      setSelectedPatronAffiliation(e.target.value);
     }
   };
   const handlePatronStatusChange = (
