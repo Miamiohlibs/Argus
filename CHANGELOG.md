@@ -2,11 +2,25 @@
 
 ## 0.9.0 - TBD
 
-### Changed
+### Fixed
 
-- New .env variables: ASPACE_API_BASE_URL, ASPACE_USER, ASPACE_PASSWORD, ASPACE_PUBLIC_BASE_URL, NEXT_PUBLIC_CATALOGS
+- Did we "fix" anything?
+
+### Added
+
+- New .env variables: ASPACE_API_BASE_URL, ASPACE_USER, ASPACE_PASSWORD, ASPACE_PUBLIC_BASE_URL, NEXT_PUBLIC_CATALOGS, NEXT_PUBLIC_USER_AFFILIATIONS,NEXT_PUBLIC_USER_STATUSES
+- Added support for ArchivesSpace
 - callNumberOverrides -> these files need to be reset to blank for the release
 - titleOverrides -> these files need to be reset to blank for the release
+- drops and replaces User.status -- we'll need to update the User table for the main argus version when we install this version.
+- Added support for Patron Info that is different from the User info, so library staff can create a project for a patron who doesn't have an account; useful for one-time reference transactions, etc.
+- Added support for printing selected pull slips from a project rather than "all" or "just one".
+
+### Changed
+
+- Changed UserStatus and UserAffiliation to .env settings rather than hard-coded enums in Prisma schema, for ease of adoption at other institutions.
+- Changed UI framework from Bootstrap 5 to Tailwind 4 for better compatibility with Next.js.
+- Moved from Next.js v. 15 to v. 16.
 
 ## 0.8.3 - 2026-04-29
 
