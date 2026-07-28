@@ -1,24 +1,17 @@
 'use server';
 import {
   AspaceClient,
-  repoResourcesSchema,
-  repoTopContainerSchema,
   repoArchivalObjectSchema,
 } from '@kenxirwin/archives-space-api-client';
 import logger from '@/lib/logger';
 import callNumberOverrides from '@/lib/catalogs/aspace/callNumberOverrides';
 import titleOverrides from '@/lib/catalogs/aspace/titleOverrides';
-import type {
-  RepoArchivalObject,
-  RepoResources,
-  RepoTopContainer,
-} from '@kenxirwin/archives-space-api-client';
+import type { RepoArchivalObject } from '@kenxirwin/archives-space-api-client';
 import type {
   BibDataDraft,
   ItemDataDraft,
   CatalogSearchResult,
 } from '@/lib/catalogs/types';
-import { ZodError } from 'zod';
 import { HandleMissingInstances } from './handleMissingInstances';
 export interface ArchivalObjectExtraInfo {
   numItems: number;
@@ -41,9 +34,9 @@ export async function getArchivalObjectData(
   const parsed = repoArchivalObjectSchema.parse(raw);
 
   /* 
-          If the archival object doesn't have any instances, try finding some 
-          by searching down the tree of the main resource
-        */
+    If the archival object doesn't have any instances, try finding some 
+    by searching down the tree of the main resource
+    */
   if (parsed.instances.length == 0) {
     const parentResourceUrl = parsed.resource.ref;
     logger.verbose(`parentResourceUrl: ${parentResourceUrl}`);
