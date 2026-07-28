@@ -6,25 +6,12 @@ It is called by: searchBibs/page.tsx > RecordSearchForm > searchCatalogByAny@act
 import {
   AspaceClient,
   repoResourcesSchema,
-  repoTopContainerSchema,
-  repoArchivalObjectSchema,
 } from '@kenxirwin/archives-space-api-client';
 import logger from '@/lib/logger';
-import callNumberOverrides from '@/lib/catalogs/aspace/callNumberOverrides';
-import titleOverrides from '@/lib/catalogs/aspace/titleOverrides';
-import type {
-  RepoArchivalObject,
-  RepoResources,
-  RepoTopContainer,
-} from '@kenxirwin/archives-space-api-client';
-import type {
-  BibDataDraft,
-  ItemDataDraft,
-  CatalogSearchResult,
-} from '@/lib/catalogs/types';
+import type { BibDataDraft, ItemDataDraft } from '@/lib/catalogs/types';
 import { ZodError } from 'zod';
-import { HandleMissingInstances } from './aspace/handleMissingInstances';
 import { getRepoResources } from './aspace/handleRepoResources';
+import { getTopContainers } from './aspace/handleTopContainers';
 import { getArchivalObjectData } from './aspace/handleArchivalObjects';
 
 export interface ArchivalObjectExtraInfo {
@@ -102,13 +89,7 @@ export async function searchByUrl(url: string, client: AspaceClient) {
 
       // https://archivesstaff.lib.miamioh.edu/api/repositories/2/top_containers/7838
       case /repositories\/\d+\/top_containers\/\d+/.test(url): {
-        logger.verbose('aspaceSearch.searchByUrl found topContainers');
-
-        const parsed = repoTopContainerSchema.parse(raw);
-        const argusData = repoTopContainerToDraft(parsed, publicUrl);
-        logger.verbose(`ArgusData for repoTpContainer: ${argusData}`);
-        logger.verbose('type: top containers');
-        return argusData;
+        return await getTopContainers(raw, url, publicUrl);
         break;
       }
       // https://archivesspace.lib.miamioh.edu/repositories/2/archival_objects/13405
@@ -134,43 +115,4 @@ export async function searchByUrl(url: string, client: AspaceClient) {
       throw error;
     }
   }
-}
-
-/*
- * repoTopContainerToDraft
- */
-function repoTopContainerToDraft(data: RepoTopContainer, url: string) {
-  const bibData: BibDataDraft = {
-    author: 'Unknown',
-    callNumber: callNumberOverrides.topContainer?.bib?.(data) ?? data.indicator,
-    itemTitle: titleOverrides.topContainer?.(data) ?? data.long_display_string,
-    catalog: 'ASPACE',
-    catalogId: data.uri,
-    catalogIdType: 'uri',
-    location_codes: data.repository._resolved?.slug ?? '',
-    location_display: data.repository._resolved?.name ?? '',
-    notes: '',
-    pub_date: null,
-    publisher: null,
-    totalItems: 1,
-    url: url,
-  };
-
-  const itemData: ItemDataDraft[] = [
-    {
-      clientKey: `item-0`,
-      barcode: '',
-      box: '',
-      call_number:
-        callNumberOverrides.topContainer?.item?.(data) ?? data.indicator,
-      copy_id: '',
-      description: data.indicator,
-      folder: '',
-      location_code: data.repository._resolved?.slug ?? '',
-      location_name: data.repository._resolved?.name ?? '',
-      ms: '',
-    },
-  ];
-
-  return { bibData, itemData };
 }
