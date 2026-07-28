@@ -1,27 +1,10 @@
 'use server';
-import {
-  AspaceClient,
-  repoResourcesSchema,
-  repoTopContainerSchema,
-  repoArchivalObjectSchema,
-} from '@kenxirwin/archives-space-api-client';
+import { repoTopContainerSchema } from '@kenxirwin/archives-space-api-client';
 import logger from '@/lib/logger';
 import callNumberOverrides from '@/lib/catalogs/aspace/callNumberOverrides';
 import titleOverrides from '@/lib/catalogs/aspace/titleOverrides';
-import type {
-  RepoArchivalObject,
-  RepoResources,
-  RepoTopContainer,
-} from '@kenxirwin/archives-space-api-client';
-import type {
-  BibDataDraft,
-  ItemDataDraft,
-  CatalogSearchResult,
-} from '@/lib/catalogs/types';
-import { ZodError } from 'zod';
-import { HandleMissingInstances } from './handleMissingInstances';
-import { getRepoResources } from './handleRepoResources';
-import { getArchivalObjectData } from './handleArchivalObjects';
+import type { RepoTopContainer } from '@kenxirwin/archives-space-api-client';
+import type { BibDataDraft, ItemDataDraft } from '@/lib/catalogs/types';
 
 export async function getTopContainers(
   raw: any,
