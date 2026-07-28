@@ -82,10 +82,14 @@ const getWesternItemCallNumbers = (data: RepoArchivalObject) => {
 const overrides: AspaceCallNumberOverrides = {
   resources: {
     bib(data) {
-      const itemCallNumbers = data.instances.map(
-        (item) => item.sub_container?.top_container?._resolved?.display_string,
-      );
-      return condenseItemRange(itemCallNumbers);
+      if (data.hasOwnProperty('instances') && data.instances.length > 0) {
+        const itemCallNumbers = data.instances.map(
+          (item) =>
+            item.sub_container?.top_container?._resolved?.display_string,
+        );
+        return condenseItemRange(itemCallNumbers);
+      }
+      return 'Unknown';
     },
   },
   archivalObject: {
