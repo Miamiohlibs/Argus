@@ -96,6 +96,10 @@ export async function HandleMissingInstances(
     'record_uri',
     originalUri?.toString(), // not sure why toString is needed, but it is
   );
+  return await getExtraInfoFromNode(node, client);
+}
+
+export async function getExtraInfoFromNode(node: any, client: AspaceClient) {
   const {
     items,
     numItems,
