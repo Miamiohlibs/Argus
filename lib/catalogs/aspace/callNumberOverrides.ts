@@ -90,16 +90,29 @@ const overrides: AspaceCallNumberOverrides = {
   },
   archivalObject: {
     bib(data, extraInfo) {
+      let summaryInfo = extraInfo?.summaryInfo ?? '';
       logger.silly('running archivalObject.bib override');
       data && logger.silly('data present');
-      extraInfo && logger.silly(`extraInfo present`);
+      extraInfo &&
+        logger.silly(`extraInfo present: ${JSON.stringify(extraInfo)}`);
       if (isWesternCollection(data)) {
         const matches = getWesternItemCallNumbers(data);
         return condenseItemRange(matches);
       }
       if (extraInfo) {
-        logger.silly('trying to extra call number from extraInfo...');
-        return `${extraInfo.firstRecordArgusData.bibData.callNumber}... (${extraInfo.numItems} items)`;
+        console.log(JSON.stringify(extraInfo, null, 2));
+        logger.silly('trying to extract call number from extraInfo...');
+        let summaryInfo = `(${extraInfo.numItems} items)`;
+
+        let derivedCallNumber =
+          extraInfo.firstRecordArgusData.bibData.callNumber;
+        logger.silly(`derivedCallNumber: ${derivedCallNumber}`);
+        if (extraInfo.summaryInfo != '') {
+          summaryInfo = extraInfo.summaryInfo;
+          derivedCallNumber =
+            derivedCallNumber?.replace(/\.\.\. \(\d+ items\)/, '') ?? '';
+        }
+        return `${derivedCallNumber}... (${summaryInfo})`;
       }
       // else, if not Western...
       const displayString = data.instances

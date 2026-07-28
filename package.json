@@ -8,7 +8,10 @@
     "build": "dotenv -c -- next build",
     "start": "dotenv -c -- next start",
     "lint": "dotenv -c -- eslint .",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "test": "vitest",
+    "test:watch": "vitest --watch",
+    "test:console": "vitest --silent=false"
   },
   "dependencies": {
     "@clerk/nextjs": "^7.0.4",
@@ -41,7 +44,8 @@
     "eslint-config-next": "16.2.11",
     "prisma": "^6.12.0",
     "tailwindcss": "^4.3.2",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^4.1.10"
   },
   "overrides": {
     "effect": "^3.20.0",
