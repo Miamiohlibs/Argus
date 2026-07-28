@@ -74,11 +74,10 @@ export async function HandleMissingInstances(
 
   console.log(`numItems: ${numItems}`);
   if (numItems > 0) {
-    const firstItemUrl =
-      process.env.ASPACE_API_BASE_URL + node.children[0].record_uri;
+    const firstItemUrl = process.env.ASPACE_API_BASE_URL + items[0].record_uri;
     const firstRecordArgusData = await searchByUrl(firstItemUrl, client);
     console.log(`numItems: ${numItems}`);
-    console.log(`first child = ${JSON.stringify(node.children[0])}`);
+    // console.log(`first child = ${JSON.stringify(node.children[0])}`);
     const extraInfo = {
       numSeries,
       numSubseries,
