@@ -1,0 +1,44 @@
+{
+    "title": "Subseries II: Miami University Student Diaries, 1943 - 1944",
+    "id": 13296,
+    "record_uri": "/repositories/2/archival_objects/13296",
+    "publish": true,
+    "suppressed": false,
+    "node_type": "archival_object",
+    "level": "subseries",
+    "has_children": true,
+    "children": [
+        {
+            "title": "Allen, Joan, 1943",
+            "id": 13297,
+            "record_uri": "/repositories/2/archival_objects/13297",
+            "publish": true,
+            "suppressed": false,
+            "node_type": "archival_object",
+            "level": "item",
+            "instance_types": [
+                "text"
+            ],
+            "has_children": false,
+            "children": [],
+            "containers": []
+        },
+        {
+            "title": "[anonymous], 1943",
+            "id": 13299,
+            "record_uri": "/repositories/2/archival_objects/13299",
+            "publish": true,
+            "suppressed": false,
+            "node_type": "archival_object",
+            "level": "item",
+            "instance_types": [
+                "text"
+            ],
+            "has_children": false,
+            "children": [],
+            "containers": []
+        }
+    ],
+    "instance_types": [],
+    "containers": []
+}

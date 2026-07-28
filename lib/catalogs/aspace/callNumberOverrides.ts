@@ -98,7 +98,8 @@ const overrides: AspaceCallNumberOverrides = {
         return condenseItemRange(matches);
       }
       if (extraInfo) {
-        logger.silly('trying to extra call number from extraInfo...');
+        console.log(JSON.stringify(extraInfo, null, 2));
+        logger.silly('trying to extract call number from extraInfo...');
         return `${extraInfo.firstRecordArgusData.bibData.callNumber}... (${extraInfo.numItems} items)`;
       }
       // else, if not Western...

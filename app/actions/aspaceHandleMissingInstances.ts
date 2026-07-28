@@ -15,7 +15,9 @@ export async function HandleMissingInstances(
   parentResourceUrl: string,
   client: AspaceClient,
 ) {
-  console.log(`looking for more info about ${parentResourceUrl}`);
+  console.log(
+    `HandleMissingInstances(): looking for more info about ${parentResourceUrl}`,
+  );
   const resourceWithTree: RepoResources = await getResourceTree(
     parentResourceUrl,
     client,
