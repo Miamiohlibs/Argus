@@ -24,29 +24,13 @@ export function SummarizeHoldings(extraInfo: any) {
   if (extraInfo.hasOwnProperty('numItems') && extraInfo.numItems > 0) {
     summaryInfo.push(`${extraInfo.numItems} items`);
   }
+  if (extraInfo.hasOwnProperty('numSubGroups') && extraInfo.numSubGroups > 0) {
+    summaryInfo.push(`${extraInfo.numSubGroups} items`);
+  }
   return summaryInfo.join('; ');
 }
-export async function HandleMissingInstances(
-  originalUri: string,
-  parentResourceUrl: string,
-  client: AspaceClient,
-) {
-  console.log(
-    `HandleMissingInstances(): looking for more info about ${parentResourceUrl}`,
-  );
-  const resourceWithTree: RepoResources = await getResourceTree(
-    parentResourceUrl,
-    client,
-  );
-  console.log(`Resource Title: ${resourceWithTree.title}`);
-  console.log(
-    `find key value pair in tree with record_uri: "${originalUri?.toString()}"`,
-  );
-  const node = findNodeByKeyValuePair(
-    resourceWithTree,
-    'record_uri',
-    originalUri?.toString(), // not sure why toString is needed, but it is
-  );
+
+export function getChildren(node: any) {
   const items = findChildren(
     {
       hasKeyValue: { key: 'level', value: 'item' },
@@ -71,6 +55,57 @@ export async function HandleMissingInstances(
     node,
   );
   const numSubseries = subseries.length;
+  const subgroups = findChildren(
+    {
+      hasKeyValue: { key: 'level', value: 'subgrp' },
+      recursive: true,
+    },
+    node,
+  );
+  const numSubGroups = subgroups.length;
+  return {
+    items,
+    numItems,
+    series,
+    numSeries,
+    subseries,
+    numSubseries,
+    subgroups,
+    numSubGroups,
+  };
+}
+
+export async function HandleMissingInstances(
+  originalUri: string,
+  parentResourceUrl: string,
+  client: AspaceClient,
+) {
+  console.log(
+    `HandleMissingInstances(): looking for more info about ${parentResourceUrl}`,
+  );
+  const resourceWithTree: RepoResources = await getResourceTree(
+    parentResourceUrl,
+    client,
+  );
+  console.log(`Resource Title: ${resourceWithTree.title}`);
+  console.log(
+    `find key value pair in tree with record_uri: "${originalUri?.toString()}"`,
+  );
+  const node = findNodeByKeyValuePair(
+    resourceWithTree,
+    'record_uri',
+    originalUri?.toString(), // not sure why toString is needed, but it is
+  );
+  const {
+    items,
+    numItems,
+    series,
+    numSeries,
+    subseries,
+    numSubseries,
+    subgroups,
+    numSubGroups,
+  } = getChildren(node);
 
   console.log(`numItems: ${numItems}`);
   if (numItems > 0) {
@@ -82,9 +117,11 @@ export async function HandleMissingInstances(
       numSeries,
       numSubseries,
       numItems,
+      numSubGroups,
       firstItemUrl,
       firstRecordArgusData,
       items,
+      subgroups,
       summaryInfo: '',
     };
     const summaryInfo = SummarizeHoldings(extraInfo);
