@@ -3,23 +3,31 @@ import { repoResourcesSchema } from '@kenxirwin/archives-space-api-client';
 import logger from '@/lib/logger';
 import callNumberOverrides from '@/lib/catalogs/aspace/callNumberOverrides';
 import titleOverrides from '@/lib/catalogs/aspace/titleOverrides';
-import type { RepoResources } from '@kenxirwin/archives-space-api-client';
+import type {
+  AspaceClient,
+  RepoResources,
+} from '@kenxirwin/archives-space-api-client';
 import type { BibDataDraft, ItemDataDraft } from '@/lib/catalogs/types';
 
 export async function getRepoResources(
   raw: any,
   url: string,
   publicUrl: string,
+  client: AspaceClient,
 ) {
   logger.verbose('aspaceSearch.searchByUrl found repoResources');
   const parsed = repoResourcesSchema.parse(raw);
-  const argusData = repoResourcesToDraft(parsed, publicUrl);
+  const argusData = await repoResourcesToDraft(parsed, publicUrl, client);
   logger.verbose(JSON.stringify(argusData, null, 2));
   logger.verbose('type: resources');
   return argusData;
 }
 
-function repoResourcesToDraft(data: RepoResources, url: string) {
+async function repoResourcesToDraft(
+  data: RepoResources,
+  url: string,
+  client: AspaceClient,
+) {
   const bibData: BibDataDraft = {
     author:
       data.linked_agents
@@ -27,7 +35,7 @@ function repoResourcesToDraft(data: RepoResources, url: string) {
         .map((entry) => entry._resolved?.names[0].sort_name)
         .join('; ') ?? 'Unknown',
     callNumber:
-      callNumberOverrides.resources?.bib?.(data) ??
+      (await callNumberOverrides.resources?.bib?.(data, client)) ??
       `${data.id_0}--${data.id_1}--${data.id_2}`,
     itemTitle: titleOverrides.resources?.(data) ?? data.title,
     catalog: 'ASPACE',
