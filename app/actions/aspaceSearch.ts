@@ -16,12 +16,14 @@ import { getArchivalObjectData } from './aspace/handleArchivalObjects';
 
 export interface ArchivalObjectExtraInfo {
   numItems: number;
-  sumSeries: number;
+  numSeries: number;
   numSubseries: number;
+  numSubGroups: number;
+  subgroups?: any[];
   summaryInfo: string;
-  firstItemUrl: string;
-  firstRecordArgusData: { bibData: BibDataDraft; itemData: ItemDataDraft };
-  items: any[];
+  firstItemUrl?: string;
+  firstRecordArgusData?: { bibData: BibDataDraft; itemData: ItemDataDraft[] };
+  items?: any[];
 }
 
 export async function getClient() {
@@ -83,7 +85,7 @@ export async function searchByUrl(url: string, client: AspaceClient) {
     switch (true) {
       // https://archivesstaff.lib.miamioh.edu/api/repositories/2/resources/634
       case /repositories\/\d+\/resources\/\d+/.test(url): {
-        return await getRepoResources(raw, url, publicUrl);
+        return await getRepoResources(raw, url, publicUrl, client);
         break;
       }
 
