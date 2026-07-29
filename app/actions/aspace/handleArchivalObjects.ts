@@ -13,15 +13,6 @@ import type {
   CatalogSearchResult,
 } from '@/lib/catalogs/types';
 import { HandleMissingInstances } from './handleMissingInstances';
-export interface ArchivalObjectExtraInfo {
-  numItems: number;
-  sumSeries: number;
-  numSubseries: number;
-  summaryInfo: string;
-  firstItemUrl: string;
-  firstRecordArgusData: { bibData: BibDataDraft; itemData: ItemDataDraft };
-  items: any[];
-}
 
 export async function getArchivalObjectData(
   raw: any,
