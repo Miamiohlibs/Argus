@@ -37,8 +37,9 @@ export interface AspaceCallNumberOverrides {
   archivalObject?: {
     bib?: (
       data: RepoArchivalObject,
+      client: AspaceClient,
       extraInfo?: ArchivalObjectExtraInfo,
-    ) => string;
+    ) => string | Promise<string>;
     item?: (item: ArchivalObjectInstance, data: RepoArchivalObject) => string;
     allItems?: (data: RepoArchivalObject) => string[];
   };
@@ -104,61 +105,59 @@ const overrides: AspaceCallNumberOverrides = {
         display first item and number of children
         */
 
-        console.log(`BIB DATA TREE: ${JSON.stringify(data.tree)}`);
         const treeUrlString = `${client.baseUrl}${data.tree.ref.replace('/tree', '')}`;
-        console.log(`FETCHING TREE DATA from: ${treeUrlString}`);
+        logger.debug(`FETCHING TREE DATA from: ${treeUrlString}`);
         const response = await client.getUrl(treeUrlString, {
           resolve: ['tree'],
         });
 
-        // console.log(`TREE: ${JSON.stringify(response.tree)}`);
-        // console.log(
-        //   `START OF TREE: ${JSON.stringify(response.tree._resolved).substring(0, 200)}`,
-        // );
         const extraInfo = await getExtraInfoFromNode(
           response.tree._resolved,
           client,
         );
-        // const children = getChildren(response.tree._resolved);
-        console.log(`BIB EXTRA INFO: ${JSON.stringify(extraInfo)}`);
-        // console.log(`CHILDREN INFO: ${JSON.stringify(children)}`);
+        logger.debug(`BIB EXTRA INFO: ${JSON.stringify(extraInfo)}`);
         let extraInfoCall;
         let firstCall;
 
+        // if there's no callnumber in the summary, and
+        // the first record includes call number info, get the first
+        // call-number-looking thing to include it in the summary
         if (
-          extraInfo.firstRecordArgusData?.bibData?.callNumber?.match(
-            callRegexMost,
-          )
-
-          //           const results = [...extraInfo.firstRecordArgusData?.bibData?.callNumber?.matchAll(callRegexMost)].map(match => match[1]);
-          //  firstCall = results[0]
+          !extraInfo.summaryInfo.match(callRegexMost) &&
+          !extraInfo.summaryInfo.match(callRegexWestern)
         ) {
-          extraInfoCall = extraInfo.firstRecordArgusData.bibData.callNumber;
-          const results = [...extraInfoCall.matchAll(callRegexMost)].map(
-            (match) => match[1],
-          );
-          firstCall = results[0];
-          return `${firstCall}... ${extraInfo.summaryInfo}`;
-        } else if (
-          extraInfo.firstRecordArgusData?.bibData?.callNumber?.match(
-            callRegexWestern,
-          )
-        ) {
-          extraInfoCall = extraInfo.firstRecordArgusData.bibData.callNumber;
-          const results = [...extraInfoCall.matchAll(callRegexWestern)].map(
-            (match) => match[1],
-          );
-          firstCall = results[0];
-          return `${firstCall}... ${extraInfo.summaryInfo}`;
+          if (
+            extraInfo.firstRecordArgusData?.bibData?.callNumber?.match(
+              callRegexMost,
+            )
+          ) {
+            extraInfoCall = extraInfo.firstRecordArgusData.bibData.callNumber;
+            const results = [...extraInfoCall.matchAll(callRegexMost)].map(
+              (match) => match[1],
+            );
+            firstCall = results[0];
+            return `${firstCall}... (${extraInfo.summaryInfo})`;
+          } else if (
+            extraInfo.firstRecordArgusData?.bibData?.callNumber?.match(
+              callRegexWestern,
+            )
+          ) {
+            extraInfoCall = extraInfo.firstRecordArgusData.bibData.callNumber;
+            const results = [...extraInfoCall.matchAll(callRegexWestern)].map(
+              (match) => match[1],
+            );
+            firstCall = results[0];
+            return `${firstCall}... (${extraInfo.summaryInfo})`;
+          }
+          return extraInfo.summaryInfo;
         }
-        return extraInfo.summaryInfo;
       }
 
       return 'Unknown';
     },
   },
   archivalObject: {
-    bib(data, extraInfo) {
+    async bib(data, client, extraInfo) {
       let summaryInfo = extraInfo?.summaryInfo ?? '';
       logger.silly('running archivalObject.bib override');
       data && logger.silly('data present');

@@ -53,7 +53,7 @@ export async function getArchivalObjectData(
   return argusData;
 }
 
-function repoArchivalObjectToDraft(
+async function repoArchivalObjectToDraft(
   data: RepoArchivalObject,
   url: string,
   extraInfo?: any,
@@ -66,7 +66,7 @@ function repoArchivalObjectToDraft(
         .map((entry) => entry._resolved?.names[0].sort_name)
         .join('; ') ?? 'Unknown',
     callNumber:
-      callNumberOverrides.archivalObject?.bib?.(data, extraInfo) ??
+      (await callNumberOverrides.archivalObject?.bib?.(data, extraInfo)) ??
       data.instances
         .map(
           (instance) =>
