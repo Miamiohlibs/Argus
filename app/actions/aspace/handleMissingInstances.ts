@@ -25,7 +25,7 @@ export function SummarizeHoldings(extraInfo: any) {
     summaryInfo.push(`${extraInfo.numItems} items`);
   }
   if (extraInfo.hasOwnProperty('numSubGroups') && extraInfo.numSubGroups > 0) {
-    summaryInfo.push(`${extraInfo.numSubGroups} items`);
+    summaryInfo.push(`${extraInfo.numSubGroups} subgroups`);
   }
   return summaryInfo.join('; ');
 }
@@ -99,7 +99,10 @@ export async function HandleMissingInstances(
   return await getExtraInfoFromNode(node, client);
 }
 
-export async function getExtraInfoFromNode(node: any, client: AspaceClient) {
+export async function getExtraInfoFromNode(
+  node: any,
+  client: AspaceClient,
+): Promise<ArchivalObjectExtraInfo> {
   const {
     items,
     numItems,
@@ -112,8 +115,14 @@ export async function getExtraInfoFromNode(node: any, client: AspaceClient) {
   } = getChildren(node);
 
   console.log(`numItems: ${numItems}`);
-  if (numItems > 0) {
-    const firstItemUrl = process.env.ASPACE_API_BASE_URL + items[0].record_uri;
+  if (numItems > 0 || numSubGroups > 0) {
+    let firstItemUrl;
+    if (numItems > 0) {
+      firstItemUrl = process.env.ASPACE_API_BASE_URL + items[0].record_uri;
+    } else {
+      firstItemUrl = process.env.ASPACE_API_BASE_URL + subgroups[0].record_uri;
+    }
+    // const firstItemUrl = process.env.ASPACE_API_BASE_URL + items[0].record_uri;
     const firstRecordArgusData = await searchByUrl(firstItemUrl, client);
     console.log(`numItems: ${numItems}`);
     // console.log(`first child = ${JSON.stringify(node.children[0])}`);
@@ -132,6 +141,15 @@ export async function getExtraInfoFromNode(node: any, client: AspaceClient) {
     extraInfo.summaryInfo = summaryInfo;
     return extraInfo;
   } else {
-    return {};
+    const extraInfo = {
+      numSeries,
+      numSubseries,
+      numItems,
+      numSubGroups,
+      subgroups,
+      summaryInfo: '',
+    };
+    extraInfo.summaryInfo = SummarizeHoldings(extraInfo);
+    return extraInfo;
   }
 }
