@@ -31,7 +31,7 @@ export interface AspaceCallNumberOverrides {
     item?: (item: ResourceInstance, data: RepoResources) => string;
   };
   topContainer?: {
-    bib?: (data: RepoTopContainer) => string;
+    bib?: (data: RepoTopContainer) => string | Promise<string>;
     item?: (data: RepoTopContainer) => string;
   };
   archivalObject?: {
