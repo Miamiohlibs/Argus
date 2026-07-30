@@ -19,10 +19,11 @@ export async function getTopContainers(
   return argusData;
 }
 
-function repoTopContainerToDraft(data: RepoTopContainer, url: string) {
+async function repoTopContainerToDraft(data: RepoTopContainer, url: string) {
   const bibData: BibDataDraft = {
     author: 'Unknown',
-    callNumber: callNumberOverrides.topContainer?.bib?.(data) ?? data.indicator,
+    callNumber:
+      (await callNumberOverrides.topContainer?.bib?.(data)) ?? data.indicator,
     itemTitle: titleOverrides.topContainer?.(data) ?? data.long_display_string,
     catalog: 'ASPACE',
     catalogId: data.uri,

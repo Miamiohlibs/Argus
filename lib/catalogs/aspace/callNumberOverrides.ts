@@ -1,36 +1,45 @@
 import type {
+  AspaceClient,
   RepoArchivalObject,
   RepoResources,
   RepoTopContainer,
 } from '@kenxirwin/archives-space-api-client';
 import { ArchivalObjectExtraInfo } from '@/app/actions/aspaceSearch';
 import logger from '@/lib/logger';
+import {
+  getChildren,
+  getExtraInfoFromNode,
+} from '@/app/actions/aspace/handleMissingInstances';
 
 type ResourceInstance = RepoResources['instances'][number];
 type ArchivalObjectInstance = RepoArchivalObject['instances'][number];
 
-const callRegexMost = /\[*\d+(A|M)\-[A-Z]\-\d+[A-Z]\]*/g;
+const callRegexMost = /(\[*\d+(A|M)\-[A-Z]\-\d+[A-Z]\]*)/g;
 // const callRegexRegGlobal = /\d+(A|M)\-[A-Z]\-\d+[A-Z]/g;
 //const callRegexWestern = /\[Range \d+[A-Z]\];* Box \d+/g;
-const callRegexWestern = /\[Range \d+[A-Z]\];* Box \d+/g;
+const callRegexWestern = /(\[Range \d+[A-Z]\];* Box \d+)/g;
 // const callRegexWesternGlobal = /\[Range \d+[A-Z]\];* Box \d+/g;
 
 const westernAncestorRef = '/repositories/2/resources/4';
 
 export interface AspaceCallNumberOverrides {
   resources?: {
-    bib?: (data: RepoResources) => string;
+    bib?: (
+      data: RepoResources,
+      client: AspaceClient,
+    ) => string | Promise<string>;
     item?: (item: ResourceInstance, data: RepoResources) => string;
   };
   topContainer?: {
-    bib?: (data: RepoTopContainer) => string;
+    bib?: (data: RepoTopContainer) => string | Promise<string>;
     item?: (data: RepoTopContainer) => string;
   };
   archivalObject?: {
     bib?: (
       data: RepoArchivalObject,
+      client: AspaceClient,
       extraInfo?: ArchivalObjectExtraInfo,
-    ) => string;
+    ) => string | Promise<string>;
     item?: (item: ArchivalObjectInstance, data: RepoArchivalObject) => string;
     allItems?: (data: RepoArchivalObject) => string[];
   };
@@ -81,15 +90,74 @@ const getWesternItemCallNumbers = (data: RepoArchivalObject) => {
 
 const overrides: AspaceCallNumberOverrides = {
   resources: {
-    bib(data) {
-      const itemCallNumbers = data.instances.map(
-        (item) => item.sub_container?.top_container?._resolved?.display_string,
-      );
-      return condenseItemRange(itemCallNumbers);
+    async bib(data: RepoResources, client: AspaceClient) {
+      if (data.hasOwnProperty('instances') && data.instances.length > 0) {
+        const itemCallNumbers = data.instances.map(
+          (item) =>
+            item.sub_container?.top_container?._resolved?.display_string,
+        );
+        return condenseItemRange(itemCallNumbers);
+      } else if (data.tree) {
+        /* 
+        else, get the resource tree, look for children
+        count children (could be subgrp)
+        get first item call number
+        display first item and number of children
+        */
+
+        const treeUrlString = `${client.baseUrl}${data.tree.ref.replace('/tree', '')}`;
+        logger.debug(`FETCHING TREE DATA from: ${treeUrlString}`);
+        const response = await client.getUrl(treeUrlString, {
+          resolve: ['tree'],
+        });
+
+        const extraInfo = await getExtraInfoFromNode(
+          response.tree._resolved,
+          client,
+        );
+        logger.debug(`BIB EXTRA INFO: ${JSON.stringify(extraInfo)}`);
+        let extraInfoCall;
+        let firstCall;
+
+        // if there's no callnumber in the summary, and
+        // the first record includes call number info, get the first
+        // call-number-looking thing to include it in the summary
+        if (
+          !extraInfo.summaryInfo.match(callRegexMost) &&
+          !extraInfo.summaryInfo.match(callRegexWestern)
+        ) {
+          if (
+            extraInfo.firstRecordArgusData?.bibData?.callNumber?.match(
+              callRegexMost,
+            )
+          ) {
+            extraInfoCall = extraInfo.firstRecordArgusData.bibData.callNumber;
+            const results = [...extraInfoCall.matchAll(callRegexMost)].map(
+              (match) => match[1],
+            );
+            firstCall = results[0];
+            return `${firstCall}... (${extraInfo.summaryInfo})`;
+          } else if (
+            extraInfo.firstRecordArgusData?.bibData?.callNumber?.match(
+              callRegexWestern,
+            )
+          ) {
+            extraInfoCall = extraInfo.firstRecordArgusData.bibData.callNumber;
+            const results = [...extraInfoCall.matchAll(callRegexWestern)].map(
+              (match) => match[1],
+            );
+            firstCall = results[0];
+            return `${firstCall}... (${extraInfo.summaryInfo})`;
+          }
+          return extraInfo.summaryInfo;
+        }
+      }
+
+      return 'Unknown';
     },
   },
   archivalObject: {
-    bib(data, extraInfo) {
+    async bib(data, client, extraInfo) {
       let summaryInfo = extraInfo?.summaryInfo ?? '';
       logger.silly('running archivalObject.bib override');
       data && logger.silly('data present');
@@ -105,7 +173,7 @@ const overrides: AspaceCallNumberOverrides = {
         let summaryInfo = `(${extraInfo.numItems} items)`;
 
         let derivedCallNumber =
-          extraInfo.firstRecordArgusData.bibData.callNumber;
+          extraInfo.firstRecordArgusData?.bibData.callNumber;
         logger.silly(`derivedCallNumber: ${derivedCallNumber}`);
         if (extraInfo.summaryInfo != '') {
           summaryInfo = extraInfo.summaryInfo;
