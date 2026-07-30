@@ -48,6 +48,7 @@ Set up a `.env` file in the root directory of the project. You can copy and past
 ```
 # Installation config
 NEXT_PUBLIC_APP_BASEPATH=/argus. # or whatever path you want to use; skip this to use /
+NEXT_PUBLIC_CATALOGS='[{"slug":"ALMA","label":"Alma"},{"slug":"ASPACE", "label": "ArchivesSpace"}]' #remove any not in use, or change the label if you want it referred to differently
 NEXT_PUBLIC_IS_DEV_ENV=false #when true, will display some ugly-useful JSON data on some results pages
 PORT=3333 # or whatever port you want to use
 NODE_ENV=development #or production -- note: production required to 'npm run build'; doesn't build under developement
@@ -57,6 +58,8 @@ DATABASE_URL=postgresql://... # database connection string; I use Neon
 SHADOW_DATABASE_URL=postgresql://... # if hosting locally, you may need to specify a shadowdb for handling migrations
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
 CLERK_SECRET_KEY=
+
+## ALMA/PRIMO CONFIG
 ALMA_BASEURL=https://api-na.hosted.exlibrisgroup.com #or whichever server is best for you
 ALMA_API_KEY= #your alma api key
 ALMA_PERMALINK_BASEURL= # your local alma permalink base url, e.g. https://ohiolink-mu.primo.exlibrisgroup.com/permalink/01OHIOLINK_MU/i4qs0/alma
@@ -65,6 +68,13 @@ PRIMO_API_KEY=
 PRIMO_QUERYSTRING=tab=Everything&scope=MyInst_and_CI&vid=01OHIOLINK_MU:MU #use your tab, scope, and vid
 NEXT_PUBLIC_BARCODE_PREFIX=12345
 NEXT_PUBLIC_INST_CODE=4321
+
+## ARCHIVES SPACE CONFIG
+ASPACE_API_BASE_URL=
+ASPACE_PUBLIC_BASE_URL=
+ASPACE_USER=
+ASPACE_PASSWORD=
+
 
 # Local UI Customizations
 NEXT_PUBLIC_NAV_COLOR=primary #suggested: primary, dark, success (bootstrap theme colors suitable for light text)
@@ -100,16 +110,19 @@ LOG_LEVEL=info #info is the default, choose from: error,warn,info,verbose,debug,
    - Run `npx prisma generate` to create prisma's database structure locally.
    - Then run `npx prisma migrate dev` to update the remote database to match the required data format.
 4. Create a Clerk account; create a new Clerk application using Google authentication. [See video demo (timestamp: 25:47-27:17)](https://youtu.be/I6DCo5RwHBE?t=1543) save the `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` and `CLERK_SECRET_KEY` provided in the setup process in the `.env` file.
-5. Add Alma / Primo details.
+5. Add Alma / Primo details (if using Alma/Primo).
    - Using the ExLibris Developer network, create API keys for Alma and Primo and add them to the `.env` file as `ALMA_API_KEY` and `PRIMO_API_KEY`.
    - Set your `ALMA_PERMALINK_BASEURL` in `.env`. To find this, identify an item in Primo that has a permalink that ends with 'alma' and a string of numbers (e.g., "https://ohiolink-mu.primo.exlibrisgroup.com/permalink/01OHIOLINK_MU/1bhrr0p/alma991013473189708518"). To get the base URL, just remove the numbers after "alma" -- this will be the consistent base URL for Alma/Primo items in your catalog.
    - Set your `PRIMO_QUERYSTRING` in `.env`. To find this, do a search in Primo and copy the URL. You only need the "tab", "scope", and "vid" paramters from the url, e.g. ("tab=Everything&scope=MyInst\*and_CI&vid=01OHIOLINK_MU:MU"). Include these paramters and leave out any others in the URL.
    - Set `NEXT_PUBLIC_BARCODE_PREFIX` with the first few numbers of your local Alma barcodes.
    - Set `NEXT_PUBLIC_INST_CODE` -- these will be the last four digits of your institution's Alma MMS IDs. For example, if an item has an MMS ID of `991017357419708518`, the institution code is `8518`. [Learn more about the "anatomy" of Alma record numbers](<https://knowledge.exlibrisgroup.com/Alma/Product_Documentation/010Alma_Online_Help*(English)/Metadata_Management/005Introduction_to_Metadata_Management/020Record_Numbers>). To find an example MMS ID, find a permalink as in step 5b -- the number after the "alma..." at the end of the permalink is an MMS ID; the last four digits become are institution code.
-
-6. Host the configured project on a server (could be hosted locally or on a third-party site like Heroku)
+6. Add ArchivesSpace details (if using ArchivesSpace)
+   - Create an ArchivesSpace API user for Argus [***with what permissions?***] and include those credentials as `ASPACE_API_USER`, `ASPACE_API_PASSWORD`
+   - The lookup function can take ArchivesSpaces URLs from either the API or from the public catalog. Set the base URLs for each of those: `ASPACE_API_BASE_URL` -- the API base url may look like 'https://aspace.your.org:8089' or 'https://aspace.your.org/api' -- do not include a trailing slash. `ASPACE_PUBLIC_BASE_URL` is likely to be simpler, like 'https://publicaspace.your.org'
+   - There is an additional, more complex ArchivesSpace setup step that will require more involved work and which probably cannot be done at setup time. See "ArchivesSpace call-number and title customization" below for details on adding custom scripts that can more accurately pull your title and call-number information from ArchivesSpace metadata.
+7. Host the configured project on a server (could be hosted locally or on a third-party site like Heroku)
    - Note: for testing things out initially, you can skip this step and host the project on a personal computer.
-7. Add optional local customizations to the `.env` file.
+8. Add optional local customizations to the `.env` file.
    - Set any or all local contact info settings: `NEXT_PUBLIC_CONTACT_DEPT`, `NEXT_PUBLIC_CONTACT_EMAIL`, `NEXT_PUBLIC_CONTACT_PHONE`. If used, these settings will add contact information to the About page and the Guest (unlogged-in user) page.
    - Set the `NEXT_PUBLIC_LOCATION_CODES_JSON` -- this is a JSON array (as a string) listing the in-house special collections locations used in the Alma catalog. Each array entry should be an object with the location code as "code" and the location name as "name". Optionally, you can also add `"unofficial":true` for entries that are not official locations in Alma. Example: `[{"code":"arcli","name":"Archives"},{"code":"mss","name":"Manuscript Collection"},{"code":"spcfo","name":"Folios"}]`. The locations listed here will be shown as options when creating a Custom Entry, and items from these locations will be sorted above other locations when looking up an item -- so if an item exists both in Special Collections and in the Main Stacks, the Special Collections item will appear higher in the display than the Main Stacks item. Unofficial locations are listed only when creating custom enties.
    - Edit `NEXT_PUBLIC_PROJECT_PURPOSES`. A project has a "purpose" associated with it, such as "class", "reference", etc. You can edit the list of purposes available based on the values defined in this array.
@@ -118,7 +131,7 @@ LOG_LEVEL=info #info is the default, choose from: error,warn,info,verbose,debug,
    - Set the `NEXT_PUBLIC_NAV_COLOR`. This defines the color of the header. You can use any [Bootstrap color](https://getbootstrap.com/docs/5.3/utilities/background/) suitable for pairing with light-colored text. Suggested values are: "primary" (blue), "dark" (dark grey), "success" (green). If you will maintain separate instances of Argus (such as one for testing, one for production) it can be helpful to choose different colors to quickly tell the user which instance they're using.
    - Set the `NEXT_PUBLIC_NAV_LABEL`. This text will be appended to the Argus logo text; so if you have a test instance, you might set the value to " -- TEST", and the header text with real "Argus -- TEST".
    - Set `NEXT_PUBLIC_IS_DEV_ENV`. Should be `false` for production; when true, will display some ugly/useful JSON data on some results pages.
-8. When the site is ready to go into production (i.e., after testing), use the Google Developer Console to create a project to handle authentication. Provide the Google project configuration to Clerk to let Google handle the authentication and have Clerk manage users. Refer to Clerk's documentation on [Deploying to production](https://clerk.com/docs/guides/development/deployment/production) for and this [video tutorial](https://youtu.be/qKU6MQp-g7w?si=Qq6pp1VvRVp64edq) guidance.
+9. When the site is ready to go into production (i.e., after testing), use the Google Developer Console to create a project to handle authentication. Provide the Google project configuration to Clerk to let Google handle the authentication and have Clerk manage users. Refer to Clerk's documentation on [Deploying to production](https://clerk.com/docs/guides/development/deployment/production) for and this [video tutorial](https://youtu.be/qKU6MQp-g7w?si=Qq6pp1VvRVp64edq) guidance.
 
 ### ArchivesSpace call-number and title customization
 
