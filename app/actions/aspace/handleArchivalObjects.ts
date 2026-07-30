@@ -44,9 +44,9 @@ export async function getArchivalObjectData(
 
   let argusData;
   if (Object.keys(extraInfo).length > 0) {
-    argusData = repoArchivalObjectToDraft(parsed, publicUrl, extraInfo);
+    argusData = repoArchivalObjectToDraft(parsed, publicUrl, client, extraInfo);
   } else {
-    argusData = repoArchivalObjectToDraft(parsed, publicUrl);
+    argusData = repoArchivalObjectToDraft(parsed, publicUrl, client);
   }
   logger.verbose(argusData);
   logger.verbose('type: archival objects');
@@ -56,6 +56,7 @@ export async function getArchivalObjectData(
 async function repoArchivalObjectToDraft(
   data: RepoArchivalObject,
   url: string,
+  client: AspaceClient,
   extraInfo?: any,
 ) {
   console.log(`EXTRA INFO: ${JSON.stringify(extraInfo)}`);
@@ -66,7 +67,11 @@ async function repoArchivalObjectToDraft(
         .map((entry) => entry._resolved?.names[0].sort_name)
         .join('; ') ?? 'Unknown',
     callNumber:
-      (await callNumberOverrides.archivalObject?.bib?.(data, extraInfo)) ??
+      (await callNumberOverrides.archivalObject?.bib?.(
+        data,
+        client,
+        extraInfo,
+      )) ??
       data.instances
         .map(
           (instance) =>
