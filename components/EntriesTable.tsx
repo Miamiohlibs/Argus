@@ -102,7 +102,8 @@ export default function EntriesTable({
         <Checkbox
           name="selectEntry[]"
           value={row.id}
-          label=""
+          label={`Select item: ${row.itemTitle}`}
+          labelHidden={true}
           onChange={(e) => handleItemCheck(row.id, e.target.checked)}
         ></Checkbox>
       ),
