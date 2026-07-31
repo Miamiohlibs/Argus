@@ -52,8 +52,8 @@ export default function ProjectsTable({
     event?.preventDefault();
     event?.stopPropagation();
 
-    console.log('Handler entered');
-    console.log(`Delete project with ID: ${projectId}`);
+    console.debug('Handler entered');
+    console.debug(`Delete project with ID: ${projectId}`);
 
     setProjects((prev) => prev.filter((p) => p.id !== projectId));
     setDeletedProjects((prev) => [...prev, projectId]);
@@ -68,7 +68,7 @@ export default function ProjectsTable({
   };
 
   useEffect(() => {
-    console.log('deletedProjects changed:', deletedProjects);
+    console.debug('deletedProjects changed:', deletedProjects);
   }, [deletedProjects]);
 
   const columns: TableColumn<ProjectWithUserAndCoEditors>[] = [

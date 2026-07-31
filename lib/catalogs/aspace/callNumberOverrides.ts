@@ -159,22 +159,22 @@ const overrides: AspaceCallNumberOverrides = {
   archivalObject: {
     async bib(data, client, extraInfo) {
       let summaryInfo = extraInfo?.summaryInfo ?? '';
-      logger.silly('running archivalObject.bib override');
-      data && logger.silly('data present');
+      logger.debug('running archivalObject.bib override');
+      data && logger.debug('data present');
       extraInfo &&
-        logger.silly(`extraInfo present: ${JSON.stringify(extraInfo)}`);
+        logger.debug(`extraInfo present: ${JSON.stringify(extraInfo)}`);
       if (isWesternCollection(data)) {
         const matches = getWesternItemCallNumbers(data);
         return condenseItemRange(matches);
       }
       if (extraInfo) {
-        console.log(JSON.stringify(extraInfo, null, 2));
-        logger.silly('trying to extract call number from extraInfo...');
+        logger.debug(JSON.stringify(extraInfo, null, 2));
+        logger.debug('trying to extract call number from extraInfo...');
         let summaryInfo = `(${extraInfo.numItems} items)`;
 
         let derivedCallNumber =
           extraInfo.firstRecordArgusData?.bibData.callNumber;
-        logger.silly(`derivedCallNumber: ${derivedCallNumber}`);
+        logger.debug(`derivedCallNumber: ${derivedCallNumber}`);
         if (extraInfo.summaryInfo != '') {
           summaryInfo = extraInfo.summaryInfo;
           derivedCallNumber =

@@ -2,7 +2,7 @@
     This is a more complex approach to identifying items attached to 
     archival_objects in ArchivesSpace
 */
-
+import logger from '@/lib/logger';
 import { findNodeByKeyValuePair } from '@/lib/findNodeByKeyValuePair';
 import { getResourceTree, searchByUrl } from '../aspaceSearch';
 import type {
@@ -80,15 +80,15 @@ export async function HandleMissingInstances(
   parentResourceUrl: string,
   client: AspaceClient,
 ) {
-  console.log(
+  logger.debug(
     `HandleMissingInstances(): looking for more info about ${parentResourceUrl}`,
   );
   const resourceWithTree: RepoResources = await getResourceTree(
     parentResourceUrl,
     client,
   );
-  console.log(`Resource Title: ${resourceWithTree.title}`);
-  console.log(
+  logger.debug(`Resource Title: ${resourceWithTree.title}`);
+  logger.debug(
     `find key value pair in tree with record_uri: "${originalUri?.toString()}"`,
   );
   const node = findNodeByKeyValuePair(
@@ -114,7 +114,7 @@ export async function getExtraInfoFromNode(
     numSubGroups,
   } = getChildren(node);
 
-  console.log(`numItems: ${numItems}`);
+  logger.debug(`numItems: ${numItems}`);
   if (numItems > 0 || numSubGroups > 0) {
     let firstItemUrl;
     if (numItems > 0) {
@@ -124,7 +124,6 @@ export async function getExtraInfoFromNode(
     }
     // const firstItemUrl = process.env.ASPACE_API_BASE_URL + items[0].record_uri;
     const firstRecordArgusData = await searchByUrl(firstItemUrl, client);
-    console.log(`numItems: ${numItems}`);
     // console.log(`first child = ${JSON.stringify(node.children[0])}`);
     const extraInfo = {
       numSeries,

@@ -59,7 +59,7 @@ async function repoArchivalObjectToDraft(
   client: AspaceClient,
   extraInfo?: any,
 ) {
-  console.log(`EXTRA INFO: ${JSON.stringify(extraInfo)}`);
+  logger.debug(`EXTRA INFO: ${JSON.stringify(extraInfo)}`);
   const bibData: BibDataDraft = {
     author:
       data.linked_agents
