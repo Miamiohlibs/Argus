@@ -16,6 +16,7 @@ export default function SearchBox({ action, pending, userId }: Props) {
           name="q"
           type="text"
           placeholder="Search title and author keywords …"
+          aria-label="Search keywords"
           disabled={pending}
         />
         <Button type="submit" disabled={pending}>
