@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 const DuplicateProjectButton = ({ id }: { id: string }) => {
   const duplicateProjectHandler = async (projectId: string) => {
     const result = await duplicateProject(projectId);
-    console.log(result);
+    console.debug(result);
     if (result.success) {
       toast.success('Project duplicated successfully!');
     } else {

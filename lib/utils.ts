@@ -10,7 +10,7 @@ export function getProjectPurposes(): string[] {
   // then alphabetize the list and append Other at the end
   try {
     if (process.env.NEXT_PUBLIC_PROJECT_PURPOSES) {
-      console.log(process.env.NEXT_PUBLIC_PROJECT_PURPOSES);
+      console.debug(process.env.NEXT_PUBLIC_PROJECT_PURPOSES);
       const purposes = JSON.parse(process.env.NEXT_PUBLIC_PROJECT_PURPOSES);
       const otherIndex = purposes.indexOf('Other');
       if (otherIndex >= 0) {
@@ -69,7 +69,7 @@ export function getSubjects(): string[] {
   // then alphabetize the list and append Other at the end
   try {
     if (process.env.NEXT_PUBLIC_SUBJECT_LIST) {
-      console.log(process.env.NEXT_PUBLIC_SUBJECT_LIST);
+      console.debug(process.env.NEXT_PUBLIC_SUBJECT_LIST);
       const subjects = JSON.parse(process.env.NEXT_PUBLIC_SUBJECT_LIST);
       const otherIndex = subjects.indexOf('Other');
       if (otherIndex >= 0) {

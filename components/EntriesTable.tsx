@@ -68,7 +68,7 @@ export default function EntriesTable({
     );
     if (!confirmed) return;
 
-    console.log(`Delete entry with ID: ${entryId}`);
+    console.debug(`Delete entry with ID: ${entryId}`);
 
     const { error } = await deleteEntry({ entryId, projectId }); // also gets {message}
     if (error) {

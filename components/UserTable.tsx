@@ -22,7 +22,7 @@ export default function UserTable({
   const [filterText, setFilterText] = useState('');
 
   const handleDelete = async (userIdtoDelete: string) => {
-    console.log(`Delete user with ID: ${userIdtoDelete}`);
+    console.debug(`Delete user with ID: ${userIdtoDelete}`);
     const confirmed = window.confirm(
       'Are you sure you want to delete this user and all their projects?',
     );
@@ -131,7 +131,11 @@ export default function UserTable({
           <>
             <Link
               href={`/admin/users/edit/${row.id}`}
-              className={buttonClasses({ variant: 'outline-primary', size: 'sm', className: 'me-1' })} // change path to your route
+              className={buttonClasses({
+                variant: 'outline-primary',
+                size: 'sm',
+                className: 'me-1',
+              })} // change path to your route
             >
               Edit
             </Link>

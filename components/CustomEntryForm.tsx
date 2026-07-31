@@ -144,7 +144,7 @@ const CustomEntryForm = ({
       toast.success(
         `Entry ${actionType === 'add' ? 'added' : 'updated'} successfully`,
       );
-      console.log('Entry saved:', data);
+      console.debug('Entry saved:', data);
 
       if (actionType === 'add') {
         formRef.current?.reset();
@@ -348,7 +348,7 @@ const CustomEntryForm = ({
           <Button
             type="submit"
             onClick={() => {
-              console.log('Form submitted');
+              console.debug('Form submitted');
             }}
           >
             Submit

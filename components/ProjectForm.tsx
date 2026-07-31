@@ -143,11 +143,11 @@ export default function ProjectForm({
   };
 
   const handlePublicChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(`Selected public: ${e.target.checked}`);
+    console.debug(`Selected public: ${e.target.checked}`);
     setSelectedPublic(e.target.checked);
   };
   const handleSubjectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    // console.log(`Selected purpose: ${e.target.value}`);
+    // console.debug(`Selected purpose: ${e.target.value}`);
     setSelectedSubject(e.target.value);
   };
   const handlePatronAffiliationChange = (
