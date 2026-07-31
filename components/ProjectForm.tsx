@@ -179,6 +179,7 @@ export default function ProjectForm({
             <Input
               type="text"
               name="title"
+              aria-label="project title"
               defaultValue={project?.title || ''}
               placeholder="Enter project title..."
               required
@@ -231,6 +232,7 @@ export default function ProjectForm({
                   <Input
                     type="text"
                     name="patronName"
+                    aria-label="patron name"
                     defaultValue={project?.patronName || ''}
                     placeholder="Enter patron name..."
                     required={false}
@@ -272,6 +274,7 @@ export default function ProjectForm({
               as="textarea"
               rows={4}
               name="notes"
+              aria-label="Project notes"
               defaultValue={project?.notes || ''}
               placeholder="Enter project notes or description (optional)..."
               className="resize-none"
