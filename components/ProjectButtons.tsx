@@ -42,7 +42,7 @@ const ProjectButtons = ({
           Back to Project
         </Link>
       )}
-      {includeAlma && canEdit && onPage !== 'searchBibs' && (
+      {includeAlma && canEdit && onPage !== 'searchBibs-ALMA' && (
         <Link
           href={`/searchBibs?projectId=${projectId.toString()}`}
           className={buttonClasses({
@@ -54,7 +54,7 @@ const ProjectButtons = ({
           Add Alma Item
         </Link>
       )}
-      {includeAspace && canEdit && onPage !== 'searchBibs' && (
+      {includeAspace && canEdit && onPage !== 'searchBibs-ASPACE' && (
         <Link
           href={`/searchBibs?catalog=ASPACE&projectId=${projectId.toString()}`}
           className={buttonClasses({

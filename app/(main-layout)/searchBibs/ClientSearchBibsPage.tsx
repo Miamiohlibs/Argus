@@ -58,7 +58,7 @@ const ClientSearchBibsPage = ({
       <ProjectMetadata project={project} />
       <ProjectButtons
         projectId={clientProjectId}
-        onPage="searchBibs"
+        onPage={`searchBibs-${resolvedCatalog}`}
         canEdit={userCanEditPage}
         canPrint={userCanPrint}
         divClass={'mb-3'}
