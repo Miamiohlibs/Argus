@@ -3,7 +3,7 @@ import { EntryWithItems } from '@/types/EntryWithItems';
 import { fetchCatalogEntry } from '@/app/actions/catalogSearch';
 import getEntryById from '@/app/actions/getEntryById';
 import { CatalogSearchResult } from '@/lib/catalogs/types';
-import BibResultsWrapper from '@/components/BibResultsWrapper';
+import BibResultsWrapper from '@/components/RecordSearchForm/BibResultsWrapper';
 import CustomEntryForm from '@/components/CustomEntryForm';
 import getUserInfo from '@/lib/getUserInfo';
 import NonOwnerAlert from '@/components/NonOwnerAlert';
