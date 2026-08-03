@@ -1,5 +1,5 @@
-import CreateProjectButton from '@/components/CreateProjectButton';
-import QuickSlipButton from '@/components/QuickSlipButton';
+import CreateProjectButton from '@/components/MainButtons/CreateProjectButton';
+import QuickSlipButton from '@/components/MainButtons/QuickSlipButton';
 
 const MainButtons = ({
   canPrint = false,

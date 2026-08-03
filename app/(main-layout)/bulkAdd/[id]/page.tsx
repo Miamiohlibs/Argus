@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import BulkAddForm from '@/components/BulkAddForm';
 import { getProject } from '@/app/actions/projectActions';
 import { ProjectWithUserAndBib } from '@/types/ProjectWithUserAndBib';
-import ProjectButtons from '@/components/ProjectButtons';
+import ProjectButtons from '@/components/Projects/ProjectButtons';
 import getUserInfo from '@/lib/getUserInfo';
 import NonOwnerAlert from '@/components/NonOwnerAlert';
 import ProjectMetadata from '@/components/ProjectMetadata';
@@ -37,7 +37,9 @@ export default async function BulkAddPage({
     return (
       <>
         {nonOwnerEditor && <NonOwnerAlert />}
-        <h1 className="text-3xl font-medium">Bulk Add Items: {project?.title}</h1>
+        <h1 className="text-3xl font-medium">
+          Bulk Add Items: {project?.title}
+        </h1>
         <ProjectMetadata project={project} />
 
         <ProjectButtons

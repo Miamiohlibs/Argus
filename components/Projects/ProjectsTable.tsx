@@ -10,7 +10,7 @@ import ArchiveDeleteProjectButton from './ArchiveDeleteProjectButton';
 import { User } from '@prisma/client';
 import Button, { buttonClasses } from '@/components/ui/Button';
 import { UnlockFill as Unlocked } from 'react-bootstrap-icons';
-import Badge from './ui/Badge';
+import Badge from '../ui/Badge';
 
 // Use Prisma's generated type that includes the user relation
 type ProjectWithUserAndCoEditors = Prisma.ProjectGetPayload<{

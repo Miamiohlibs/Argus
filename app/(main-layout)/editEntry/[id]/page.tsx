@@ -7,7 +7,7 @@ import BibResultsWrapper from '@/components/BibResultsWrapper';
 import CustomEntryForm from '@/components/CustomEntryForm';
 import getUserInfo from '@/lib/getUserInfo';
 import NonOwnerAlert from '@/components/NonOwnerAlert';
-import ProjectButtons from '@/components/ProjectButtons';
+import ProjectButtons from '@/components/Projects/ProjectButtons';
 import ProjectMetadata from '@/components/ProjectMetadata';
 import { getProject } from '@/app/actions/projectActions';
 

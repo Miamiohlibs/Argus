@@ -5,7 +5,7 @@ import { unauthorized } from 'next/navigation';
 import getUserInfo from '@/lib/getUserInfo';
 import { getProject } from '@/app/actions/projectActions';
 import ProjectMetadata from '@/components/ProjectMetadata';
-import ProjectButtons from '@/components/ProjectButtons';
+import ProjectButtons from '@/components/Projects/ProjectButtons';
 
 export async function generateMetadata(): Promise<Metadata> {
   return {

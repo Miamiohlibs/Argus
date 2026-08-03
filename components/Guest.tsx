@@ -3,7 +3,7 @@ import About from '@/components/About';
 import { buttonClasses } from '@/components/ui/Button';
 const Guest = () => {
   return (
-    <div className="guest mx-auto max-w-screen-xl px-4">
+    <div className="guest mx-auto max-w-7xl px-4">
       <h1 className="mb-4">Welcome</h1>
       {/* <p>Please sign in to view projects.</p> */}
       <SignInButton>

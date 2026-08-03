@@ -9,7 +9,7 @@ import { unauthorized } from 'next/navigation';
 import logger from '@/lib/logger';
 import NonOwnerAlert from '@/components/NonOwnerAlert';
 import ProjectMetadata from '@/components/ProjectMetadata';
-import ProjectButtons from '@/components/ProjectButtons';
+import ProjectButtons from '@/components/Projects/ProjectButtons';
 
 interface EditProjectPageProps {
   params: Promise<{ id: string }>;

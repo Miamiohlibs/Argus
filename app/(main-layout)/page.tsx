@@ -1,8 +1,8 @@
 import { Metadata } from 'next';
 import Guest from '@/components/Guest';
 import { currentUser } from '@clerk/nextjs/server';
-import ProjectsTable from '@/components/ProjectsTable';
-import MainButtons from '@/components/MainButtons';
+import ProjectsTable from '@/components/Projects/ProjectsTable';
+import MainButtons from '@/components/MainButtons/MainButtons';
 import getUserInfo from '@/lib/getUserInfo';
 import { redirect } from 'next/navigation';
 
