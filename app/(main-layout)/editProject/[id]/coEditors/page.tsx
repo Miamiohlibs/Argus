@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import { getProject } from '@/app/actions/projectActions';
-import CoEditorTable from '@/components/CoEditorTable';
+import CoEditorTable from './CoEditorTable';
 import ProjectMetadata from '@/components/Projects/ProjectMetadata';
 import { notFound } from 'next/navigation';
 import RemoveCoEditorButton from '@/components/Projects/RemoveCoEditorButton';
