@@ -1,6 +1,6 @@
 import { getCurrentUser } from '@/app/actions/getUser';
 import { getProjects } from '@/app/actions/projectActions';
-import UserDiagnosticInfo from '@/components/UserDiagnosticInfo';
+import UserDiagnosticInfo from './UserDiagnosticInfo';
 
 export default async function MePage() {
   const { user, error: userError } = await getCurrentUser();
