@@ -94,7 +94,12 @@ export default function EntriesTable({
   // Move columns inside the component so handleDelete is in scope
   const columns: TableColumn<EntryWithItems>[] = [
     {
-      name: <Check></Check>,
+      name: (
+        <>
+          <Check />
+          <span className="sr-only">Select Items for Actions</span>
+        </>
+      ),
       sortable: false,
       width: '2.5em',
       wrap: false,
