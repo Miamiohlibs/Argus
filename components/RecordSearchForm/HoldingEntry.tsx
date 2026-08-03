@@ -10,7 +10,7 @@ import { EntryWithItems } from '@/types/EntryWithItems';
 import type { BibDataDraft, ItemDataDraft } from '@/lib/catalogs/types';
 import { inHouseLocationCodes } from '@/lib/locationCodes';
 import { useRouter } from 'next/navigation';
-import QuickSlipProjectInfo from './QuickSlipProjectInfo';
+import QuickSlipProjectInfo from '../QuickSlipProjectInfo';
 import { User } from '@prisma/client';
 
 interface HoldingEntryProps {

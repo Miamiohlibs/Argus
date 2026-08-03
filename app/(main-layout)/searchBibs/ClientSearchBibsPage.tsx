@@ -1,5 +1,5 @@
 'use client';
-import RecordSearchForm from '@/components/RecordSearchForm';
+import RecordSearchForm from '@/components/RecordSearchForm/RecordSearchForm';
 import { useSearchParams } from 'next/navigation';
 import ProjectButtons from '@/components/Projects/ProjectButtons';
 import NonOwnerAlert from '@/components/NonOwnerAlert';
