@@ -79,12 +79,9 @@ export default function ProjectsTable({
         <p>
           <Link href={`/project/${row.id}`}>
             {row.title || 'Untitled Project'}
-            <Badge
-              bg="light"
-              className="mx-1 rounded-2xl"
-              aria-label={`${row._count.bibEntries} entries in project`}
-            >
+            <Badge bg="light" className="mx-1 rounded-2xl">
               {row._count.bibEntries}
+              <span className="sr-only"> entries in project</span>
             </Badge>
           </Link>
           {row.public && (
@@ -245,6 +242,7 @@ export default function ProjectsTable({
           <input
             type="text"
             placeholder="Search projects..."
+            aria-label="Search projects"
             value={filterText}
             onChange={(e) => setFilterText(e.target.value)}
             className="p-2 border rounded w-full md:w-1/3"

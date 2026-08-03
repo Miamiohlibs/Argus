@@ -39,13 +39,13 @@ const ArchiveDeleteProjectButton = ({
 
   const handleDeleteProject = async (
     projectId: number,
-    event?: React.MouseEvent
+    event?: React.MouseEvent,
   ) => {
     event?.preventDefault();
     event?.stopPropagation();
 
     const confirmed = window.confirm(
-      'Are you sure you want to delete this project FOREVER?'
+      'Are you sure you want to delete this project FOREVER?',
     );
     if (!confirmed) return;
 
@@ -62,7 +62,7 @@ const ArchiveDeleteProjectButton = ({
 
   const handleArchiveProject = async (projectId: number) => {
     const confirmed = window.confirm(
-      'Are you sure you want to Archive this project?'
+      'Are you sure you want to Archive this project?',
     );
     if (!confirmed) return;
 
@@ -84,7 +84,7 @@ const ArchiveDeleteProjectButton = ({
 
   const handleUnarchiveProject = async (projectId: number) => {
     const confirmed = window.confirm(
-      'Are you sure you want to Unarchive this project?'
+      'Are you sure you want to Unarchive this project?',
     );
     if (!confirmed) return;
 
@@ -133,6 +133,7 @@ const ArchiveDeleteProjectButton = ({
           size="sm"
           className="relative rounded-l-none focus:z-10"
           disabled={isArchived || isUnarchived || isDeleted}
+          aria-label="Delete entry"
         >
           <Trash />
         </Dropdown.Toggle>
