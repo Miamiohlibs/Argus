@@ -6,7 +6,7 @@ import { User } from '@prisma/client';
 import getUsers from '@/app/actions/getUsers';
 import Link from 'next/link';
 import Button, { buttonClasses } from '@/components/ui/Button';
-import DeleteButton from './DeleteButton';
+import DeleteButton from '@/components/DeleteButton';
 import deleteUser from '@/app/actions/deleteUser';
 import { toast } from 'react-toastify';
 
