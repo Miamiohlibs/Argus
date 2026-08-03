@@ -1,10 +1,10 @@
 import { Metadata } from 'next';
 import { getProject } from '@/app/actions/projectActions';
-import CoEditorTable from '@/components/CoEditorTable';
-import ProjectMetadata from '@/components/ProjectMetadata';
+import CoEditorTable from './CoEditorTable';
+import ProjectMetadata from '@/components/Projects/ProjectMetadata';
 import { notFound } from 'next/navigation';
-import RemoveCoEditorButton from '@/components/RemoveCoEditorButton';
-import ProjectButtons from '@/components/ProjectButtons';
+import RemoveCoEditorButton from '@/components/Projects/RemoveCoEditorButton';
+import ProjectButtons from '@/components/Projects/ProjectButtons';
 import getUserInfo from '@/lib/getUserInfo';
 import { unauthorized } from 'next/navigation';
 
@@ -33,7 +33,9 @@ export default async function CoEditorPage({ params }: EditProjectPageProps) {
   }
   return (
     <>
-      <h1 className="text-3xl font-medium">Update Co-Editor(s) on: {project?.title}</h1>
+      <h1 className="text-3xl font-medium">
+        Update Co-Editor(s) on: {project?.title}
+      </h1>
       <ProjectMetadata project={project} />
       <ProjectButtons
         projectId={project.id}

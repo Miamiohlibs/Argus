@@ -1,5 +1,5 @@
 import ClientQuickPages from './ClientQuickPages';
-import MainButtons from '@/components/MainButtons';
+import MainButtons from '@/components/MainButtons/MainButtons';
 import getUserInfo from '@/lib/getUserInfo';
 
 interface PageProps {

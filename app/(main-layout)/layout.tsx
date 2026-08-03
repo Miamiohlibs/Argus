@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import { Roboto } from 'next/font/google';
 import './globals.css';
 import { ClerkProvider } from '@clerk/nextjs';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
+import Header from '@/components/page/Header';
+import Footer from '@/components/page/Footer';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 

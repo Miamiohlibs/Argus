@@ -3,7 +3,7 @@ import { TableColumn, TableProps } from 'react-data-table-component';
 import { useMemo, useState } from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
-import DeleteButton from './DeleteButton';
+import DeleteButton from '@/components/DeleteButton';
 import deleteEntry from '@/app/actions/deleteEntry';
 import { toast } from 'react-toastify';
 import { EntryWithItems } from '@/types/EntryWithItems';
