@@ -3,7 +3,7 @@ import { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { getProject } from '@/app/actions/projectActions';
 import getEntries from '@/app/actions/getEntries';
-import EntriesTable from '@/components/EntriesTable';
+import EntriesTable from './EntriesTable';
 import getUserInfo from '@/lib/getUserInfo';
 import ProjectButtons from '@/components/Projects/ProjectButtons';
 import ProjectMetadata from '@/components/ProjectMetadata';
