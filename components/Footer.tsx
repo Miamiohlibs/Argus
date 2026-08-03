@@ -3,7 +3,7 @@ import Link from 'next/link';
 const Footer = () => {
   return (
     <footer className="mt-auto bg-light py-2 print:hidden">
-      <div className="mx-auto max-w-screen-xl px-4">
+      <div className="mx-auto max-w-7xl px-4">
         <div className="footer-meta">
           <div>
             <Link href="https://github.com/Miamiohlibs/Argus">Argus</Link>{' '}
