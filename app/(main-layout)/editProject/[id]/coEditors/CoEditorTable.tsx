@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import DataTable from 'react-data-table-component';
 import Button from '@/components/ui/Button';
 import { getPossibleCoEditors } from '@/app/actions/coEditors';
-import AddCoEditorButton from './AddCoEditorButton';
+import AddCoEditorButton from '@/components/Projects/AddCoEditorButton';
 import { Prisma } from '@prisma/client';
 
 type UserWithCoEditor = Prisma.UserGetPayload<{
@@ -34,10 +34,10 @@ export default function CoEditorTable({ projectId }: { projectId: string }) {
     () =>
       users.filter((user) =>
         [user.name, user.email, user.role].some((val) =>
-          val?.toLowerCase().includes(filterText.toLowerCase() || '')
-        )
+          val?.toLowerCase().includes(filterText.toLowerCase() || ''),
+        ),
       ),
-    [users, filterText]
+    [users, filterText],
   );
 
   const columns: TableColumn<UserWithCoEditor>[] = [

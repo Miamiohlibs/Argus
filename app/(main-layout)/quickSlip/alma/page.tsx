@@ -1,4 +1,4 @@
-import RecordSearchForm from '@/components/RecordSearchForm';
+import RecordSearchForm from '@/components/RecordSearchForm/RecordSearchForm';
 import { getCurrentUser } from '@/app/actions/getUser';
 import { getPermissions } from '@/lib/getUserInfo';
 import { redirect } from 'next/navigation';

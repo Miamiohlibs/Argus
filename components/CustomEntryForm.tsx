@@ -10,7 +10,7 @@ import Button from '@/components/ui/Button';
 import type { BibDataDraft, ItemDataDraft } from '@/lib/catalogs/types';
 import { useState } from 'react';
 import { LocationCode, inHouseLocationData } from '@/lib/locationCodes';
-import QuickSlipProjectInfo from './QuickSlipProjectInfo';
+import QuickSlipProjectInfo from './Projects/QuickSlipProjectInfo';
 import { useRouter } from 'next/navigation';
 import { User } from '@prisma/client';
 

@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import getUser from '@/app/actions/getUser';
-import UserEditForm from '@/components/UserEditForm';
+import UserEditForm from './UserEditForm';
 import Link from 'next/link';
 import checkAccess from '@/lib/checkAccess';
 import getUserInfo from '@/lib/getUserInfo';

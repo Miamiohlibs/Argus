@@ -7,7 +7,7 @@ import NavEditor from './NavEditor';
 import NavAdmin from './NavAdmin';
 import HeaderNav from './HeaderNav';
 import { NAV_LINK_CLASS } from './navLinkStyles';
-import { buttonClasses } from './ui/Button';
+import { buttonClasses } from '@/components/ui/Button';
 
 const NAV_BG_CLASSES: Record<string, string> = {
   primary: 'bg-primary',
@@ -23,7 +23,8 @@ const NAV_BG_CLASSES: Record<string, string> = {
 const Header = async () => {
   const user = await checkUser();
   const navBgClass =
-    NAV_BG_CLASSES[process.env.NEXT_PUBLIC_NAV_COLOR ?? 'dark'] ?? NAV_BG_CLASSES.dark;
+    NAV_BG_CLASSES[process.env.NEXT_PUBLIC_NAV_COLOR ?? 'dark'] ??
+    NAV_BG_CLASSES.dark;
 
   const brand = (
     <NextLink href="/" className={`flex items-center ${NAV_LINK_CLASS}`}>
@@ -49,7 +50,10 @@ const Header = async () => {
       </Show>
       <NavAdmin />
       <Show when="signed-in">
-        <NextLink href="/searchEntries" className={`flex items-center gap-1 ${NAV_LINK_CLASS}`}>
+        <NextLink
+          href="/searchEntries"
+          className={`flex items-center gap-1 ${NAV_LINK_CLASS}`}
+        >
           <Search aria-hidden="true" /> Search
         </NextLink>
       </Show>

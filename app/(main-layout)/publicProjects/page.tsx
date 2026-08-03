@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
-import ProjectsTable from '@/components/ProjectsTable';
-import MainButtons from '@/components/MainButtons';
+import ProjectsTable from '@/components/Projects/ProjectsTable';
+import MainButtons from '@/components/MainButtons/MainButtons';
 import getUserInfo from '@/lib/getUserInfo';
 import checkAccess from '@/lib/checkAccess';
 

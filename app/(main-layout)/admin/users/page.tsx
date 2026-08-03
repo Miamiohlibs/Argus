@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import UserTableWrapper from '@/components/UserTableWrapper';
+import UserTableWrapper from './UserTableWrapper';
 import checkAccess from '@/lib/checkAccess';
 import { checkUser } from '@/lib/checkUser';
 import Link from 'next/link';
