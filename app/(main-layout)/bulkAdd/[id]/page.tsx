@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import BulkAddForm from '@/components/BulkAddForm';
+import BulkAddForm from './BulkAddForm';
 import { getProject } from '@/app/actions/projectActions';
 import { ProjectWithUserAndBib } from '@/types/ProjectWithUserAndBib';
 import ProjectButtons from '@/components/Projects/ProjectButtons';
