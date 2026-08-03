@@ -5,7 +5,7 @@ import { ProjectWithUserAndBib } from '@/types/ProjectWithUserAndBib';
 import ProjectButtons from '@/components/Projects/ProjectButtons';
 import getUserInfo from '@/lib/getUserInfo';
 import NonOwnerAlert from '@/components/NonOwnerAlert';
-import ProjectMetadata from '@/components/ProjectMetadata';
+import ProjectMetadata from '@/components/Projects/ProjectMetadata';
 import { unauthorized } from 'next/navigation';
 
 export async function generateMetadata(): Promise<Metadata> {

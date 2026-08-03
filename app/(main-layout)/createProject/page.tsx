@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import ProjectForm from '@/components/ProjectForm';
+import ProjectForm from '@/components/Projects/ProjectForm';
 import { createProject } from '@/app/actions/projectActions';
 import getUserInfo from '@/lib/getUserInfo';
 import { unauthorized } from 'next/navigation';

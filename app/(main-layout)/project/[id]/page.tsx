@@ -6,7 +6,7 @@ import getEntries from '@/app/actions/getEntries';
 import EntriesTable from './EntriesTable';
 import getUserInfo from '@/lib/getUserInfo';
 import ProjectButtons from '@/components/Projects/ProjectButtons';
-import ProjectMetadata from '@/components/ProjectMetadata';
+import ProjectMetadata from '@/components/Projects/ProjectMetadata';
 import { setSelectedEntriesCookie } from '@/lib/selectedEntriesCookie';
 
 type MetadataProps = {

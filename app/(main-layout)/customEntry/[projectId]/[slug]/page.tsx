@@ -4,7 +4,7 @@ import getEntryById from '@/app/actions/getEntryById';
 import { EntryWithItems } from '@/types/EntryWithItems';
 import getUserInfo from '@/lib/getUserInfo';
 import NonOwnerAlert from '@/components/NonOwnerAlert';
-import ProjectMetadata from '@/components/ProjectMetadata';
+import ProjectMetadata from '@/components/Projects/ProjectMetadata';
 import ProjectButtons from '@/components/Projects/ProjectButtons';
 import { getProject } from '@/app/actions/projectActions';
 

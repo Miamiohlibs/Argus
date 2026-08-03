@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import ProjectForm from '@/components/ProjectForm';
+import ProjectForm from '@/components/Projects/ProjectForm';
 import { checkUser } from '@/lib/checkUser';
 import { updateProject } from '@/app/actions/projectActions';
 import { getProject } from '@/app/actions/projectActions';
@@ -8,7 +8,7 @@ import { redirect } from 'next/navigation';
 import { unauthorized } from 'next/navigation';
 import logger from '@/lib/logger';
 import NonOwnerAlert from '@/components/NonOwnerAlert';
-import ProjectMetadata from '@/components/ProjectMetadata';
+import ProjectMetadata from '@/components/Projects/ProjectMetadata';
 import ProjectButtons from '@/components/Projects/ProjectButtons';
 
 interface EditProjectPageProps {

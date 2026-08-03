@@ -8,7 +8,7 @@ import CustomEntryForm from '@/components/CustomEntryForm';
 import getUserInfo from '@/lib/getUserInfo';
 import NonOwnerAlert from '@/components/NonOwnerAlert';
 import ProjectButtons from '@/components/Projects/ProjectButtons';
-import ProjectMetadata from '@/components/ProjectMetadata';
+import ProjectMetadata from '@/components/Projects/ProjectMetadata';
 import { getProject } from '@/app/actions/projectActions';
 
 type MetadataProps = {

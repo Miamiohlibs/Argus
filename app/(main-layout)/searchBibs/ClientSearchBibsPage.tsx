@@ -3,7 +3,7 @@ import RecordSearchForm from '@/components/RecordSearchForm/RecordSearchForm';
 import { useSearchParams } from 'next/navigation';
 import ProjectButtons from '@/components/Projects/ProjectButtons';
 import NonOwnerAlert from '@/components/NonOwnerAlert';
-import ProjectMetadata from '@/components/ProjectMetadata';
+import ProjectMetadata from '@/components/Projects/ProjectMetadata';
 import { ProjectWithUserAndBib } from '@/types/ProjectWithUserAndBib';
 import type { Catalog } from '@prisma/client';
 import { CATALOG_DISPLAY_NAMES } from '@/lib/catalogs/displayNames';
