@@ -1,5 +1,5 @@
 import { SignInButton } from '@clerk/nextjs';
-import About from '@/components/About';
+import About from '@/components/About/About';
 import { buttonClasses } from '@/components/ui/Button';
 const Guest = () => {
   return (
