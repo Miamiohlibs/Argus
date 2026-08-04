@@ -73,8 +73,11 @@ function getContainerItems(data: AspaceSolrResultPaginationSchema) {
     const title = item.title,
       itemData = JSON.parse(item.json);
     const callNumber =
-      itemData.sub_container?.top_container?._resolved?.display_string;
+      itemData.instances[0].sub_container?.top_container?._resolved
+        ?.display_string ??
+      itemData.instances[0].sub_container?.top_container?._resolved.indicator;
     logger.verbose(`TC ITEM: ${title}, ${callNumber}`);
+    logger.verbose(`OBJECT: ${JSON.stringify(itemData, null, 2)}`);
     return { title, callNumber };
   });
   return items;
