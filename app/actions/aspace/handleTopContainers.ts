@@ -48,21 +48,19 @@ export async function getTopContainers(
   if (matches !== null) {
     const repoId = matches[1];
     const topContainerId = matches[2];
-    logger.verbose(`topContainerId: ${topContainerId}`);
+    // logger.debug(`topContainerId: ${topContainerId}`);
     const moreUri = `/repositories/${repoId}/search?q=top_container_uri_u_sstr:"/repositories/${repoId}/top_containers/${topContainerId}"&type[]=archival_object&type[]=resource&type[]=accession&page=1&page_size=250&fields[]=uri&fields[]=title&fields[]=level&fields[]=primary_type&fields[]=json`;
-    logger.verbose(`fetch additional topContainer info: ${moreUri}`);
+    logger.debug(`fetch Solr topContainer info: ${moreUri}`);
     const moreRaw = await client.getUrl(moreUri);
-    logger.verbose(`moreInfo response: ${JSON.stringify(moreRaw)}`);
+    // logger.debug(`moreInfo response: ${JSON.stringify(moreRaw)}`);
     const moreParsed = aspaceSolrResultPaginationSchema.parse(moreRaw);
-    console.log(JSON.stringify(moreParsed, null, 2));
+    // logger.debug(JSON.stringify(moreParsed, null, 2));
     solrItems = getContainerItems(moreParsed) ?? [];
   }
   const parsed = repoTopContainerSchema.parse(raw);
   logger.verbose(`solrItems length: ${solrItems.length}`);
   const argusData = await repoTopContainerToDraft(parsed, publicUrl, solrItems);
-  logger.verbose(
-    `ArgusData for repoTopContainer: ${JSON.stringify(argusData)}`,
-  );
+  logger.debug(`ArgusData for repoTopContainer: ${JSON.stringify(argusData)}`);
   logger.verbose('type: top containers');
   return argusData;
 }
@@ -76,8 +74,8 @@ function getContainerItems(data: AspaceSolrResultPaginationSchema) {
       itemData.instances[0].sub_container?.top_container?._resolved
         ?.display_string ??
       itemData.instances[0].sub_container?.top_container?._resolved.indicator;
-    logger.verbose(`TC ITEM: ${title}, ${callNumber}`);
-    logger.verbose(`OBJECT: ${JSON.stringify(itemData, null, 2)}`);
+    logger.debug(`TopContainer ITEM: ${title}, ${callNumber}`);
+    // logger.verbose(`OBJECT: ${JSON.stringify(itemData, null, 2)}`);
     return { title, callNumber };
   });
   return items;
