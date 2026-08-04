@@ -91,7 +91,7 @@ export async function searchByUrl(url: string, client: AspaceClient) {
 
       // https://archivesstaff.lib.miamioh.edu/api/repositories/2/top_containers/7838
       case /repositories\/\d+\/top_containers\/\d+/.test(url): {
-        return await getTopContainers(raw, url, publicUrl);
+        return await getTopContainers(raw, url, publicUrl, client);
         break;
       }
       // https://archivesspace.lib.miamioh.edu/repositories/2/archival_objects/13405
