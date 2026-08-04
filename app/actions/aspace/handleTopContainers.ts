@@ -115,7 +115,7 @@ async function repoTopContainerToDraft(
         copy_id: '',
         description: item.title,
         folder: '',
-        location_code: data.repository._resolved?.slug ?? '',
+        location_code: '',
         location_name: data.repository._resolved?.name ?? '',
         ms: '',
       };
