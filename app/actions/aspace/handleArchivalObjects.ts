@@ -131,7 +131,7 @@ const getItems = (data: RepoArchivalObject) => {
         copy_id: '',
         description: '',
         folder: '',
-        location_code: data.repository._resolved?.slug ?? '',
+        location_code: '',
         location_name: data.repository._resolved?.name ?? '',
         ms: '',
       }));
