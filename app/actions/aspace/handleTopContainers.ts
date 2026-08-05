@@ -9,6 +9,7 @@ import type {
 } from '@kenxirwin/archives-space-api-client';
 import type { BibDataDraft, ItemDataDraft } from '@/lib/catalogs/types';
 import { z } from 'zod';
+import { getCallNumberFromInstance } from '@/lib/catalogs/aspace/getCallNumberFromInstance';
 
 const aspaceSolrResultSchema = z.object({
   uri: z.string(),
@@ -70,29 +71,7 @@ function getContainerItems(data: AspaceSolrResultPaginationSchema) {
   const items = itemDataOnly.map((item) => {
     const title = item.title,
       itemData = JSON.parse(item.json);
-    let callNumber;
-    const type_2 = itemData.instances[0].sub_container?.type_2 as string;
-    const indicator_2 =
-      itemData.instances[0].sub_container?.indicator_2 ?? null;
-    const type = itemData.instances[0].sub_container?.top_container?._resolved
-      ?.type as string;
-    const indicator =
-      itemData.instances[0].sub_container?.top_container?._resolved
-        ?.indicator ?? null;
-    if (type && indicator && indicator_2) {
-      const capitalType = type.charAt(0).toUpperCase() + type.slice(1);
-      const capitalType2 = type_2.charAt(0).toUpperCase() + type_2.slice(1);
-      callNumber = `${capitalType} ${indicator}`;
-      if (type_2 && indicator_2) {
-        const capitalType2 = type_2.charAt(0).toUpperCase() + type_2.slice(1);
-        callNumber += `, ${capitalType2} ${indicator_2}`;
-      }
-    } else {
-      callNumber =
-        itemData.instances[0].sub_container?.top_container?._resolved
-          ?.display_string ??
-        itemData.instances[0].sub_container?.top_container?._resolved.indicator;
-    }
+    let callNumber = getCallNumberFromInstance(itemData.instances[0]);
     logger.debug(`TopContainer ITEM: ${title}, ${callNumber}`);
     // logger.verbose(`OBJECT: ${JSON.stringify(itemData, null, 2)}`);
     return { title, callNumber };
