@@ -18,7 +18,6 @@
     "@kenxirwin/alma-search": "^0.2.0",
     "@kenxirwin/archives-space-api-client": "^0.3.2",
     "@prisma/client": "^6.13.0",
-    "dotenv": "^17.2.1",
     "next": "^16.2.12",
     "react": "19.2.8",
     "react-bootstrap-icons": "^1.11.6",
