@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { createPortal } from 'react-dom';
 import {
   ButtonHTMLAttributes,
   HTMLAttributes,
@@ -8,6 +9,7 @@ import {
   createContext,
   useContext,
   useEffect,
+  useLayoutEffect,
   useRef,
   useState,
 } from 'react';
@@ -17,6 +19,7 @@ interface DropdownContextValue {
   open: boolean;
   setOpen: (open: boolean) => void;
   toggleRef: React.RefObject<HTMLButtonElement | null>;
+  menuRef: React.RefObject<HTMLDivElement | null>;
 }
 
 const DropdownContext = createContext<DropdownContextValue | null>(null);
@@ -37,12 +40,16 @@ function Dropdown({ children, className = '', ...props }: DropdownProps) {
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const toggleRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!open) return;
 
     const handlePointerDown = (event: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+      const target = event.target as Node;
+      const insideContainer = containerRef.current?.contains(target);
+      const insideMenu = menuRef.current?.contains(target);
+      if (!insideContainer && !insideMenu) {
         setOpen(false);
       }
     };
@@ -62,7 +69,7 @@ function Dropdown({ children, className = '', ...props }: DropdownProps) {
   }, [open]);
 
   return (
-    <DropdownContext.Provider value={{ open, setOpen, toggleRef }}>
+    <DropdownContext.Provider value={{ open, setOpen, toggleRef, menuRef }}>
       <div ref={containerRef} className={`relative inline-block ${className}`} {...props}>
         {children}
       </div>
@@ -107,15 +114,48 @@ export function DropdownMenu({
   className?: string;
   align?: 'start' | 'end';
 }) {
-  const { open } = useDropdownContext();
+  const { open, toggleRef, menuRef } = useDropdownContext();
+  const [position, setPosition] = useState<{ top: number; left: number } | null>(null);
+
+  useLayoutEffect(() => {
+    if (!open) {
+      setPosition(null);
+      return;
+    }
+
+    const updatePosition = () => {
+      const toggleEl = toggleRef.current;
+      const menuEl = menuRef.current;
+      if (!toggleEl) return;
+      const rect = toggleEl.getBoundingClientRect();
+      const menuWidth = menuEl?.offsetWidth ?? 0;
+      setPosition({
+        top: rect.bottom + 4,
+        left: align === 'end' ? rect.right - menuWidth : rect.left,
+      });
+    };
+
+    updatePosition();
+    window.addEventListener('scroll', updatePosition, true);
+    window.addEventListener('resize', updatePosition);
+    return () => {
+      window.removeEventListener('scroll', updatePosition, true);
+      window.removeEventListener('resize', updatePosition);
+    };
+  }, [open, align, toggleRef, menuRef]);
+
   if (!open) return null;
-  return (
+
+  return createPortal(
     <div
+      ref={menuRef}
       role="menu"
-      className={`absolute ${align === 'end' ? 'right-0' : 'left-0'} z-20 mt-1 min-w-40 rounded border border-gray-200 bg-white py-1 shadow-lg print:hidden ${className}`}
+      style={position ? { top: position.top, left: position.left } : undefined}
+      className={`fixed z-50 min-w-40 rounded border border-gray-200 bg-white py-1 shadow-lg print:hidden ${position ? '' : 'invisible'} ${className}`}
     >
       {children}
-    </div>
+    </div>,
+    document.body,
   );
 }
 
