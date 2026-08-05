@@ -83,7 +83,7 @@ async function repoArchivalObjectToDraft(
     catalog: 'ASPACE',
     catalogId: data.uri,
     catalogIdType: 'uri',
-    location_codes: data.repository._resolved?.slug ?? '',
+    location_codes: '',
     location_display: data.repository._resolved?.name ?? '',
     notes: '',
     pub_date:
