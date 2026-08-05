@@ -72,15 +72,21 @@ function getContainerItems(data: AspaceSolrResultPaginationSchema) {
       itemData = JSON.parse(item.json);
     let callNumber;
     const type_2 = itemData.instances[0].sub_container?.type_2 as string;
-    const indicator_2 = itemData.instances[0].sub_container?.indicator_2;
+    const indicator_2 =
+      itemData.instances[0].sub_container?.indicator_2 ?? null;
     const type = itemData.instances[0].sub_container?.top_container?._resolved
       ?.type as string;
     const indicator =
-      itemData.instances[0].sub_container?.top_container?._resolved?.indicator;
-    if (type && type_2 && indicator && indicator_2) {
+      itemData.instances[0].sub_container?.top_container?._resolved
+        ?.indicator ?? null;
+    if (type && indicator && indicator_2) {
       const capitalType = type.charAt(0).toUpperCase() + type.slice(1);
       const capitalType2 = type_2.charAt(0).toUpperCase() + type_2.slice(1);
-      callNumber = `${capitalType} ${indicator}, ${capitalType2} ${indicator_2}`;
+      callNumber = `${capitalType} ${indicator}`;
+      if (type_2 && indicator_2) {
+        const capitalType2 = type_2.charAt(0).toUpperCase() + type_2.slice(1);
+        callNumber += `, ${capitalType2} ${indicator_2}`;
+      }
     } else {
       callNumber =
         itemData.instances[0].sub_container?.top_container?._resolved
