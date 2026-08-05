@@ -226,10 +226,16 @@ const HoldingEntry = ({
               const description = item.description
                 ? `, ${item.description}`
                 : '';
+
+              // if location code is not used, don't throw in this extra colon
+              let locationCodeDelimiter = ': ';
+              if (item.location_code == '') {
+                locationCodeDelimiter = '';
+              }
               const itemLabel =
                 sortedItems.length === 1
                   ? 'Sole Item'
-                  : `Item: ${item.location_code}: ${item.call_number} ${description} ${copyNo} (${item.location_name})`;
+                  : `Item: ${item.location_code}${locationCodeDelimiter}${item.call_number} ${description} ${copyNo} (${item.location_name})`;
 
               const isChecked = selectedItems.some(
                 (selected) => selected.clientKey === item.clientKey,

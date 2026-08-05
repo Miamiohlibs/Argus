@@ -10,11 +10,13 @@ import {
   getChildren,
   getExtraInfoFromNode,
 } from '@/app/actions/aspace/handleMissingInstances';
+import { getCallNumberFromInstance } from './getCallNumberFromInstance';
 
 type ResourceInstance = RepoResources['instances'][number];
 type ArchivalObjectInstance = RepoArchivalObject['instances'][number];
 
-const callRegexMost = /(\[*\d+(A|M)\-[A-Z]\-\d+[A-Z]\]*)/g;
+const callRegexMost =
+  /((Box\:* *)*\d+)*[, ]*(\[*\d+(A|M)\-[A-Z]\-\d+[A-Z]\]*)[, ]*(Folder\:* \d+)*/g;
 // const callRegexRegGlobal = /\d+(A|M)\-[A-Z]\-\d+[A-Z]/g;
 //const callRegexWestern = /\[Range \d+[A-Z]\];* Box \d+/g;
 const callRegexWestern = /(\[Range \d+[A-Z]\];* Box \d+)/g;
@@ -167,6 +169,7 @@ const overrides: AspaceCallNumberOverrides = {
         const matches = getWesternItemCallNumbers(data);
         return condenseItemRange(matches);
       }
+      // else, if not Western...
       if (extraInfo) {
         logger.debug(JSON.stringify(extraInfo, null, 2));
         logger.debug('trying to extract call number from extraInfo...');
@@ -182,12 +185,12 @@ const overrides: AspaceCallNumberOverrides = {
         }
         return `${derivedCallNumber}... (${summaryInfo})`;
       }
-      // else, if not Western...
+
       const displayString = data.instances
-        .map(
-          (instance) =>
-            instance?.sub_container?.top_container?._resolved?.indicator,
-        )
+        .map((instance) => {
+          return getCallNumberFromInstance(instance);
+          // instance?.sub_container?.top_container?._resolved?.indicator,
+        })
         .join('; ');
       const matches = displayString.match(callRegexMost)?.join('; ');
       return matches ?? displayString;

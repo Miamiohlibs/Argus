@@ -9,6 +9,7 @@ import type {
 } from '@kenxirwin/archives-space-api-client';
 import type { BibDataDraft, ItemDataDraft } from '@/lib/catalogs/types';
 import { z } from 'zod';
+import { getCallNumberFromInstance } from '@/lib/catalogs/aspace/getCallNumberFromInstance';
 
 const aspaceSolrResultSchema = z.object({
   uri: z.string(),
@@ -70,10 +71,7 @@ function getContainerItems(data: AspaceSolrResultPaginationSchema) {
   const items = itemDataOnly.map((item) => {
     const title = item.title,
       itemData = JSON.parse(item.json);
-    const callNumber =
-      itemData.instances[0].sub_container?.top_container?._resolved
-        ?.display_string ??
-      itemData.instances[0].sub_container?.top_container?._resolved.indicator;
+    let callNumber = getCallNumberFromInstance(itemData.instances[0]);
     logger.debug(`TopContainer ITEM: ${title}, ${callNumber}`);
     // logger.verbose(`OBJECT: ${JSON.stringify(itemData, null, 2)}`);
     return { title, callNumber };

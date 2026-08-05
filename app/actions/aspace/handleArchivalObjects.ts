@@ -83,7 +83,7 @@ async function repoArchivalObjectToDraft(
     catalog: 'ASPACE',
     catalogId: data.uri,
     catalogIdType: 'uri',
-    location_codes: data.repository._resolved?.slug ?? '',
+    location_codes: '',
     location_display: data.repository._resolved?.name ?? '',
     notes: '',
     pub_date:
@@ -116,7 +116,7 @@ const getItems = (data: RepoArchivalObject) => {
       description:
         item.sub_container?.top_container?._resolved?.long_display_string ?? '',
       folder: '',
-      location_code: data.repository._resolved?.slug ?? '',
+      location_code: '',
       location_name: data.repository._resolved?.name ?? '',
       ms: '',
     }));
@@ -131,7 +131,7 @@ const getItems = (data: RepoArchivalObject) => {
         copy_id: '',
         description: '',
         folder: '',
-        location_code: data.repository._resolved?.slug ?? '',
+        location_code: '',
         location_name: data.repository._resolved?.name ?? '',
         ms: '',
       }));
