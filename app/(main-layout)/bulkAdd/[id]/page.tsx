@@ -1,11 +1,11 @@
 import { Metadata } from 'next';
-import BulkAddForm from '@/components/BulkAddForm';
+import BulkAddForm from './BulkAddForm';
 import { getProject } from '@/app/actions/projectActions';
 import { ProjectWithUserAndBib } from '@/types/ProjectWithUserAndBib';
-import ProjectButtons from '@/components/ProjectButtons';
+import ProjectButtons from '@/components/Projects/ProjectButtons';
 import getUserInfo from '@/lib/getUserInfo';
 import NonOwnerAlert from '@/components/NonOwnerAlert';
-import ProjectMetadata from '@/components/ProjectMetadata';
+import ProjectMetadata from '@/components/Projects/ProjectMetadata';
 import { unauthorized } from 'next/navigation';
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -37,7 +37,9 @@ export default async function BulkAddPage({
     return (
       <>
         {nonOwnerEditor && <NonOwnerAlert />}
-        <h1 className="h2">Bulk Add Items: {project?.title}</h1>
+        <h1 className="text-3xl font-medium">
+          Bulk Add Items: {project?.title}
+        </h1>
         <ProjectMetadata project={project} />
 
         <ProjectButtons

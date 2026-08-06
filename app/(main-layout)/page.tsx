@@ -1,8 +1,8 @@
 import { Metadata } from 'next';
 import Guest from '@/components/Guest';
 import { currentUser } from '@clerk/nextjs/server';
-import ProjectsTable from '@/components/ProjectsTable';
-import MainButtons from '@/components/MainButtons';
+import ProjectsTable from '@/components/Projects/ProjectsTable';
+import MainButtons from '@/components/MainButtons/MainButtons';
 import getUserInfo from '@/lib/getUserInfo';
 import { redirect } from 'next/navigation';
 
@@ -40,8 +40,8 @@ const Home = async () => {
   }
   return (
     <>
-      <h1 className="h2">{displayName}&apos;s Projects</h1>
-      <div className="mb-3">
+      <h1 className="text-3xl font-medium">{displayName}&apos;s Projects</h1>
+      <div className="mb-4">
         <MainButtons isEditorOrAbove={isEditorOrAbove} canPrint={canPrint} />
       </div>
       <ProjectsTable limitToUser={true} user={user} canPrint={canPrint} />

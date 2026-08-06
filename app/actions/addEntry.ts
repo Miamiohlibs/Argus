@@ -7,32 +7,14 @@ import { updateProjectLastUpdated } from '@/app/actions/projectActions';
 const entryAction = async ({
   bibData,
   itemData,
+  projectId,
   actionType,
   existingEntryId,
 }: EntryActionData) => {
-  console.log('bibData', bibData);
-  // console.log('itemData', itemData);
-  // console.log('actionType', actionType);
   try {
-    const url =
-      bibData.mms_id && process.env.ALMA_PERMALINK_BASEURL
-        ? process.env.ALMA_PERMALINK_BASEURL + bibData.mms_id
-        : undefined;
-
     logger.verbose(
       `${actionType === 'add' ? 'Adding' : 'Updating'} entry with bibData:`,
       bibData,
-    );
-
-    if (bibData.project_id === undefined && bibData.projectId !== undefined) {
-      bibData.project_id = bibData.projectId;
-    }
-    if (bibData.title === undefined && bibData.itemTitle !== undefined) {
-      bibData.title = bibData.itemTitle;
-    }
-    // console.log('bibData.project_id', bibData.project_id);
-    const projectId = parseInt(
-      (bibData.project_id as string).replace(/"/g, ''),
     );
     logger.verbose('Project ID:', projectId);
 
@@ -59,38 +41,35 @@ const entryAction = async ({
     const selectedLocationNamesArr = [
       ...new Set(itemData.map((item) => item.location_name)),
     ];
-
     const selectedLocationNames =
       selectedLocationNamesArr.length > 0
         ? selectedLocationNamesArr.join(',')
-        : bibData.location_names;
+        : bibData.location_display;
 
     const selectedCallNumbersArr = [
       ...new Set(itemData.map((item) => item.call_number)),
     ];
-
     const selectedCallNumbers =
       selectedCallNumbersArr.length > 0
         ? selectedCallNumbersArr.join(',')
-        : bibData.call_number;
+        : bibData.callNumber;
 
-    logger.verbose('received bibData', JSON.stringify(bibData));
     // Prepare the data object
     const entryData = {
-      itemTitle: bibData.title as string,
-      author: (bibData.author as string) ?? '',
-      location_codes: selectedLocationCodes as string,
-      location_display: selectedLocationNames as string,
-      pub_date:
-        (bibData.date_of_publication as string) ?? (bibData.pub_date as string),
-      publisher: bibData.publisher_const as string,
-      callNumber: selectedCallNumbers as string,
-      projectId: projectId,
-      totalItems: parseInt(bibData.total_item_count as string) || 1,
-      url: url as string,
-      notes: (bibData.holdingNote as string) ?? (bibData.notes as string),
-      almaId: bibData.mms_id as string,
-      almaIdType: 'mms_id' as const,
+      itemTitle: bibData.itemTitle,
+      author: bibData.author ?? '',
+      location_codes: selectedLocationCodes,
+      location_display: selectedLocationNames,
+      pub_date: bibData.pub_date,
+      publisher: bibData.publisher,
+      callNumber: selectedCallNumbers,
+      projectId,
+      totalItems: bibData.totalItems ?? 1,
+      url: bibData.url,
+      notes: bibData.notes,
+      catalogId: bibData.catalogId,
+      catalogIdType: bibData.catalogIdType,
+      catalog: bibData.catalog,
     };
 
     let response;

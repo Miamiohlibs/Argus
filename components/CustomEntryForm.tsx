@@ -3,13 +3,16 @@ import { useRef } from 'react';
 import entryAction from '@/app/actions/addEntry';
 import { toast } from 'react-toastify';
 import { EntryWithItems } from '@/types/EntryWithItems';
-import { Form, InputGroup, Button, FormSelect } from 'react-bootstrap';
-import { BibEntry, ItemEntry } from '@prisma/client';
+import Input from '@/components/ui/Input';
+import Select from '@/components/ui/Select';
+import InputGroup, { InputGroupText } from '@/components/ui/InputGroup';
+import Button from '@/components/ui/Button';
+import type { BibDataDraft, ItemDataDraft } from '@/lib/catalogs/types';
 import { useState } from 'react';
-import { useEffect } from 'react';
 import { LocationCode, inHouseLocationData } from '@/lib/locationCodes';
-import QuickSlipProjectInfo from './QuickSlipProjectInfo';
+import QuickSlipProjectInfo from './Projects/QuickSlipProjectInfo';
 import { useRouter } from 'next/navigation';
+import { User } from '@prisma/client';
 
 interface CustomEntryFormProps {
   projectId?: number;
@@ -18,6 +21,7 @@ interface CustomEntryFormProps {
   quickSlip?: boolean;
   nonOwnerEditor?: boolean;
   currentUserName: string;
+  currentUser?: User;
 }
 
 // interface LocationCode {
@@ -33,20 +37,15 @@ const CustomEntryForm = ({
   quickSlip = false,
   nonOwnerEditor = false,
   currentUserName,
+  currentUser,
 }: CustomEntryFormProps) => {
   const router = useRouter();
-  const [locations, setLocations] = useState<LocationCode[]>([]);
+  const [locations] = useState<LocationCode[]>(
+    () => inHouseLocationData() ?? [],
+  );
   const [selectedLocation, setSelectedLocation] = useState<LocationCode | null>(
     null,
   );
-
-  // Load locations only once on mount
-  useEffect(() => {
-    const locationCodes = inHouseLocationData();
-    if (typeof locationCodes != 'undefined') {
-      setLocations(locationCodes);
-    }
-  }, []);
 
   const handleLocationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     // console.log(`Selected location: ${e.target.value}`);
@@ -76,85 +75,65 @@ const CustomEntryForm = ({
   locationSelectOptions.unshift(blankPullDownOption);
 
   const handleSubmit = async (event: React.SyntheticEvent<HTMLFormElement>) => {
-    console.log('starting handleSubmit');
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
-    console.log('Form submitted with data:', formData);
-    if (quickSlip) {
-      const allFormData: Record<string, FormDataEntryValue> = {};
-      const urlEncodedArray = [];
-      for (const [key, value] of formData.entries()) {
-        allFormData[key] = value;
-        urlEncodedArray.push(key + '=' + encodeURIComponent(value.toString()));
-      }
-      const urlString = urlEncodedArray.join('&');
-      const slipsUrl = `/quickSlip/handler?${urlString}`;
-      router.push(slipsUrl);
-      return true;
-    }
-    // const allFormData: Record<string, FormDataEntryValue> = {};
-    // for (const [key, value] of formData.entries()) {
-    //   allFormData[key] = value;
-    // }
-    // const actionType = 'add'; // or 'edit' (later)
     const actionType = existingEntry ? 'edit' : 'add';
-    const bibData: Partial<BibEntry> = {
-      itemTitle: formData.get('itemTitle') as string,
-      author: formData.get('author') as string,
-      almaId: 'unknown',
-      almaIdType: 'unknown',
-      // location: selectedLocation ? selectedLocation.code : '',
-      location_codes: selectedLocation ? selectedLocation.code : '',
-      location_display: selectedLocation ? selectedLocation.name : '',
-      pub_date: formData.get('pub_date') as string,
-      notes: (formData.get('itemNotes') as string) || '',
-      projectId: projectId,
-    };
-    // Convert nulls to empty strings for FormData compatibility
-    const safeBibData: Record<string, FormDataEntryValue> = Object.fromEntries(
-      Object.entries(bibData).map(([key, value]) => [
-        key,
-        value === null
-          ? ''
-          : typeof value === 'number'
-            ? value.toString()
-            : value,
-      ]),
-    );
 
-    const safeItemData: {
-      description: string | null;
-      id: string;
-      // location: string | null;
-      location_name: string | null;
-      location_code: string | null;
-      call_number: string | null;
-      copy_id: string | null;
-      bibEntryId: string;
-      barcode: string | null;
-      box: string | null;
-      folder: string | null;
-      ms: string | null;
-      //   notes: string | null;
-    } = {
-      description: (formData.get('itemDescription') as string) ?? null,
-      id: 'unknown',
-      // location: selectedLocation?.code ?? null,
+    const draftBibData: BibDataDraft = {
+      itemTitle: (formData.get('itemTitle') as string) ?? '',
+      author: (formData.get('author') as string) ?? '',
+      catalogId: null,
+      catalogIdType: null,
+      catalog: 'CUSTOM',
+      location_codes: selectedLocation ? selectedLocation.code : null,
+      location_display: selectedLocation ? selectedLocation.name : null,
+      pub_date: (formData.get('pub_date') as string) || null,
+      publisher: null,
+      callNumber: (formData.get('itemCallNumber') as string) || null,
+      notes: (formData.get('itemNotes') as string) || '',
+      totalItems: 1,
+      url: null,
+    };
+
+    const draftItemData: ItemDataDraft = {
+      clientKey: existingEntry?.items?.[0]?.id ?? 'custom-item',
+      description: null,
       location_name: selectedLocation?.name ?? null,
       location_code: selectedLocation?.code ?? null,
-      call_number: (formData.get('itemCallNumber') as string) ?? null,
-      copy_id: (formData.get('itemCopy') as string) ?? null,
-      bibEntryId: 'unknown',
-      barcode: '',
-      box: (formData.get('itemBox') as string) ?? null,
-      folder: (formData.get('itemFolder') as string) ?? null,
-      ms: (formData.get('itemMs') as string) ?? null,
-      //   notes: (formData.get('itemNotes') as string) ?? null,
+      call_number: (formData.get('itemCallNumber') as string) || null,
+      copy_id: (formData.get('itemCopy') as string) || null,
+      barcode: null,
+      box: (formData.get('itemBox') as string) || null,
+      folder: (formData.get('itemFolder') as string) || null,
+      ms: (formData.get('itemMs') as string) || null,
     };
 
+    if (quickSlip) {
+      const qs = new URLSearchParams();
+      qs.set('bibData', JSON.stringify(draftBibData));
+      qs.set('itemData', JSON.stringify([draftItemData]));
+      for (const key of [
+        'userName',
+        'userStatus',
+        'userAffiliation',
+        'purpose',
+        'patronName',
+        'patronAffiliation',
+        'patronStatus',
+      ]) {
+        const value = formData.get(key);
+        if (value) {
+          qs.set(key, value.toString());
+        }
+      }
+      router.push(`/quickSlip/handler?${qs.toString()}`);
+      return;
+    }
+
     const { data, error } = await entryAction({
-      bibData: safeBibData,
-      itemData: [safeItemData],
+      bibData: draftBibData,
+      itemData: [draftItemData],
+      projectId: Number(projectId),
       actionType,
       ...(existingEntry?.id && { existingEntryId: existingEntry.id }),
     });
@@ -165,7 +144,7 @@ const CustomEntryForm = ({
       toast.success(
         `Entry ${actionType === 'add' ? 'added' : 'updated'} successfully`,
       );
-      console.log('Entry saved:', data);
+      console.debug('Entry saved:', data);
 
       if (actionType === 'add') {
         formRef.current?.reset();
@@ -174,7 +153,7 @@ const CustomEntryForm = ({
     }
   };
 
-  let itemData: ItemEntry | undefined = undefined;
+  let itemData: EntryWithItems['items'][number] | undefined = undefined;
   if (existingEntry && existingEntry.items && existingEntry?.items.length > 0) {
     itemData = existingEntry.items[0];
   }
@@ -182,30 +161,14 @@ const CustomEntryForm = ({
   const formRef = useRef<HTMLFormElement>(null);
   return (
     <>
-      <Form ref={formRef} onSubmit={handleSubmit}>
-        {/* text fields for BibEntry and ItemEntry fields
-       // // bib: itemTitle, author
-        // item: description, location, call_number, copy, box, folder, ms 
-        */}
-        <Form.Control
-          type="hidden"
-          id="bibEntryId"
-          name="bibEntryId"
-          value={existingEntry?.id ?? 'unknown'}
-        />
-        <Form.Control
-          type="hidden"
-          id="projectId"
-          name="projectId"
-          value={projectId}
-        />
-        <Form.Group className="mb-2">
+      <form ref={formRef} onSubmit={handleSubmit}>
+        <div className="mb-2">
           <InputGroup>
-            <InputGroup.Text id="title-note" className="bg-primary text-white">
-              <Form.Label htmlFor="itemTitle">Title</Form.Label>
+            <InputGroupText id="title-note" className="required">
+              <label htmlFor="itemTitle">Title</label>
               <sup>*</sup>
-            </InputGroup.Text>
-            <Form.Control
+            </InputGroupText>
+            <Input
               type="text"
               id="itemTitle"
               name="itemTitle"
@@ -216,14 +179,14 @@ const CustomEntryForm = ({
               required={true}
             />
           </InputGroup>
-        </Form.Group>
+        </div>
 
-        <Form.Group className="mb-2">
+        <div className="mb-2">
           <InputGroup>
-            <InputGroup.Text className="bg-primary text-white" id="author-note">
-              <Form.Label htmlFor="author">Author</Form.Label> <sup>*</sup>
-            </InputGroup.Text>
-            <Form.Control
+            <InputGroupText id="author-note" className="required">
+              <label htmlFor="author">Author</label> <sup>*</sup>
+            </InputGroupText>
+            <Input
               type="text"
               id="author"
               name="author"
@@ -234,17 +197,13 @@ const CustomEntryForm = ({
               required={true}
             />
           </InputGroup>
-        </Form.Group>
-        <Form.Group className="mb-2">
+        </div>
+        <div className="mb-2">
           <InputGroup>
-            <InputGroup.Text
-              id="location-note"
-              className="bg-primary text-white"
-            >
-              <Form.Label htmlFor="itemLocation">Location</Form.Label>{' '}
-              <sup>*</sup>
-            </InputGroup.Text>
-            <FormSelect
+            <InputGroupText id="location-note" className="required">
+              <label htmlFor="itemLocation">Location</label> <sup>*</sup>
+            </InputGroupText>
+            <Select
               id="itemLocation"
               name="itemLocation"
               aria-describedby="location-note"
@@ -254,16 +213,16 @@ const CustomEntryForm = ({
               required={true}
             >
               {locationSelectOptions}
-            </FormSelect>
+            </Select>
           </InputGroup>
-        </Form.Group>
+        </div>
 
-        <Form.Group className="mb-2">
+        <div className="mb-2">
           <InputGroup>
-            <InputGroup.Text id="pub-date-note">
-              <Form.Label htmlFor="pub_date">Publication Date</Form.Label>
-            </InputGroup.Text>
-            <Form.Control
+            <InputGroupText id="pub-date-note">
+              <label htmlFor="pub_date">Publication Date</label>
+            </InputGroupText>
+            <Input
               type="text"
               id="pub_date"
               name="pub_date"
@@ -273,14 +232,14 @@ const CustomEntryForm = ({
               defaultValue={existingEntry?.pub_date ?? ''}
             />
           </InputGroup>
-        </Form.Group>
+        </div>
 
-        <Form.Group className="mb-2">
+        <div className="mb-2">
           <InputGroup>
-            <InputGroup.Text id="call-number-note">
-              <Form.Label htmlFor="itemCallNumber">Call Number</Form.Label>
-            </InputGroup.Text>
-            <Form.Control
+            <InputGroupText id="call-number-note">
+              <label htmlFor="itemCallNumber">Call Number</label>
+            </InputGroupText>
+            <Input
               type="text"
               id="itemCallNumber"
               name="itemCallNumber"
@@ -290,14 +249,14 @@ const CustomEntryForm = ({
               defaultValue={itemData?.call_number ?? ''}
             />
           </InputGroup>
-        </Form.Group>
+        </div>
 
-        <Form.Group className="mb-2">
+        <div className="mb-2">
           <InputGroup>
-            <InputGroup.Text id="copy-note">
-              <Form.Label htmlFor="itemCopy">Copy</Form.Label>
-            </InputGroup.Text>
-            <Form.Control
+            <InputGroupText id="copy-note">
+              <label htmlFor="itemCopy">Copy</label>
+            </InputGroupText>
+            <Input
               type="text"
               id="itemCopy"
               name="itemCopy"
@@ -307,14 +266,14 @@ const CustomEntryForm = ({
               defaultValue={itemData?.copy_id ?? ''}
             />
           </InputGroup>
-        </Form.Group>
+        </div>
 
-        <Form.Group className="mb-2">
+        <div className="mb-2">
           <InputGroup>
-            <InputGroup.Text id="box-note">
-              <Form.Label htmlFor="itemBox">Box</Form.Label>
-            </InputGroup.Text>
-            <Form.Control
+            <InputGroupText id="box-note">
+              <label htmlFor="itemBox">Box</label>
+            </InputGroupText>
+            <Input
               type="text"
               id="itemBox"
               name="itemBox"
@@ -324,14 +283,14 @@ const CustomEntryForm = ({
               disabled={!editable}
             />
           </InputGroup>
-        </Form.Group>
+        </div>
 
-        <Form.Group className="mb-2">
+        <div className="mb-2">
           <InputGroup>
-            <InputGroup.Text id="folder-note">
-              <Form.Label htmlFor="itemFolder">Folder</Form.Label>
-            </InputGroup.Text>
-            <Form.Control
+            <InputGroupText id="folder-note">
+              <label htmlFor="itemFolder">Folder</label>
+            </InputGroupText>
+            <Input
               type="text"
               id="itemFolder"
               name="itemFolder"
@@ -341,14 +300,14 @@ const CustomEntryForm = ({
               defaultValue={itemData?.folder ?? ''}
             />
           </InputGroup>
-        </Form.Group>
+        </div>
 
-        <Form.Group className="mb-2">
+        <div className="mb-2">
           <InputGroup>
-            <InputGroup.Text id="ms-note">
-              <Form.Label htmlFor="itemMs">Manuscript</Form.Label>
-            </InputGroup.Text>
-            <Form.Control
+            <InputGroupText id="ms-note">
+              <label htmlFor="itemMs">Manuscript</label>
+            </InputGroupText>
+            <Input
               type="text"
               id="itemMs"
               name="itemMs"
@@ -358,14 +317,14 @@ const CustomEntryForm = ({
               defaultValue={itemData?.ms ?? ''}
             />
           </InputGroup>
-        </Form.Group>
+        </div>
 
-        <Form.Group className="mb-2">
+        <div className="mb-2">
           <InputGroup>
-            <InputGroup.Text id="notes-note">
-              <Form.Label htmlFor="itemNotes">Notes</Form.Label>
-            </InputGroup.Text>
-            <Form.Control
+            <InputGroupText id="notes-note">
+              <label htmlFor="itemNotes">Notes</label>
+            </InputGroupText>
+            <Input
               type="text"
               id="itemNotes"
               name="itemNotes"
@@ -379,22 +338,23 @@ const CustomEntryForm = ({
               }
             />
           </InputGroup>
-        </Form.Group>
+        </div>
 
-        {quickSlip && <QuickSlipProjectInfo />}
+        {quickSlip && (
+          <QuickSlipProjectInfo currentUser={currentUser ?? null} />
+        )}
 
         {editable && (
           <Button
             type="submit"
-            className="btn btn-primary"
             onClick={() => {
-              console.log('Form submitted');
+              console.debug('Form submitted');
             }}
           >
             Submit
           </Button>
         )}
-      </Form>
+      </form>
     </>
   );
 };

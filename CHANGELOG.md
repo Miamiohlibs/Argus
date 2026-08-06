@@ -1,5 +1,29 @@
 # Changelog
 
+## 0.9.0 - TBD
+
+### Added
+
+- New .env variables: ASPACE_API_BASE_URL, ASPACE_USER, ASPACE_PASSWORD, ASPACE_PUBLIC_BASE_URL, NEXT_PUBLIC_CATALOGS, NEXT_PUBLIC_USER_AFFILIATIONS,NEXT_PUBLIC_USER_STATUSES, NEXT_PUBLIC_SLIP_HEADER, NEXT_PUBLIC_SLIP_SUBHEAD
+- Added structural ability to add new catalogs beyond Alma
+- Added support for ArchivesSpace as first new catalog
+- Aspace features:
+  - SearchBibs accepts Aspace urls -- either public URL or API url, for any of: resources, top_containers, or archival_objects
+  - callNumberOverrides -> these files need to be reset to blank for the release
+  - titleOverrides -> these files need to be reset to blank for the release
+  - separate pull slip format from Alma
+- drops and replaces User.status -- we'll need to update the User table for the main argus version when we install this version.
+- Added support for Patron Info that is different from the User info, so library staff can create a project for a patron who doesn't have an account; useful for one-time reference transactions, etc.
+- Added support for printing selected pull slips from a project rather than "all" or "just one".
+- Added badges on the ProjectsTable showing how many items are connected to a project
+
+### Changed
+
+- Changed UserStatus and UserAffiliation to .env settings rather than hard-coded enums in Prisma schema, for ease of adoption at other institutions.
+- Changed UI framework from Bootstrap 5 to Tailwind 4 for better compatibility with Next.js.
+- Moved from Next.js v. 15 to v. 16.
+- Reorganized components so that most are in subfolders of @/components (for components that are used in multiple pages) or are in the @/app directory with the page that calls them (for components that are not re-used.)
+
 ## 0.8.3 - 2026-04-29
 
 ### Changed

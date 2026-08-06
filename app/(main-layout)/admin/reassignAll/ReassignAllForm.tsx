@@ -1,5 +1,7 @@
 'use client';
-import { Form, InputGroup, Button } from 'react-bootstrap';
+import InputGroup from '@/components/ui/InputGroup';
+import Label from '@/components/ui/Label';
+import Button from '@/components/ui/Button';
 import { ReassignAllResult } from '@/app/actions/reassignAll';
 import SelectUserFormElement from '@/components/SelectUserFormElement';
 import { useActionState, startTransition, useEffect } from 'react';
@@ -42,7 +44,7 @@ export default function ReassignAllForm({ action, users }: FormProps) {
     let gotNewUser = false;
     if (oldUserData?.includes('&&&')) {
       const [oldUserTempId, oldUserTempName] = oldUserData.split('&&&');
-      console.log(oldUserData.split('&&&'));
+      // console.log(oldUserData.split('&&&'));
       oldUserId = oldUserTempId;
       oldUserName = oldUserTempName;
       formData.append('oldUserId', oldUserId);
@@ -70,21 +72,17 @@ export default function ReassignAllForm({ action, users }: FormProps) {
   };
 
   return (
-    <form onSubmit={onSubmit} className="mt-3">
-      <InputGroup className="bg-danger-subtle mb-3 p-1">
-        <Form.Label className="d-flex align-items-center mx-2">
-          Reassign From Owner
-        </Form.Label>
+    <form onSubmit={onSubmit} className="mt-4">
+      <InputGroup className="mb-4 bg-red-50 p-1">
+        <Label className="mx-2 flex items-center">Reassign From Owner</Label>
         <SelectUserFormElement
           users={users}
           fieldName="oldUser"
           appendNameString={true}
         />
       </InputGroup>
-      <InputGroup className="bg-success-subtle mb-3 p-1">
-        <Form.Label className="d-flex align-items-center mx-2">
-          New Projects Owner
-        </Form.Label>
+      <InputGroup className="mb-4 bg-green-50 p-1">
+        <Label className="mx-2 flex items-center">New Projects Owner</Label>
         <SelectUserFormElement
           users={users}
           fieldName="newUser"
