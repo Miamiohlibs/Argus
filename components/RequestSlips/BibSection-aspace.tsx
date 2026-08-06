@@ -54,7 +54,7 @@ export const bibSectionAspace = (props: RequestSlipProps) => {
       </div>
 
       <div className={styles.column}>
-        <h3 className={styles.h3}>Whereabouts</h3>
+        <h3 className={styles.h3}>Shelfmark</h3>
         {/* <div className={styles.text}>{location}</div>
          */}
         {callNumber &&
