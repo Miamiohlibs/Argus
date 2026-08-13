@@ -3,7 +3,11 @@ import type {
   AlmaItemDataPlusHoldingDetails,
   AlmaItemHoldingBibDataPlusCallAndLocation,
 } from '@/types/CondensedBibHoldings';
-import type { BibDataDraft, ItemDataDraft, CatalogSearchResult } from '@/lib/catalogs/types';
+import type {
+  BibDataDraft,
+  ItemDataDraft,
+  CatalogSearchResult,
+} from '@/lib/catalogs/types';
 
 export function mapAlmaBibToDraft(
   bib: AlmaItemHoldingBibDataPlusCallAndLocation,
@@ -37,13 +41,16 @@ export function mapAlmaItemToDraft(
 ): ItemDataDraft {
   const libraryDesc = item.library?.desc;
   const locationDesc = item.location?.desc;
-  const location_name =
-    libraryDesc && locationDesc && libraryDesc !== locationDesc
-      ? `${libraryDesc}: ${locationDesc}`
-      : (locationDesc ?? libraryDesc ?? null);
+  const location_name = locationDesc ?? libraryDesc ?? null;
+  // libraryDesc && locationDesc
+  //  ? locationDesc
+  // libraryDesc && locationDesc && libraryDesc !== locationDesc
+  //   ? `${libraryDesc}: ${locationDesc}`
+  //   : (locationDesc ?? libraryDesc ?? null);
 
   return {
-    clientKey: item.pid || `${item.barcode ?? 'nobarcode'}-${item.copy_id ?? '0'}`,
+    clientKey:
+      item.pid || `${item.barcode ?? 'nobarcode'}-${item.copy_id ?? '0'}`,
     description: item.description || null,
     call_number: item.call_number || null,
     copy_id: item.copy_id || null,
