@@ -167,6 +167,7 @@ export default function EntriesTable({
       name: 'Call Number',
       selector: (row: EntryWithItems) => row.callNumber ?? '',
       sortable: true,
+      width: '12em',
     },
     {
       name: '# Items',
