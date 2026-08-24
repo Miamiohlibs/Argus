@@ -74,7 +74,9 @@ export async function searchByUrl(url: string, client: AspaceClient) {
   try {
     const publicBaseUrl = process.env.ASPACE_PUBLIC_BASE_URL ?? '';
     const apiBaseUrl = process.env.ASPACE_API_BASE_URL ?? '';
-    url = url.replace(publicBaseUrl, apiBaseUrl);
+    if (url.startsWith(publicBaseUrl) && !url.startsWith(apiBaseUrl)) {
+      url = url.replace(publicBaseUrl, apiBaseUrl);
+    }
     const publicUrl = url.replace(apiBaseUrl, publicBaseUrl);
     logger.verbose(`aspaceSearch/searchByUrl fetching: ${url}`);
     const raw = await client.getUrl(url, {
