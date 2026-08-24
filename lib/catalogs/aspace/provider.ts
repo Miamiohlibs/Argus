@@ -40,7 +40,7 @@ export const aspaceProvider: SearchableCatalogProvider = {
       }
       return { data: { bibData: data.bibData, itemData: data.itemData || [] } };
     } catch (error) {
-      console.error('Failed to fetchByCatalogId in aspace/provider');
+      logger.error('Failed to fetchByCatalogId in aspace/provider');
       return { error: 'Failed to fetchByCatalogId in aspace/provider' };
     }
   },
