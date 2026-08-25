@@ -16,7 +16,7 @@
   "dependencies": {
     "@clerk/nextjs": "^7.0.4",
     "@kenxirwin/alma-search": "^0.2.0",
-    "@kenxirwin/archives-space-api-client": "^0.3.2",
+    "@kenxirwin/archives-space-api-client": "^0.3.4",
     "@prisma/client": "^6.13.0",
     "next": "^16.2.12",
     "react": "19.2.8",
