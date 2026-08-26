@@ -7,7 +7,6 @@ import styles from './RequestSlipHalfPageHtml.module.css';
 import { Roboto } from 'next/font/google';
 import { bibSectionAspace } from './BibSection-aspace';
 import { bibSectionDefault } from './BibSection-default';
-import { bibSectionOverrides } from './BibSectionOverrides';
 import { getUserAffiliations, getUserStatuses } from '@/lib/utils';
 
 const roboto = Roboto({
@@ -46,9 +45,6 @@ const PrintButton: React.FC<{ children?: React.ReactNode }> = ({
 export const bibSection = (props: RequestSlipProps) => {
   const { catalog } = props;
   if (catalog == 'ASPACE') {
-    // if (bibSectionOverrides.aspace(props)) {
-    // return bibSectionOverrides.aspace(props);
-    // }
     return bibSectionAspace(props);
   } else {
     return bibSectionDefault(props);
