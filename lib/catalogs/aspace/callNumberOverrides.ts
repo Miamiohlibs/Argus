@@ -65,6 +65,14 @@ const overrides: AspaceCallNumberOverrides = {
     /* custom code for getting all items */
     // },
   },
+  topContainer: {
+    // async bib(data: RepoTopContainer) {
+    //   return 'customCallNumber';
+    // },
+    // item(data: RepoTopContainer) {
+    //   return 'customItemCallNumber';
+    // },
+  },
 };
 
 export default overrides;
