@@ -1,6 +1,6 @@
 # Argus
 
-Argus is a project manager for library special collections and archives. Library staff and researchers can create lists of bibliographic (bib) records imported from a connected Ex Libris Alma/Primo catalog and/or from ArchivesSpace. Item records (for individual volumes) associate with each bib record can also be specified. Once lists are created, a user can generate pull slips for use in special collections.
+Argus is a project manager for special collections. Library staff and researchers can create lists of bibliographic (bib) records from a connected Ex Libris Alma/Primo catalog to look up items by call number, barcode, or Alma's mms_id. Item records (for individual volumes) associate with each bib record can also be specified. Once lists are created, a user can generate pull slips for use in special collections.
 
 User-created lists can be used to help researchers remember items of interest, and can help library workers easily re-use or update course-related items from one class/semester/year to the next, streamlining workflows and reducing duplicated effort.
 
@@ -37,11 +37,9 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 It uses Google-based authentication, managed through [Clerk](https://clerk.com/). User permissions are managed by the application.
 
-Databases are managed through Prisma on a hosted database.
+Databases are through Prisma; you can host a database locally on your own server or use a service like [Neon](https://neon.com) to host your database. (We have used both in developing Argus.)
 
 Connects with Ex Libris's Alma API; to allow call-number lookups, the Ex Libris Primo API is required as well.
-
-Connects with ArchivesSpace's API to allow lookups by URL; URLs can come from the public or staff web interfaces or be direct API endpoints.
 
 ## Configuration
 
