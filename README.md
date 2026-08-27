@@ -1,6 +1,6 @@
 # Argus
 
-Argus is a project manager for special collections. Library staff and researchers can create lists of bibliographic (bib) records from a connected Ex Libris Alma/Primo catalog to look up items by call number, barcode, or Alma's mms_id. Item records (for individual volumes) associate with each bib record can also be specified. Once lists are created, a user can generate pull slips for use in special collections.
+Argus is a project manager for library special collections and archives. Library staff and researchers can create lists of bibliographic (bib) records imported from a connected Ex Libris Alma/Primo catalog and/or from ArchivesSpace. Item records (for individual volumes) associate with each bib record can also be specified. Once lists are created, a user can generate pull slips for use in special collections.
 
 User-created lists can be used to help researchers remember items of interest, and can help library workers easily re-use or update course-related items from one class/semester/year to the next, streamlining workflows and reducing duplicated effort.
 
@@ -37,9 +37,11 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 It uses Google-based authentication, managed through [Clerk](https://clerk.com/). User permissions are managed by the application.
 
-Databases are through Prisma; you can host a database locally on your own server or use a service like [Neon](https://neon.com) to host your database. (We have used both in developing Argus.)
+Databases are managed through Prisma on a hosted database.
 
 Connects with Ex Libris's Alma API; to allow call-number lookups, the Ex Libris Primo API is required as well.
+
+Connects with ArchivesSpace's API to allow lookups by URL; URLs can come from the public or staff web interfaces or be direct API endpoints.
 
 ## Configuration
 
@@ -133,7 +135,45 @@ LOG_LEVEL=info #info is the default, choose from: error,warn,info,verbose,debug,
    - Set `NEXT_PUBLIC_IS_DEV_ENV`. Should be `false` for production; when true, will display some ugly/useful JSON data on some results pages.
 9. When the site is ready to go into production (i.e., after testing), use the Google Developer Console to create a project to handle authentication. Provide the Google project configuration to Clerk to let Google handle the authentication and have Clerk manage users. Refer to Clerk's documentation on [Deploying to production](https://clerk.com/docs/guides/development/deployment/production) for and this [video tutorial](https://youtu.be/qKU6MQp-g7w?si=Qq6pp1VvRVp64edq) guidance.
 
-### ArchivesSpace call-number and title customization
+### Additional customizations using a fork of the GitHub repo (recommended)
+
+The configuration steps above allow an institution to connect to their own catalog and create some display and permissions settings in Argus. You can do all of that without forking the GitHub repo.
+
+There are additional customizations possible, but they require that you create a local fork of the main `argus4archives/Argus` repo (e.g. `your-org/Argus`) on GitHub; this is especially important if you are connecting to ArchivesSpace. This will allow you to customize:
+
+- The format of printable request slips.
+- How Argus identifies a call number/shelfmark for ArchivesSpace items.
+- How Argus identifies the title of ArchivesSpace items.
+
+To create these customization:
+
+1. Fork the repo to your own user or organization in GitHub.
+2. Set the `argus4archives/Argus` as the "upstream" branch and your own fok as the "origin" branch.
+
+```
+git remote add upstream https://github.com/argus4archives/Argus.git
+git remote add origin https://github.com/<your-org>/Argus.git
+```
+
+3. Configure the "ours" merge driver locally on the command line: `git config merge.ours.driver true`. This only needs doing once per machine/clone. Because the local customization files are meant to diverge per installation, this command sets it up once so future `git pull`s from upstream don't create merge conflicts on your local edits. This tells git to keep your local version of any file matching a `merge=ours` rule in `.gitattributes` (e.g. `callNumberOverrides.ts`) whenever you merge or pull changes from upstream, instead of trying to merge the two versions. Upstream Argus development should never need to edit this file's contents again after it's created, so in practice this means your customization simply persists across updates.
+4. Edit the local Overrides files described in the following sections.
+5. Once customization has been added, do not use GitHub's "sync fork" button to update the software, since it can't apply the `merge=ours` behavior and will offer to discard the customization commit instead of merging around it.Instead, fetch and merge upstream/dev locally:
+
+```
+git fetch upstream
+git checkout main
+git merge upstream/main
+```
+
+With the driver configured, git pulls in the new upstream commits (new version release) normally, and for the three `merge=ours` files it keeps the local version untouched — no conflict markers, no manual resolution. 6. Push the merged result to origin:
+
+```
+git push origin main
+```
+
+This is the actual "sync" — origin/main now has upstream's changes plus the preserved override customizations, and the local commit is never discarded.
+
+#### ArchivesSpace call-number and title customization
 
 Different institutions structure their ArchivesSpace `id_0`/`id_1`/`id_2`/`indicator`/`display_string` fields differently, so call-number parsing is a designated per-installation extension point rather than a one-size-fits-all default.
 
@@ -141,15 +181,7 @@ Different institutions structure their ArchivesSpace `id_0`/`id_1`/`id_2`/`indic
 
 Structured like the callNumberOverrides.ts file, `lib/catalogs/aspace/titleOverrides.ts` allows for local customizations of how titles are extracted from ArchivesSpace data.
 
-Because these files are meant to diverge per installation, set it up once so future `git pull`s from upstream don't create merge conflicts on your local edits:
-
-```
-git config merge.ours.driver true
-```
-
-This tells git to keep your local version of any file matching a `merge=ours` rule in `.gitattributes` (already configured for `callNumberOverrides.ts`) whenever you merge or pull changes from upstream, instead of trying to merge the two versions. Upstream Argus development should never need to edit this file's contents again after it's created, so in practice this means your customization simply persists across updates.
-
-### Request slip customization
+#### Request slip customization
 
 Similar to to the ArchivesSpace title and call number customizations above, the `/components/Request Slips/BibSectionOverrides.tsx` file will let you make a custom local layout for the top portion of the request slip. Using the same variables available in the `BibSection-aspace.tsx` and `BibSection-default.tsx` files, you can provide an alternate layout for that section of the printable request slips.
 
