@@ -149,6 +149,12 @@ git config merge.ours.driver true
 
 This tells git to keep your local version of any file matching a `merge=ours` rule in `.gitattributes` (already configured for `callNumberOverrides.ts`) whenever you merge or pull changes from upstream, instead of trying to merge the two versions. Upstream Argus development should never need to edit this file's contents again after it's created, so in practice this means your customization simply persists across updates.
 
+### Request slip customization
+
+Similar to to the ArchivesSpace title and call number customizations above, the `/components/Request Slips/BibSectionOverrides.tsx` file will let you make a custom local layout for the top portion of the request slip. Using the same variables available in the `BibSection-aspace.tsx` and `BibSection-default.tsx` files, you can provide an alternate layout for that section of the printable request slips.
+
+As with the title and call number customizations, the `BibSectionsOverrides.tsx` file is managed by the `.gitattributes` file so that your changes to the overrides file will no be overwritten by future software updates.
+
 ## Getting Started (Boilerplate NextJs stuff)
 
 First, run the development server:
