@@ -1,5 +1,6 @@
 'use server';
 import { db } from '@/lib/db';
+import logger from '@/lib/logger';
 
 export async function getPossibleCoEditors(project_id: string) {
   // add field isProjectOwner
@@ -15,10 +16,10 @@ export async function getPossibleCoEditors(project_id: string) {
   const possibleCoEditors = users.map((user) => ({
     ...user,
     isProjectCoEditor: user.coEditorOn.some(
-      (project) => project.id === project_id_int
+      (project) => project.id === project_id_int,
     ),
     isProjectOwner: user.projects.some(
-      (project) => project.id === project_id_int
+      (project) => project.id === project_id_int,
     ),
   }));
 
@@ -27,7 +28,7 @@ export async function getPossibleCoEditors(project_id: string) {
 
 export async function addCoEditor(
   userId: string,
-  projectId: string
+  projectId: string,
 ): Promise<{ success: boolean; error?: string }> {
   const project_id_int = parseInt(projectId) ?? null;
   if (isNaN(project_id_int)) {
@@ -49,14 +50,14 @@ export async function addCoEditor(
     });
     return { success: true };
   } catch (error) {
-    console.error('Error adding co-editor:', error);
+    logger.error('Error adding co-editor:', error);
     return { success: false, error: 'Failed to add co-editor' };
   }
 }
 
 export async function removeCoEditor(
   userId: string,
-  projectId: string
+  projectId: string,
 ): Promise<{ success: boolean; error?: string }> {
   const project_id_int = parseInt(projectId) ?? null;
   if (isNaN(project_id_int)) {
@@ -75,10 +76,10 @@ export async function removeCoEditor(
         },
       },
     });
-    console.log(removalResponse);
+    logger.verbose(removalResponse);
     return { success: true };
   } catch (error) {
-    console.error('Error adding co-editor:', error);
+    logger.error('Error adding co-editor:', error);
     return { success: false, error: 'Failed to remove co-editor' };
   }
 }

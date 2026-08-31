@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import ProjectForm from '@/components/ProjectForm';
+import ProjectForm from '@/components/Projects/ProjectForm';
 import { checkUser } from '@/lib/checkUser';
 import { updateProject } from '@/app/actions/projectActions';
 import { getProject } from '@/app/actions/projectActions';
@@ -8,8 +8,8 @@ import { redirect } from 'next/navigation';
 import { unauthorized } from 'next/navigation';
 import logger from '@/lib/logger';
 import NonOwnerAlert from '@/components/NonOwnerAlert';
-import ProjectMetadata from '@/components/ProjectMetadata';
-import ProjectButtons from '@/components/ProjectButtons';
+import ProjectMetadata from '@/components/Projects/ProjectMetadata';
+import ProjectButtons from '@/components/Projects/ProjectButtons';
 
 interface EditProjectPageProps {
   params: Promise<{ id: string }>;
@@ -45,11 +45,11 @@ export default async function EditProjectPage({
       <>
         {/* this NonOwnerAlert has different conditions from others because the only one who should normally edit this page is the owner. */}
         {!isOwner && !isCoEditor && <NonOwnerAlert />}
-        <h1 className="h2">Edit Project Details</h1>
+        <h1 className="text-3xl font-medium">Edit Project Details</h1>
         {project && <ProjectMetadata project={project} />}
         <ProjectButtons
           projectId={parseInt(id)}
-          divClass="mb-3"
+          divClass="mb-4"
           canAssignCoEditors={isOwner || isAdmin}
           isAdmin={isAdmin}
           onPage="edit-project-details"
@@ -58,6 +58,7 @@ export default async function EditProjectPage({
           user={currentUser}
           action={updateProject}
           project={project}
+          isAdmin={isAdmin}
           basePath={process.env.NEXT_PUBLIC_APP_BASEPATH ?? '/'}
         />
       </>

@@ -2,7 +2,6 @@
 import logger from '@/lib/logger';
 import { db } from '@/lib/db';
 import { isUserAdmin } from '@/lib/getUserInfo';
-import { projectUpdate } from 'next/dist/build/swc/generated-native';
 
 export interface SearchResult {
   id: string;

@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import ProjectForm from '@/components/ProjectForm';
+import ProjectForm from '@/components/Projects/ProjectForm';
 import { createProject } from '@/app/actions/projectActions';
 import getUserInfo from '@/lib/getUserInfo';
 import { unauthorized } from 'next/navigation';
@@ -14,14 +14,19 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function CreateProjectPage() {
   const {
     user,
-    permissions: { isEditorOrAbove },
+    permissions: { isEditorOrAbove, isAdmin },
   } = await getUserInfo();
   const basePath = process.env.NEXT_PUBLIC_APP_BASEPATH ?? '/';
 
   if (isEditorOrAbove && user != undefined) {
     return (
       <>
-        <ProjectForm user={user} action={createProject} basePath={basePath} />
+        <ProjectForm
+          user={user}
+          action={createProject}
+          basePath={basePath}
+          isAdmin={isAdmin}
+        />
       </>
     );
   } else {

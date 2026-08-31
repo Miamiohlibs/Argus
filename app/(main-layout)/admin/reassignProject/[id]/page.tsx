@@ -4,7 +4,7 @@ import ReassignmentForm from './ReassignmentForm';
 import getUsers from '@/app/actions/getUsers';
 import getUserInfo from '@/lib/getUserInfo';
 import checkAccess from '@/lib/checkAccess';
-import ProjectButtons from '@/components/ProjectButtons';
+import ProjectButtons from '@/components/Projects/ProjectButtons';
 
 export default async function ReassignProjectPage({
   params,

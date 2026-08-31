@@ -1,0 +1,176 @@
+'use client';
+import { TableColumn } from 'react-data-table-component';
+import { useEffect, useMemo, useState } from 'react';
+import DataTable from 'react-data-table-component';
+import { User } from '@prisma/client';
+import getUsers from '@/app/actions/getUsers';
+import Link from 'next/link';
+import Button, { buttonClasses } from '@/components/ui/Button';
+import DeleteButton from '@/components/DeleteButton';
+import deleteUser from '@/app/actions/deleteUser';
+import { toast } from 'react-toastify';
+
+export default function UserTable({
+  user,
+  canDeleteSuperAdmin,
+}: {
+  user: User;
+  canDeleteSuperAdmin: boolean;
+}) {
+  const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [filterText, setFilterText] = useState('');
+
+  const handleDelete = async (userIdtoDelete: string) => {
+    console.debug(`Delete user with ID: ${userIdtoDelete}`);
+    const confirmed = window.confirm(
+      'Are you sure you want to delete this user and all their projects?',
+    );
+    if (!confirmed) return;
+    const { error } = await deleteUser(userIdtoDelete); // also gets {message}
+    if (error) {
+      toast.error('Entry deletion failed');
+    } else {
+      toast.success('Entry deleted successfully');
+      setUsers((prev) => prev.filter((item) => item.id !== userIdtoDelete));
+    }
+  };
+
+  useEffect(() => {
+    // Fetch users from an API or other source
+    const fetchUsers = async () => {
+      const data = await getUsers(); // Assuming getUsers is an async function that fetches users
+      setUsers(data.users ?? []);
+      setLoading(false);
+    };
+
+    fetchUsers();
+  }, []);
+
+  const filteredUsers = useMemo(
+    () =>
+      users.filter((user) =>
+        [user.name, user.email, user.role].some((val) =>
+          val?.toLowerCase().includes(filterText.toLowerCase() || ''),
+        ),
+      ),
+    [users, filterText],
+  );
+
+  const columns: TableColumn<User>[] = [
+    {
+      name: 'Name',
+      selector: (row: User) => row.name ?? '',
+      cell: (row: User) => {
+        let extra;
+        if (row.clerkUserId == user.clerkUserId) {
+          extra = (
+            <Button
+              variant="outline-secondary"
+              size="sm"
+              className="ms-3"
+              disabled
+            >
+              Self
+            </Button>
+          );
+        }
+        return (
+          <>
+            {row.name}
+            {extra}
+          </>
+        );
+      },
+      sortable: true,
+    },
+    {
+      name: 'Email',
+      selector: (row: User) => row.email ?? '',
+      sortable: true,
+    },
+    {
+      name: 'Role',
+      selector: (row: User) => row.role ?? '',
+      sortable: true,
+    },
+    {
+      name: 'Can Print',
+      selector: (row: User) => row.printSlips && 'true',
+      sortable: true,
+    },
+    {
+      name: 'Status',
+      selector: (row: User) => row.status ?? '',
+      sortable: true,
+    },
+    {
+      name: 'Affiliation',
+      selector: (row: User) => row.affiliation ?? '',
+      sortable: true,
+    },
+    {
+      name: 'Created',
+      selector: (row: User) => new Date(row.createdAt).getTime(),
+      cell: (row: User) => new Date(row.createdAt).toLocaleDateString(),
+      sortable: true,
+      width: '8em',
+    },
+    {
+      name: 'Updated',
+      selector: (row: User) => new Date(row.updatedAt).getTime(),
+      cell: (row: User) => new Date(row.updatedAt).toLocaleDateString(),
+      sortable: true,
+      width: '8em',
+    },
+    {
+      name: 'Tools',
+      cell: (row: User) =>
+        (canDeleteSuperAdmin || row.role !== 'superadmin') &&
+        row.clerkUserId !== user.clerkUserId ? (
+          <>
+            <Link
+              href={`/admin/users/edit/${row.id}`}
+              className={buttonClasses({
+                variant: 'outline-primary',
+                size: 'sm',
+                className: 'me-1',
+              })} // change path to your route
+            >
+              Edit
+            </Link>
+            <DeleteButton label="" onDelete={() => handleDelete(row.id)} />
+          </>
+        ) : (
+          <></>
+        ),
+      ignoreRowClick: true,
+    },
+  ];
+  return (
+    <div className="react-data-table" id="users-table">
+      <DataTable
+        // title="User List"
+        columns={columns}
+        data={filteredUsers}
+        progressPending={loading}
+        pagination
+        paginationPerPage={25}
+        paginationRowsPerPageOptions={[10, 25, 50, 100]}
+        highlightOnHover
+        striped
+        subHeader
+        subHeaderComponent={
+          <input
+            type="text"
+            placeholder="Search by name, email, or role"
+            aria-label="Search users by name, email, or role"
+            value={filterText}
+            onChange={(e) => setFilterText(e.target.value)}
+            className="p-2 border rounded w-full md:w-1/3"
+          />
+        }
+      />
+    </div>
+  );
+}

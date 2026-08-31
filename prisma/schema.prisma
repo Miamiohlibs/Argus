@@ -9,43 +9,47 @@ datasource db {
 }
 
 model User {
-  id          String           @id @default(uuid())
-  clerkUserId String           @unique
-  email       String           @unique
+  id          String    @id @default(uuid())
+  clerkUserId String    @unique
+  email       String    @unique
   name        String
   imageUrl    String?
-  createdAt   DateTime         @default(now())
-  updatedAt   DateTime         @updatedAt
-  role        Role             @default(user)
-  affiliation UserAffiliation?
-  status      UserStatus?
-  printSlips  Boolean          @default(false)
-  projects    Project[]        @relation("ProjectOwner")
-  coEditorOn  Project[]        @relation("ProjectCoEditors")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  role        Role      @default(user)
+  affiliation String?
+  status      String?
+  printSlips  Boolean   @default(false)
+  projects    Project[] @relation("ProjectOwner")
+  coEditorOn  Project[] @relation("ProjectCoEditors")
 }
 
 model Project {
-  id          Int        @id @default(autoincrement())
-  title       String
-  userId      String
-  notes       String?
-  needForDate DateTime?
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-  purpose     String     @default("Other")
-  public      Boolean    @default(false)
-  subjects    String[]
-  status      String?
-  bibEntries  BibEntry[]
-  user        User       @relation("ProjectOwner", fields: [userId], references: [clerkUserId], onDelete: Cascade)
-  coEditors   User[]     @relation("ProjectCoEditors")
+  id                Int        @id @default(autoincrement())
+  title             String
+  userId            String
+  notes             String?
+  needForDate       DateTime?
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
+  purpose           String     @default("Other")
+  public            Boolean    @default(false)
+  subjects          String[]
+  status            String?
+  patronName        String?
+  patronAffiliation String?
+  patronStatus      String?
+  bibEntries        BibEntry[]
+  user              User       @relation("ProjectOwner", fields: [userId], references: [clerkUserId], onDelete: Cascade)
+  coEditors         User[]     @relation("ProjectCoEditors")
 }
 
 model BibEntry {
   id               String      @id @default(uuid())
   itemTitle        String
-  almaId           String?
-  almaIdType       String?
+  catalogId        String?
+  catalogIdType    String?
+  catalog          Catalog     @default(ALMA)
   author           String
   callNumber       String?
   notes            String?
@@ -82,16 +86,8 @@ enum Role {
   superadmin
 }
 
-enum UserAffiliation {
-  Miami
-  Other
-}
-
-enum UserStatus {
-  Undergrad
-  Graduate
-  Faculty
-  Staff
-  Alumni
-  Other
+enum Catalog {
+  ALMA
+  ASPACE
+  CUSTOM
 }

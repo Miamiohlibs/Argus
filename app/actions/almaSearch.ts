@@ -31,8 +31,8 @@ export async function bibHoldingsByAny(input: string) {
     if (Array.isArray(found)) {
       return await bibHoldings({ mms_id: found[1] });
     } else {
-      console.log(
-        `No MMS_ID found in url: ${input}. Hint: Permalink URLs will only work here if they end in ...alma99 followed by a bunch of digits. If you have a different sort of permalink, try looking up by Barcode or Call Number.`
+      logger.error(
+        `No MMS_ID found in url: ${input}. Hint: Permalink URLs will only work here if they end in ...alma99 followed by a bunch of digits. If you have a different sort of permalink, try looking up by Barcode or Call Number.`,
       );
     }
   } else if (input.match(mmsRe)) {
@@ -81,7 +81,7 @@ export async function bibById({ mms_id }: { mms_id: string }) {
 // paginate through all API results
 async function getAllHoldingsItemsByMmsId(
   mms_id: string,
-  limit = 100
+  limit = 100,
 ): Promise<AlmaItemApiResponse> {
   let allItems: AlmaItem[] = [];
   let offset = 0;
@@ -94,7 +94,7 @@ async function getAllHoldingsItemsByMmsId(
   while (true) {
     const results: AlmaItemApiResponse = await alma.holdingsItemsByMmsId(
       mms_id,
-      { offset, limit }
+      { offset, limit },
     );
 
     if (offset === 0) {
@@ -135,8 +135,8 @@ function condenseBibHoldings(response: AlmaItemApiResponse) {
     ...new Set(
       response.item.map(
         (item) =>
-          `${item.item_data.location.desc} (${item.item_data.location.value})`
-      )
+          `${item.item_data.location.desc} (${item.item_data.location.value})`,
+      ),
     ),
   ];
   const allLocations = allLocationsArr.join(',');
@@ -157,7 +157,7 @@ function condenseBibHoldings(response: AlmaItemApiResponse) {
 
   uniqHoldings.forEach((holdingId) => {
     const allMatchingHoldings: AlmaItem[] = response.item.filter(
-      (item) => item.holding_data.holding_id == holdingId
+      (item) => item.holding_data.holding_id == holdingId,
     );
     const allMatchingItems: AlmaItemDataPlusHoldingDetails[] =
       allMatchingHoldings.map((holding) => ({
@@ -180,9 +180,8 @@ function condenseBibHoldings(response: AlmaItemApiResponse) {
 
 export async function bibHoldings({ mms_id }: { mms_id: string }) {
   try {
-    const results: AlmaItemApiResponse = await getAllHoldingsItemsByMmsId(
-      mms_id
-    );
+    const results: AlmaItemApiResponse =
+      await getAllHoldingsItemsByMmsId(mms_id);
 
     const condensedResults = condenseBibHoldings(results);
     if (condensedResults !== undefined) {

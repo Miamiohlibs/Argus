@@ -1,3 +1,26 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-primary: #0d6efd;
+  --color-primary-hover: #0b5ed7;
+  --color-secondary: #6c757d;
+  --color-secondary-hover: #5c636a;
+  --color-success: #198754;
+  --color-success-hover: #157347;
+  --color-info: #117888;
+  --color-info-hover: #0e606d;
+  --color-warning: #ffc107;
+  --color-warning-hover: #ffca2c;
+  --color-danger: #dc3545;
+  --color-danger-hover: #bb2d3b;
+  --color-light: #f8f9fa;
+  --color-light-hover: #e2e6ea;
+  --color-dark: #212529;
+  --color-dark-hover: #424649;
+
+
+}
+
 :root {
   --box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
 }
@@ -6,24 +29,30 @@
   box-sizing: border-box;
 }
 
+      /* Define global element styles */
+  h1 { @apply text-4xl font-extrabold tracking-tight my-4; }
+  h2 { @apply text-3xl font-bold my-3; }
+  h3 { @apply text-2xl font-semibold my-2; }
+  h4 { @apply text-xl font-medium my-2; }
+  h5 { @apply text-lg font-medium my-1; }
+  h6 { @apply text-base font-medium; }
+
 body {
   background-color: #ffffff;
-  /* min-height: 100vh; */
   margin: 0;
   font-family: 'Lato', sans-serif;
-  /* padding-bottom: 2em;  */
 }
-main{
+main {
   min-height: 85vh;
 }
-footer { 
-  /* position: fixed; */
+footer {
   bottom: 0;
   width: 100%;
 }
 
-footer a { 
-  color: #0248B1 !important;
+footer a {
+  color: #0248b1 !important;
+  text-decoration: underline;
 }
 .footer-meta {
   display: flex;
@@ -40,7 +69,7 @@ footer a {
 
 /* Add separator before every item except the first */
 .footer-meta > *:not(:first-child)::before {
-  content: "";
+  content: '';
   position: absolute;
   left: -0.75rem;
   top: 50%;
@@ -50,9 +79,7 @@ footer a {
   background-color: rgba(0, 0, 0, 0.15);
 }
 
-
-
-.bib-entry{
+.bib-entry {
   background-color: #ddd;
   box-shadow: var(--box-shadow);
   padding: 20px;
@@ -61,7 +88,7 @@ footer a {
 .bib-entry p {
   margin: 5px 0;
 }
-.bib-entry-label { 
+.bib-entry-label {
   font-weight: bold;
   color: #333;
 }
@@ -73,87 +100,43 @@ footer a {
   margin: 20px 0;
 }
 
-.navbar.bg-primary .navbar-brand, .navbar.bg-success .navbar-brand,
-.navbar.bg-primary .nav-link, .navbar.bg-success .nav-link,
-.navbar-text.text-light { 
-  color: #fff !important;
-}
-
-.navbar.bg-primary .nav-link:focus,
-.navbar.bg-success .nav-link:focus
-{
-    outline: 1px auto #fff;
-        /* outline-offset: 2px; */
-
-}
-
-.navbar button:focus, 
-.navbar.bg-primary button:focus, .navbar.bg-primary button:focus-visible
-.navbar.bg-success button:focus, .navbar.bg-success button:focus-visible
-{
-    outline: 2px auto #fff;
-    outline-offset: 2px;
-}
-
-.navbar.bg-primary  .nav-link:hover,
-.navbar.bg-primary  .navbar-brand:hover,
-.navbar.bg-success  .nav-link:hover,
-.navbar.bg-success  .navbar-brand:hover
-{
-  color: #dddddd; /* Slightly darker white for hover state */
-  text-decoration: underline;
-  
-}
-.guest button:focus, .guest button:focus-visible {
-  outline: 2px solid blue;
-  outline-offset: 2px;
-}
-
-.rdt_TableCol, .rdt_TableCell {
+.rdt_TableCol,
+.rdt_TableCell {
   font-size: 14px;
-    padding-left: 5px !important;
-    padding-right: 5px !important;
-
+  padding-left: 5px !important;
+  padding-right: 5px !important;
 }
 
 .rdt_TableCol:focus-visible {
   font-weight: bold !important;
   text-decoration: underline;
   color: blue;
-  opacity: 1.0 !important;
+  opacity: 1 !important;
 }
-.rdt_TableCol_Sortable div, .rdt_TableCol div {
-    padding: 2px; 
-    margin: 2px;
+.rdt_TableCol_Sortable div,
+.rdt_TableCol div {
+  padding: 2px;
+  margin: 2px;
 }
 
-.rdt_TableCol_Sortable:focus-visible div, .rdt_TableCol:focus-visible div {
+.rdt_TableCol_Sortable:focus-visible div,
+.rdt_TableCol:focus-visible div {
   outline: 2px solid #0000ff;
 }
 .rdt_TableCell a:not(.btn) {
   color: #0000ff !important;
 }
 
-.form-label { 
-  margin-bottom: 0;
-}
-/* .sc-lgpSej {} */
-/*up and down sorting arrows in react-data-table */
-
-.btn { 
-  text-wrap: nowrap !important; 
-}
-
 @media print {
-  .no-print, .navbar-nav, .btn {
-    display: none;
-  }
   /* hide tools columns */
   .react-data-table input,
-  #entries-table div[data-column-id="7"],
-  #projects-table div[data-column-id="6"],
-  #users-table div[data-column-id="6"]
-   {
+  #entries-table div[data-column-id='7'],
+  #projects-table div[data-column-id='6'],
+  #users-table div[data-column-id='6'] {
     display: none;
   }
+}
+
+.default a {
+  color: #0000ff 
 }

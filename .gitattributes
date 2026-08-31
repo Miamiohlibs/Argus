@@ -1,0 +1,8 @@
+# Institution-specific ArchivesSpace call-number overrides — this file is a
+# per-installation extension point (see lib/catalogs/aspace/callNumberOverrides.ts).
+# Upstream should not edit its contents again after initial creation, so local
+# edits here never conflict on `git pull`/rebase from upstream, as long as the
+# merge.ours driver is configured (see README.md).
+lib/catalogs/aspace/callNumberOverrides.ts merge=ours
+lib/catalogs/aspace/titleOverrides.ts merge=ours
+components/RequestSlips/BibSectionOverrides.tsx merge=ours

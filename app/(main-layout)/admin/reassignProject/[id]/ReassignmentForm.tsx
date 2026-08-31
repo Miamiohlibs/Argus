@@ -1,5 +1,7 @@
 'use client';
-import { Form, InputGroup, Button } from 'react-bootstrap';
+import InputGroup from '@/components/ui/InputGroup';
+import Label from '@/components/ui/Label';
+import Button from '@/components/ui/Button';
 import { useActionState } from 'react';
 import SelectUserFormElement from '@/components/SelectUserFormElement';
 import type { UpdateProjectOwnerResult } from '@/app/actions/projectActions';
@@ -27,13 +29,11 @@ export default function ReassignmentForm({
   >(action, null);
 
   return (
-    <form action={formAction} className="mt-3">
-      <Form.Control type="hidden" name="projectId" value={projectId} />
-      <Form.Control type="hidden" name="thisUserId" value={actorId} />
-      <InputGroup className="mb-3">
-        <Form.Label className="d-flex align-items-center mx-2">
-          New Project Owner
-        </Form.Label>
+    <form action={formAction} className="mt-4">
+      <input type="hidden" name="projectId" value={projectId} />
+      <input type="hidden" name="thisUserId" value={actorId} />
+      <InputGroup className="mb-4">
+        <Label className="mx-2 flex items-center">New Project Owner</Label>
         <SelectUserFormElement users={users} fieldName="newOwnerId" />
       </InputGroup>
 

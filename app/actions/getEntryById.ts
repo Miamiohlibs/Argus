@@ -26,7 +26,7 @@ async function getEntryById(entryId: string): Promise<{
     };
 
     logger.verbose(`Fetched entry for with id: ${entryId}`);
-
+    logger.verbose(`Entry: ${JSON.stringify(entry)}`);
     return {
       data: entry,
     };
