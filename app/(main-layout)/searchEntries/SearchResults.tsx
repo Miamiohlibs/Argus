@@ -1,6 +1,6 @@
 'use client';
 import { TableColumn } from 'react-data-table-component';
-import { useEffect, useState } from 'react';
+import { useMemo, useState } from 'react';
 import DataTable from 'react-data-table-component';
 import Link from 'next/link';
 
@@ -11,27 +11,17 @@ export default function SearchResults({
 }: {
   results: SearchResult[];
 }) {
-  const [currentEntries, setCurrentEntries] = useState<SearchResult[]>([]); // Track current entries
-  const [filteredEntries, setFilteredEntries] = useState<SearchResult[]>([]);
-  const [loading, setLoading] = useState(true);
   const [filterText, setFilterText] = useState('');
 
-  // Initialize data when entries prop changes
-  useEffect(() => {
-    setCurrentEntries(results);
-    setFilteredEntries(results);
-    setLoading(false);
-  }, [results]); // Only run when entries prop changes
-
-  // Filter entries when filterText or currentEntries change
-  useEffect(() => {
-    const filtered = currentEntries.filter((entry) =>
-      [entry.title, entry.projectName, entry.user].some((val) =>
-        val?.toLowerCase().includes(filterText.toLowerCase() || ''),
+  const filteredEntries = useMemo(
+    () =>
+      results.filter((entry) =>
+        [entry.title, entry.projectName, entry.user].some((val) =>
+          val?.toLowerCase().includes(filterText.toLowerCase() || ''),
+        ),
       ),
-    );
-    setFilteredEntries(filtered);
-  }, [filterText, currentEntries]); // Use currentEntries instead of entries
+    [results, filterText],
+  );
 
   // Move columns inside the component so handleDelete is in scope
   const columns: TableColumn<SearchResult>[] = [
@@ -83,7 +73,6 @@ export default function SearchResults({
       <DataTable
         columns={columns}
         data={filteredEntries}
-        progressPending={loading}
         pagination
         paginationPerPage={25}
         paginationRowsPerPageOptions={[10, 25, 50, 100]}

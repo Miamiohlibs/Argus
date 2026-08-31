@@ -1,6 +1,6 @@
 import { getCurrentUser } from '@/app/actions/getUser';
 import { getProjects } from '@/app/actions/projectActions';
-import UserDiagnosticInfo from '@/components/UserDiagnosticInfo';
+import UserDiagnosticInfo from './UserDiagnosticInfo';
 
 export default async function MePage() {
   const { user, error: userError } = await getCurrentUser();
@@ -12,7 +12,7 @@ export default async function MePage() {
   );
 
   return (
-    <>
+    <div className="default">
       {user && (
         <UserDiagnosticInfo
           user={user}
@@ -22,13 +22,13 @@ export default async function MePage() {
       )}
       {process.env.NODE_ENV == 'development' && (
         <>
-          <h2 className="mt-5">JSON</h2>
+          <h2 className="mt-12">JSON</h2>
           <h3>User</h3>
           <pre>{JSON.stringify(user, null, 2)}</pre>
           <h3>Projects</h3>
           <pre>{JSON.stringify(projects, null, 2)}</pre>
         </>
       )}
-    </>
+    </div>
   );
 }

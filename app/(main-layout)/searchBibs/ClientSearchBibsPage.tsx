@@ -1,13 +1,17 @@
 'use client';
-import RecordSearchForm from '@/components/RecordSearchForm';
+import RecordSearchForm from '@/components/RecordSearchForm/RecordSearchForm';
 import { useSearchParams } from 'next/navigation';
-import ProjectButtons from '@/components/ProjectButtons';
+import ProjectButtons from '@/components/Projects/ProjectButtons';
 import NonOwnerAlert from '@/components/NonOwnerAlert';
-import ProjectMetadata from '@/components/ProjectMetadata';
+import ProjectMetadata from '@/components/Projects/ProjectMetadata';
 import { ProjectWithUserAndBib } from '@/types/ProjectWithUserAndBib';
+import type { Catalog } from '@prisma/client';
+import { CATALOG_DISPLAY_NAMES } from '@/lib/catalogs/displayNames';
+import { CATALOG_SEARCH_PLACEHOLDER } from '@/lib/catalogs/displayNames';
 
 interface ClientSearchBibsPageProps {
   projectId?: number;
+  catalog?: Catalog;
   userCanEditPage: boolean;
   userCanPrint: boolean;
   nonOwnerAlert: boolean;
@@ -18,6 +22,7 @@ interface ClientSearchBibsPageProps {
 
 const ClientSearchBibsPage = ({
   projectId,
+  catalog,
   userCanEditPage,
   userCanPrint = false,
   nonOwnerAlert,
@@ -28,6 +33,8 @@ const ClientSearchBibsPage = ({
   // You can still use useSearchParams if needed for other params
   const params = useSearchParams();
   const tempId = projectId || params?.get('projectId') || 'none';
+  const resolvedCatalog: Catalog =
+    catalog ?? ((params?.get('catalog') as Catalog | null) || 'ALMA');
   let numericId: number;
   if (typeof tempId === 'number') {
     numericId = tempId;
@@ -45,21 +52,25 @@ const ClientSearchBibsPage = ({
   return (
     <>
       {nonOwnerAlert && <NonOwnerAlert />}
-      <h1 className="h2">Search Alma Catalog for Item</h1>
+      <h1 className="text-3xl font-medium">
+        Search {CATALOG_DISPLAY_NAMES[resolvedCatalog]} Catalog for Item
+      </h1>
       <ProjectMetadata project={project} />
       <ProjectButtons
         projectId={clientProjectId}
-        onPage="searchBibs"
+        onPage={`searchBibs-${resolvedCatalog}`}
         canEdit={userCanEditPage}
         canPrint={userCanPrint}
         divClass={'mb-3'}
       />
       <RecordSearchForm
         projectId={clientProjectId}
+        catalog={resolvedCatalog}
         userCanEditPage={userCanEditPage}
         quickSlip={false}
         nonOwnerEditor={nonOwnerEditor}
         currentUserName={currentUserName}
+        searchPlaceholder={CATALOG_SEARCH_PLACEHOLDER[resolvedCatalog]}
       />
     </>
   );

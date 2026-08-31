@@ -3,6 +3,7 @@ export type RequestSlipProps = {
   title?: string;
   location?: string;
   callNumber?: string | undefined;
+  catalog: string;
   publisher?: string;
   box?: string;
   folder?: string;
@@ -11,16 +12,13 @@ export type RequestSlipProps = {
   notes?: string;
   itemInfo?: string[] | never[] | undefined;
   highlightedItemIndex?: number;
+  patronName?: string;
+  patronAffiliation?: string;
+  patronStatus?: string;
   userName?: string;
   userEmail?: string;
-  userAffiliation?: 'Miami' | 'Other';
-  userStatus?:
-    | 'Undergrad'
-    | 'Graduate'
-    | 'Faculty'
-    | 'Staff'
-    | 'Alumni'
-    | 'Other';
+  userAffiliation?: string;
+  userStatus?: string;
   personPrinting?: string;
   projectName?: string;
   purpose: string | undefined;

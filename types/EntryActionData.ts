@@ -1,8 +1,9 @@
-import { ItemEntry } from '@prisma/client';
+import type { BibDataDraft, ItemDataDraft } from '@/lib/catalogs/types';
 
 interface EntryActionData {
-  bibData: Record<string, FormDataEntryValue>;
-  itemData: ItemEntry[];
+  bibData: BibDataDraft;
+  itemData: ItemDataDraft[];
+  projectId: number;
   actionType: 'add' | 'edit';
   existingEntryId?: string;
 }

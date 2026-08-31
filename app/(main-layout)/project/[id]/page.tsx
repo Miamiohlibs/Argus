@@ -1,10 +1,13 @@
+'use server';
 import { Metadata } from 'next';
+import { redirect } from 'next/navigation';
 import { getProject } from '@/app/actions/projectActions';
 import getEntries from '@/app/actions/getEntries';
-import EntriesTable from '@/components/EntriesTable';
+import EntriesTable from './EntriesTable';
 import getUserInfo from '@/lib/getUserInfo';
-import ProjectButtons from '@/components/ProjectButtons';
-import ProjectMetadata from '@/components/ProjectMetadata';
+import ProjectButtons from '@/components/Projects/ProjectButtons';
+import ProjectMetadata from '@/components/Projects/ProjectMetadata';
+import { setSelectedEntriesCookie } from '@/lib/selectedEntriesCookie';
 
 type MetadataProps = {
   params: Promise<{ id: string }>;
@@ -46,14 +49,14 @@ export default async function ProjectPage({
 
   return (
     <>
-      <h1 className="h2">
+      <h1 className="text-3xl font-medium">
         {project?.title}
         {project && project.status == 'archived' && ' (Archived)'}
       </h1>
 
       {/* <p>Owner: {project?.user.name}</p> */}
       {project && <ProjectMetadata project={project} hideTitle={true} />}
-      <div className={'mb-3'} id={'project-tools'}>
+      <div className={'mb-4'} id={'project-tools'}>
         <ProjectButtons
           projectId={parseInt(id)}
           canEdit={canEdit}
@@ -69,11 +72,16 @@ export default async function ProjectPage({
           entries={bibEntries.data?.entries}
           canEdit={canEdit}
           canPrint={canPrint}
+          handleSelectSubmit={async (ids) => {
+            'use server';
+            await setSelectedEntriesCookie({ projectId: id, entryIds: ids });
+            redirect('/slips/selected');
+          }}
         />
       ) : (
         <p>No bibliography entries found.</p>
       )}
-      <p className="mt-5">Notes: {project?.notes}</p>
+      <p className="mt-12">Notes: {project?.notes}</p>
       {process.env.NEXT_PUBLIC_IS_DEV_ENV && (
         <pre>{JSON.stringify(bibEntries.data?.entries, null, 2)}</pre>
       )}

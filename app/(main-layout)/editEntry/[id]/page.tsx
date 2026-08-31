@@ -1,13 +1,14 @@
 import { Metadata } from 'next';
 import { EntryWithItems } from '@/types/EntryWithItems';
-import { bibHoldings } from '@/app/actions/almaSearch';
+import { fetchCatalogEntry } from '@/app/actions/catalogSearch';
 import getEntryById from '@/app/actions/getEntryById';
-import { CondensedBibHoldings } from '@/types/CondensedBibHoldings';
-import BibResultsWrapper from '@/components/BibResultsWrapper';
+import { CatalogSearchResult } from '@/lib/catalogs/types';
+import BibResultsWrapper from '@/components/RecordSearchForm/BibResultsWrapper';
+import CustomEntryForm from '@/components/CustomEntryForm';
 import getUserInfo from '@/lib/getUserInfo';
 import NonOwnerAlert from '@/components/NonOwnerAlert';
-import ProjectButtons from '@/components/ProjectButtons';
-import ProjectMetadata from '@/components/ProjectMetadata';
+import ProjectButtons from '@/components/Projects/ProjectButtons';
+import ProjectMetadata from '@/components/Projects/ProjectMetadata';
 import { getProject } from '@/app/actions/projectActions';
 
 type MetadataProps = {
@@ -50,25 +51,57 @@ export default async function EditEntryPage({
   const projectId = existingEntry?.projectId ?? 0;
   const { project } = await getProject({ id: projectId.toString() });
 
-  const mmsId = existingEntry?.almaId ?? '';
   const {
     permissions: { canEdit, canPrint, nonOwnerEditor, currentUserName },
   } = await getUserInfo(projectId);
 
+  if (existingEntry?.catalog === 'CUSTOM') {
+    return (
+      <>
+        {nonOwnerEditor && <NonOwnerAlert />}
+        <h1 className="text-3xl font-medium">
+          Edit Custom Entry: <i>{existingEntry.itemTitle}</i>
+        </h1>
+        <ProjectButtons
+          canEdit={canEdit}
+          canPrint={canPrint}
+          onPage="editEntry"
+          projectId={projectId}
+          divClass="mb-2"
+        />
+        {project && <ProjectMetadata project={project} />}
+        <CustomEntryForm
+          projectId={projectId}
+          existingEntry={existingEntry}
+          editable={canEdit}
+          currentUserName={currentUserName}
+          nonOwnerEditor={nonOwnerEditor}
+        />
+      </>
+    );
+  }
+
   const {
     data: holdingsData,
     error: holdingsError,
-  }: { data?: CondensedBibHoldings; error?: string } = await bibHoldings({
-    mms_id: mmsId,
-  });
+  }: { data?: CatalogSearchResult; error?: string } = await fetchCatalogEntry(
+    existingEntry?.catalog ?? 'ALMA',
+    existingEntry?.catalogId ?? '',
+  );
   if (holdingsError) {
-    return <>Error refreshing catalog data</>;
+    return (
+      <>
+        <h1>Error</h1>
+        <p>Error refreshing catalog data: {holdingsError}.</p>
+        <p>ID: {id}</p>
+      </>
+    );
   }
   return (
     <>
       {nonOwnerEditor && <NonOwnerAlert />}
-      <h1 className="h2">
-        Editing: <i>{holdingsData && holdingsData.bib_data.title}</i>
+      <h1 className="text-3xl font-medium">
+        Editing: <i>{holdingsData && holdingsData.bibData.itemTitle}</i>
       </h1>
       <ProjectButtons
         canEdit={canEdit}

@@ -86,7 +86,7 @@ export async function isUserAdmin(userId: string): Promise<boolean> {
         id: userId,
       },
     });
-    console.log(`Current User: ${JSON.stringify(user)}`);
+    logger.verbose(`Current User: ${JSON.stringify(user)}`);
     return user?.role != null && ['admin', 'superadmin'].includes(user.role);
   } catch (error) {
     logger.error(

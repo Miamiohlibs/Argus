@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
-import ProjectsTable from '@/components/ProjectsTable';
-import MainButtons from '@/components/MainButtons';
+import ProjectsTable from '@/components/Projects/ProjectsTable';
+import MainButtons from '@/components/MainButtons/MainButtons';
 import getUserInfo from '@/lib/getUserInfo';
 import checkAccess from '@/lib/checkAccess';
 
@@ -24,8 +24,8 @@ const PublicProjectsPage = async () => {
 
   return (
     <>
-      <h1 className="h2">Public Projects</h1>
-      <div className="mb-3">
+      <h1 className="text-3xl font-medium">Public Projects</h1>
+      <div className="mb-4">
         <MainButtons isEditorOrAbove={isEditorOrAbove} canPrint={canPrint} />
       </div>{' '}
       <ProjectsTable

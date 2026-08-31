@@ -1,5 +1,7 @@
 'use client';
-import { Button, InputGroup, Form } from 'react-bootstrap';
+import Button from '@/components/ui/Button';
+import Input from '@/components/ui/Input';
+import InputGroup from '@/components/ui/InputGroup';
 interface Props {
   action: (formData: FormData) => void;
   pending: boolean;
@@ -8,19 +10,20 @@ interface Props {
 
 export default function SearchBox({ action, pending, userId }: Props) {
   return (
-    <Form action={action} className="mb-5">
+    <form action={action} className="mb-12">
       <InputGroup>
-        <Form.Control
+        <Input
           name="q"
           type="text"
           placeholder="Search title and author keywords …"
+          aria-label="Search keywords"
           disabled={pending}
         />
         <Button type="submit" disabled={pending}>
           {pending ? 'Searching…' : 'Search'}
         </Button>
       </InputGroup>
-      <Form.Control type="hidden" id="userId" name="userId" value={userId} />
-    </Form>
+      <input type="hidden" id="userId" name="userId" value={userId} />
+    </form>
   );
 }
