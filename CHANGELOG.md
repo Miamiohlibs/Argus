@@ -1,11 +1,5 @@
 # Changelog
 
-## 0.9.1 - 2026-09-23
-
-### Changed
-
-- Updated next to ^16.3.6 to include patch addressing a critical vulnerability in Next.
-
 ## 0.9.0 - 2026-08-31
 
 ### Added
