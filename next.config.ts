@@ -1,13 +1,13 @@
 import type { NextConfig } from 'next';
 import path from 'node:path';
-import { createRequire } from 'node:module';
+import { readFileSync } from 'node:fs';
 
-const require = createRequire(import.meta.url);
-const { version } = require('./package.json');
+const projectRoot = process.cwd();
+const { version } = JSON.parse(readFileSync(path.join(projectRoot, 'package.json'), 'utf-8'));
 
 const nextConfig: NextConfig = {
   /* config options here */
-  outputFileTracingRoot: path.join(__dirname),
+  outputFileTracingRoot: projectRoot,
   basePath: process.env.NEXT_PUBLIC_APP_BASEPATH
     ? `${process.env.NEXT_PUBLIC_APP_BASEPATH}`
     : '',
