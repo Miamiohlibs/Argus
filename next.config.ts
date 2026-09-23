@@ -1,6 +1,9 @@
 import type { NextConfig } from 'next';
 import path from 'node:path';
-import { version } from './package.json';
+import { createRequire } from 'node:module';
+
+const require = createRequire(import.meta.url);
+const { version } = require('./package.json');
 
 const nextConfig: NextConfig = {
   /* config options here */
