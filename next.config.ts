@@ -1,10 +1,13 @@
 import type { NextConfig } from 'next';
 import path from 'node:path';
-import { version } from './package.json';
+import { readFileSync } from 'node:fs';
+
+const projectRoot = process.cwd();
+const { version } = JSON.parse(readFileSync(path.join(projectRoot, 'package.json'), 'utf-8'));
 
 const nextConfig: NextConfig = {
   /* config options here */
-  outputFileTracingRoot: path.join(__dirname),
+  outputFileTracingRoot: projectRoot,
   basePath: process.env.NEXT_PUBLIC_APP_BASEPATH
     ? `${process.env.NEXT_PUBLIC_APP_BASEPATH}`
     : '',
